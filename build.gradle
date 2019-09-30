@@ -42,7 +42,6 @@ allprojects {
 project(":desktop") {
     apply plugin: "java-library"
 
-
     dependencies {
         implementation project(":core")
         api "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
@@ -87,7 +86,6 @@ project(":ios") {
     apply plugin: "java-library"
     apply plugin: "robovm"
 
-
     dependencies {
         implementation project(":core")
         api "com.mobidevelop.robovm:robovm-rt:$roboVMVersion"
@@ -103,11 +101,16 @@ project(":ios") {
 project(":core") {
     apply plugin: "java-library"
 
-
     dependencies {
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
         api "com.google.guava:guava:28.1-android"
+        testImplementation 'org.junit.jupiter:junit-jupiter-api:5.5.2'
+        testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.5.2'
+    }
+
+    test {
+        useJUnitPlatform()
     }
 }
