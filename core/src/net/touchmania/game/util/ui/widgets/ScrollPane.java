@@ -17,10 +17,15 @@
 package net.touchmania.game.util.ui.widgets;
 
 public class ScrollPane extends com.badlogic.gdx.scenes.scene2d.ui.ScrollPane {
-    private boolean overscrollX = true, overscrollY = true;
-    private boolean hScrollOnBottom = true, vScrollOnRight = true;
-    private float fadeAlphaSeconds = 1, fadeDelaySeconds = 1;
-    private float overscrollDistance = 50, overscrollSpeedMin = 30, overscrollSpeedMax = 200;
+    private boolean overscrollX = true;
+    private boolean overscrollY = true;
+    private boolean hScrollOnBottom = true;
+    private boolean vScrollOnRight = true;
+    private float fadeAlphaSeconds = 1f;
+    private float fadeDelaySeconds = 1f;
+    private float overscrollDistance = 50f;
+    private float overscrollSpeedMin = 30f;
+    private float overscrollSpeedMax = 200f;
 
     public ScrollPane() {
         super(null);

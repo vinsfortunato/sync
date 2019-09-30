@@ -18,20 +18,10 @@ package net.touchmania.game.ui.play;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import net.touchmania.game.match.Match;
+import net.touchmania.game.round.Round;
 import net.touchmania.game.song.note.Note;
 import net.touchmania.game.song.note.NotePanel;
-import net.touchmania.game.song.note.NoteType;
 
-/**
- * Used to draw:
- * <ul>
- *     <li>{@link NoteType#TAP}</li>
- *     <li>{@link NoteType#LIFT}</li>
- *     <li>{@link NoteType#FAKE}</li>
- * </ul>
- * @author flood2d
- */
 public class BaseNoteDrawer<N extends Note> implements NoteDrawer<N> {
     private final BeatmapView view;
 
@@ -100,7 +90,7 @@ public class BaseNoteDrawer<N extends Note> implements NoteDrawer<N> {
     }
 
     @Override
-    public Match getMatch() {
-        return view.getScreen().getMatch();
+    public Round getRound() {
+        return view.getRound();
     }
 }

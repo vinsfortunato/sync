@@ -16,17 +16,18 @@
 
 package net.touchmania.game.song;
 
-import com.badlogic.gdx.utils.IntMap;
 import net.touchmania.game.song.note.Note;
 import net.touchmania.game.song.note.NotePanel;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.TreeMap;
 
 /**
  * @author flood2d
  */
 public class Beatmap {
-    private IntMap<TreeMap<Double, Note>> panels;
+    private Map<Integer, TreeMap<Double, Note>> panels;
 
     /**
      * The taps count of the beatmap, or -1 if data
@@ -91,7 +92,7 @@ public class Beatmap {
      */
     public void setNotesMap(NotePanel notePanel, TreeMap<Double, Note> notesMap) {
         if(panels == null) {
-            panels = new IntMap<>();
+            panels = new HashMap<>();
         }
         panels.put(notePanel.ordinal(), notesMap);
     }

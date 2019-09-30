@@ -30,7 +30,7 @@ public class MineNoteDrawer extends BaseNoteDrawer<MineNote> {
 
     @Override
     public float getNoteRotation(MineNote note, NotePanel panel, double beat, double time) {
-        float degrees = -60f * getMatch().getCurrentBeat();
+        float degrees = -60f * (float) getRound().getCurrentBeat();
         degrees %= 360f;
         return degrees;
     }

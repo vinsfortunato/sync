@@ -18,7 +18,7 @@ package net.touchmania.game.ui.play;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import net.touchmania.game.match.Match;
+import net.touchmania.game.round.Round;
 import net.touchmania.game.song.note.Note;
 import net.touchmania.game.song.note.NotePanel;
 
@@ -119,8 +119,8 @@ public interface NoteDrawer<N extends Note> {
     TextureRegion getNoteTextureRegion(N note, NotePanel panel, double beat, double time);
 
     /**
-     * Gets the match currently being played.
-     * @return the match related to the drawer.
+     * Gets the round currently being played.
+     * @return the round related to the drawer.
      */
-    Match getMatch();
+    Round getRound();
 }

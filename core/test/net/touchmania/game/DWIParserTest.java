@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package net.touchmania.game.test;
+package net.touchmania.game;
 
 import com.badlogic.gdx.utils.Array;
 import net.touchmania.game.song.Beatmap;

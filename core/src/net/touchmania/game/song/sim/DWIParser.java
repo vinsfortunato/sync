@@ -40,8 +40,6 @@ import java.util.regex.Pattern;
  * @author flood2d
  */
 public class DWIParser extends TagSimParser {
-    /** Pattern that matches the #TAG:VALUE; syntax **/
-    private static Pattern TAG_PATTERN = Pattern.compile("#\\s*([^:]+?)\\s*:\\s*([^;]*?)\\s*;");
     /** Pattern that matches the display bpm syntax **/
     private static Pattern DISPLAY_BPM_PATTERN = Pattern.compile("(\\*)|(\\d+)(\\s*\\.\\.\\s*(\\d+))?");
     /** Pattern that matches the BPMs and stops syntax **/
@@ -145,12 +143,12 @@ public class DWIParser extends TagSimParser {
 
                 if(!matcher.group(4).isEmpty()) {
                     return new DisplayBPM.RangeDisplayBPM(
-                            Integer.valueOf(matcher.group(2)),
-                            Integer.valueOf(matcher.group(4)));
+                            Integer.parseInt(matcher.group(2)),
+                            Integer.parseInt(matcher.group(4)));
                 }
 
                 return new DisplayBPM.StaticDisplayBPM(
-                        Integer.valueOf(matcher.group(2)));
+                        Integer.parseInt(matcher.group(2)));
             }
         }
         return null;
@@ -207,7 +205,7 @@ public class DWIParser extends TagSimParser {
 
     @Override
     protected Chart parseChart(String chartRawData) throws SimParseException {
-        String chartData[] = chartRawData.split("\\s*:\\s*");
+        String[] chartData = chartRawData.split("\\s*:\\s*");
         if(chartData.length < 4) { //Must be 4 (or 5 if double mode).
             throw new SimParseException("Invalid chart data.");
         }
@@ -245,7 +243,7 @@ public class DWIParser extends TagSimParser {
      * Split tags into header and chart tags. Chart tags has chart
      * style as tag name, other tags must be considered header tags.
      */
-    private class DWIDataSupplier implements DataSupplier {
+    private static class DWIDataSupplier implements DataSupplier {
         /** Contains header tags where key is the tag name and value is the tag value **/
         private ObjectMap<String, String> headerTagsMap = new ObjectMap<>();
         /** Contains charts data as string that are a result of the concatenation
@@ -288,7 +286,7 @@ public class DWIParser extends TagSimParser {
         }
     }
 
-    private class BeatmapParser {
+    private static class BeatmapParser {
         private Beatmap beatmap = new Beatmap();
         private String beatmapData;
         private NoteResolution resolution = NoteResolution.NOTE_8TH; //Default resolution
@@ -302,10 +300,10 @@ public class DWIParser extends TagSimParser {
 
         BeatmapParser(String beatmapData) {
             this.beatmapData = beatmapData.replaceAll("\\s", ""); //Remove whitespaces
-            this.beatmap.setNotesMap(NotePanel.UP, new TreeMap<Double, Note>());
-            this.beatmap.setNotesMap(NotePanel.LEFT, new TreeMap<Double, Note>());
-            this.beatmap.setNotesMap(NotePanel.RIGHT, new TreeMap<Double, Note>());
-            this.beatmap.setNotesMap(NotePanel.DOWN, new TreeMap<Double, Note>());
+            this.beatmap.setNotesMap(NotePanel.UP, new TreeMap<>());
+            this.beatmap.setNotesMap(NotePanel.LEFT, new TreeMap<>());
+            this.beatmap.setNotesMap(NotePanel.RIGHT, new TreeMap<>());
+            this.beatmap.setNotesMap(NotePanel.DOWN, new TreeMap<>());
         }
 
         Beatmap parse() throws SimParseException {
@@ -317,7 +315,6 @@ public class DWIParser extends TagSimParser {
 
         /**
          * @param dataChar the beatmap data character to parse.
-         * @return true if the parsed character is a note character, false otherwise.
          * @throws SimParseException if the beatmap data is invalid.
          */
         private void parseDataCharacter(char dataChar) throws SimParseException {

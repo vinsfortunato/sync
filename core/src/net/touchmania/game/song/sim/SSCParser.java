@@ -24,6 +24,7 @@ import net.touchmania.game.song.ChartType;
 import net.touchmania.game.song.TimingData;
 
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Parse SSC SIMs - Stepmania format (.ssc file extension).
@@ -162,7 +163,7 @@ public class SSCParser extends SMParser {
         }
     }
 
-    private class SSCDataSupplier implements TagSimParser.DataSupplier {
+    private static class SSCDataSupplier implements TagSimParser.DataSupplier {
         /** Contains header tags where key is the tag name and value is the tag value **/
         ObjectMap<String, String> headerTagsMap = new ObjectMap<>();
         /** Contains charts data as strings **/

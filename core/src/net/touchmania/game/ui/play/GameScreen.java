@@ -16,85 +16,71 @@
 
 package net.touchmania.game.ui.play;
 
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
-import net.touchmania.game.match.Match;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import net.touchmania.game.Game;
 import net.touchmania.game.util.concurrent.DoneListener;
-import net.touchmania.game.util.ui.LayoutScreen;
+import net.touchmania.game.util.ui.Screen;
+import net.touchmania.game.util.ui.Theme;
 
 /**
  * @author flood2d
  */
-public class GameScreen extends LayoutScreen{
-    private BeatmapView notes;
-    private Image background;
-    private GameControls controls;
+public class GameScreen implements Screen {
+    private static GameScreen instance;
+    private boolean prepared = false;
 
-    private Match match;
+    /* Widgets */
+    private BeatmapView beatmapView;
 
-    public GameScreen(String layoutId) {
-        super(layoutId);
+    private GameScreen() {
+        Game.instance().getDisposer().manage(this);
     }
 
-    /**
-    public GameScreen(net.touchmania.game.Game game, net.touchmania.game.match.Match match) {
-       // super(game);
-        this.match = match;
-    }
-
-     **/
     @Override
     public void prepare() {
-        //loadAsset("texture/blue_background.jpg", Texture.class);
-       // loadAsset(net.touchmania.game.Const.ATLAS_GAME, TextureAtlas.class);
+        prepared = true;
     }
 
     @Override
     public void show(Stage stage) {
-        /**
-        Stage stage = getStage();
-        Gdx.input.setInputProcessor(stage);
-
-        notes = new BeatmapView(this);
-        background = new Image(new TextureRegion(
-                getAssets().get("texture/blue_background.jpg", Texture.class)));
-        controls = new GameControls(this);
-
-        this.match.getControls().addListener(notes.getState());
-        this.match.getScoreKeeper().addListener(notes.getState());
-
-        background.setDebug(true);
-        notes.setDebug(true);
-        controls.setDebug(true);
-
-        Container<GameControls> controlContainer = new Container<GameControls>(controls);
-        controlContainer.center();
-
         Table table = new Table();
-        Stack stack = new Stack();
-        stack.setFillParent(true);
-        stack.addActor(background);
-        stack.addActor(notes);
-        stack.add(controlContainer);
-        table.addActor(stack);
         table.setFillParent(true);
-        getStage().addActor(table);
-         **/
-    }
+        stage.addActor(table);
+        table.setDebug(true); //TODO
 
+        beatmapView = new BeatmapView();
+
+        table.add(beatmapView)
+                .padLeft(0)
+                .padTop(0)
+                .width(1080)
+                .height(1920);
+
+        table.left().top();
+    }
 
     @Override
     public void hide(DoneListener listener) {
 
     }
 
-    public TextureAtlas getTextureAtlas() {
-       // return getAssets().get(net.touchmania.game.Const.ATLAS_GAME, TextureAtlas.class);
-        return null;
+    @Override
+    public void dispose() {
+        prepared = false;
     }
 
-    public Match getMatch() {
-        return match;
+    @Override
+    public boolean isPrepared() {
+        return prepared;
+    }
+
+    @Override
+    public Theme getTheme() {
+        return Game.instance().getThemes().getActiveTheme();
+    }
+
+    public static GameScreen instance() {
+        return instance == null ? instance = new GameScreen() : instance;
     }
 }

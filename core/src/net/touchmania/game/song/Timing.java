@@ -34,9 +34,9 @@ import java.util.TreeSet;
 public class Timing {
     private TimingData timingData;
     /** beat as a function of time **/
-    public Graph2D beatGraph; //TODO turn private
+    private Graph2D beatGraph;
     /** time as a function of beat **/
-    public Graph2D timeGraph; //TODO turn private
+    private Graph2D timeGraph;
 
     public Timing(TimingData timingData) throws InvalidTimingDataException {
         if(timingData == null) {

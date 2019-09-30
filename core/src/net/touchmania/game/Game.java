@@ -22,10 +22,14 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
+import net.touchmania.game.player.PlayerManager;
 import net.touchmania.game.song.SongManager;
+import net.touchmania.game.ui.play.GameScreen;
 import net.touchmania.game.util.Disposer;
 import net.touchmania.game.util.concurrent.ExecutorManager;
 import net.touchmania.game.util.ui.ScreenManager;
+import net.touchmania.game.util.ui.Theme;
+import net.touchmania.game.util.ui.ThemeManager;
 import net.touchmania.game.util.ui.test.TestScreen;
 
 public class Game implements ApplicationListener {
@@ -34,10 +38,11 @@ public class Game implements ApplicationListener {
 	private GameSettings settings;
 	private AssetManager assets;
 	private ScreenManager screens;
+	private ThemeManager themes;
 	private SongManager songs;
+	private PlayerManager players;
 	private ExecutorManager executors;
 	private Disposer disposer;
-	private Music music;
 	private FPSLogger fps;
 
 	public Game(Backend backend) {
@@ -53,10 +58,12 @@ public class Game implements ApplicationListener {
 		this.executors = new ExecutorManager();
 		this.assets = new AssetManager();
 		this.screens = new ScreenManager();
+		this.themes = new ThemeManager();
 		this.songs = new SongManager();
+		this.players = new PlayerManager();
 
-		//Show test screen
-		this.screens.show(TestScreen.instance());
+		//Show test screen TODO remove
+		this.screens.show(GameScreen.instance());
 	}
 
 	@Override
@@ -103,8 +110,16 @@ public class Game implements ApplicationListener {
 		return screens;
 	}
 
+	public ThemeManager getThemes() {
+		return themes;
+	}
+
 	public SongManager getSongs() {
 		return songs;
+	}
+
+	public PlayerManager getPlayers() {
+		return players;
 	}
 
 	public ExecutorManager getExecutors() {
@@ -113,14 +128,6 @@ public class Game implements ApplicationListener {
 
 	public Disposer getDisposer() {
 		return disposer;
-	}
-
-	public void setMusic(Music music) {
-		this.music = music;
-	}
-
-	public Music getMusic() {
-		return music;
 	}
 
 	public static Game instance() {

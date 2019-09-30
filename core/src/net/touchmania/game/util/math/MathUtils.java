@@ -16,11 +16,6 @@
 
 package net.touchmania.game.util.math;
 
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.text.ParseException;
-
 /**
  * @author flood2d
  */
@@ -42,39 +37,5 @@ public final class MathUtils {
         if (value.compareTo(min) < 0) return min;
         if (value.compareTo(max) > 0) return max;
         return value;
-    }
-
-    /**
-     * <p>Example:
-     * <table border>
-     * <caption><b>Rounding mode examples</b></caption>
-     * <tr valign=top><th>Input Number</th>
-     * <th>Input rounded to 1 decimal digit (decimalPlaces = 3)<br>
-     * <tr align=right><td>5.55</td>  <td>5.6</td>
-     * <tr align=right><td>2.54</td>  <td>2.5</td>
-     * <tr align=right><td>1.67</td>  <td>1.7</td>
-     * <tr align=right><td>1.02</td>  <td>1.0</td>
-     * <tr align=right><td>1.00</td>  <td>1.0</td>
-     * </table>
-     *
-     * @param value the value to round.
-     * @param decimalPlaces the decimalPlaces
-     * @return the value rounded to n decimal places.
-     */
-    public static double roundDecimals(double value, int decimalPlaces) {
-        if (decimalPlaces < 0) {
-            throw new IllegalArgumentException("Decimal places cannot be negative!");
-        }
-        StringBuilder pattern = new StringBuilder(decimalPlaces == 0 ? "#" : "#.");
-        for (int i = 0; i < decimalPlaces; i++) {
-            pattern.append("#");
-        }
-        DecimalFormat df = new DecimalFormat(pattern.toString());
-        df.setRoundingMode(RoundingMode.HALF_EVEN);
-        try {
-            return NumberFormat.getInstance().parse(df.format(value)).doubleValue();
-        } catch (ParseException e) {
-            return value;
-        }
     }
 }

@@ -58,6 +58,6 @@ public class LayoutScreen implements Screen {
 
     @Override
     public Theme getTheme() {
-        return Game.instance().getScreens().getTheme();
+        return Game.instance().getThemes().getActiveTheme();
     }
 }

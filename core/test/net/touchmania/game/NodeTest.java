@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package net.touchmania.game.test;
+package net.touchmania.game;
 
 import net.touchmania.game.util.Node;
 

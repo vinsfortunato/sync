@@ -14,19 +14,18 @@
  * limitations under the License.
  */
 
-package net.touchmania.game.song.note;
+package net.touchmania.game;
 
-/**
- * @author flood2d
- */
-@Deprecated
-public enum NoteType {
-    TAP,
-    HOLD,
-    HOLD_ROLL_TAIL,
-    ROLL,
-    MINE,
-    AUTO_KEYSOUND,
-    LIFT,
-    FAKE
+import java.lang.instrument.Instrumentation;
+
+public class ObjectSizeFetcher {
+    private static Instrumentation instrumentation;
+
+    public static void premain(String args, Instrumentation inst) {
+        instrumentation = inst;
+    }
+
+    public static long getObjectSize(Object o) {
+        return instrumentation.getObjectSize(o);
+    }
 }

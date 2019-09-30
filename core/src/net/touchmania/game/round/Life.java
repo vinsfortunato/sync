@@ -14,28 +14,11 @@
  * limitations under the License.
  */
 
-package net.touchmania.game.song.modifier;
+package net.touchmania.game.round;
 
 /**
- * Applies speed and acceleration modifiers.
  * @author flood2d
  */
-public class BeatModifierApplier {
-    private SpeedModifier speedModifier = new MultiplySpeedModifier(1.0f); //Default speed mod
+public abstract class Life {
 
-    public void setSpeedModifier(SpeedModifier modifier) {
-        speedModifier = modifier;
-    }
-
-    public SpeedModifier getSpeedModifier() {
-        return speedModifier;
-    }
-
-    public float apply(float beat) {
-        return speedModifier.apply(beat);
-    }
-
-    public float revert(float beat) {
-        return speedModifier.revert(beat);
-    }
 }

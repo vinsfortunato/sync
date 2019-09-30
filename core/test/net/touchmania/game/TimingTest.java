@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package net.touchmania.game.test;
+package net.touchmania.game;
 
 
 import net.touchmania.game.song.InvalidTimingDataException;
@@ -57,7 +57,7 @@ public class TimingTest {
 
         try {
             Timing timing = new Timing(data);
-            GraphVisualizer.showGraph(timing.timeGraph);
+            //GraphVisualizer.showGraph(timing.timeGraph);
 
             for(double i = 0.0D; i < 162.0D; i+= 1.0D) {
                 System.out.println("Time " + i + " = " + timing.getBeatAt(i) + " beat");

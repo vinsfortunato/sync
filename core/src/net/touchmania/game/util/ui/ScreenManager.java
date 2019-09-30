@@ -30,7 +30,6 @@ import java.util.concurrent.Executors;
 public class ScreenManager implements Disposable {
     public static int LOAD_EXECUTOR_ID;
     private Stage stage;
-    private Theme theme;
     private Screen currentScreen;
 
     public ScreenManager() {
@@ -104,10 +103,6 @@ public class ScreenManager implements Disposable {
 
     private ListeningExecutorService getLoadExecutor() {
         return (ListeningExecutorService) Game.instance().getExecutors().getExecutor(LOAD_EXECUTOR_ID);
-    }
-
-    public Theme getTheme() {
-        return theme;
     }
 
     private class PrepareTask implements Runnable {

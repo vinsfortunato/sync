@@ -49,7 +49,7 @@ public class SMParser extends TagSimParser {
     /** Pattern that matches the display bpm syntax **/
     private static Pattern DISPLAY_BPM_PATTERN = Pattern.compile("(\\*)|(\\d+)(\\s*:\\s*(\\d+))?");
     /** Pattern that matches the BPMs and stops syntax **/
-    public static Pattern TIMING_DATA_PATTERN = Pattern.compile("([+-]?\\d+(\\.\\d+)?)\\s*=\\s*(\\+?\\d+(\\.\\d+)?)");
+    protected static Pattern TIMING_DATA_PATTERN = Pattern.compile("([+-]?\\d+(\\.\\d+)?)\\s*=\\s*(\\+?\\d+(\\.\\d+)?)");
 
     @Override
     protected DataSupplier prepareDataSupplier(String rawContent) throws SimParseException {
@@ -149,12 +149,12 @@ public class SMParser extends TagSimParser {
 
                 if(!matcher.group(4).isEmpty()) {
                     return new DisplayBPM.RangeDisplayBPM(
-                            Integer.valueOf(matcher.group(2)),
-                            Integer.valueOf(matcher.group(4)));
+                            Integer.parseInt(matcher.group(2)),
+                            Integer.parseInt(matcher.group(4)));
                 }
 
                 return new DisplayBPM.StaticDisplayBPM(
-                        Integer.valueOf(matcher.group(2)));
+                        Integer.parseInt(matcher.group(2)));
             }
         }
         return null;
@@ -212,7 +212,7 @@ public class SMParser extends TagSimParser {
 
     @Override
     protected Chart parseChart(String chartRawData) throws SimParseException {
-        String chartData[] = chartRawData.split("\\s*:\\s*");
+        String[] chartData = chartRawData.split("\\s*:\\s*");
 
         if(chartData.length != 6) {
             throw new SimParseException("Invalid chart data.");
@@ -236,7 +236,7 @@ public class SMParser extends TagSimParser {
     }
 
     private GrooveRadar parseGrooveRadar(String value) throws SimParseException {
-        String grooveValues[] = value.split("\\s*,\\s*");
+        String[] grooveValues = value.split("\\s*,\\s*");
 
         if(grooveValues.length != 5) {
             throw new SimParseException("Groove radar cannot be parsed!");
@@ -268,7 +268,7 @@ public class SMParser extends TagSimParser {
 
     @Override
     protected Beatmap parseBeatmap(String chartRawData) throws SimParseException {
-        String chartData[] = chartRawData.split("\\s*:\\s*");
+        String[] chartData = chartRawData.split("\\s*:\\s*");
         ChartType chartType = parseChartType(chartData[0]);
         if(chartType != null) {
             switch(chartType) {
@@ -285,7 +285,7 @@ public class SMParser extends TagSimParser {
      * Split tags into header and chart tags. Chart tags have NOTES
      * as tag name, other tags must be considered header tags.
      */
-    private class SMDataSupplier implements DataSupplier{
+    private static class SMDataSupplier implements DataSupplier {
         /** Contains header tags where key is the tag name and value is the tag value **/
         ObjectMap<String, String> headerTagsMap = new ObjectMap<>();
         /** Contains charts data as strings **/
@@ -321,9 +321,9 @@ public class SMParser extends TagSimParser {
         }
     }
 
-    protected abstract class BeatmapParser {
+    protected abstract static class BeatmapParser {
         protected Beatmap beatmap = new Beatmap();
-        private String measures[];
+        private String[] measures;
 
         BeatmapParser(String beatmapData) {
             beatmapData = beatmapData.replaceAll("\\s", ""); //Remove whitespaces
@@ -386,7 +386,7 @@ public class SMParser extends TagSimParser {
                     double lastNoteBeat = lastNoteEntry.getKey();
                     Note lastNote = lastNoteEntry.getValue();
                     //Last note in the map must be a LengthyNote otherwise beatmap data is invalid.
-                    if(lastNote != null && lastNote instanceof LengthyNote) {
+                    if(lastNote instanceof LengthyNote) {
                         ((LengthyNote) lastNote).length = beat - lastNoteBeat;
                     } else {
                         throw new SimParseException("Cannot parse LengthyNote length!");
@@ -423,13 +423,13 @@ public class SMParser extends TagSimParser {
         public abstract NotePanel getPanelFromIndex(int index);
     }
 
-    protected class DanceSingleBeatmapParser extends BeatmapParser {
+    protected static class DanceSingleBeatmapParser extends BeatmapParser {
         DanceSingleBeatmapParser(String beatmapData) {
             super(beatmapData);
-            beatmap.setNotesMap(NotePanel.LEFT, new TreeMap<Double, Note>());
-            beatmap.setNotesMap(NotePanel.UP, new TreeMap<Double, Note>());
-            beatmap.setNotesMap(NotePanel.RIGHT, new TreeMap<Double, Note>());
-            beatmap.setNotesMap(NotePanel.DOWN, new TreeMap<Double, Note>());
+            beatmap.setNotesMap(NotePanel.LEFT, new TreeMap<>());
+            beatmap.setNotesMap(NotePanel.UP, new TreeMap<>());
+            beatmap.setNotesMap(NotePanel.RIGHT, new TreeMap<>());
+            beatmap.setNotesMap(NotePanel.DOWN, new TreeMap<>());
         }
 
         @Override
@@ -452,14 +452,14 @@ public class SMParser extends TagSimParser {
         }
     }
 
-    protected class PumpSingleBeatmapParser extends BeatmapParser {
+    protected static class PumpSingleBeatmapParser extends BeatmapParser {
         PumpSingleBeatmapParser(String beatmapData) {
             super(beatmapData);
-            beatmap.setNotesMap(NotePanel.LEFT_DOWN, new TreeMap<Double, Note>());
-            beatmap.setNotesMap(NotePanel.LEFT_UP, new TreeMap<Double, Note>());
-            beatmap.setNotesMap(NotePanel.CENTER, new TreeMap<Double, Note>());
-            beatmap.setNotesMap(NotePanel.RIGHT_UP, new TreeMap<Double, Note>());
-            beatmap.setNotesMap(NotePanel.RIGHT_DOWN, new TreeMap<Double, Note>());
+            beatmap.setNotesMap(NotePanel.LEFT_DOWN, new TreeMap<>());
+            beatmap.setNotesMap(NotePanel.LEFT_UP, new TreeMap<>());
+            beatmap.setNotesMap(NotePanel.CENTER, new TreeMap<>());
+            beatmap.setNotesMap(NotePanel.RIGHT_UP, new TreeMap<>());
+            beatmap.setNotesMap(NotePanel.RIGHT_DOWN, new TreeMap<>());
         }
 
         @Override
