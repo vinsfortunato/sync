@@ -1,0 +1,47 @@
+<!--
+  ~ Copyright 2018 Vincenzo Fortunato
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<values>
+    <!-- Boolean value -->
+    <boolean id="boolean1">true</boolean>
+
+    <!-- Float value -->
+    <float id="float1">1.0</float>
+
+    <!-- Integer value -->
+    <int id="int1">1</int>
+
+    <!-- Duration value 120 milliseconds -->
+    <duration id="duration1">120</duration>
+
+    <!-- Duration value 10 seconds and 120 milliseconds -->
+    <duration id="duration2">10.120</duration>
+
+    <!-- Duration value 12 hours, 2 minutes, 30 seconds, 100 milliseconds -->
+    <duration id="duration3">12:02:30.100</duration>
+
+    <!-- Percentage value 50.12% -->
+    <percent id="percent1">50.12%</percent>
+
+    <!-- Percentage value 100% -->
+    <percent id="percent2">100%</percent>
+
+    <!-- Percentage value 10% -->
+    <percent id="percent3">0.10</percent>
+
+    <!-- Percentage value referencing another resource -->
+    <percent id="percent4">percent:percent3</percent>
+</values>

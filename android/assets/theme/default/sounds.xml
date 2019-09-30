@@ -1,0 +1,29 @@
+<!--
+  ~ Copyright 2018 Vincenzo Fortunato
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<sounds>
+    <!-- From mp3 file -->
+    <sound id="test_13">sounds/sound1.mp3</sound>
+
+    <!-- From wav file -->
+    <sound id="test_14">sounds/sound2.wav</sound>
+
+    <!-- From ogg file -->
+    <sound id="test_15">sounds/sound3.ogg</sound>
+
+    <!-- By referencing another predeclared sound -->
+    <sound id="test_16">font:test_13</sound>
+</sounds>

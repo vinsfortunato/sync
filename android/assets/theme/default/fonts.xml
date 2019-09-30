@@ -1,0 +1,12 @@
+<fonts>
+    <!-- From ttf file -->
+    <font id="test_12"
+          size="12"
+          color="color:white"
+          borderWidth="5"
+          borderColor="color:red">test.ttf</font>
+
+    <!-- By referencing another predeclared font and overriding its attributes -->
+    <font id="test_14"
+          size="14">font:test_12</font>
+</fonts>

@@ -1,0 +1,5 @@
+<style>
+    <attribute name="thumb">drawable:slider_track</attribute>
+    <attribute name="progress">drawable:slider_progress</attribute>
+    <attribute name="track">drawable:slider_track</attribute>
+</style>

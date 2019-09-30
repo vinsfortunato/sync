@@ -1,0 +1,12 @@
+<!-- Enums languages supported by the theme
+    For each language a strings resource file must be created and defined
+    inside /strings/ folder with name strings_{locale}.xml where {locale}
+    must be replaced with the lang's locale.
+-->
+<langs>
+    <!-- English language /strings/strings_en_US.xml DEFAULT -->
+    <lang locale="en_US" default="true"/>
+
+    <!-- Italian language /strings/strings_it_IT.xml -->
+    <lang locale="it_IT"/>
+</langs>

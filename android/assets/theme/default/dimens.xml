@@ -1,0 +1,7 @@
+<dimens>
+    <!-- By using a raw value -->
+    <dimen id="screen_left_margin">10</dimen>
+
+    <!-- By referencing another predeclared dimension -->
+    <dimen id="screen_right_margin">dimen:screen_left_margin</dimen>
+</dimens>

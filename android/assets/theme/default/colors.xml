@@ -1,0 +1,13 @@
+<colors>
+    <!-- By using the hex color code -->
+    <color id="primary_white">#ffffff</color>
+
+    <!-- By using the rgb function -->
+    <color id="primary_red">rgb(255,0,0)</color>
+
+    <!-- By using the rgba function -->
+    <color id="primary_blue">rgba(0, 0, 255, 1.0)</color>
+
+    <!-- By referencing another predeclared color-->
+    <color id="text_white">color:primary_white</color>
+</colors>

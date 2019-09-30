@@ -1,0 +1,9 @@
+<!-- Default strings -->
+<strings>
+
+    <!-- String raw value -->
+    <string id="str1">String1</string>
+
+    <!-- String value by referencing another declared value -->
+    <string id="str2">string:str1</string>
+</strings>
