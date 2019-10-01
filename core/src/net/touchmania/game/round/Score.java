@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package net.touchmania.game.song.score;
+package net.touchmania.game.round;
 
 /**
  * Created by Flood2d on 29/11/2016.

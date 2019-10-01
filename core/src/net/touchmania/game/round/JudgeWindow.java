@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package net.touchmania.game.song.score;
+package net.touchmania.game.round;
 
 /**
  * @author flood2d

@@ -16,7 +16,7 @@
 
 package net.touchmania.game.song.note;
 
-import net.touchmania.game.song.score.Judgment;
+import net.touchmania.game.round.Judgment;
 
 public class LengthyNote implements Note {
     /**

@@ -18,6 +18,7 @@ package net.touchmania.game.ui.play;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import net.touchmania.game.round.Judgment;
 import net.touchmania.game.round.Round;
 import net.touchmania.game.song.note.Note;
 import net.touchmania.game.song.note.NotePanel;
@@ -99,7 +100,7 @@ public interface NoteDrawer<N extends Note> {
     /**
      * Checks if the given note is visible. If it isn't visible
      * the note will not be drawn. For example, tap notes with a judgment
-     * greated than {@link net.touchmania.game.song.score.Judgment#GOOD} are invisible.
+     * greated than {@link Judgment#GOOD} are invisible.
      * @param note the note.
      * @param panel the note panel.
      * @param beat the note beat.

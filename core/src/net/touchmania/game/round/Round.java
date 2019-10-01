@@ -1,19 +1,18 @@
 package net.touchmania.game.round;
 
 import net.touchmania.game.song.Chart;
-import net.touchmania.game.song.score.ScoreKeeper;
 
 public class Round {
     private Chart chart;
-    private ScoreKeeper scoreKeeper;
+    private Judge judge;
 
     public Round(Chart chart) {
         this.chart = chart;
-        this.scoreKeeper = new ScoreKeeper();
+        this.judge = new Judge();
     }
 
-    public ScoreKeeper getScoreKeeper() {
-        return scoreKeeper;
+    public Judge getJudge() {
+        return judge;
     }
 
     public Chart getChart() {
