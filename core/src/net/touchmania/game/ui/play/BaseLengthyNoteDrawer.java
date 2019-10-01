@@ -23,7 +23,7 @@ import net.touchmania.game.song.note.NotePanel;
 /**
  * @author flood2d
  */
-public class BaseLengthyNoteDrawer<N extends LengthyNote> extends BaseNoteDrawer<N> implements LengthyNoteDrawer<N> {
+public abstract class BaseLengthyNoteDrawer<N extends LengthyNote> extends BaseNoteDrawer<N> implements LengthyNoteDrawer<N> {
     public BaseLengthyNoteDrawer(BeatmapView view) {
         super(view);
     }

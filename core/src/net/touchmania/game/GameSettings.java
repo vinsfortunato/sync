@@ -47,6 +47,10 @@ public class GameSettings {
         return screenCachePolicy;
     }
 
+    public GameMode getGameMode() {
+        return GameMode.DANCE;
+    }
+
     public Locale getLanguage() {
         return Locale.getDefault(); //TODO
     }

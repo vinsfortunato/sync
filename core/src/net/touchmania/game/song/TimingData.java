@@ -28,28 +28,28 @@ public class TimingData {
     public TreeMap<Double, Double> delays;
     public TreeMap<Double, Double> warps;
 
-    public Double putBpm(Double beat, Double bpm) {
+    public Double putBpm(double beat, double bpm) {
         if(bpms == null) {
            bpms = new TreeMap<>();
         }
         return bpms.put(beat, bpm);
     }
 
-    public Double putStop(Double beat, Double length) {
+    public Double putStop(double beat, double length) {
         if(stops == null) {
             stops = new TreeMap<>();
         }
         return stops.put(beat, length);
     }
 
-    public Double putDelay(Double beat, Double length) {
+    public Double putDelay(double beat, double length) {
         if(delays == null) {
             delays = new TreeMap<>();
         }
         return delays.put(beat, length);
     }
 
-    public Double putWarp(Double beat, Double length) {
+    public Double putWarp(double beat, double length) {
         if(warps == null) {
             warps = new TreeMap<>();
         }

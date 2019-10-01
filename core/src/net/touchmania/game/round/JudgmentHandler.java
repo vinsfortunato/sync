@@ -14,29 +14,11 @@
  * limitations under the License.
  */
 
-package net.touchmania.game.song.note;
+package net.touchmania.game.round;
 
-import net.touchmania.game.GameMode;
+public interface JudgmentHandler {
 
-public enum NotePanel {
-    LEFT_UP,
-    LEFT,
-    LEFT_DOWN,
-    DOWN ,
-    RIGHT_DOWN,
-    RIGHT ,
-    RIGHT_UP,
-    UP,
-    CENTER;
+    void handleJudgment(double time, Judgment judgment);
 
-    public static NotePanel[] getModePanels(GameMode mode) {
-        switch (mode) {
-            case DANCE:
-                return new NotePanel[] { LEFT, DOWN, UP, RIGHT };
-            case PUMP:
-                return new NotePanel[] { LEFT_DOWN, LEFT_UP, CENTER, RIGHT_UP, RIGHT_DOWN };
-        }
-
-        return new NotePanel[0];
-    }
+    void handleMineExplosion(double time);
 }

@@ -16,9 +16,24 @@
 
 package net.touchmania.game.round;
 
-/**
- * @author flood2d
- */
-public abstract class Life {
+public class Life implements JudgmentHandler {
+    /**
+     * Gets the life value at the given time, where time is relative to the start of the music track.
+     * Life is represented as a double value between 0.0 (no life) and 1.0 (max life).
+     * @param time the time in seconds relative to the start of the music track.
+     * @return the life value, a double between 1.0 and 0.0 (inclusive).
+     */
+    public double getLifeAt(double time) {
+        return 0.0D;
+    }
 
+    @Override
+    public void handleJudgment(double time, Judgment judgment) {
+
+    }
+
+    @Override
+    public void handleMineExplosion(double time) {
+
+    }
 }

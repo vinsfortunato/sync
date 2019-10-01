@@ -67,8 +67,9 @@ public class SongLoader implements Callable<Song> {
 
         //Parse song
         Song song = new Song();
-        song.simFormat = simFormat;
         song.directory = songDir;
+        song.simFile = simFile;
+        song.simFormat = simFormat;
         song.title = parser.parseTitle();
         song.subtitle = parser.parseSubtitle();
         song.artist = parser.parseArtist();

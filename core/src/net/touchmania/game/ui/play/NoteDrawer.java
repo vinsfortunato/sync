@@ -23,9 +23,6 @@ import net.touchmania.game.round.Round;
 import net.touchmania.game.song.note.Note;
 import net.touchmania.game.song.note.NotePanel;
 
-/**
- * @author flood2d
- */
 public interface NoteDrawer<N extends Note> {
     /**
      * Draw a note to the batch. The batch is translated to the receptor position.
@@ -100,7 +97,7 @@ public interface NoteDrawer<N extends Note> {
     /**
      * Checks if the given note is visible. If it isn't visible
      * the note will not be drawn. For example, tap notes with a judgment
-     * greated than {@link Judgment#GOOD} are invisible.
+     * greater than {@link Judgment#GOOD} are invisible.
      * @param note the note.
      * @param panel the note panel.
      * @param beat the note beat.
@@ -108,6 +105,22 @@ public interface NoteDrawer<N extends Note> {
      * @return true if the note is visible and must be drawn.
      */
     boolean isNoteVisible(N note, NotePanel panel, double beat, double time);
+
+    /**
+     * Checks if the given note is inside the view.
+     * Only notes inside the view will be drawn.
+     * @param note the note.
+     * @param panel the note panel.
+     * @param beat the note beat.
+     * @param time current time relative to the start of the music track.
+     * @param viewX the view x position relative to the receptor x.
+     * @param viewY the view y position relative to the receptor y.
+     * @param viewWidth the view width.
+     * @param viewHeight the view height.
+     * @return true if the given note is inside the view, false otherwise.
+     */
+    boolean isNoteInsideView(N note, NotePanel panel, double beat, double time,
+                             float viewX, float viewY, float viewWidth, float viewHeight);
 
     /**
      * Gets note texture region.

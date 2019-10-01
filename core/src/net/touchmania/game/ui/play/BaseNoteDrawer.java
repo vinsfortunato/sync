@@ -22,7 +22,7 @@ import net.touchmania.game.round.Round;
 import net.touchmania.game.song.note.Note;
 import net.touchmania.game.song.note.NotePanel;
 
-public class BaseNoteDrawer<N extends Note> implements NoteDrawer<N> {
+public abstract class BaseNoteDrawer<N extends Note> implements NoteDrawer<N> {
     private final BeatmapView view;
 
     public BaseNoteDrawer(BeatmapView view) {
@@ -81,6 +81,12 @@ public class BaseNoteDrawer<N extends Note> implements NoteDrawer<N> {
 
     @Override
     public boolean isNoteVisible(N note, NotePanel panel, double beat, double time) {
+        return false;
+    }
+
+    @Override
+    public boolean isNoteInsideView(N note, NotePanel panel, double beat, double time,
+                                    float viewX, float viewY, float viewWidth, float viewHeight) {
         return false;
     }
 

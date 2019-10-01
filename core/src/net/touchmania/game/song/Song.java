@@ -28,6 +28,11 @@ public class Song {
      * The directory that contains the song's sim file.
      */
     public FileHandle directory;
+
+    /**
+     * The song's sim file.
+     */
+    public FileHandle simFile;
     /**
      * The song's sim file format.
      */

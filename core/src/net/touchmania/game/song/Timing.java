@@ -38,14 +38,16 @@ public class Timing {
     /** time as a function of beat **/
     private Graph2D timeGraph;
 
-    public Timing(TimingData timingData) throws InvalidTimingDataException {
-        if(timingData == null) {
-            throw new InvalidTimingDataException("Timing data cannot be null.");
-        } else if(timingData.bpms == null || timingData.bpms.isEmpty()) {
+    public Timing(TimingData timingData) {
+        Preconditions.checkNotNull(timingData, "Timing data cannot be null");
+
+        /** TODO move check to simparser or timing data
+        if(timingData.bpms == null || timingData.bpms.isEmpty()) {
             throw new InvalidTimingDataException("BPMs map cannot be empty.");
         } else if(timingData.bpms.firstKey().compareTo(0.0D) != 0){
             throw new InvalidTimingDataException("BPMs map doesn't contain 0.0 key beat.");
         }
+         **/
 
         this.timingData = timingData;
         this.beatGraph = TimingBeatGraphBuilder.build(timingData);
@@ -55,7 +57,7 @@ public class Timing {
     /**
      * Gets the beat at the given time, where time is relative to the start of
      * the music track.
-     * @param time the time in seconds relative to the music track.
+     * @param time the time in seconds relative to the start of the music track.
      * @return the beat at given time.
      */
     public double getBeatAt(double time) {
@@ -73,9 +75,7 @@ public class Timing {
     public double getTimeAt(double beat) {
         Preconditions.checkArgument(Double.compare(beat, 0.0D) >= 0, "Beat cannot be less than 0.");
         Double time = timeGraph.f(beat);
-        if(time.isNaN()) {
-            throw new IllegalStateException("Invalid timing graph. Infinite pauses aren't allowed.");
-        }
+        Preconditions.checkState(!time.isNaN(), "Invalid timing graph. Infinite pauses aren't allowed.");
         return time;
     }
 
