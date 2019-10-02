@@ -87,6 +87,9 @@ public class SongLoader implements Callable<Song> {
         song.selectable = parser.parseSelectable();
         song.timingData = parser.parseTimingData();
         song.charts = parser.parseCharts();
+        for(Chart chart : song.charts) {
+            chart.song = song;
+        }
         song.hash = calculateSongHash(rawContent); //Calculate at the end if the parse is successful
         return song;
     }

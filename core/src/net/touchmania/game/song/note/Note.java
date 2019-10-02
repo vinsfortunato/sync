@@ -18,8 +18,29 @@ package net.touchmania.game.song.note;
 
 import net.touchmania.game.song.Beatmap;
 
+import javax.annotation.Nonnull;
+
 /**
  * Represents a {@link Beatmap} note.
  * @author flood2d
  */
-public interface Note {}
+public abstract class Note implements Comparable<Note> {
+    private double beat;
+
+    public Note(double beat) {
+        this.beat = beat;
+    }
+
+    /**
+     * Gets the note beat.
+     * @return the note beat.
+     */
+    public double getBeat() {
+        return beat;
+    }
+
+    @Override
+    public int compareTo(@Nonnull Note o) {
+        return Double.compare(getBeat(), o.getBeat());
+    }
+}

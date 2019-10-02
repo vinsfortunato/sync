@@ -24,6 +24,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
 import net.touchmania.game.Game;
+import net.touchmania.game.round.Round;
 import net.touchmania.game.song.*;
 import net.touchmania.game.song.sim.SimParseException;
 import net.touchmania.game.song.sim.SimParser;
@@ -55,6 +56,7 @@ public class GameScreen implements Screen {
         /* TODO TEST START */
         FileHandle fh = Gdx.files.external("touchmania/Songs/ITG Rodeo Tournament 8/012 - Into Dust");
         SongLoader sl = new SongLoader(fh);
+
         try {
             Song song = sl.call();
             Chart chart = null;
@@ -64,12 +66,13 @@ public class GameScreen implements Screen {
                 }
             }
 
+            Round round = new Round(chart);
             SimParser parser = song.simFormat.newParser();
             parser.init(Files.toString(song.simFile.file(), Charsets.UTF_8));
             chart.beatmap = parser.parseBeatmap(chart);
-            beatmapView = new BeatmapView();
-            beatmapView.setBeatmap(chart.beatmap);
-            music = Gdx.audio.newMusic(Gdx.files.external(song.musicPath));
+            beatmapView = new BeatmapView(round);
+
+            music = Gdx.audio.newMusic(Gdx.files.external(song.directory.path() + "/" + song.musicPath));
         } catch (Exception e) {
             System.err.println("Cannot read song!");
             e.printStackTrace();
@@ -85,8 +88,6 @@ public class GameScreen implements Screen {
         table.setFillParent(true);
         stage.addActor(table);
         table.setDebug(true); //TODO
-
-        beatmapView = new BeatmapView();
 
         table.add(beatmapView)
                 .padLeft(0)

@@ -42,7 +42,7 @@ public class Score implements JudgmentHandler {
      * Gets the combo value at the given time, where time is relative to the start of the music track.
      * Combo is represented as a positive int value.
      * @param time the time in seconds relative to the start of the music track.
-     * @return the combo value, a int positive value.
+     * @return the combo value, an int positive value.
      */
     public int getComboAt(double time) {
         return 0;

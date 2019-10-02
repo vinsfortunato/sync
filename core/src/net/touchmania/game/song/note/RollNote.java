@@ -18,10 +18,17 @@ package net.touchmania.game.song.note;
 
 public class RollNote extends LengthyNote {
     /**
-     * @param resolution the note head resolution.
-     * @param length     the note length measured in beats.
+     * @param beat the note head beat.
      */
-    public RollNote(NoteResolution resolution, double length) {
-        super(resolution, length);
+    public RollNote(double beat) {
+        super(beat);
+    }
+
+    /**
+     * @param beat the note head beat.
+     * @param length the note length measured in beats.
+     */
+    public RollNote(double beat, double length) {
+        super(beat, length);
     }
 }

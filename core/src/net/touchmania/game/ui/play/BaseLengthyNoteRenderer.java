@@ -23,38 +23,38 @@ import net.touchmania.game.song.note.NotePanel;
 /**
  * @author flood2d
  */
-public abstract class BaseLengthyNoteDrawer<N extends LengthyNote> extends BaseNoteDrawer<N> implements LengthyNoteDrawer<N> {
-    public BaseLengthyNoteDrawer(BeatmapView view) {
+public abstract class BaseLengthyNoteRenderer extends BaseNoteRenderer implements LengthyNoteRenderer {
+    public BaseLengthyNoteRenderer(BeatmapView view) {
         super(view);
     }
 
     @Override
-    public float getTailX(N note, NotePanel panel, double beat, double time) {
+    public float getTailX(NotePanel panel, LengthyNote note, double beat, double time) {
         return 0;
     }
 
     @Override
-    public float getTailY(N note, NotePanel panel, double beat, double time) {
+    public float getTailY(NotePanel panel, LengthyNote note, double beat, double time) {
         return 0;
     }
 
     @Override
-    public boolean isActive(N note, NotePanel panel, double beat, double time) {
+    public boolean isActive(NotePanel panel, LengthyNote note, double beat, double time) {
         return false;
     }
 
     @Override
-    public TextureRegion getNoteBodyTexture(N note, NotePanel panel, double beat, double time) {
+    public TextureRegion getNoteBodyTexture(NotePanel panel, LengthyNote note, double beat, double time) {
         return null;
     }
 
     @Override
-    public TextureRegion getNoteConnectorTexture(N note, NotePanel panel, double beat, double time) {
+    public TextureRegion getNoteConnectorTexture(NotePanel panel, LengthyNote note, double beat, double time) {
         return null;
     }
 
     @Override
-    public TextureRegion getNoteTailTexture(N note, NotePanel panel, double beat, double time) {
+    public TextureRegion getNoteTailTexture(NotePanel panel, LengthyNote note, double beat, double time) {
         return null;
     }
 }

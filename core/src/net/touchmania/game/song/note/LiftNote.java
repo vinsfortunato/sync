@@ -19,5 +19,8 @@ package net.touchmania.game.song.note;
 /**
  * @author flood2d
  */
-public class LiftNote implements Note {
+public class LiftNote extends Note {
+    public LiftNote(double beat) {
+        super(beat);
+    }
 }

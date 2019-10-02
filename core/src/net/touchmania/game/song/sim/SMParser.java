@@ -373,39 +373,36 @@ public class SMParser extends TagSimParser {
          * @throws SimParseException if the note cannot be parsed correctly.
          */
         public void parseNote(NotePanel panel, double beat, char c) throws SimParseException {
-            TreeMap<Double, Note> notesMap = beatmap.getNotes(panel);
             switch(c) {
                 case '1':
-                    notesMap.put(beat, new TapNote(NoteResolution.valueFromBeat(beat)));
+                    beatmap.putNote(panel, new TapNote(beat));
                     break;
                 case '2':
-                    notesMap.put(beat, new HoldNote(NoteResolution.valueFromBeat(beat), 0));
+                    beatmap.putNote(panel, new HoldNote(beat));
                     break;
                 case '3':
-                    Map.Entry<Double, Note> lastNoteEntry = notesMap.lastEntry();
-                    double lastNoteBeat = lastNoteEntry.getKey();
-                    Note lastNote = lastNoteEntry.getValue();
+                    Note lastNote = beatmap.lastNote(panel);
                     //Last note in the map must be a LengthyNote otherwise beatmap data is invalid.
                     if(lastNote instanceof LengthyNote) {
-                        ((LengthyNote) lastNote).length = beat - lastNoteBeat;
+                        ((LengthyNote) lastNote).setLength(beat - lastNote.getBeat());
                     } else {
                         throw new SimParseException("Cannot parse LengthyNote length!");
                     }
                     break;
                 case '4':
-                    notesMap.put(beat, new RollNote(NoteResolution.valueFromBeat(beat), 0));
+                    beatmap.putNote(panel, new RollNote(beat));
                     break;
                 case 'M':
-                    notesMap.put(beat, new MineNote());
+                    beatmap.putNote(panel, new MineNote(beat));
                     break;
                 case 'K':
-                    notesMap.put(beat, new AutoKeySoundNote());
+                    beatmap.putNote(panel, new AutoKeySoundNote(beat));
                     break;
                 case 'L':
-                    notesMap.put(beat, new LiftNote());
+                    beatmap.putNote(panel, new LiftNote(beat));
                     break;
                 case 'F':
-                    notesMap.put(beat, new FakeNote());
+                    beatmap.putNote(panel, new FakeNote(beat));
                     break;
             }
         }
@@ -426,10 +423,6 @@ public class SMParser extends TagSimParser {
     protected static class DanceSingleBeatmapParser extends BeatmapParser {
         DanceSingleBeatmapParser(String beatmapData) {
             super(beatmapData);
-            beatmap.setNotesMap(NotePanel.LEFT, new TreeMap<>());
-            beatmap.setNotesMap(NotePanel.UP, new TreeMap<>());
-            beatmap.setNotesMap(NotePanel.RIGHT, new TreeMap<>());
-            beatmap.setNotesMap(NotePanel.DOWN, new TreeMap<>());
         }
 
         @Override
@@ -455,11 +448,6 @@ public class SMParser extends TagSimParser {
     protected static class PumpSingleBeatmapParser extends BeatmapParser {
         PumpSingleBeatmapParser(String beatmapData) {
             super(beatmapData);
-            beatmap.setNotesMap(NotePanel.LEFT_DOWN, new TreeMap<>());
-            beatmap.setNotesMap(NotePanel.LEFT_UP, new TreeMap<>());
-            beatmap.setNotesMap(NotePanel.CENTER, new TreeMap<>());
-            beatmap.setNotesMap(NotePanel.RIGHT_UP, new TreeMap<>());
-            beatmap.setNotesMap(NotePanel.RIGHT_DOWN, new TreeMap<>());
         }
 
         @Override

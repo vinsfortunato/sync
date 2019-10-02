@@ -22,40 +22,40 @@ import net.touchmania.game.round.Round;
 import net.touchmania.game.song.note.Note;
 import net.touchmania.game.song.note.NotePanel;
 
-public abstract class BaseNoteDrawer<N extends Note> implements NoteDrawer<N> {
+public abstract class BaseNoteRenderer implements NoteRenderer {
     private final BeatmapView view;
 
-    public BaseNoteDrawer(BeatmapView view) {
+    public BaseNoteRenderer(BeatmapView view) {
         this.view = view;
     }
 
     @Override
-    public void draw(Batch batch, N note, NotePanel panel, double beat, double time) {
+    public void draw(Batch batch, NotePanel panel, Note note, double beat, double time) {
 
     }
 
     @Override
-    public float getNoteX(N note, NotePanel panel, double beat, double time) {
+    public float getNoteX(NotePanel panel, Note note, double beat, double time) {
         return 0;
     }
 
     @Override
-    public float getNoteY(N note, NotePanel panel, double beat, double time) {
+    public float getNoteY(NotePanel panel, Note note, double beat, double time) {
         return 0;
     }
 
     @Override
-    public float getNoteScaleX(N note, NotePanel panel, double beat, double time) {
+    public float getNoteScaleX(NotePanel panel, Note note, double beat, double time) {
         return 0;
     }
 
     @Override
-    public float getNoteScaleY(N note, NotePanel panel, double beat, double time) {
+    public float getNoteScaleY(NotePanel panel, Note note, double beat, double time) {
         return 0;
     }
 
     @Override
-    public float getNoteRotation(N note, NotePanel panel, double beat, double time) {
+    public float getNoteRotation(NotePanel panel, Note note, double beat, double time) {
         float rotation = 0.0f; //for panels: down, right_down, center.
         switch(panel) { //rotate texture according to the panel
             case LEFT:
@@ -75,23 +75,22 @@ public abstract class BaseNoteDrawer<N extends Note> implements NoteDrawer<N> {
     }
 
     @Override
-    public float getNoteOpacity(N note, NotePanel panel, double beat, double time) {
+    public float getNoteOpacity(NotePanel panel, Note note, double beat, double time) {
         return 0;
     }
 
     @Override
-    public boolean isNoteVisible(N note, NotePanel panel, double beat, double time) {
+    public boolean isNoteVisible(NotePanel panel, Note note, double beat, double time) {
         return false;
     }
 
     @Override
-    public boolean isNoteInsideView(N note, NotePanel panel, double beat, double time,
-                                    float viewX, float viewY, float viewWidth, float viewHeight) {
+    public boolean isNoteInsideView(NotePanel panel, Note note, double beat, double time, float viewX, float viewY, float viewWidth, float viewHeight) {
         return false;
     }
 
     @Override
-    public TextureRegion getNoteTextureRegion(N note, NotePanel panel, double beat, double time) {
+    public TextureRegion getNoteTextureRegion(NotePanel panel, Note note, double beat, double time) {
         return null;
     }
 

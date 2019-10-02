@@ -19,14 +19,8 @@ package net.touchmania.game.song.note;
 /**
  * @author flood2d
  */
-public class MineNote implements Note {
-    /**
-     * True if the note exploded, false otherwise.
-     */
-    public boolean exploded = false;
-
-    /**
-     * The explosion time.
-     */
-    public long explosionTime;
+public class MineNote extends Note {
+    public MineNote(double beat) {
+        super(beat);
+    }
 }

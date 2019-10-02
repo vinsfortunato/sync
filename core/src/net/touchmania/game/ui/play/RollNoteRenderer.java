@@ -16,13 +16,11 @@
 
 package net.touchmania.game.ui.play;
 
-import net.touchmania.game.song.note.RollNote;
-
 /**
  * @author flood2d
  */
-public class RollNoteDrawer extends BaseLengthyNoteDrawer<RollNote> {
-    public RollNoteDrawer(BeatmapView view) {
+public class RollNoteRenderer extends BaseLengthyNoteRenderer {
+    public RollNoteRenderer(BeatmapView view) {
         super(view);
     }
 }

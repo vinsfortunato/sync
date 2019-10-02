@@ -19,5 +19,8 @@ package net.touchmania.game.song.note;
 /**
  * @author flood2d
  */
-public class AutoKeySoundNote implements Note {
+public class AutoKeySoundNote extends Note {
+    public AutoKeySoundNote(double beat) {
+        super(beat);
+    }
 }

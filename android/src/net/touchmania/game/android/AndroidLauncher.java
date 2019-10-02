@@ -16,6 +16,9 @@
 
 package net.touchmania.game.android;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
@@ -28,6 +31,13 @@ public class AndroidLauncher extends AndroidApplication implements Backend {
 	@Override
 	protected void onCreate (Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+			if (this.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+				this.requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 0x03);
+			}
+		}
+
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 		config.useImmersiveMode = true;
 		initialize(new Game(this), config);

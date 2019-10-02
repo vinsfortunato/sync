@@ -16,50 +16,46 @@
 
 package net.touchmania.game.song.note;
 
-import net.touchmania.game.round.Judgment;
+public class LengthyNote extends Note {
+    private double length;
+    private NoteResolution resolution;
 
-public class LengthyNote implements Note {
-    /**
-     * The note length in beats.
-     */
-    public double length;
-
-    /**
-     * The note head resolution calculated from the note head beat.
-     */
-    public final NoteResolution resolution;
-
-    /**
-     * The judgement generated for the note head. Can be null if the head
-     * has not been judged yet.
-     */
-    public Judgment headJudgment;
-
-    /**
-     * The judgment generated for the note tail. Can be null if the tail
-     * has not been judged yet.
-     */
-    public Judgment tailJudgment;
-
-    /**
-     * The time when the {@link #headJudgment} has been generated, relative to the start
-     * of the music track.
-     */
-    public double headJudgmentTime;
-
-    /**
-     * The time when the {@link #tailJudgment} has been generated, relative to the start
-     * of the music track.
-     */
-    public double tailJudgmentTime;
+    public LengthyNote(double beat) {
+        this(beat, 0);
+    }
 
     /**
      *
-     * @param resolution the note head resolution.
+     * @param beat the note head beat.
      * @param length the note length measured in beats.
      */
-    public LengthyNote(NoteResolution resolution, double length) {
-        this.resolution = resolution;
+    public LengthyNote(double beat, double length) {
+        super(beat);
+        this.resolution = NoteResolution.valueFromBeat(beat);
+        this.setLength(length);
+    }
+
+    /**
+     * Gets the note length in beats.
+     * @return note length in beats.
+     */
+    public double getLength() {
+        return length;
+    }
+
+    /**
+     * Sets the note length in beats.
+     * @param length the note length in beats.
+     */
+    public void setLength(double length) {
         this.length = length;
+    }
+
+    /**
+     * Gets the note head resolution calculated from the note head beat.
+     * @return the note head resolution.
+     */
+    public NoteResolution getResolution() {
+        return resolution;
     }
 }

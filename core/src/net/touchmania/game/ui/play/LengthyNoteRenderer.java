@@ -23,68 +23,68 @@ import net.touchmania.game.song.note.NotePanel;
 /**
  * @author flood2d
  */
-public interface LengthyNoteDrawer<N extends LengthyNote> extends NoteDrawer<N> {
+public interface LengthyNoteRenderer extends NoteRenderer {
     /**
      * Gets note tail x position relative to receptor x position.
-     * @param note the note.
      * @param panel the note panel.
+     * @param note the note.
      * @param beat the note beat.
      * @param time current time relative to the start of the music track.
      * @return the x position relative to the receptor x position.
      */
-    float getTailX(N note, NotePanel panel, double beat, double time);
+    float getTailX(NotePanel panel, LengthyNote note, double beat, double time);
 
     /**
      * Gets note tail y position relative to receptor y position.
-     * @param note the note.
      * @param panel the note panel.
+     * @param note the note.
      * @param beat the note beat.
      * @param time current time relative to the start of the music track.
      * @return the y position relative to the receptor y position.
      */
-    float getTailY(N note, NotePanel panel, double beat, double time);
+    float getTailY(NotePanel panel, LengthyNote note, double beat, double time);
 
     /**
      * Checks if the note is active. For example hold/roll notes are active
      * when the user is holding down the control.
-     * @param note the note.
      * @param panel the note panel.
+     * @param note the note.
      * @param beat the note beat.
      * @param time current time relative to the start of the music track.
      * @return true if the note is active, false otherwise.
      */
-    boolean isActive(N note, NotePanel panel, double beat, double time);
+    boolean isActive(NotePanel panel, LengthyNote note, double beat, double time);
 
     /**
      * Gets the note body texture region. That is the texture that is put after
      * the head and repeated (when necessary) to fill the entire note length.
-     * @param note the note.
      * @param panel the note panel.
+     * @param note the note.
      * @param beat the note beat.
      * @param time current time relative to the start of the music track.
      * @return the note body texture region.
      */
-    TextureRegion getNoteBodyTexture(N note, NotePanel panel, double beat, double time);
+    TextureRegion getNoteBodyTexture(NotePanel panel, LengthyNote note, double beat, double time);
 
     /**
      * Gets the note connector texture. That is the texture that is put between the
-     * {@link #getNoteBodyTexture(LengthyNote, NotePanel, double, double)} and the
-     * {@link #getNoteTailTexture(LengthyNote, NotePanel, double, double)} to connect them.
-     * @param note the note.
+     * {@link #getNoteBodyTexture(NotePanel, LengthyNote, double, double)} and the
+     * {@link #getNoteTailTexture(NotePanel, LengthyNote, double, double)} to connect them.
      * @param panel the note panel.
+     * @param note the note.
      * @param beat the note beat.
      * @param time current time relative to the start of the music track.
      * @return the note connector texture region.
      */
-    TextureRegion getNoteConnectorTexture(N note, NotePanel panel, double beat, double time);
+    TextureRegion getNoteConnectorTexture(NotePanel panel, LengthyNote note, double beat, double time);
 
     /**
      * Gets the note tail texture. That is the texture that is put at the end of the note.
-     * @param note the note.
      * @param panel the note panel.
+     * @param note the note.
      * @param beat the note beat.
      * @param time current time relative to the start of the music track.
      * @return the note tail texture region.
      */
-    TextureRegion getNoteTailTexture(N note, NotePanel panel, double beat, double time);
+    TextureRegion getNoteTailTexture(NotePanel panel, LengthyNote note, double beat, double time);
 }

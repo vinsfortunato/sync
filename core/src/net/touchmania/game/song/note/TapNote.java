@@ -16,30 +16,22 @@
 
 package net.touchmania.game.song.note;
 
-import net.touchmania.game.round.Judgment;
-
 /**
  * @author flood2d
  */
-public class TapNote implements Note {
-    /**
-     * The note resolution calculated from the note beat.
-     */
-    public final NoteResolution resolution;
+public class TapNote extends Note {
+    private NoteResolution resolution;
+
+    public TapNote(double beat) {
+        super(beat);
+        this.resolution = NoteResolution.valueFromBeat(beat);
+    }
 
     /**
-     * The judgement generated for this note. Can be null if the note has not been
-     * judged yet.
+     * Gets the note resolution calculated from the note beat.
+     * @return the note resolution.
      */
-    public Judgment judgment;
-
-    /**
-     * The time when the {@link #judgment} has been generated, relative to the start
-     * of the music track.
-     */
-    public double judgmentTime;
-
-    public TapNote(NoteResolution resolution) {
-        this.resolution = resolution;
+    public NoteResolution getResolution() {
+        return resolution;
     }
 }

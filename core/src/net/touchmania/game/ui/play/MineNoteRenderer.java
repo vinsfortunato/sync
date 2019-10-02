@@ -16,13 +16,27 @@
 
 package net.touchmania.game.ui.play;
 
-import net.touchmania.game.song.note.HoldNote;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import net.touchmania.game.song.note.Note;
+import net.touchmania.game.song.note.NotePanel;
 
 /**
  * @author flood2d
  */
-public class HoldNoteDrawer extends BaseLengthyNoteDrawer<HoldNote> {
-    public HoldNoteDrawer(BeatmapView view) {
+public class MineNoteRenderer extends BaseNoteRenderer {
+    public MineNoteRenderer(BeatmapView view) {
         super(view);
+    }
+
+    @Override
+    public float getNoteRotation(NotePanel panel, Note note, double beat, double time) {
+        float degrees = -60f * (float) beat;
+        degrees %= 360f;
+        return degrees;
+    }
+
+    @Override
+    public TextureRegion getNoteTextureRegion(NotePanel panel, Note note, double beat, double time) {
+        return null; //TODO return mine texture
     }
 }

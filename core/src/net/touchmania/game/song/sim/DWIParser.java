@@ -300,10 +300,6 @@ public class DWIParser extends TagSimParser {
 
         BeatmapParser(String beatmapData) {
             this.beatmapData = beatmapData.replaceAll("\\s", ""); //Remove whitespaces
-            this.beatmap.setNotesMap(NotePanel.UP, new TreeMap<>());
-            this.beatmap.setNotesMap(NotePanel.LEFT, new TreeMap<>());
-            this.beatmap.setNotesMap(NotePanel.RIGHT, new TreeMap<>());
-            this.beatmap.setNotesMap(NotePanel.DOWN, new TreeMap<>());
         }
 
         Beatmap parse() throws SimParseException {
@@ -366,23 +362,20 @@ public class DWIParser extends TagSimParser {
         }
 
         private void putPanels(NotePanel... panels) throws SimParseException {
-            TreeMap<Double, Note> notesMap;
             for(NotePanel panel : panels) {
-                notesMap = beatmap.getNotes(panel);
-                if(holdingPanelSet.remove(panel)) { //Parsing hold tail
-                    Map.Entry<Double, Note> lastNoteEntry = notesMap.lastEntry();
-                    if(lastNoteEntry.getValue() instanceof TapNote) {
-                        //Copy resolution from previous note
-                        NoteResolution resolution = ((TapNote) lastNoteEntry.getValue()).resolution;
+                if(holdingPanelSet.remove(panel)) {
+                    //Parsing hold tail
+                    Note lastNote = beatmap.lastNote(panel);
+                    if(lastNote instanceof TapNote) {
                         //Calculate hold note length
-                        double length = currentBeat - lastNoteEntry.getKey();
-                        //Change previous tap note with hold note
-                        lastNoteEntry.setValue(new HoldNote(resolution, length));
+                        double length = currentBeat - lastNote.getBeat();
+                        //Replace previous tap note with hold note
+                        beatmap.putNote(panel, new HoldNote(lastNote.getBeat(), length));
                     } else {
                         throw new SimParseException("Invalid beatmap data! Expecting tap note as last map value!");
                     }
                 } else {
-                    notesMap.put(currentBeat, new TapNote(NoteResolution.valueFromBeat(currentBeat)));
+                    beatmap.putNote(panel, new TapNote(currentBeat));
                 }
             }
 

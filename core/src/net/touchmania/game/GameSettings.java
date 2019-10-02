@@ -28,9 +28,15 @@ import java.util.Locale;
 public class GameSettings {
     /** Contains supported sim formats ordered by their priority in ascending order (formats with
      * higher priority have higher indexes).**/
-    public Array<SimFormat> simFormatPriorityList;
+    public Array<SimFormat> simFormatPriorityList = new Array<>();
 
     private ScreenCachePolicy screenCachePolicy = ScreenCachePolicy.KEEP_IN_MEMORY;
+
+    public GameSettings() {
+        simFormatPriorityList.add(SimFormat.DWI);
+        simFormatPriorityList.add(SimFormat.SSC);
+        simFormatPriorityList.add(SimFormat.SM);
+    }
 
     /**
      * Get sim format priority. Higher values are associated with formats with higher priority.
