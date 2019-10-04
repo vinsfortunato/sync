@@ -24,12 +24,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
 import net.touchmania.game.Game;
+import net.touchmania.game.GameMode;
+import net.touchmania.game.resource.ResourceProvider;
 import net.touchmania.game.round.Round;
 import net.touchmania.game.song.*;
 import net.touchmania.game.song.sim.SimParser;
 import net.touchmania.game.util.concurrent.DoneListener;
 import net.touchmania.game.ui.Screen;
-import net.touchmania.game.ui.Theme;
+import net.touchmania.game.resource.Theme;
 
 /**
  * @author flood2d
@@ -75,6 +77,10 @@ public class GameScreen implements Screen {
         }
         /* TODO TEST END */
 
+
+        //Preload necessary resources
+        Game.instance().getResources().loadDomain(getResourceDomain());
+
         prepared = true;
     }
 
@@ -106,6 +112,10 @@ public class GameScreen implements Screen {
         if(music != null) {
             music.dispose();
         }
+
+        //Dispose cached resources
+        Game.instance().getResources().disposeDomain(getResourceDomain());
+
         prepared = false;
     }
 
@@ -114,9 +124,15 @@ public class GameScreen implements Screen {
         return prepared;
     }
 
-    @Override
-    public Theme getTheme() {
-        return Game.instance().getThemes().getActiveTheme();
+    private String getResourceDomain() {
+        GameMode mode = Game.instance().getSettings().getGameMode();
+
+        switch(mode) {
+            case DANCE: return "play_dance";
+            case PUMP:  return "play_pump";
+        }
+
+        return null;
     }
 
     public static GameScreen instance() {

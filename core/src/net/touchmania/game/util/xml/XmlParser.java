@@ -24,6 +24,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.ArrayList;
+import java.util.List;
 
 //TODO Based on older version. Check libgdx latest release for changes (bug fixes etc...)
 /**
@@ -41,7 +43,7 @@ import java.io.Reader;
  * @author Flood2d
  */
 public class XmlParser {
-    private final Array<Element> elements = new Array<>(8);
+    private final List<Element> elements = new ArrayList<>(8);
     private Element root;
     private Element current;
     private final StringBuilder textBuffer = new StringBuilder(64);
@@ -347,8 +349,8 @@ public class XmlParser {
                 if (data[i] == '\n') lineNumber++;
             throw new XmlParseException("Error parsing XML on line " + lineNumber + " near: "
                     + new String(data, p, Math.min(32, pe - p)));
-        } else if (elements.size != 0) {
-            Element element = elements.peek();
+        } else if (elements.size() != 0) {
+            Element element = elements.get(elements.size() - 1);
             elements.clear();
             throw new XmlParseException("Error parsing XML, unclosed element: " + element.getName());
         }
@@ -458,8 +460,8 @@ public class XmlParser {
     }
 
     private void close () {
-        root = elements.pop();
-        current = elements.size > 0 ? elements.peek() : null;
+        root = elements.remove(elements.size() - 1);
+        current = elements.size() > 0 ? elements.get(elements.size() - 1) : null;
     }
 
     public static class Element {

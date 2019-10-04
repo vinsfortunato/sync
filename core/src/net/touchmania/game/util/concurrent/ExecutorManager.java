@@ -21,6 +21,8 @@ import com.badlogic.gdx.utils.IntMap;
 import com.google.common.base.Preconditions;
 import net.touchmania.game.Game;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 
 /**
@@ -28,7 +30,7 @@ import java.util.concurrent.ExecutorService;
  * disposing them when they are no longer required.
  */
 public class ExecutorManager implements Disposable {
-    private IntMap<ExecutorService> executorsMap;
+    private Map<Integer, ExecutorService> executorsMap;
     private int idCounter = 0;
 
     public ExecutorManager() {
@@ -58,7 +60,7 @@ public class ExecutorManager implements Disposable {
     public boolean putExecutor(int id, ExecutorService service) {
         Preconditions.checkNotNull(service, "Null services are not allowed!");
         if(executorsMap == null) {
-            executorsMap = new IntMap<>();
+            executorsMap = new HashMap<>();
         }
         ExecutorService prev =  executorsMap.put(id, service);
         if(prev != null) {

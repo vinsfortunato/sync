@@ -21,6 +21,8 @@ import com.google.common.base.Preconditions;
 import net.touchmania.game.song.Beatmap;
 import net.touchmania.game.song.Chart;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 
 /**
@@ -99,8 +101,8 @@ public abstract class TagSimParser implements SimParser {
     }
 
     @Override
-    public Array<Chart> parseCharts() {
-        Array<Chart> charts = new Array<>();
+    public List<Chart> parseCharts() {
+        List<Chart> charts = new ArrayList<>();
         for(String chartRawData : dataSupplier.getChartsRawDataArray()) {
             try {
                 charts.add(parseChart(chartRawData));

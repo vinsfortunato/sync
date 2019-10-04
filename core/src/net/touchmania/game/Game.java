@@ -23,12 +23,12 @@ import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import net.touchmania.game.player.PlayerManager;
 import net.touchmania.game.song.SongManager;
-import net.touchmania.game.ui.ResourceProvider;
+import net.touchmania.game.resource.ResourceProvider;
 import net.touchmania.game.ui.screen.play.GameScreen;
 import net.touchmania.game.util.Disposer;
 import net.touchmania.game.util.concurrent.ExecutorManager;
 import net.touchmania.game.ui.ScreenManager;
-import net.touchmania.game.ui.ThemeManager;
+import net.touchmania.game.resource.ThemeManager;
 
 public class Game implements ApplicationListener {
 	private static Game instance;

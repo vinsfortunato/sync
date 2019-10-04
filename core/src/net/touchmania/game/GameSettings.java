@@ -16,10 +16,11 @@
 
 package net.touchmania.game;
 
-import com.badlogic.gdx.utils.Array;
 import net.touchmania.game.song.sim.SimFormat;
 import net.touchmania.game.ui.ScreenCachePolicy;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -28,7 +29,7 @@ import java.util.Locale;
 public class GameSettings {
     /** Contains supported sim formats ordered by their priority in ascending order (formats with
      * higher priority have higher indexes).**/
-    public Array<SimFormat> simFormatPriorityList = new Array<>();
+    public List<SimFormat> simFormatPriorityList = new ArrayList<>();
 
     private ScreenCachePolicy screenCachePolicy = ScreenCachePolicy.KEEP_IN_MEMORY;
 
@@ -46,7 +47,7 @@ public class GameSettings {
      * @return the priority of the sim format.
      */
     public int getSimFormatPriority(SimFormat format) {
-        return simFormatPriorityList.indexOf(format, true);
+        return simFormatPriorityList.indexOf(format);
     }
 
     public ScreenCachePolicy getScreenCachePolicy() {

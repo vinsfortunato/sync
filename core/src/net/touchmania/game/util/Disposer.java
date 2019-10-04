@@ -20,14 +20,17 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.google.common.base.Preconditions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Disposer implements Disposable {
-    private Array<Disposable> disposables;
+    private List<Disposable> disposables;
 
     public void manage(Disposable disposable) {
         Preconditions.checkNotNull(disposable, "Cannot manage null disposable!");
         Preconditions.checkArgument(disposable != this, "Cannot manage itself!");
         if(disposables == null) {
-            disposables = new Array<>();
+            disposables = new ArrayList<>();
         }
         disposables.add(disposable);
     }

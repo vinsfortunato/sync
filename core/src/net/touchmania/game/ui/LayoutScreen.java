@@ -19,6 +19,8 @@ package net.touchmania.game.ui;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.google.common.base.Preconditions;
 import net.touchmania.game.Game;
+import net.touchmania.game.resource.Layout;
+import net.touchmania.game.resource.ResourceProvider;
 import net.touchmania.game.util.concurrent.DoneListener;
 
 public class LayoutScreen implements Screen {
@@ -32,7 +34,8 @@ public class LayoutScreen implements Screen {
 
     @Override
     public void prepare() {
-        layout = getTheme().getLayout(layoutId);
+        ResourceProvider resources = Game.instance().getResources();
+        layout = resources.getLayout(layoutId);
         Preconditions.checkNotNull(layout, String.format("Layout with id '%s' not found!", layoutId));
     }
 
@@ -54,10 +57,5 @@ public class LayoutScreen implements Screen {
     @Override
     public boolean isPrepared() {
         return false;
-    }
-
-    @Override
-    public Theme getTheme() {
-        return Game.instance().getThemes().getActiveTheme();
     }
 }

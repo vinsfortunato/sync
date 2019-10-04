@@ -16,7 +16,10 @@
 
 package net.touchmania.game.song;
 
+import com.google.common.collect.ComparisonChain;
+
 import javax.annotation.Nonnull;
+import java.util.Objects;
 
 /**
  * @author flood2d
@@ -78,28 +81,20 @@ public class Chart implements Comparable<Chart> {
         if(obj == this) return true;
         if(obj instanceof Chart) {
             Chart o = (Chart) obj;
-            return o.type != null
-                    && o.difficultyClass != null
-                    && o.type.equals(type)
-                    && o.difficultyClass.equals(difficultyClass);
+            return Objects.equals(type, o.type) && Objects.equals(difficultyClass, o.difficultyClass);
         }
         return false;
     }
 
     /**
-     * An array of charts is ordered by using their type and
+     * A list of chart is ordered using their type and
      * difficulty class. Chart type has higher priority.
      */
     @Override
     public int compareTo(@Nonnull Chart o) {
-        if(o.type == null) return 1;
-        if(type == null) return -1;
-        int result = type.compareTo(o.type);
-        if(result == 0) {
-            if(o.difficultyClass == null) return 1;
-            if(difficultyClass == null) return -1;
-            result = difficultyClass.compareTo(o.difficultyClass);
-        }
-        return result;
+        return ComparisonChain.start()
+                .compare(type, o.type)
+                .compare(difficultyClass, o.difficultyClass)
+                .result();
     }
 }

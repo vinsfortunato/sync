@@ -22,6 +22,8 @@ import net.touchmania.game.song.Chart;
 import net.touchmania.game.song.DisplayBPM;
 import net.touchmania.game.song.TimingData;
 
+import java.util.List;
+
 /**
  * Parse a sim file content. Each sim format parser must implement this interface.
  * Methods that refer to unavailable values, if specified, must return null.
@@ -139,7 +141,7 @@ public interface SimParser {
      * @return an {@link Array} containing all the available charts of the song, can be empty if
      * there is no supported chart or supported charts are invalid.
      */
-    Array<Chart> parseCharts();
+    List<Chart> parseCharts();
 
     /**
      * Parse a beatmap. This method will search the given chart into the sim file. If the

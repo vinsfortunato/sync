@@ -18,6 +18,8 @@ package net.touchmania.game.ui;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Disposable;
+import net.touchmania.game.resource.ResourceProvider;
+import net.touchmania.game.resource.Theme;
 import net.touchmania.game.util.concurrent.DoneListener;
 
 public interface Screen extends Disposable {
@@ -48,7 +50,6 @@ public interface Screen extends Disposable {
      * This method is executed on rendering thread so it must not block
      * and must be fast. The given listener must be notified when
      * the screen hiding process is complete.
-     *
      * @param listener the listener to notify when hiding process is complete.
      */
     void hide(DoneListener listener);
@@ -67,15 +68,7 @@ public interface Screen extends Disposable {
     /**
      * Returns true if {@link #prepare()} terminated its computation and
      * {@link #dispose()} has not been called yet.
-     *
      * @return true if the screen is prepared.
      */
     boolean isPrepared();
-
-    /**
-     * Gets the screen theme.
-     *
-     * @return the screen theme
-     */
-    Theme getTheme();
 }

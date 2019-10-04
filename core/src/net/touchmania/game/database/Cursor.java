@@ -34,19 +34,19 @@ import java.io.Closeable;
  */
 public interface Cursor extends Closeable {
     /** Value returned by {@link #getType(int)} if the specified column is null */
-    static final int FIELD_TYPE_NULL = 0;
+    int FIELD_TYPE_NULL = 0;
 
     /** Value returned by {@link #getType(int)} if the specified  column type is integer */
-    static final int FIELD_TYPE_INTEGER = 1;
+    int FIELD_TYPE_INTEGER = 1;
 
     /** Value returned by {@link #getType(int)} if the specified column type is float */
-    static final int FIELD_TYPE_FLOAT = 2;
+    int FIELD_TYPE_FLOAT = 2;
 
     /** Value returned by {@link #getType(int)} if the specified column type is string */
-    static final int FIELD_TYPE_STRING = 3;
+    int FIELD_TYPE_STRING = 3;
 
     /** Value returned by {@link #getType(int)} if the specified column type is blob */
-    static final int FIELD_TYPE_BLOB = 4;
+    int FIELD_TYPE_BLOB = 4;
 
     /**
      * Returns the numbers of rows in the cursor.

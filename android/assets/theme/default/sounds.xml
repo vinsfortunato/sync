@@ -25,5 +25,5 @@
     <sound id="test_15">sounds/sound3.ogg</sound>
 
     <!-- By referencing another predeclared sound -->
-    <sound id="test_16">font:test_13</sound>
+    <sound id="test_16">sound:test_13</sound>
 </sounds>

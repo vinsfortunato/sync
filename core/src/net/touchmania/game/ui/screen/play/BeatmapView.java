@@ -47,34 +47,10 @@ public class BeatmapView extends Widget {
             drawReceptor(batch, panel, beat, time);
             drawNotes(batch, panel, beat, time);
         }
-
-        /**
-        batch.end();
-
-        ShapeRenderer renderer = new ShapeRenderer();
-        renderer.setProjectionMatrix(batch.getProjectionMatrix());
-        renderer.setTransformMatrix(batch.getTransformMatrix());
-        renderer.translate(getX(), getY(), 0);
-
-        renderer.begin(ShapeRenderer.ShapeType.Filled);
-        renderer.setColor(Color.GREEN);
-        renderer.rect(20, 20, getWidth() - 40, getHeight() - 40);
-        renderer.setColor(Color.RED);
-        renderer.rect(getWidth() / 2 - 40, posY, 80, 80);
-        renderer.end();
-
-        batch.begin();
-
-        posY += 1.0f;
-
-        if(posY > getHeight() - 80) {
-            posY = 0.0f;
-        }
-         **/
     }
 
     private void drawReceptor(Batch batch, NotePanel panel, double beat, double time) {
-
+        receptorRenderer.draw(batch, panel, beat, time);
     }
 
     private void drawNotes(Batch batch, NotePanel panel, double beat, double time) {
