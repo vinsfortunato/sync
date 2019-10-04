@@ -18,7 +18,7 @@ package net.touchmania.game;
 
 import com.badlogic.gdx.utils.Array;
 import net.touchmania.game.song.sim.SimFormat;
-import net.touchmania.game.util.ui.ScreenCachePolicy;
+import net.touchmania.game.ui.ScreenCachePolicy;
 
 import java.util.Locale;
 

@@ -19,18 +19,16 @@ package net.touchmania.game;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import net.touchmania.game.player.PlayerManager;
 import net.touchmania.game.song.SongManager;
-import net.touchmania.game.ui.play.GameScreen;
+import net.touchmania.game.ui.ResourceProvider;
+import net.touchmania.game.ui.screen.play.GameScreen;
 import net.touchmania.game.util.Disposer;
 import net.touchmania.game.util.concurrent.ExecutorManager;
-import net.touchmania.game.util.ui.ScreenManager;
-import net.touchmania.game.util.ui.Theme;
-import net.touchmania.game.util.ui.ThemeManager;
-import net.touchmania.game.util.ui.test.TestScreen;
+import net.touchmania.game.ui.ScreenManager;
+import net.touchmania.game.ui.ThemeManager;
 
 public class Game implements ApplicationListener {
 	private static Game instance;
@@ -120,6 +118,11 @@ public class Game implements ApplicationListener {
 
 	public PlayerManager getPlayers() {
 		return players;
+	}
+
+	public ResourceProvider getResources() {
+		//The theme is also the global resource provider
+		return getThemes().getActiveTheme();
 	}
 
 	public ExecutorManager getExecutors() {
