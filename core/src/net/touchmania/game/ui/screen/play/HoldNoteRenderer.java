@@ -32,21 +32,21 @@ public class HoldNoteRenderer extends BaseLengthyNoteRenderer {
 
     @Override
     public Drawable getNoteDrawable(NotePanel panel, Note note, double beat, double time) {
-        return Game.instance().getResources().getDrawable("res_play_dance_note_hold_head");
+        return Game.instance().getResources().getDrawable("play_dance_note_hold_head");
     }
 
     @Override
     public Drawable getNoteBodyDrawable(NotePanel panel, LengthyNote note, double beat, double time) {
-        return Game.instance().getResources().getDrawable("res_play_dance_note_hold_body");
+        return Game.instance().getResources().getDrawable("play_dance_note_hold_body");
     }
 
     @Override
     public Drawable getNoteConnectorDrawable(NotePanel panel, LengthyNote note, double beat, double time) {
-        return Game.instance().getResources().getDrawable("res_play_dance_note_hold_conn");
+        return Game.instance().getResources().getDrawable("play_dance_note_hold_conn");
     }
 
     @Override
     public Drawable getNoteTailDrawable(NotePanel panel, LengthyNote note, double beat, double time) {
-        return Game.instance().getResources().getDrawable("res_play_dance_note_hold_tail");
+        return Game.instance().getResources().getDrawable("play_dance_note_hold_tail");
     }
 }

@@ -1,4 +1,6 @@
 <fonts>
+    <!-- Font files should be located in a folder named 'fonts' -->
+
     <!-- From ttf file -->
     <font id="test_12"
           size="12"

@@ -17,8 +17,8 @@
 package net.touchmania.game.ui;
 
 public enum DPI {
-    LOW(320, 1.0f),
-    MEDIUM(480, 1.5f),
+    LOW(320, 0.5f),
+    MEDIUM(480, 1.0f),
     HIGH(640, 2.0f);
 
     public final int dpi;

@@ -110,7 +110,7 @@ public class ReceptorRenderer {
      * @return the receptor drawable.
      */
     public Drawable getReceptorDrawable(NotePanel panel, double beat, double time) {
-        return Game.instance().getResources().getDrawable("res_play_dance_receptor");
+        return Game.instance().getResources().getDrawable("play_dance_receptor");
     }
 
     /**

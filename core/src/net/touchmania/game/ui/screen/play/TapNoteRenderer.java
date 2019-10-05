@@ -12,6 +12,6 @@ public class TapNoteRenderer extends BaseNoteRenderer {
 
     @Override
     public Drawable getNoteDrawable(NotePanel panel, Note note, double beat, double time) {
-        return Game.instance().getResources().getDrawable("res_play_dance_note_tap");
+        return Game.instance().getResources().getDrawable("play_dance_note_tap");
     }
 }

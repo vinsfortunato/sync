@@ -38,6 +38,6 @@ public class MineNoteRenderer extends BaseNoteRenderer {
 
     @Override
     public Drawable getNoteDrawable(NotePanel panel, Note note, double beat, double time) {
-        return Game.instance().getResources().getDrawable("res_play_dance_mine");
+        return Game.instance().getResources().getDrawable("play_dance_mine");
     }
 }

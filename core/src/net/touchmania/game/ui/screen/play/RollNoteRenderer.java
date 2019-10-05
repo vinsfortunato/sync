@@ -32,21 +32,21 @@ public class RollNoteRenderer extends BaseLengthyNoteRenderer {
 
     @Override
     public Drawable getNoteDrawable(NotePanel panel, Note note, double beat, double time) {
-        return Game.instance().getResources().getDrawable("res_play_dance_note_roll_head");
+        return Game.instance().getResources().getDrawable("play_dance_note_roll_head");
     }
 
     @Override
     public Drawable getNoteBodyDrawable(NotePanel panel, LengthyNote note, double beat, double time) {
-        return Game.instance().getResources().getDrawable("res_play_dance_note_roll_body");
+        return Game.instance().getResources().getDrawable("play_dance_note_roll_body");
     }
 
     @Override
     public Drawable getNoteConnectorDrawable(NotePanel panel, LengthyNote note, double beat, double time) {
-        return Game.instance().getResources().getDrawable("res_play_dance_note_roll_conn");
+        return Game.instance().getResources().getDrawable("play_dance_note_roll_conn");
     }
 
     @Override
     public Drawable getNoteTailDrawable(NotePanel panel, LengthyNote note, double beat, double time) {
-        return Game.instance().getResources().getDrawable("res_play_dance_note_roll_tail");
+        return Game.instance().getResources().getDrawable("play_dance_note_roll_tail");
     }
 }

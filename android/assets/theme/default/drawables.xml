@@ -1,0 +1,13 @@
+<drawables>
+    <!--
+      ~ High resolution drawable files should be located inside 'drawables/high'.
+      ~ Medium resolution drawable files should be located inside 'drawables/medium'.
+      ~ Low resolution drawable files should be located inside 'drawables/low'.
+      ~ Other drawable files should be located inside 'drawables'.
+    -->
+
+
+    <include>drawables_play_dance.xml</include>
+
+
+</drawables>
