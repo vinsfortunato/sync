@@ -24,14 +24,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
 import net.touchmania.game.Game;
-import net.touchmania.game.GameMode;
-import net.touchmania.game.resource.ResourceProvider;
 import net.touchmania.game.round.Round;
 import net.touchmania.game.song.*;
 import net.touchmania.game.song.sim.SimParser;
 import net.touchmania.game.util.concurrent.DoneListener;
 import net.touchmania.game.ui.Screen;
-import net.touchmania.game.resource.Theme;
 
 /**
  * @author flood2d
@@ -39,6 +36,7 @@ import net.touchmania.game.resource.Theme;
 public class GameScreen implements Screen {
     private static GameScreen instance;
     private boolean prepared = false;
+    private int resGroup;
 
     /* Widgets */
     private BeatmapView beatmapView;
@@ -51,6 +49,8 @@ public class GameScreen implements Screen {
 
     @Override
     public void prepare() {
+        resGroup = Game.instance().getResources().startGroup();
+
         /* TODO TEST START */
         FileHandle fh = Gdx.files.external("touchmania/Songs/ITG Rodeo Tournament 8/012 - Into Dust");
         SongLoader sl = new SongLoader(fh);
@@ -76,10 +76,6 @@ public class GameScreen implements Screen {
             e.printStackTrace();
         }
         /* TODO TEST END */
-
-
-        //Preload necessary resources
-        Game.instance().getResources().loadDomain(getResourceDomain());
 
         prepared = true;
     }
@@ -113,26 +109,13 @@ public class GameScreen implements Screen {
             music.dispose();
         }
 
-        //Dispose cached resources
-        Game.instance().getResources().disposeDomain(getResourceDomain());
-
+        Game.instance().getResources().endGroup(resGroup);
         prepared = false;
     }
 
     @Override
     public boolean isPrepared() {
         return prepared;
-    }
-
-    private String getResourceDomain() {
-        GameMode mode = Game.instance().getSettings().getGameMode();
-
-        switch(mode) {
-            case DANCE: return "play_dance";
-            case PUMP:  return "play_pump";
-        }
-
-        return null;
     }
 
     public static GameScreen instance() {

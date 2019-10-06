@@ -6,12 +6,15 @@ import net.touchmania.game.song.note.Note;
 import net.touchmania.game.song.note.NotePanel;
 
 public class TapNoteRenderer extends BaseNoteRenderer {
+    /* Resources */
+    private Drawable noteDrawable = Game.instance().getResources().getDrawable("play_dance_note_tap");
+
     public TapNoteRenderer(BeatmapView view) {
         super(view);
     }
 
     @Override
     public Drawable getNoteDrawable(NotePanel panel, Note note, double beat, double time) {
-        return Game.instance().getResources().getDrawable("play_dance_note_tap");
+        return noteDrawable;
     }
 }

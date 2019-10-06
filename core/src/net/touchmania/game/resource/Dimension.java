@@ -16,7 +16,7 @@
 
 package net.touchmania.game.resource;
 
-import net.touchmania.game.ui.DPI;
+import net.touchmania.game.util.ui.DPI;
 
 public class Dimension {
     private final float baseValue;

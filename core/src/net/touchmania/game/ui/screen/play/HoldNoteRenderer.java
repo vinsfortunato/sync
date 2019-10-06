@@ -26,27 +26,32 @@ import net.touchmania.game.song.note.NotePanel;
  * @author flood2d
  */
 public class HoldNoteRenderer extends BaseLengthyNoteRenderer {
+    private Drawable noteDrawable = Game.instance().getResources().getDrawable("play_dance_note_hold_head");
+    private Drawable bodyDrawable = Game.instance().getResources().getDrawable("play_dance_note_hold_body");
+    private Drawable connDrawable = Game.instance().getResources().getDrawable("play_dance_note_hold_conn");
+    private Drawable tailDrawable = Game.instance().getResources().getDrawable("play_dance_note_hold_tail");
+
     public HoldNoteRenderer(BeatmapView view) {
         super(view);
     }
 
     @Override
     public Drawable getNoteDrawable(NotePanel panel, Note note, double beat, double time) {
-        return Game.instance().getResources().getDrawable("play_dance_note_hold_head");
+        return noteDrawable;
     }
 
     @Override
     public Drawable getNoteBodyDrawable(NotePanel panel, LengthyNote note, double beat, double time) {
-        return Game.instance().getResources().getDrawable("play_dance_note_hold_body");
+        return bodyDrawable;
     }
 
     @Override
     public Drawable getNoteConnectorDrawable(NotePanel panel, LengthyNote note, double beat, double time) {
-        return Game.instance().getResources().getDrawable("play_dance_note_hold_conn");
+        return connDrawable;
     }
 
     @Override
     public Drawable getNoteTailDrawable(NotePanel panel, LengthyNote note, double beat, double time) {
-        return Game.instance().getResources().getDrawable("play_dance_note_hold_tail");
+        return tailDrawable;
     }
 }

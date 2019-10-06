@@ -17,12 +17,12 @@
 package net.touchmania.game.resource.xml;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.GdxRuntimeException;
-import net.touchmania.game.resource.SoundLoader;
 
-public class XmlSoundLoader implements SoundLoader, Cloneable {
+public class XmlSoundLoader implements Cloneable {
     /** The sound file **/
     private FileHandle file;
 
@@ -34,12 +34,19 @@ public class XmlSoundLoader implements SoundLoader, Cloneable {
         this.file = file;
     }
 
-    @Override
-    public Sound load() throws Exception {
+    public Sound loadSound() throws Exception {
         try {
             return Gdx.audio.newSound(file);
         } catch(GdxRuntimeException e) {
-            throw new Exception ("Sound cannot be loaded correctly!", e);
+            throw new Exception("Sound cannot be loaded correctly!", e);
+        }
+    }
+
+    public Music loadMusic() throws Exception {
+        try {
+            return Gdx.audio.newMusic(file);
+        } catch(GdxRuntimeException e) {
+            throw new Exception("Music cannot be loaded correctly!", e);
         }
     }
 

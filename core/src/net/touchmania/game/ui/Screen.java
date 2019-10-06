@@ -18,20 +18,20 @@ package net.touchmania.game.ui;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Disposable;
-import net.touchmania.game.resource.ResourceProvider;
-import net.touchmania.game.resource.Theme;
 import net.touchmania.game.util.concurrent.DoneListener;
 
 public interface Screen extends Disposable {
     /**
      * Prepares the screen resources and performs required
-     * time expensive computations. This method is executed
-     * on a separate thread.
+     * time expensive computations. Actors that require resources should
+     * be initialized inside this method to let them load necessary resources and
+     * avoid blocking the rendering thread.
+     * <p>This method is executed on a separate thread.</p>
      * <p>
      *     {@link #isPrepared()} must return:
      *     <ul>
      *         <li><code>false</code> during method computation </li>
-     *         <li><code>true</code> after method computation </li>
+     *         <li><code>true</code> immediately after method computation </li>
      *     </ul>
      * </p>
      */

@@ -16,10 +16,30 @@
 
 package net.touchmania.game.resource;
 
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.utils.Disposable;
 
-public interface ResourceProvider {
+/**
+ * <p>Manages and provides resources.</p>
+ *
+ * <p> Getting a resource by using one of the defined getter methods
+ * will automatically load the resource when necessary. Loading
+ * a resource can take some time therefore getting a resource during
+ * rendering should be avoided. It is better to get resources
+ * outside the rendering thread and during preparation phases.</p>
+ *
+ * <p> Some resources need to be disposed when they are no longer needed.
+ * Methods {@link #startGroup()} and {@link #endGroup(int)} can be used to
+ * keep track of loaded resources and dispose them when they are no longer needed.
+ * By starting a group all resources loaded after group creation will be added to
+ * the group. Resources can be added to multiple groups and will only be disposed
+ * when all their groups are ended. </p>
+ */
+public interface ResourceProvider extends Disposable {
     /**
      * Gets the layout with the given id.
      * @param id the layout id.
@@ -56,20 +76,25 @@ public interface ResourceProvider {
     Dimension getDimension(String id);
 
     /**
-     * Gets the font generator with the given id. Bitmap font must be generated using the provided
-     * generator only when needed.
+     * Gets the font with the given id.
      * @param id the font id.
-     * @return the generator of the font with the given id, or null if there's no font with the given id.
+     * @return the font with the given id, or null if there's no font with the given id.
      */
-    FontGenerator getFont(String id);
+    BitmapFont getFont(String id);
 
     /**
-     * Gets the sound loaded with the given id. Sound must be loaded using the provided loader only when
-     * needed.
+     * Gets the sound with the given id.
      * @param id the sound id.
-     * @return the loader of the sound with the given id, or null if there's no sound with the given id.
+     * @return the sound with the given id, or null if there's no sound with the given id.
      */
-    SoundLoader getSound(String id);
+    Sound getSound(String id);
+
+    /**
+     * Gets the music with the given id.
+     * @param id the music id.
+     * @return the music with the given id, or null if there's no music with the given id.
+     */
+    Music getMusic(String id);
 
     /**
      * Gets the string with the given id.
@@ -115,18 +140,17 @@ public interface ResourceProvider {
     Float getPercent(String id);
 
     /**
-     * Load a resource domain. All resources into the given domain will be loaded
-     * and kept in memory until {@link #disposeDomain(String)} is called.
-     * A resource inside a domain has its id starting with the domain,
-     * therefore domain has the same syntax of a resource id.
-     * @param domain the resource domain to load.
+     * Start a resource group. All resources loaded after calling this method will
+     * be added to the group until {@link #endGroup(int)} is called. This can be
+     * used to track resources that need to be disposed when they are no longer needed.
+     * @return the group id.
      */
-    void loadDomain(String domain);
+    int startGroup();
 
     /**
-     * Dispose a resource domain. All resources into the given domain will be disposed.
-     * For more info about domains look at {@link #loadDomain(String)}.
-     * @param domain the resource domain to dispose.
+     * End a resource group. Resources that are present in more than one group will
+     * only be removed from the group but will not be disposed.
+     * @param groupId the group id.
      */
-    void disposeDomain(String domain);
+    void endGroup(int groupId);
 }

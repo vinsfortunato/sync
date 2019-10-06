@@ -16,16 +16,16 @@
 
 package net.touchmania.game.resource.xml;
 
-
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import net.touchmania.game.resource.*;
 import net.touchmania.game.resource.xml.parsers.XmlStyleParser;
 
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 public class XmlTheme implements Theme {
     private Theme fallback;
@@ -34,6 +34,7 @@ public class XmlTheme implements Theme {
     private Map<String, Color> colors;
     private Map<String, Dimension> dimens;
     private Map<String, Object> values;
+    private Map<String, XmlDrawableLoader> drawables;
     private Map<String, XmlFontGenerator> fonts;
     private Map<String, XmlSoundLoader> sounds;
     private Map<String, String> strings;
@@ -46,6 +47,8 @@ public class XmlTheme implements Theme {
     @Override
     public Layout getLayout(String id) {
         //TODO getLayout
+
+
         return hasFallbackTheme() ? getFallbackTheme().getLayout(id) : null;
     }
 
@@ -103,11 +106,15 @@ public class XmlTheme implements Theme {
     }
 
     @Override
-    public FontGenerator getFont(String id) {
+    public BitmapFont getFont(String id) {
         if(fonts != null) {
             XmlFontGenerator generator = fonts.get(id);
             if(generator != null) {
-                return generator;
+                try {
+                    return generator.generate();
+                } catch (Exception e) {
+                    //TODO log exception
+                }
             }
         }
         return hasFallbackTheme() ? getFallbackTheme().getFont(id) : null;
@@ -118,14 +125,34 @@ public class XmlTheme implements Theme {
     }
 
     @Override
-    public SoundLoader getSound(String id) {
+    public Sound getSound(String id) {
         if(sounds != null) {
             XmlSoundLoader loader = sounds.get(id);
             if(loader != null) {
-                return loader;
+                try {
+                    return loader.loadSound();
+                } catch (Exception e) {
+                    //TODO log exception
+                }
             }
         }
         return hasFallbackTheme() ? getFallbackTheme().getSound(id) : null;
+    }
+
+    @Override
+    public Music getMusic(String id) {
+        if(sounds != null) {
+            XmlSoundLoader loader = sounds.get(id);
+            if(loader != null) {
+                try {
+                    return loader.loadMusic();
+                } catch (Exception e) {
+                    //TODO log exception
+                }
+            }
+        }
+
+        return hasFallbackTheme() ? getFallbackTheme().getMusic(id) : null;
     }
 
     public void setStrings(Map<String, String> strings) {
@@ -203,14 +230,13 @@ public class XmlTheme implements Theme {
     }
 
     @Override
-    public void loadDomain(String domain) {
+    public int startGroup() {
         //TODO
-
-        //Load drawables starting with
+        return 0;
     }
 
     @Override
-    public void disposeDomain(String domain) {
+    public void endGroup(int groupId) {
         //TODO
     }
 
@@ -243,5 +269,9 @@ public class XmlTheme implements Theme {
     @Override
     public List<Locale> getLanguages() {
         return langs;
+    }
+
+    @Override
+    public void dispose() {
     }
 }

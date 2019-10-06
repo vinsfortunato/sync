@@ -58,7 +58,7 @@ public class ScreenManager implements Disposable {
             showPrepared(screen);
         } else {
             //Prepare the task async then show it when preparation is done
-            getLoadExecutor().submit(new PrepareTask(screen));
+            getLoadExecutor().submit(new PrepareScreenTask(screen));
         }
     }
 
@@ -69,7 +69,7 @@ public class ScreenManager implements Disposable {
                 @Override
                 public void onDone() {
                     if(getScreenCachePolicy() == ScreenCachePolicy.DISPOSE_ON_HIDE) {
-                        getLoadExecutor().submit(new DisposeTask(currentScreen));
+                        getLoadExecutor().submit(new DisposeScreenTask(currentScreen));
                     }
                     stage.clear();
                     currentScreen = screen;
@@ -106,29 +106,24 @@ public class ScreenManager implements Disposable {
         return (ListeningExecutorService) Game.instance().getExecutors().getExecutor(LOAD_EXECUTOR_ID);
     }
 
-    private class PrepareTask implements Runnable {
+    private class PrepareScreenTask implements Runnable {
         private Screen screen;
 
-        PrepareTask(Screen screen) {
+        PrepareScreenTask(Screen screen) {
             this.screen = screen;
         }
 
         @Override
         public void run() {
             screen.prepare();
-            Gdx.app.postRunnable(new Runnable() {
-                @Override
-                public void run() {
-                    showPrepared(screen);
-                }
-            });
+            Gdx.app.postRunnable(() -> showPrepared(screen));
         }
     }
 
-    private class DisposeTask implements Runnable {
+    private class DisposeScreenTask implements Runnable {
         private Screen screen;
 
-        DisposeTask(Screen screen) {
+        DisposeScreenTask(Screen screen) {
             this.screen = screen;
         }
 

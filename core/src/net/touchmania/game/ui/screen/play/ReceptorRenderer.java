@@ -9,6 +9,9 @@ import net.touchmania.game.song.note.NotePanel;
 public class ReceptorRenderer {
     private BeatmapView view;
 
+    /* Resources */
+    private Drawable receptorDrawable = Game.instance().getResources().getDrawable("play_dance_receptor");
+
     public ReceptorRenderer(BeatmapView view) {
         this.view = view;
     }
@@ -110,7 +113,7 @@ public class ReceptorRenderer {
      * @return the receptor drawable.
      */
     public Drawable getReceptorDrawable(NotePanel panel, double beat, double time) {
-        return Game.instance().getResources().getDrawable("play_dance_receptor");
+        return receptorDrawable;
     }
 
     /**

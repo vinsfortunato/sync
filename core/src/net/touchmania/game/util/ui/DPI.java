@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package net.touchmania.game.ui;
+package net.touchmania.game.util.ui;
 
 public enum DPI {
     LOW(320, 0.5f),
