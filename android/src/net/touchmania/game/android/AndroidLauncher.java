@@ -21,11 +21,13 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 
+import android.util.DisplayMetrics;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import net.touchmania.game.Backend;
 import net.touchmania.game.Game;
 import net.touchmania.game.database.DatabaseHelper;
+import net.touchmania.game.util.ui.DPI;
 
 public class AndroidLauncher extends AndroidApplication implements Backend {
 	@Override
@@ -46,5 +48,10 @@ public class AndroidLauncher extends AndroidApplication implements Backend {
 	@Override
 	public DatabaseHelper getDatabaseHelper() {
 		return null; //TODO
+	}
+
+	@Override
+	public DPI getDeviceDPI() {
+		return DPI.closest(getResources().getDisplayMetrics().densityDpi);
 	}
 }

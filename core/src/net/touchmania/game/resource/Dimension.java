@@ -16,7 +16,7 @@
 
 package net.touchmania.game.resource;
 
-import net.touchmania.game.util.ui.DPI;
+import net.touchmania.game.Game;
 
 public class Dimension {
     private final float baseValue;
@@ -38,7 +38,7 @@ public class Dimension {
      * @return the dimension value.
      */
     public float getValue() {
-        return baseValue * DPI.getDeviceDPI().scale;
+        return baseValue * Game.instance().getBackend().getDeviceDPI().scale;
     }
 
     /**

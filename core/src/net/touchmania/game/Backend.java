@@ -19,6 +19,7 @@ package net.touchmania.game;
 import net.touchmania.game.database.DatabaseHelper;
 import net.touchmania.game.database.Database;
 import net.touchmania.game.database.Cursor;
+import net.touchmania.game.util.ui.DPI;
 
 /**
  * @author flood2d
@@ -37,4 +38,6 @@ public interface Backend {
      * @return a database helper.
      */
     DatabaseHelper getDatabaseHelper();
+
+    DPI getDeviceDPI();
 }

@@ -16,6 +16,10 @@
 
 package net.touchmania.game.util.ui;
 
+/**
+ * DPI classes. It is used to calculate the appropriate values for
+ * pixel density dependent properties.
+ */
 public enum DPI {
     LOW(320, 0.5f),
     MEDIUM(480, 1.0f),
@@ -29,7 +33,18 @@ public enum DPI {
         this.scale = scale;
     }
 
-    public static DPI getDeviceDPI() {
-        return null; //TODO how?
+    /**
+     * Returns the closest dpi class.
+     * @param dpi the dpi to fit into a class.
+     * @return the closest dpi class.
+     */
+    public static DPI closest(int dpi) {
+        DPI closest = null;
+        for(DPI d : values()) {
+            if(closest == null || Math.abs(d.dpi - dpi) < Math.abs(closest.dpi - dpi)) {
+                closest = d;
+            }
+        }
+        return closest;
     }
 }

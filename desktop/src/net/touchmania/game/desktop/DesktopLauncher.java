@@ -5,8 +5,9 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import net.touchmania.game.Backend;
 import net.touchmania.game.Game;
 import net.touchmania.game.database.DatabaseHelper;
+import net.touchmania.game.util.ui.DPI;
 
-public class DesktopLauncher implements Backend{
+public class DesktopLauncher implements Backend {
 	public static void main (String[] arg) {
 		new DesktopLauncher().startGame();
 	}
@@ -18,6 +19,11 @@ public class DesktopLauncher implements Backend{
 
 	@Override
 	public DatabaseHelper getDatabaseHelper() {
+		return null;
+	}
+
+	@Override
+	public DPI getDeviceDPI() {
 		return null;
 	}
 }

@@ -1,13 +1,12 @@
 package net.touchmania.game.resource.xml;
 
-import com.badlogic.gdx.files.FileHandle;
-import net.touchmania.game.resource.xml.parsers.XmlMapResourceParser;
-import net.touchmania.game.resource.xml.resolvers.XmlReferenceValueResolver;
-import net.touchmania.game.util.xml.XmlParseException;
-import net.touchmania.game.util.xml.XmlParser;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import net.touchmania.game.util.Loader;
 
-public class XmlDrawableLoader  {
-
-
-
+public class XmlDrawableLoader implements Loader<Drawable> {
+    @Override
+    public Drawable load() throws Exception {
+        //TODO
+        return null;
+    }
 }

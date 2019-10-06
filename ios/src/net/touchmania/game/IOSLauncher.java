@@ -1,6 +1,7 @@
 package net.touchmania.game;
 
 import net.touchmania.game.database.DatabaseHelper;
+import net.touchmania.game.util.ui.DPI;
 import org.robovm.apple.foundation.NSAutoreleasePool;
 import org.robovm.apple.uikit.UIApplication;
 
@@ -22,6 +23,11 @@ public class IOSLauncher extends IOSApplication.Delegate implements Backend {
 
     @Override
     public DatabaseHelper getDatabaseHelper() {
+        return null;
+    }
+
+    @Override
+    public DPI getDeviceDPI() {
         return null;
     }
 }
