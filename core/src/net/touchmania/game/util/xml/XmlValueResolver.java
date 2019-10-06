@@ -23,9 +23,8 @@ package net.touchmania.game.util.xml;
  */
 public interface XmlValueResolver<T> {
     /**
-     * Resolve a value by parsing it a simple value or by resolving it
+     * Resolve a value by parsing a simple value or by resolving it
      * in a more complex way.
-     *
      * @param value the value to resolve, can be null.
      * @return the resolved value.
      * @throws XmlParseException if the value cannot be resolved correctly.

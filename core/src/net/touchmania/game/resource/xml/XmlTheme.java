@@ -31,13 +31,17 @@ public class XmlTheme implements Theme {
     private Theme fallback;
     private FileHandle manifestFile;
     private XmlThemeManifest manifest;
+
+    /* Resource maps */
+    private Map<String, XmlDrawableLoader> drawables;
     private Map<String, Color> colors;
     private Map<String, Dimension> dimens;
-    private Map<String, Object> values;
-    private Map<String, XmlDrawableLoader> drawables;
-    private Map<String, XmlFontGenerator> fonts;
+    private Map<String, XmlFontLoader> fonts;
     private Map<String, XmlSoundLoader> sounds;
+    private Map<String, XmlMusicLoader> musics;
     private Map<String, String> strings;
+    private Map<String, Object> values;
+
     private List<Locale> langs;
 
     public XmlTheme(FileHandle manifestFile) {
@@ -101,17 +105,17 @@ public class XmlTheme implements Theme {
         return hasFallbackTheme() ? getFallbackTheme().getDimension(id) : null;
     }
 
-    public void setFonts(Map<String, XmlFontGenerator> fonts) {
+    public void setFonts(Map<String, XmlFontLoader> fonts) {
         this.fonts = fonts;
     }
 
     @Override
     public BitmapFont getFont(String id) {
         if(fonts != null) {
-            XmlFontGenerator generator = fonts.get(id);
+            XmlFontLoader generator = fonts.get(id);
             if(generator != null) {
                 try {
-                    return generator.generate();
+                    return generator.load();
                 } catch (Exception e) {
                     //TODO log exception
                 }
@@ -130,7 +134,7 @@ public class XmlTheme implements Theme {
             XmlSoundLoader loader = sounds.get(id);
             if(loader != null) {
                 try {
-                    return loader.loadSound();
+                    return loader.load();
                 } catch (Exception e) {
                     //TODO log exception
                 }
@@ -139,13 +143,17 @@ public class XmlTheme implements Theme {
         return hasFallbackTheme() ? getFallbackTheme().getSound(id) : null;
     }
 
+    public void setMusics(Map<String, XmlMusicLoader> musics) {
+        this.musics = musics;
+    }
+
     @Override
     public Music getMusic(String id) {
-        if(sounds != null) {
-            XmlSoundLoader loader = sounds.get(id);
+        if(musics != null) {
+            XmlMusicLoader loader = musics.get(id);
             if(loader != null) {
                 try {
-                    return loader.loadMusic();
+                    return loader.load();
                 } catch (Exception e) {
                     //TODO log exception
                 }

@@ -17,6 +17,7 @@
 package net.touchmania.game.resource.xml.parsers;
 
 import com.badlogic.gdx.files.FileHandle;
+import net.touchmania.game.resource.xml.XmlTheme;
 import net.touchmania.game.resource.xml.resolvers.XmlReferenceValueResolver;
 import net.touchmania.game.resource.xml.resolvers.XmlStringResolver;
 import net.touchmania.game.util.xml.XmlParseException;
@@ -34,7 +35,7 @@ public class XmlStringsParser extends XmlMapResourceParser<String>{
      * Create a resource parser from its file.
      * @param resourceFile the resource file.
      */
-    public XmlStringsParser(FileHandle resourceFile) {
+    public XmlStringsParser(FileHandle resourceFile, XmlTheme theme) {
         super(resourceFile);
     }
 

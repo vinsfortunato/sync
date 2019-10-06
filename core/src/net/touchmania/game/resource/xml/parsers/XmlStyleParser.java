@@ -30,7 +30,7 @@ public class XmlStyleParser extends XmlResourceParser<XmlStyle> {
      *
      * @param resourceFile the resource file.
      */
-    public XmlStyleParser(FileHandle resourceFile) {
+    public XmlStyleParser(FileHandle resourceFile, XmlTheme theme) {
         super(resourceFile);
     }
 

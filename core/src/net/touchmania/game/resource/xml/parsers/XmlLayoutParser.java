@@ -16,6 +16,8 @@
 
 package net.touchmania.game.resource.xml.parsers;
 
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -38,13 +40,15 @@ public class XmlLayoutParser extends XmlResourceParser<XmlLayout> {
     private XmlTheme theme;
 
     /* Reference resolvers */
+    public final XmlValueResolver<Layout> layoutResolver = null; //TODO
+    public final XmlValueResolver<Style> styleResolver;
+    public final XmlValueResolver<Drawable> drawableResolver = null; //TODO
     public final XmlValueResolver<Color> colorResolver;
     public final XmlValueResolver<Dimension> dimensionResolver;
+    public final XmlValueResolver<BitmapFont> fontResolver;
+    public final XmlValueResolver<Sound> soundResolver;
+    public final XmlValueResolver<Music> musicResolver;
     public final XmlValueResolver<String> stringResolver = null; //TODO
-    public final XmlValueResolver<Layout> layoutResolver = null; //TODO
-    public final XmlValueResolver<Style> styleResolver = null; //TODO
-    public final XmlValueResolver<Drawable> drawableResolver = null; //TODO
-    public final XmlValueResolver<BitmapFont> fontResolver = null; //TODO
     public final XmlValueResolver<Integer> integerResolver;
     public final XmlValueResolver<Float> floatResolver;
     public final XmlValueResolver<Boolean> booleanResolver;
@@ -64,8 +68,15 @@ public class XmlLayoutParser extends XmlResourceParser<XmlLayout> {
         this.theme = theme;
 
         //Create a new instance for every reference resolver.
+        //this.layoutResolver = XmlLayoutResolver.from(theme);
+        this.styleResolver = XmlStyleResolver.from(theme);
+        //this.drawableResolver = XmlDrawableResolver.from(theme);
         this.colorResolver = XmlColorResolver.from(theme);
         this.dimensionResolver = XmlDimensionResolver.from(theme);
+        this.fontResolver = XmlFontResolver.from(theme);
+        this.soundResolver = XmlSoundResolver.from(theme);
+        this.musicResolver = XmlMusicResolver.from(theme);
+        //this.stringResolver = XmlStringResolver.from(theme);
         this.integerResolver = XmlIntegerResolver.from(theme);
         this.floatResolver = XmlFloatResolver.from(theme);
         this.booleanResolver = XmlBooleanResolver.from(theme);

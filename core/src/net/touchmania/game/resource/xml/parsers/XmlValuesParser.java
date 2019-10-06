@@ -17,6 +17,7 @@
 package net.touchmania.game.resource.xml.parsers;
 
 import com.badlogic.gdx.files.FileHandle;
+import net.touchmania.game.resource.xml.XmlTheme;
 import net.touchmania.game.resource.xml.resolvers.*;
 import net.touchmania.game.util.xml.XmlParseException;
 import net.touchmania.game.util.xml.XmlParser;
@@ -26,18 +27,15 @@ public class XmlValuesParser extends XmlMapResourceParser<Object> {
      * Create a resource parser from its file.
      * @param resourceFile the resource file.
      */
-    public XmlValuesParser(FileHandle resourceFile) {
+    public XmlValuesParser(FileHandle resourceFile, XmlTheme theme) {
         super(resourceFile);
     }
 
     @Override
-    protected XmlReferenceValueResolver<Object> getResolver(XmlParser.Element element) {
-        if(element.getName().equals("boolean")) return booleanResolver;
-        if(element.getName().equals("float")) return floatResolver;
-        if(element.getName().equals("int")) return integerResolver;
-        if(element.getName().equals("duration")) return durationResolver;
-        if(element.getName().equals("percent")) return percentResolver;
-        throw new IllegalArgumentException("Unrecognised element name!");
+    protected void checkRoot(XmlParser.Element root) throws XmlParseException {
+        if(!root.getName().equals("values")) {
+            throw new XmlParseException("Unexpected xml root element name. Expected to be 'values'!");
+        }
     }
 
     @Override
@@ -48,21 +46,33 @@ public class XmlValuesParser extends XmlMapResourceParser<Object> {
             case "int":
             case "duration":
             case "percent":
-                break;
+                return;
             default:
                 throw new XmlParseException(String.format("Unexpected element name '%s'!", element.getName()));
         }
     }
 
     @Override
-    protected void checkRoot(XmlParser.Element root) throws XmlParseException {
-        if(!root.getName().equals("values")) {
-            throw new XmlParseException("Unexpected xml root element name. Expected to be 'values'!");
+    @SuppressWarnings("unchecked")
+    public XmlReferenceValueResolver getResolver(XmlParser.Element element) {
+        switch (element.getName()) {
+            case "boolean":
+                return booleanResolver;
+            case "float":
+                return floatResolver;
+            case "int":
+                return integerResolver;
+            case "duration":
+                return durationResolver;
+            case "percent":
+                return percentResolver;
+            default:
+                throw new IllegalArgumentException("Unexpected element name!");
         }
     }
 
     /* Resolvers */
-    private XmlReferenceValueResolver<Object> booleanResolver = wrap(new XmlBooleanResolver() {
+    private XmlReferenceValueResolver<Boolean> booleanResolver = new XmlBooleanResolver() {
         @Override
         public Boolean resolveReference(String resourceId) throws XmlParseException {
             Object value = getResolvedValues().get(resourceId);
@@ -75,8 +85,9 @@ public class XmlValuesParser extends XmlMapResourceParser<Object> {
             }
             return null;
         }
-    });
-    private XmlReferenceValueResolver<Object> floatResolver = wrap(new XmlFloatResolver() {
+    };
+
+    private XmlReferenceValueResolver<Float> floatResolver = new XmlFloatResolver() {
         @Override
         public Float resolveReference(String resourceId) throws XmlParseException {
             Object value = getResolvedValues().get(resourceId);
@@ -89,8 +100,9 @@ public class XmlValuesParser extends XmlMapResourceParser<Object> {
             }
             return null;
         }
-    });
-    private XmlReferenceValueResolver<Object> integerResolver = wrap(new XmlIntegerResolver() {
+    };
+
+    private XmlReferenceValueResolver<Integer> integerResolver = new XmlIntegerResolver() {
         @Override
         public Integer resolveReference(String resourceId) throws XmlParseException {
             Object value = getResolvedValues().get(resourceId);
@@ -103,8 +115,9 @@ public class XmlValuesParser extends XmlMapResourceParser<Object> {
             }
             return null;
         }
-    });
-    private XmlReferenceValueResolver<Object> durationResolver = wrap(new XmlDurationResolver() {
+    };
+
+    private XmlReferenceValueResolver<Long> durationResolver = new XmlDurationResolver() {
         @Override
         public Long resolveReference(String resourceId) throws XmlParseException {
             Object value = getResolvedValues().get(resourceId);
@@ -117,8 +130,9 @@ public class XmlValuesParser extends XmlMapResourceParser<Object> {
             }
             return null;
         }
-    });
-    private XmlReferenceValueResolver<Object> percentResolver = wrap(new XmlPercentResolver() {
+    };
+
+    private XmlReferenceValueResolver<Float> percentResolver = new XmlPercentResolver() {
         @Override
         public Float resolveReference(String resourceId) throws XmlParseException {
             Object value = getResolvedValues().get(resourceId);
@@ -131,47 +145,5 @@ public class XmlValuesParser extends XmlMapResourceParser<Object> {
             }
             return null;
         }
-    });
-
-    private static XmlReferenceValueResolver<Object> wrap(XmlReferenceValueResolver<?> resolver) {
-        return new XmlReferenceValueResolverWrapper(resolver);
-    }
-
-    private static class XmlReferenceValueResolverWrapper extends XmlReferenceValueResolver<Object> {
-        private XmlReferenceValueResolver<?> resolver;
-
-        XmlReferenceValueResolverWrapper(XmlReferenceValueResolver<?> resolver) {
-            this.resolver = resolver;
-        }
-
-        @Override
-        public Object resolve(String value) throws XmlParseException {
-            return resolver.resolve(value);
-        }
-
-        @Override
-        public boolean isReference(String value) {
-            return resolver.isReference(value);
-        }
-
-        @Override
-        public String getReferenceId(String value) throws XmlParseException {
-            return resolver.getReferenceId(value);
-        }
-
-        @Override
-        protected String getResourceTypeName() {
-            return null;
-        }
-
-        @Override
-        public Object resolveReference(String resourceId) throws XmlParseException {
-            return resolver.resolveReference(resourceId);
-        }
-
-        @Override
-        public Object resolveValue(String value) throws XmlParseException {
-            return resolver.resolveValue(value);
-        }
-    }
+    };
 }

@@ -14,22 +14,12 @@
   ~ limitations under the License.
   -->
 
-<sounds>
-    <!-- Sound files should be located inside a folder named 'sounds' -->
+<musics>
+    <!-- Music files should be located inside a folder named 'sounds' -->
 
     <!-- From mp3 file -->
-    <sound id="test_13">sound1.mp3</sound>
-
-    <!-- From wav file -->
-    <sound id="test_14">sound2.wav</sound>
-
-    <!-- From ogg file -->
-    <sound id="test_15">sound3.ogg</sound>
-
-    <!-- By referencing another predeclared sound -->
-    <sound id="test_16">sound:test_13</sound>
-
     <music id="music_0">music1.mp3</music>
 
+    <!-- Referencing a predeclared music -->
     <music id="music_1">music:music_0</music>
-</sounds>
+</musics>

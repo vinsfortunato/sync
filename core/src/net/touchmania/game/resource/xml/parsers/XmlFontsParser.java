@@ -22,14 +22,14 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.utils.ObjectMap;
 import net.touchmania.game.resource.Dimension;
-import net.touchmania.game.resource.xml.XmlFontGenerator;
+import net.touchmania.game.resource.xml.XmlFontLoader;
 import net.touchmania.game.resource.xml.XmlTheme;
 import net.touchmania.game.resource.xml.resolvers.*;
 import net.touchmania.game.util.xml.XmlParseException;
 import net.touchmania.game.util.xml.XmlParser;
 import net.touchmania.game.util.xml.XmlValueResolver;
 
-public class XmlFontsParser extends XmlMapResourceParser<XmlFontGenerator> {
+public class XmlFontsParser extends XmlMapResourceParser<XmlFontLoader> {
     private final XmlValueResolver<Dimension> dimensionResolver;
     private final XmlValueResolver<Boolean> booleanResolver;
     private final XmlValueResolver<Color> colorResolver;
@@ -38,7 +38,7 @@ public class XmlFontsParser extends XmlMapResourceParser<XmlFontGenerator> {
     private final XmlValueResolver<String> stringResolver;
     private final XmlValueResolver<Texture.TextureFilter> filterResolver;
     private final XmlValueResolver<FreeTypeFontGenerator.Hinting> hintingResolver;
-    private final XmlReferenceValueResolver<XmlFontGenerator> fontGeneratorResolver;
+    private final XmlReferenceValueResolver<XmlFontLoader> fontGeneratorResolver;
 
     /**
      * Create a resource parser from its file.
@@ -61,7 +61,7 @@ public class XmlFontsParser extends XmlMapResourceParser<XmlFontGenerator> {
     }
 
     @Override
-    protected void parseAttributes(String id, XmlFontGenerator value, XmlParser.Element element) throws XmlParseException {
+    protected void parseAttributes(String id, XmlFontLoader value, XmlParser.Element element) throws XmlParseException {
         for (ObjectMap.Entry<String, String> attribute : element.getAttributes()) {
             if (!attribute.key.equals("id") && !parseFontAttribute(value, attribute.key, attribute.value)) {
                 throw new XmlParseException(String.format(
@@ -85,7 +85,7 @@ public class XmlFontsParser extends XmlMapResourceParser<XmlFontGenerator> {
     }
 
     @Override
-    protected XmlReferenceValueResolver<XmlFontGenerator> getResolver(XmlParser.Element element) {
+    protected XmlReferenceValueResolver<XmlFontLoader> getResolver(XmlParser.Element element) {
         return fontGeneratorResolver;
     }
 
@@ -97,7 +97,7 @@ public class XmlFontsParser extends XmlMapResourceParser<XmlFontGenerator> {
      * @return true if the attribute has been recognised and parsed, false if it has not been recognised.
      * @throws XmlParseException if the attribute has been recognised but cannot be parsed correctly.
      */
-    private boolean parseFontAttribute(XmlFontGenerator generator, String name, String value) throws XmlParseException {
+    private boolean parseFontAttribute(XmlFontLoader generator, String name, String value) throws XmlParseException {
         FreeTypeFontGenerator.FreeTypeFontParameter p = generator.parameter;
         switch(name) {
             case "size":           p.size = dimensionResolver.resolve(value).getIntValue();                      break;
@@ -127,7 +127,7 @@ public class XmlFontsParser extends XmlMapResourceParser<XmlFontGenerator> {
         return true;
     }
 
-    private class XmlFontGeneratorResolver extends XmlReferenceValueResolver<XmlFontGenerator> {
+    private class XmlFontGeneratorResolver extends XmlReferenceValueResolver<XmlFontLoader> {
         @Override
         protected String getResourceTypeName() {
             return "font";
@@ -137,18 +137,18 @@ public class XmlFontsParser extends XmlMapResourceParser<XmlFontGenerator> {
          * Referencing a declared font is like extending it.
          * Attributes of the extended font can be overridden.*/
         @Override
-        public XmlFontGenerator resolveReference(String resourceId) {
+        public XmlFontLoader resolveReference(String resourceId) {
             //Font definition is extending another declared font
-            XmlFontGenerator generator = getResolvedValues().get(resourceId);
+            XmlFontLoader generator = getResolvedValues().get(resourceId);
             return generator != null ? generator.copy() : null;
         }
 
         @Override
-        public XmlFontGenerator resolveValue(String value) throws XmlParseException {
+        public XmlFontLoader resolveValue(String value) throws XmlParseException {
             if(value == null || value.isEmpty()) {
                 throw new XmlParseException("Invalid font file! File name cannot be null or empty!");
             }
-            return new XmlFontGenerator(getResourceFile().sibling(value));
+            return new XmlFontLoader(getResourceFile().sibling(value));
         }
     }
 

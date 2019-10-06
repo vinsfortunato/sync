@@ -127,17 +127,17 @@ public abstract class XmlMapResourceParser<T> extends XmlResourceParser<Map<Stri
     }
 
     /**
+     * Checks root element child's validity
+     * @throws XmlParseException if the child is invalid.
+     */
+    protected abstract void checkRootChild(XmlParser.Element element) throws XmlParseException;
+
+    /**
      * Gets a resolver for the given xml element.
      * @param element the element that has the value to resolve.
      * @return the resolver.
      */
     protected abstract XmlReferenceValueResolver<T> getResolver(XmlParser.Element element);
-
-    /**
-     * Checks root element child's validity
-     * @throws XmlParseException if the child is invalid.
-     */
-    protected abstract void checkRootChild(XmlParser.Element element) throws XmlParseException;
 
     /**
      * Parse additional element attributes onto the given value of the resource with the given id.

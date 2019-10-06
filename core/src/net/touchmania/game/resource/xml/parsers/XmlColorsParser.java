@@ -18,6 +18,7 @@ package net.touchmania.game.resource.xml.parsers;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
+import net.touchmania.game.resource.xml.XmlTheme;
 import net.touchmania.game.util.ui.ColorUtils;
 import net.touchmania.game.resource.xml.resolvers.XmlColorResolver;
 import net.touchmania.game.resource.xml.resolvers.XmlReferenceValueResolver;
@@ -37,13 +38,15 @@ public class XmlColorsParser extends XmlMapResourceParser<Color> {
      * Create a resource parser from its file.
      * @param resourceFile the resource file.
      */
-    public XmlColorsParser(FileHandle resourceFile) {
+    public XmlColorsParser(FileHandle resourceFile, XmlTheme theme) {
         super(resourceFile);
     }
 
     @Override
-    protected XmlReferenceValueResolver<Color> getResolver(XmlParser.Element element) {
-        return colorResolver;
+    protected void checkRoot(XmlParser.Element root) throws XmlParseException {
+        if(!root.getName().equals("colors")) {
+            throw new XmlParseException("Unexpected xml root element name. Expected to be 'colors'!");
+        }
     }
 
     @Override
@@ -54,9 +57,7 @@ public class XmlColorsParser extends XmlMapResourceParser<Color> {
     }
 
     @Override
-    protected void checkRoot(XmlParser.Element root) throws XmlParseException {
-        if(!root.getName().equals("colors")) {
-            throw new XmlParseException("Unexpected xml root element name. Expected to be 'colors'!");
-        }
+    protected XmlReferenceValueResolver<Color> getResolver(XmlParser.Element element) {
+        return colorResolver;
     }
 }

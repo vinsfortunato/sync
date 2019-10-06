@@ -18,6 +18,7 @@ package net.touchmania.game.resource.xml.parsers;
 
 import com.badlogic.gdx.files.FileHandle;
 import net.touchmania.game.resource.Dimension;
+import net.touchmania.game.resource.xml.XmlTheme;
 import net.touchmania.game.resource.xml.resolvers.XmlReferenceValueResolver;
 import net.touchmania.game.util.xml.XmlParseException;
 import net.touchmania.game.util.xml.XmlParser;
@@ -36,13 +37,15 @@ public class XmlDimensParser extends XmlMapResourceParser<Dimension> {
      * Create a resource parser from its file.
      * @param resourceFile the resource file.
      */
-    public XmlDimensParser(FileHandle resourceFile) {
+    public XmlDimensParser(FileHandle resourceFile, XmlTheme theme) {
         super(resourceFile);
     }
 
     @Override
-    protected XmlReferenceValueResolver<Dimension> getResolver(XmlParser.Element element) {
-        return dimenResolver;
+    protected void checkRoot(XmlParser.Element root) throws XmlParseException {
+        if(!root.getName().equals("dimens")) {
+            throw new XmlParseException("Unexpected xml root element name. Expected to be 'dimens'!");
+        }
     }
 
     @Override
@@ -53,9 +56,7 @@ public class XmlDimensParser extends XmlMapResourceParser<Dimension> {
     }
 
     @Override
-    protected void checkRoot(XmlParser.Element root) throws XmlParseException {
-        if(!root.getName().equals("dimens")) {
-            throw new XmlParseException("Unexpected xml root element name. Expected to be 'dimens'!");
-        }
+    protected XmlReferenceValueResolver<Dimension> getResolver(XmlParser.Element element) {
+        return dimenResolver;
     }
 }

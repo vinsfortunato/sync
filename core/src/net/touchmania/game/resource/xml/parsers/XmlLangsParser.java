@@ -1,6 +1,7 @@
 package net.touchmania.game.resource.xml.parsers;
 
 import com.badlogic.gdx.files.FileHandle;
+import net.touchmania.game.resource.xml.XmlTheme;
 import net.touchmania.game.resource.xml.resolvers.XmlBooleanResolver;
 import net.touchmania.game.resource.xml.resolvers.XmlLocaleResolver;
 import net.touchmania.game.util.xml.XmlParseException;
@@ -16,7 +17,7 @@ public class XmlLangsParser extends XmlResourceParser<List<Locale>>{
      *
      * @param resourceFile the resource file.
      */
-    public XmlLangsParser(FileHandle resourceFile) {
+    public XmlLangsParser(FileHandle resourceFile, XmlTheme theme) {
         super(resourceFile);
     }
 

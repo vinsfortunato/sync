@@ -41,13 +41,14 @@ public class XmlThemeParser extends XmlResourceParser<XmlTheme> {
     @Override
     public XmlTheme parse() throws Exception {
         XmlTheme theme = super.parse(); //Parse theme.xml (theme manifest)
-        parseColors(theme); //Parse colors.xml (colors resource)
-        parseDimens(theme); //Parse dimens.xml (dimensions resource)
-        parseValues(theme); //Parse values.xml (values resource)
-        parseLangs(theme); //Parse langs.xml (languages resource)
-        parseFonts(theme); //Parse fonts.xml (fonts resource)
-        parseSounds(theme); //Parse sounds.xml (sounds resource)
-        parseStrings(theme); //Parse strings/strings_{locale}.xml based on active/supported locale (strings resources)
+        parseColors(theme);             //Parse colors.xml (color resources)
+        parseDimens(theme);             //Parse dimens.xml (dimension resources)
+        parseValues(theme);             //Parse values.xml (value resources)
+        parseLangs(theme);              //Parse langs.xml (language resources)
+        parseFonts(theme);              //Parse fonts.xml (font resources)
+        parseSounds(theme);             //Parse sounds.xml (sound resources)
+        parseMusics(theme);             //Parse musics.xml (music resources)
+        parseStrings(theme);            //Parse strings/strings_{locale}.xml based on active/supported locale (strings resources)
         return theme;
     }
 
@@ -77,21 +78,21 @@ public class XmlThemeParser extends XmlResourceParser<XmlTheme> {
     private void parseColors(XmlTheme theme) throws Exception {
         FileHandle colorsFile = getResourceFile().sibling("colors.xml");
         if(colorsFile.exists()) {
-            theme.setColors(new XmlColorsParser(colorsFile).parse());
+            theme.setColors(new XmlColorsParser(colorsFile, theme).parse());
         }
     }
 
     private void parseDimens(XmlTheme theme) throws Exception {
         FileHandle dimensFile = getResourceFile().sibling("dimens.xml");
         if(dimensFile.exists()) {
-            theme.setDimensions(new XmlDimensParser(dimensFile).parse());
+            theme.setDimensions(new XmlDimensParser(dimensFile, theme).parse());
         }
     }
     
     private void parseValues(XmlTheme theme) throws Exception {
         FileHandle valuesFile = getResourceFile().sibling("values.xml");
         if(valuesFile.exists()) {
-            theme.setValues(new XmlValuesParser(valuesFile).parse());
+            theme.setValues(new XmlValuesParser(valuesFile, theme).parse());
         }
     }
 
@@ -109,10 +110,17 @@ public class XmlThemeParser extends XmlResourceParser<XmlTheme> {
         }
     }
 
+    private void parseMusics(XmlTheme theme) throws Exception {
+        FileHandle musicsFile = getResourceFile().sibling("musics.xml");
+        if(musicsFile.exists()) {
+            theme.setMusics(new XmlMusicsParser(musicsFile, theme).parse());
+        }
+    }
+
     private void parseLangs(XmlTheme theme) throws Exception {
         FileHandle langFile = getResourceFile().sibling("langs.xml");
         if(langFile.exists()) {
-            theme.setLanguages(new XmlLangsParser(langFile).parse());
+            theme.setLanguages(new XmlLangsParser(langFile, theme).parse());
         }
     }
 
@@ -131,14 +139,14 @@ public class XmlThemeParser extends XmlResourceParser<XmlTheme> {
                 //Parse active lang strings
                 FileHandle stringsFile = getStringsFile(active);
                 FileUtils.checkFilePresence(stringsFile);
-                XmlStringsParser parser = new XmlStringsParser(stringsFile);
+                XmlStringsParser parser = new XmlStringsParser(stringsFile, theme);
                 Map<String, String> strings = parser.parse();
 
                 //Parse default language if active isn't already default
                 if(index != 0) {
                     stringsFile = getStringsFile(langs.get(0)); //Get default theme lang
                     FileUtils.checkFilePresence(stringsFile);
-                    parser = new XmlStringsParser(stringsFile);
+                    parser = new XmlStringsParser(stringsFile, theme);
                     Map<String, String> defStrings = parser.parse();
 
                     //Merge maps by overriding default lang strings with active lang strings
@@ -152,7 +160,7 @@ public class XmlThemeParser extends XmlResourceParser<XmlTheme> {
                 //Parse default theme lang strings
                 FileHandle stringsFile = getStringsFile(langs.get(0));
                 FileUtils.checkFilePresence(stringsFile);
-                XmlStringsParser parser = new XmlStringsParser(stringsFile);
+                XmlStringsParser parser = new XmlStringsParser(stringsFile, theme);
                 theme.setStrings(parser.parse());
             }
         }

@@ -21,13 +21,14 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
+import net.touchmania.game.util.Loader;
 
 /**
  * Generates a font from its file by using FreeType font engine. Check
  * <a href="https://freetype.org/">FreeType</a> documentation for
  * more info (supported font formats, features etc..)
  */
-public class XmlFontGenerator implements Cloneable {
+public class XmlFontLoader implements Loader<BitmapFont>, Cloneable {
     /** The font file **/
     public final FileHandle file;
     /** Holds font generation parameters **/
@@ -37,11 +38,11 @@ public class XmlFontGenerator implements Cloneable {
      * Creates a generator from a font file.
      * @param file the font file.
      */
-    public XmlFontGenerator(FileHandle file) {
+    public XmlFontLoader(FileHandle file) {
         this.file = file;
     }
 
-    public BitmapFont generate() throws Exception {
+    public BitmapFont load() throws Exception {
         FreeTypeFontGenerator generator = null;
         try {
             generator = new FreeTypeFontGenerator(file);
@@ -57,8 +58,8 @@ public class XmlFontGenerator implements Cloneable {
         }
     }
 
-    public XmlFontGenerator copy() {
-        XmlFontGenerator copy = new XmlFontGenerator(file);
+    public XmlFontLoader copy() {
+        XmlFontLoader copy = new XmlFontLoader(file);
         copy.parameter.size = parameter.size;
         copy.parameter.mono = parameter.mono;
         copy.parameter.hinting = parameter.hinting;

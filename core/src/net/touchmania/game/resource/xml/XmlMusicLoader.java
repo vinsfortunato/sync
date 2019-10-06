@@ -23,7 +23,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import net.touchmania.game.util.Loader;
 
-public class XmlSoundLoader implements Loader<Sound>, Cloneable {
+public class XmlMusicLoader implements Loader<Music>, Cloneable {
     /** The sound file **/
     private FileHandle file;
 
@@ -31,19 +31,19 @@ public class XmlSoundLoader implements Loader<Sound>, Cloneable {
      * Creates a loader from a sound file.
      * @param file the sound file.
      */
-    public XmlSoundLoader(FileHandle file) {
+    public XmlMusicLoader(FileHandle file) {
         this.file = file;
     }
 
-    public Sound load() throws Exception {
+    public Music load() throws Exception {
         try {
-            return Gdx.audio.newSound(file);
+            return Gdx.audio.newMusic(file);
         } catch(GdxRuntimeException e) {
-            throw new Exception("Sound cannot be loaded correctly!", e);
+            throw new Exception("Music cannot be loaded correctly!", e);
         }
     }
 
-    public XmlSoundLoader copy() {
-        return new XmlSoundLoader(file);
+    public XmlMusicLoader copy() {
+        return new XmlMusicLoader(file);
     }
 }

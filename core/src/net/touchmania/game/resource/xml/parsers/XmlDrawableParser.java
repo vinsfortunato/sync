@@ -16,6 +16,37 @@
 
 package net.touchmania.game.resource.xml.parsers;
 
-public class XmlDrawableParser {
-    //TODO
+import com.badlogic.gdx.files.FileHandle;
+import net.touchmania.game.resource.xml.XmlDrawableLoader;
+import net.touchmania.game.resource.xml.XmlTheme;
+import net.touchmania.game.resource.xml.resolvers.XmlReferenceValueResolver;
+import net.touchmania.game.util.xml.XmlParseException;
+import net.touchmania.game.util.xml.XmlParser;
+
+public class XmlDrawableParser  extends XmlMapResourceParser<XmlDrawableLoader> {
+
+    /**
+     * Create a resource parser from its file.
+     * @param resourceFile the resource file.
+     */
+    public XmlDrawableParser(FileHandle resourceFile, XmlTheme theme) {
+        super(resourceFile);
+    }
+
+    @Override
+    protected void checkRoot(XmlParser.Element root) throws XmlParseException {
+        if(!root.getName().equals("drawables")) {
+            throw new XmlParseException("Unexpected xml root element name. Expected to be 'drawables'!");
+        }
+    }
+
+    @Override
+    protected void checkRootChild(XmlParser.Element element) throws XmlParseException {
+
+    }
+
+    @Override
+    protected XmlReferenceValueResolver<XmlDrawableLoader> getResolver(XmlParser.Element element) {
+        return null;
+    }
 }
