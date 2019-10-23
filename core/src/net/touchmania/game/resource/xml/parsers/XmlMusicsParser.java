@@ -47,11 +47,11 @@ public class XmlMusicsParser extends XmlMapResourceParser<XmlMusicLoader> {
             return "music";
         }
 
-        /* Referencing a declared sound is like extending it.
-         * Attributes of the extended sound can be overridden.*/
+        /* Referencing a declared music is like extending it.
+         * Attributes of the extended music can be overridden.*/
         @Override
         public XmlMusicLoader resolveReference(String resourceId) {
-            //Sound definition is extending another declared sound
+            //Music definition is extending another declared music
             XmlMusicLoader loader = getResolvedValues().get(resourceId);
             return loader != null ? loader.copy() : null;
         }
@@ -59,7 +59,7 @@ public class XmlMusicsParser extends XmlMapResourceParser<XmlMusicLoader> {
         @Override
         public XmlMusicLoader resolveValue(String value) throws XmlParseException {
             if(value == null || value.isEmpty()) {
-                throw new XmlParseException("Invalid sound file! File name cannot be null or empty!");
+                throw new XmlParseException("Invalid music file! File name cannot be null or empty!");
             }
             return new XmlMusicLoader(getResourceFile().sibling("musics").sibling(value));
         }

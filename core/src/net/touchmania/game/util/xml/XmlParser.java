@@ -537,6 +537,14 @@ public class XmlParser {
             attributes.put(name, value);
         }
 
+        public Array<Element> getChildren() {
+            return children;
+        }
+
+        public void setChildren(Array<Element> children) {
+            this.children = children;
+        }
+
         /**
          * @return the count of children elements.
          */

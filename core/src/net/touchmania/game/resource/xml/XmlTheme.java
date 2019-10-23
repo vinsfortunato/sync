@@ -20,6 +20,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import net.touchmania.game.resource.*;
@@ -42,7 +43,11 @@ public class XmlTheme implements Theme {
     private Map<String, String> strings;
     private Map<String, Object> values;
 
+    /* Supported languages */
     private List<Locale> langs;
+
+    private int groupId = 0;
+    private Map<String, Set<Integer>> loadedResources;
 
     public XmlTheme(FileHandle manifestFile) {
         this.manifestFile = manifestFile;
@@ -51,8 +56,6 @@ public class XmlTheme implements Theme {
     @Override
     public Layout getLayout(String id) {
         //TODO getLayout
-
-
         return hasFallbackTheme() ? getFallbackTheme().getLayout(id) : null;
     }
 
@@ -61,7 +64,7 @@ public class XmlTheme implements Theme {
         FileHandle stylesDir = manifestFile.sibling("styles");
         if(stylesDir.exists()) {
             try {
-                XmlStyleParser parser = new XmlStyleParser(stylesDir.child(id + "_style.xml"));
+                XmlStyleParser parser = new XmlStyleParser(stylesDir.child(id + "_style.xml"), this);
                 return parser.parse();
             } catch (Exception e) {
                 //TODO log exception
@@ -239,8 +242,9 @@ public class XmlTheme implements Theme {
 
     @Override
     public int startGroup() {
-        //TODO
-        return 0;
+        int groupId = ++this.groupId;
+        //TODO check groupid is available
+        return groupId;
     }
 
     @Override
