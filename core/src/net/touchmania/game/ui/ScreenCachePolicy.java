@@ -20,14 +20,14 @@ public enum ScreenCachePolicy {
     /**
      * Screens are prepared only one time and they will be
      * disposed only when the application is closed/paused.
-     * Should be used on devices with a lot memory to
+     * Should be used when a lot of memory is available to
      * provide a smooth and faster user experience.
      */
     KEEP_IN_MEMORY,
     /**
      * Screens are automatically disposed after hiding and will
-     * be prepared always before showing. Should be used on
-     * devices with little memory.
+     * be prepared always before showing. Should be used to
+     * minimize memory usage.
      */
     DISPOSE_ON_HIDE
 }
