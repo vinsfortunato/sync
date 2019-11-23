@@ -24,6 +24,9 @@
     <!-- Integer value -->
     <int id="int1">1</int>
 
+    <!-- Integer value referencing another value -->
+    <int id="int2">int:int1</int>
+
     <!-- Duration value 120 milliseconds -->
     <duration id="duration1">120</duration>
 

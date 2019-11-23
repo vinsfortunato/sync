@@ -63,7 +63,7 @@ public class XmlFontsParser extends XmlMapResourceParser<XmlFontLoader> {
     @Override
     protected void parseAttributes(String id, XmlFontLoader value, XmlParser.Element element) throws XmlParseException {
         for (ObjectMap.Entry<String, String> attribute : element.getAttributes()) {
-            if (!attribute.key.equals("id") && !parseFontAttribute(value, attribute.key, attribute.value)) {
+            if (!attribute.key.equals("id") && !parseAttribute(value, attribute.key, attribute.value)) {
                 throw new XmlParseException(String.format(
                         "Unrecognised attribute with name '%s' and value '%s'!", attribute.key, attribute.value));
             }
@@ -97,7 +97,7 @@ public class XmlFontsParser extends XmlMapResourceParser<XmlFontLoader> {
      * @return true if the attribute has been recognised and parsed, false if it has not been recognised.
      * @throws XmlParseException if the attribute has been recognised but cannot be parsed correctly.
      */
-    private boolean parseFontAttribute(XmlFontLoader generator, String name, String value) throws XmlParseException {
+    private boolean parseAttribute(XmlFontLoader generator, String name, String value) throws XmlParseException {
         FreeTypeFontGenerator.FreeTypeFontParameter p = generator.parameter;
         switch(name) {
             case "size":           p.size = dimensionResolver.resolve(value).getIntValue();                      break;

@@ -18,6 +18,7 @@ package net.touchmania.game.resource.xml.parsers;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ObjectMap;
 import net.touchmania.game.resource.xml.*;
 import net.touchmania.game.resource.xml.resolvers.XmlReferenceValueResolver;
 import net.touchmania.game.util.xml.XmlParseException;
@@ -100,6 +101,30 @@ public class XmlDrawablesParser extends XmlMapResourceParser<XmlDrawableLoader> 
     }
 
     @Override
+    protected void parseAttributes(String id, XmlDrawableLoader value, XmlParser.Element element) throws XmlParseException {
+        for (ObjectMap.Entry<String, String> attribute : element.getAttributes()) {
+            //Skip id attribute
+            if(attribute.key.equals("id")) continue;
+
+            //Parse attribute
+            if(value instanceof XmlTextureLoader && parseAttribute((XmlTextureLoader) value, attribute.key, attribute.value)) continue;
+            if(value instanceof XmlRegionLoader  && parseAttribute((XmlRegionLoader)  value, attribute.key, attribute.value)) continue;
+
+            throw new XmlParseException(String.format(
+                    "Unrecognised attribute with name '%s' and value '%s'!", attribute.key, attribute.value));
+
+        }
+    }
+
+    private boolean parseAttribute(XmlTextureLoader loader, String name, String value) throws XmlParseException {
+
+    }
+
+    private boolean parseAttribute(XmlRegionLoader loader, String name, String value) throws XmlParseException {
+
+    }
+
+    @Override
     protected void checkRoot(XmlParser.Element root) throws XmlParseException {
         if(!root.getName().equals("drawables")) {
             throw new XmlParseException("Unexpected xml root element name. Expected to be 'drawables'!");
@@ -157,7 +182,7 @@ public class XmlDrawablesParser extends XmlMapResourceParser<XmlDrawableLoader> 
         }
     }
 
-    private class XmlSpriteDrawableLoaderResolver extends XmlDrawableLoaderResolver {
+    private class XmlTextureDrawableLoaderResolver extends XmlDrawableLoaderResolver {
         @Override
         public XmlDrawableLoader resolveReference(String resourceId) throws XmlParseException {
             return null;
@@ -169,7 +194,7 @@ public class XmlDrawablesParser extends XmlMapResourceParser<XmlDrawableLoader> 
         }
     }
 
-    private class XmlTextureDrawableLoaderResolver extends XmlDrawableLoaderResolver {
+    private class XmlSpriteDrawableLoaderResolver extends XmlDrawableLoaderResolver {
         @Override
         public XmlDrawableLoader resolveReference(String resourceId) throws XmlParseException {
             return null;

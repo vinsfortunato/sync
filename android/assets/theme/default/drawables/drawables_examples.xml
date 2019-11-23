@@ -1,0 +1,73 @@
+<drawables>
+    <!-- Textures -->
+    <!-- Texture from file -->
+    <texture id="texture1"
+             minFilter="nearest" magFilter="nearest"
+             uWrap="repeat" vWrap="repeat">play_dance_receptor.png</texture>
+
+    <!-- Texture by referencing another texture resource -->
+    <texture id="texture2">texture:texture1</texture>
+
+    <!-- Sprites -->
+    <!-- Sprite from texture resource -->
+    <sprite id="sprite1"
+            scaleX="1.0" scaleY="1.0"
+            padLeft="0" padRight="0" padTop="0" padBottom="0"
+            rotate="180" opacity="1.0" tint="color:my_tint"
+            flip="false">texture:texture1</sprite>
+
+    <!-- Sprite by referencing another sprite resource -->
+    <sprite id="sprite2">sprite:sprite1</sprite>
+
+    <!-- Sprite from region resource -->
+    <sprite id="sprite3">region:region1</sprite>
+
+    <!-- Sprite from file -->
+    <sprite id="sprite4">play_dance_receptor.png</sprite>
+
+    <!-- Regions -->
+    <!-- Region from file -->
+    <region id="region1"
+            x="0" y="0" width="256" height="256">play_dance_note_hold_roll.png</region>
+
+    <!-- Region by referencing another region resource -->
+    <region id="region2"
+            x="0" y="0" width="256" height="256">region:region1</region>
+
+    <!-- Region from texture resource -->
+    <region id="region3"
+            x="0" y="0" width="256" height="256">texture:texture1</region>
+
+    <!-- Ninepatches -->
+    <!-- Ninepatch from file -->
+    <ninepatch id="ninepatch1"
+               left="10" right="10" top="10" bottom="10">play_dance_receptor.png</ninepatch>
+
+    <!-- Ninepatch from texture resource -->
+    <ninepatch id="ninepatch2"
+               left="10" right="10" top="10" bottom="10">texture:texture1</ninepatch>
+
+    <!-- Ninepatch from region resource -->
+    <ninepatch id="ninepatch3"
+               left="10" right="10" top="10" bottom="10">region:region1</ninepatch>
+
+    <!-- Ninepatch by referencing another ninepatch resource -->
+    <ninepatch id="ninepatch3"
+               left="10" right="10" top="10" bottom="10">ninepatch:ninepatch1</ninepatch>
+
+    <!-- Drawables -->
+    <!-- Drawable by referencing a texture resource -->
+    <drawable id="drawable1">texture:texture1</drawable>
+
+    <!-- Drawable by referencing a texture resource -->
+    <drawable id="drawable2">sprite:sprite1</drawable>
+
+    <!-- Drawable by referencing a texture resource -->
+    <drawable id="drawable3">region:region1</drawable>
+
+    <!-- Drawable by referencing a texture resource -->
+    <drawable id="drawable4">ninepatch:ninepatch1</drawable>
+
+    <!-- Drawable by referencing another drawable -->
+    <drawable id="drawable5">drawable:drawable1</drawable>
+</drawables>
