@@ -27,6 +27,6 @@ public class XmlTextureFilterResolver implements XmlValueResolver<Texture.Textur
             case "mipmap_linear_nearest": return Texture.TextureFilter.MipMapLinearNearest;
         }
 
-        throw new XmlParseException(String.format("Invalid align format for value '%s'!", value));
+        throw new XmlParseException(String.format("Invalid filter format for value '%s'!", value));
     }
 }

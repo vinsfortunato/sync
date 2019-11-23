@@ -17,23 +17,35 @@
 package net.touchmania.game.resource.xml.parsers;
 
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
+import net.touchmania.game.resource.Dimension;
 import net.touchmania.game.resource.xml.*;
-import net.touchmania.game.resource.xml.resolvers.XmlReferenceValueResolver;
+import net.touchmania.game.resource.xml.resolvers.*;
 import net.touchmania.game.util.xml.XmlParseException;
 import net.touchmania.game.util.xml.XmlParser;
+import net.touchmania.game.util.xml.XmlValueResolver;
+import static net.touchmania.game.resource.xml.resolvers.XmlTextureFilterResolver.GLOBAL_TEXTURE_FILTER_RESOLVER;
+import static net.touchmania.game.resource.xml.resolvers.XmlTextureWrapResolver.GLOBAL_TEXTURE_WRAP_RESOLVER;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class XmlDrawablesParser extends XmlMapResourceParser<XmlDrawableLoader> {
-    private XmlReferenceValueResolver<XmlDrawableLoader> drawableResolver = new XmlDrawableLoaderResolver();
-    private XmlReferenceValueResolver<XmlDrawableLoader> spriteResolver = new XmlSpriteDrawableLoaderResolver();
-    private XmlReferenceValueResolver<XmlDrawableLoader> ninepatchResolver = new XmlNinepatchDrawableLoaderResolver();
-    private XmlReferenceValueResolver<XmlDrawableLoader> textureResolver = new XmlTextureDrawableLoaderResolver();
-    private XmlReferenceValueResolver<XmlDrawableLoader> regionResolver = new XmlRegionDrawableLoaderResolver();
+    private final XmlValueResolver<Dimension> dimensionResolver;
+    private final XmlValueResolver<Boolean> booleanResolver;
+    private final XmlValueResolver<Color> colorResolver;
+    private final XmlValueResolver<Float> floatResolver;
+    private final XmlValueResolver<Integer> integerResolver;
+    private final XmlValueResolver<String> stringResolver;
+    private final XmlReferenceValueResolver<XmlDrawableLoader> drawableResolver;
+    private final XmlReferenceValueResolver<XmlDrawableLoader> spriteResolver;
+    private final XmlReferenceValueResolver<XmlDrawableLoader> ninepatchResolver;
+    private final XmlReferenceValueResolver<XmlDrawableLoader> textureResolver;
+    private final XmlReferenceValueResolver<XmlDrawableLoader> regionResolver;
 
     /**
      * Create a resource parser from its file.
@@ -41,6 +53,19 @@ public class XmlDrawablesParser extends XmlMapResourceParser<XmlDrawableLoader> 
      */
     public XmlDrawablesParser(FileHandle resourceFile, XmlTheme theme) {
         super(resourceFile);
+
+        //Init resolvers
+        this.dimensionResolver = XmlDimensionResolver.from(theme);
+        this.booleanResolver = XmlBooleanResolver.from(theme);
+        this.colorResolver = XmlColorResolver.from(theme);
+        this.floatResolver = XmlFloatResolver.from(theme);
+        this.integerResolver = XmlIntegerResolver.from(theme);
+        this.stringResolver = XmlStringResolver.from(theme);
+        this.drawableResolver = new XmlDrawableLoaderResolver();
+        this.spriteResolver = new XmlSpriteDrawableLoaderResolver();
+        this.ninepatchResolver = new XmlNinepatchDrawableLoaderResolver();
+        this.textureResolver = new XmlTextureDrawableLoaderResolver();
+        this.regionResolver = new XmlRegionDrawableLoaderResolver();
     }
 
     @Override
@@ -112,16 +137,31 @@ public class XmlDrawablesParser extends XmlMapResourceParser<XmlDrawableLoader> 
 
             throw new XmlParseException(String.format(
                     "Unrecognised attribute with name '%s' and value '%s'!", attribute.key, attribute.value));
-
         }
     }
 
     private boolean parseAttribute(XmlTextureLoader loader, String name, String value) throws XmlParseException {
+        switch(name) {
+            case "minFilter": loader.minFilter = GLOBAL_TEXTURE_FILTER_RESOLVER.resolve(value);                 break;
+            case "maxFilter": loader.magFilter = GLOBAL_TEXTURE_FILTER_RESOLVER.resolve(value);                 break;
+            case "uWrap":     loader.uWrap = GLOBAL_TEXTURE_WRAP_RESOLVER.resolve(value);                       break;
+            case "vWrap":     loader.vWrap = GLOBAL_TEXTURE_WRAP_RESOLVER.resolve(value);                       break;
+            default: return false; //Unrecognised attribute
+        }
 
+        return true;
     }
 
     private boolean parseAttribute(XmlRegionLoader loader, String name, String value) throws XmlParseException {
+        switch(name) {
+            case "x": loader.x = dimensionResolver.resolve(value).getIntValue();                                break;
+            case "y": loader.y = dimensionResolver.resolve(value).getIntValue();                                break;
+            case "width": loader.width = dimensionResolver.resolve(value).getIntValue();                        break;
+            case "height": loader.height = dimensionResolver.resolve(value).getIntValue();                      break;
+            default: return false; //Unrecognised attribute
+        }
 
+        return true;
     }
 
     @Override

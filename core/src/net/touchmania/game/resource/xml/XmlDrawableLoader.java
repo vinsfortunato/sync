@@ -1,9 +1,10 @@
 package net.touchmania.game.resource.xml;
 
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import net.touchmania.game.util.Copy;
 import net.touchmania.game.util.Loader;
 
-public abstract class XmlDrawableLoader implements Loader<Drawable> {
+public abstract class XmlDrawableLoader implements Loader<Drawable>, Copy {
     public float minWidth;
     public float minHeight;
     public float leftWidth;
@@ -26,5 +27,6 @@ public abstract class XmlDrawableLoader implements Loader<Drawable> {
         loader.bottomHeight = bottomHeight;
     }
 
+    @Override
     public abstract XmlDrawableLoader copy();
 }

@@ -48,7 +48,7 @@ public class XmlFontsParser extends XmlMapResourceParser<XmlFontLoader> {
     public XmlFontsParser(FileHandle resourceFile, XmlTheme theme) {
         super(resourceFile);
 
-        //Create a new instance for every reference resolver.
+        //Init resolvers
         this.dimensionResolver = XmlDimensionResolver.from(theme);
         this.booleanResolver = XmlBooleanResolver.from(theme);
         this.colorResolver = XmlColorResolver.from(theme);
