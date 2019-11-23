@@ -26,9 +26,10 @@ public abstract class XmlBooleanResolver extends XmlReferenceValueResolver<Boole
         @Override
         public Boolean resolve(String value) throws XmlParseException {
             if(value != null) {
-                if(value.equals("true")) {
+                value = value.trim();
+                if(value.equalsIgnoreCase("true")) {
                     return true;
-                } else if(value.equals("false")) {
+                } else if(value.equalsIgnoreCase("false")) {
                     return false;
                 }
             }

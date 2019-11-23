@@ -11,16 +11,20 @@ public abstract class XmlDrawableLoader implements Loader<Drawable> {
     public float topHeight;
     public float bottomHeight;
 
-    public XmlDrawableLoader copy() {
-        XmlDrawableLoader copy = create();
-        copy.minWidth = minWidth;
-        copy.minHeight = minHeight;
-        copy.leftWidth = leftWidth;
-        copy.rightWidth = rightWidth;
-        copy.topHeight = topHeight;
-        copy.bottomHeight = bottomHeight;
-        return copy;
+    public XmlDrawableLoader() {}
+
+    /**
+     * Copy constructor.
+     * @param loader the loader to copy.
+     */
+    public XmlDrawableLoader(XmlDrawableLoader loader) {
+        loader.minWidth = minWidth;
+        loader.minHeight = minHeight;
+        loader.leftWidth = leftWidth;
+        loader.rightWidth = rightWidth;
+        loader.topHeight = topHeight;
+        loader.bottomHeight = bottomHeight;
     }
 
-    protected abstract XmlDrawableLoader create();
+    public abstract XmlDrawableLoader copy();
 }

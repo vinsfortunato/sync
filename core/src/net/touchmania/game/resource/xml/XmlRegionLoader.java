@@ -1,4 +1,4 @@
 package net.touchmania.game.resource.xml;
 
-public class XmlNinePatchDrawableLoader {
+public class XmlRegionLoader {
 }

@@ -27,7 +27,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class XmlDrawableParser  extends XmlMapResourceParser<XmlDrawableLoader> {
+public class XmlDrawablesParser extends XmlMapResourceParser<XmlDrawableLoader> {
     private XmlReferenceValueResolver<XmlDrawableLoader> drawableResolver = new XmlDrawableLoaderResolver();
     private XmlReferenceValueResolver<XmlDrawableLoader> spriteResolver = new XmlSpriteDrawableLoaderResolver();
     private XmlReferenceValueResolver<XmlDrawableLoader> ninepatchResolver = new XmlNinepatchDrawableLoaderResolver();
@@ -38,7 +38,7 @@ public class XmlDrawableParser  extends XmlMapResourceParser<XmlDrawableLoader> 
      * Create a resource parser from its file.
      * @param resourceFile the resource file.
      */
-    public XmlDrawableParser(FileHandle resourceFile, XmlTheme theme) {
+    public XmlDrawablesParser(FileHandle resourceFile, XmlTheme theme) {
         super(resourceFile);
     }
 
@@ -139,30 +139,25 @@ public class XmlDrawableParser  extends XmlMapResourceParser<XmlDrawableLoader> 
     }
 
     private class XmlDrawableLoaderResolver extends XmlReferenceValueResolver<XmlDrawableLoader> {
-
         @Override
         protected String getResourceTypeName() {
             return "drawable";
         }
 
-        /* Referencing a declared drawable is like extending it.
-         * Attributes of the extended drawable can be overridden.*/
         @Override
         public XmlDrawableLoader resolveReference(String resourceId) throws XmlParseException {
-            //Drawable definition is extending another predeclared drawable
             XmlDrawableLoader loader = getResolvedValues().get(resourceId);
             return loader != null ? loader.copy() : null;
         }
 
         @Override
         public XmlDrawableLoader resolveValue(String value) throws XmlParseException {
-            //TODO.. <drawable> is used only for referencing. So no need to parse value.
-            return null;
+            //<drawable> is used only for referencing. So no need to parse value.
+            throw new XmlParseException("Unexpected behavior.");
         }
     }
 
     private class XmlSpriteDrawableLoaderResolver extends XmlDrawableLoaderResolver {
-
         @Override
         public XmlDrawableLoader resolveReference(String resourceId) throws XmlParseException {
             return null;
@@ -175,7 +170,6 @@ public class XmlDrawableParser  extends XmlMapResourceParser<XmlDrawableLoader> 
     }
 
     private class XmlTextureDrawableLoaderResolver extends XmlDrawableLoaderResolver {
-
         @Override
         public XmlDrawableLoader resolveReference(String resourceId) throws XmlParseException {
             return null;
@@ -188,7 +182,6 @@ public class XmlDrawableParser  extends XmlMapResourceParser<XmlDrawableLoader> 
     }
 
     private class XmlNinepatchDrawableLoaderResolver extends XmlDrawableLoaderResolver {
-
         @Override
         public XmlDrawableLoader resolveReference(String resourceId) throws XmlParseException {
             return null;
@@ -201,7 +194,6 @@ public class XmlDrawableParser  extends XmlMapResourceParser<XmlDrawableLoader> 
     }
 
     private class XmlRegionDrawableLoaderResolver extends XmlDrawableLoaderResolver {
-
         @Override
         public XmlDrawableLoader resolveReference(String resourceId) throws XmlParseException {
             return null;

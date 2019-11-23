@@ -42,6 +42,33 @@ public class XmlFontLoader implements Loader<BitmapFont>, Cloneable {
         this.file = file;
     }
 
+    public XmlFontLoader(XmlFontLoader loader) {
+        this(loader.file);
+        loader.parameter.size = parameter.size;
+        loader.parameter.mono = parameter.mono;
+        loader.parameter.hinting = parameter.hinting;
+        loader.parameter.color = new Color(parameter.color);
+        loader.parameter.gamma = parameter.gamma;
+        loader.parameter.renderCount = parameter.renderCount;
+        loader.parameter.borderWidth = parameter.borderWidth;
+        loader.parameter.borderColor = new Color(parameter.borderColor);
+        loader.parameter.borderStraight = parameter.borderStraight;
+        loader.parameter.borderGamma = parameter.borderGamma;
+        loader.parameter.shadowOffsetX = parameter.shadowOffsetX;
+        loader.parameter.shadowOffsetY = parameter.shadowOffsetY;
+        loader.parameter.shadowColor = new Color(parameter.shadowColor);
+        loader.parameter.spaceX = parameter.spaceX;
+        loader.parameter.spaceY = parameter.spaceY;
+        loader.parameter.characters = parameter.characters;
+        loader.parameter.kerning = parameter.kerning;
+        loader.parameter.packer = parameter.packer;
+        loader.parameter.flip = parameter.flip;
+        loader.parameter.genMipMaps = parameter.genMipMaps;
+        loader.parameter.minFilter = parameter.minFilter;
+        loader.parameter.magFilter = parameter.magFilter;
+        loader.parameter.incremental = parameter.incremental;
+    }
+
     public BitmapFont load() throws Exception {
         FreeTypeFontGenerator generator = null;
         try {
@@ -56,33 +83,5 @@ public class XmlFontLoader implements Loader<BitmapFont>, Cloneable {
                 }
             }
         }
-    }
-
-    public XmlFontLoader copy() {
-        XmlFontLoader copy = new XmlFontLoader(file);
-        copy.parameter.size = parameter.size;
-        copy.parameter.mono = parameter.mono;
-        copy.parameter.hinting = parameter.hinting;
-        copy.parameter.color = new Color(parameter.color);
-        copy.parameter.gamma = parameter.gamma;
-        copy.parameter.renderCount = parameter.renderCount;
-        copy.parameter.borderWidth = parameter.borderWidth;
-        copy.parameter.borderColor = new Color(parameter.borderColor);
-        copy.parameter.borderStraight = parameter.borderStraight;
-        copy.parameter.borderGamma = parameter.borderGamma;
-        copy.parameter.shadowOffsetX = parameter.shadowOffsetX;
-        copy.parameter.shadowOffsetY = parameter.shadowOffsetY;
-        copy.parameter.shadowColor = new Color(parameter.shadowColor);
-        copy.parameter.spaceX = parameter.spaceX;
-        copy.parameter.spaceY = parameter.spaceY;
-        copy.parameter.characters = parameter.characters;
-        copy.parameter.kerning = parameter.kerning;
-        copy.parameter.packer = parameter.packer;
-        copy.parameter.flip = parameter.flip;
-        copy.parameter.genMipMaps = parameter.genMipMaps;
-        copy.parameter.minFilter = parameter.minFilter;
-        copy.parameter.magFilter = parameter.magFilter;
-        copy.parameter.incremental = parameter.incremental;
-        return copy;
     }
 }

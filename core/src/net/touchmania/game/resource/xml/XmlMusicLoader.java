@@ -25,7 +25,7 @@ import net.touchmania.game.util.Loader;
 
 public class XmlMusicLoader implements Loader<Music>, Cloneable {
     /** The sound file **/
-    private FileHandle file;
+    public final FileHandle file;
 
     /**
      * Creates a loader from a sound file.
@@ -35,15 +35,19 @@ public class XmlMusicLoader implements Loader<Music>, Cloneable {
         this.file = file;
     }
 
+    /**
+     * Copy constructor.
+     * @param loader the loader to copy.
+     */
+    public XmlMusicLoader(XmlMusicLoader loader) {
+        this(loader.file);
+    }
+
     public Music load() throws Exception {
         try {
             return Gdx.audio.newMusic(file);
         } catch(GdxRuntimeException e) {
             throw new Exception("Music cannot be loaded correctly!", e);
         }
-    }
-
-    public XmlMusicLoader copy() {
-        return new XmlMusicLoader(file);
     }
 }

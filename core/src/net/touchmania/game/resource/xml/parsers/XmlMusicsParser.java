@@ -53,7 +53,7 @@ public class XmlMusicsParser extends XmlMapResourceParser<XmlMusicLoader> {
         public XmlMusicLoader resolveReference(String resourceId) {
             //Music definition is extending another declared music
             XmlMusicLoader loader = getResolvedValues().get(resourceId);
-            return loader != null ? loader.copy() : null;
+            return loader != null ? new XmlMusicLoader(loader) : null;
         }
 
         @Override

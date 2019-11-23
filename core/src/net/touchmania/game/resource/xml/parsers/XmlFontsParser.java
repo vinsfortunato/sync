@@ -139,8 +139,8 @@ public class XmlFontsParser extends XmlMapResourceParser<XmlFontLoader> {
         @Override
         public XmlFontLoader resolveReference(String resourceId) {
             //Font definition is extending another declared font
-            XmlFontLoader generator = getResolvedValues().get(resourceId);
-            return generator != null ? generator.copy() : null;
+            XmlFontLoader loader = getResolvedValues().get(resourceId);
+            return loader != null ? new XmlFontLoader(loader) : null;
         }
 
         @Override
@@ -149,27 +149,6 @@ public class XmlFontsParser extends XmlMapResourceParser<XmlFontLoader> {
                 throw new XmlParseException("Invalid font file! File name cannot be null or empty!");
             }
             return new XmlFontLoader(getResourceFile().sibling(value));
-        }
-    }
-
-    private static class XmlTextureFilterResolver implements XmlValueResolver<Texture.TextureFilter> {
-        @Override
-        public Texture.TextureFilter resolve(String value) throws XmlParseException {
-            if(value == null || value.isEmpty()) {
-                throw new XmlParseException("Invalid filter value! Value cannot be null or empty!");
-            }
-
-            switch(value.trim().toLowerCase()) {
-                case "nearest": return Texture.TextureFilter.Nearest;
-                case "linear": return Texture.TextureFilter.Linear;
-                case "mipmap": return Texture.TextureFilter.MipMap;
-                case "mipmapnearestnearest": return Texture.TextureFilter.MipMapNearestNearest;
-                case "mipmapnearestlinear": return Texture.TextureFilter.MipMapNearestLinear;
-                case "mipmaplinearlinear": return Texture.TextureFilter.MipMapLinearLinear;
-                case "mipmaplinearnearest": return Texture.TextureFilter.MipMapLinearNearest;
-            }
-
-            throw new XmlParseException(String.format("Invalid align format for value '%s'!", value));
         }
     }
 
@@ -185,9 +164,12 @@ public class XmlFontsParser extends XmlMapResourceParser<XmlFontLoader> {
                 case "slight": return FreeTypeFontGenerator.Hinting.Slight;
                 case "medium": return FreeTypeFontGenerator.Hinting.Medium;
                 case "full": return FreeTypeFontGenerator.Hinting.Full;
-                case "autoslight": return FreeTypeFontGenerator.Hinting.AutoSlight;
-                case "automedium": return FreeTypeFontGenerator.Hinting.AutoMedium;
-                case "autofull": return FreeTypeFontGenerator.Hinting.AutoFull;
+                case "autoslight":
+                case "auto_slight": return FreeTypeFontGenerator.Hinting.AutoSlight;
+                case "automedium":
+                case "auto_medium": return FreeTypeFontGenerator.Hinting.AutoMedium;
+                case "autofull":
+                case "auto_full": return FreeTypeFontGenerator.Hinting.AutoFull;
             }
 
             throw new XmlParseException(String.format("Invalid align format for value '%s'!", value));

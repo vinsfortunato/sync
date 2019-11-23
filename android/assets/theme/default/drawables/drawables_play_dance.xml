@@ -8,7 +8,7 @@
     <ninepatch left="10" right="10" top="10" bottom="10">drawable:play_dance_note_tap_4</ninepatch>
 
     <!-- Textures -->
-    <texture id="play_dance_receptor">play_dance_receptor.png</texture>
+    <texture id="play_dance_receptor" minFilter="nearest" magFilter="nearest" uWrap="repeat" vWrap="repeat">play_dance_receptor.png</texture>
 
     <!-- Tap notes -->
     <region id="play_dance_note_tap_4"  x="0" y="0"    width="256" height="256"><texture>play_dance_note_tap.png</texture></region>
