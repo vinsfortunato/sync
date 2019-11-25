@@ -30,7 +30,7 @@ public class XmlColorsParser extends XmlMapResourceParser<Color> {
         @Override
         public Color resolveReference(String resourceId) throws XmlParseException {
             Color color = getResolvedValues().get(resourceId);
-            return color != null ? ColorUtils.copy(color) : null;
+            return ColorUtils.copy(color);
         }
     };
 

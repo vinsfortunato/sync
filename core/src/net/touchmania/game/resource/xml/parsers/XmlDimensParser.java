@@ -28,8 +28,7 @@ public class XmlDimensParser extends XmlMapResourceParser<Dimension> {
     private XmlDimensionResolver dimenResolver = new XmlDimensionResolver() {
         @Override
         public Dimension resolveReference(String resourceId) {
-            Dimension dimension = getResolvedValues().get(resourceId);
-            return dimension != null ? dimension.copy() : null;
+            return getResolvedValues().get(resourceId);
         }
     };
 

@@ -23,16 +23,16 @@ public class XmlMusicsParser extends XmlMapResourceParser<XmlMusicLoader> {
 
     @Override
     protected void checkRoot(XmlParser.Element root) throws XmlParseException {
-        if(!root.getName().equals("sounds")) {
-            throw new XmlParseException("Unexpected xml root element name. Expected to be 'sounds'!");
+        if(!root.getName().equals("musics")) {
+            throw new XmlParseException("Unexpected xml root element name. Expected to be 'musics'!");
         }
     }
 
     @Override
     protected void checkRootChild(XmlParser.Element element) throws XmlParseException {
-        if(!element.getName().equals("sound")) {
+        if(!element.getName().equals("music")) {
             throw new XmlParseException(String.format(
-                    "Unexpected element name '%s'! Expected to be 'sound' or 'music'!", element.getName()));
+                    "Unexpected element name '%s'! Expected to be 'music'!", element.getName()));
         }
     }
 
@@ -47,13 +47,10 @@ public class XmlMusicsParser extends XmlMapResourceParser<XmlMusicLoader> {
             return "music";
         }
 
-        /* Referencing a declared music is like extending it.
-         * Attributes of the extended music can be overridden.*/
         @Override
         public XmlMusicLoader resolveReference(String resourceId) {
-            //Music definition is extending another declared music
             XmlMusicLoader loader = getResolvedValues().get(resourceId);
-            return loader != null ? new XmlMusicLoader(loader) : null;
+            return new XmlMusicLoader(loader);
         }
 
         @Override

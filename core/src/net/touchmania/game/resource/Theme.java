@@ -17,6 +17,7 @@
 package net.touchmania.game.resource;
 
 import com.badlogic.gdx.utils.Array;
+import net.touchmania.game.util.ui.TexturePath;
 
 import java.util.List;
 import java.util.Locale;
@@ -59,4 +60,6 @@ public interface Theme extends ResourceProvider {
      * uses the languages defined into the fallback theme.
      */
     List<Locale> getLanguages();
+
+    TexturePath getTexturePath(String path);
 }

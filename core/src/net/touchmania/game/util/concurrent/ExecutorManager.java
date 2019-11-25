@@ -17,7 +17,6 @@
 package net.touchmania.game.util.concurrent;
 
 import com.badlogic.gdx.utils.Disposable;
-import com.badlogic.gdx.utils.IntMap;
 import com.google.common.base.Preconditions;
 import net.touchmania.game.Game;
 

@@ -53,6 +53,8 @@ public class GameScreen implements Screen {
 
         /* TODO TEST START */
         FileHandle fh = Gdx.files.external("touchmania/Songs/ITG Rodeo Tournament 8/012 - Into Dust");
+
+        Gdx.app.log("test", String.valueOf(fh.exists()));
         SongLoader sl = new SongLoader(fh);
 
         try {

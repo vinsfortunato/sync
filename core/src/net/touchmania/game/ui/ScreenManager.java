@@ -120,7 +120,7 @@ public class ScreenManager implements Disposable {
         }
     }
 
-    private class DisposeScreenTask implements Runnable {
+    private static class DisposeScreenTask implements Runnable {
         private Screen screen;
 
         DisposeScreenTask(Screen screen) {

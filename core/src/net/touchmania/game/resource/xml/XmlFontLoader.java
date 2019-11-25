@@ -21,6 +21,10 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
+import com.google.common.base.Charsets;
+import com.google.common.hash.HashCode;
+import com.google.common.hash.HashFunction;
+import com.google.common.hash.Hashing;
 import net.touchmania.game.util.Loader;
 
 /**
@@ -29,6 +33,8 @@ import net.touchmania.game.util.Loader;
  * more info (supported font formats, features etc..)
  */
 public class XmlFontLoader implements Loader<BitmapFont>, Cloneable {
+    private XmlTheme theme;
+
     /** The font file **/
     public final FileHandle file;
     /** Holds font generation parameters **/
@@ -38,50 +44,79 @@ public class XmlFontLoader implements Loader<BitmapFont>, Cloneable {
      * Creates a generator from a font file.
      * @param file the font file.
      */
-    public XmlFontLoader(FileHandle file) {
+    public XmlFontLoader(XmlTheme theme, FileHandle file) {
+        this.theme = theme;
         this.file = file;
     }
 
     public XmlFontLoader(XmlFontLoader loader) {
-        this(loader.file);
-        loader.parameter.size = parameter.size;
-        loader.parameter.mono = parameter.mono;
-        loader.parameter.hinting = parameter.hinting;
-        loader.parameter.color = new Color(parameter.color);
-        loader.parameter.gamma = parameter.gamma;
-        loader.parameter.renderCount = parameter.renderCount;
-        loader.parameter.borderWidth = parameter.borderWidth;
-        loader.parameter.borderColor = new Color(parameter.borderColor);
-        loader.parameter.borderStraight = parameter.borderStraight;
-        loader.parameter.borderGamma = parameter.borderGamma;
-        loader.parameter.shadowOffsetX = parameter.shadowOffsetX;
-        loader.parameter.shadowOffsetY = parameter.shadowOffsetY;
-        loader.parameter.shadowColor = new Color(parameter.shadowColor);
-        loader.parameter.spaceX = parameter.spaceX;
-        loader.parameter.spaceY = parameter.spaceY;
-        loader.parameter.characters = parameter.characters;
-        loader.parameter.kerning = parameter.kerning;
-        loader.parameter.packer = parameter.packer;
-        loader.parameter.flip = parameter.flip;
-        loader.parameter.genMipMaps = parameter.genMipMaps;
-        loader.parameter.minFilter = parameter.minFilter;
-        loader.parameter.magFilter = parameter.magFilter;
-        loader.parameter.incremental = parameter.incremental;
+        this(loader.theme, loader.file);
+        parameter.size = loader.parameter.size;
+        parameter.mono = loader.parameter.mono;
+        parameter.hinting = loader.parameter.hinting;
+        parameter.color = new Color(loader.parameter.color);
+        parameter.gamma = loader.parameter.gamma;
+        parameter.renderCount = loader.parameter.renderCount;
+        parameter.borderWidth = loader.parameter.borderWidth;
+        parameter.borderColor = new Color(loader.parameter.borderColor);
+        parameter.borderStraight = loader.parameter.borderStraight;
+        parameter.borderGamma = loader.parameter.borderGamma;
+        parameter.shadowOffsetX = loader.parameter.shadowOffsetX;
+        parameter.shadowOffsetY = loader.parameter.shadowOffsetY;
+        parameter.shadowColor = new Color(loader.parameter.shadowColor);
+        parameter.spaceX = loader.parameter.spaceX;
+        parameter.spaceY = loader.parameter.spaceY;
+        parameter.characters = loader.parameter.characters;
+        parameter.kerning = loader.parameter.kerning;
+        parameter.flip = loader.parameter.flip;
+        parameter.genMipMaps = loader.parameter.genMipMaps;
+        parameter.minFilter = loader.parameter.minFilter;
+        parameter.magFilter = loader.parameter.magFilter;
+        parameter.incremental = loader.parameter.incremental;
     }
 
     public BitmapFont load() throws Exception {
-        FreeTypeFontGenerator generator = null;
-        try {
-            generator = new FreeTypeFontGenerator(file);
-            return generator.generateFont(parameter);
-        } finally {
-            if(generator != null) {
-                try {
-                    generator.dispose();
-                } catch(Throwable e) {
-                    //Ignore
+        //Generate hash from params
+        HashFunction hf = Hashing.murmur3_128();
+        HashCode hc = hf.newHasher()
+                .putString(file.path(), Charsets.UTF_8)
+                .putInt(parameter.size)
+                .putBoolean(parameter.mono)
+                .putInt(parameter.hinting.hashCode())
+                .putInt(parameter.color != null ? parameter.color.toIntBits() : 0)
+                .putFloat(parameter.gamma)
+                .putInt(parameter.renderCount)
+                .putFloat(parameter.borderWidth)
+                .putInt(parameter.borderColor != null ? parameter.borderColor.toIntBits() : 0)
+                .putBoolean(parameter.borderStraight)
+                .putFloat(parameter.borderGamma)
+                .putFloat(parameter.shadowOffsetX)
+                .putFloat(parameter.shadowOffsetY)
+                .putInt(parameter.shadowColor != null ? parameter.shadowColor.toIntBits() : 0)
+                .putFloat(parameter.spaceX)
+                .putFloat(parameter.spaceY)
+                .putString(parameter.characters, Charsets.UTF_8)
+                .putBoolean(parameter.kerning)
+                .putBoolean(parameter.flip)
+                .putBoolean(parameter.genMipMaps)
+                .putInt(parameter.minFilter.hashCode())
+                .putInt(parameter.magFilter.hashCode())
+                .putBoolean(parameter.incremental).hash();
+
+        return theme.load(hc.asLong(), BitmapFont.class, () -> {
+            FreeTypeFontGenerator generator = null;
+            try {
+                generator = new FreeTypeFontGenerator(file);
+                return generator.generateFont(parameter);
+            } finally {
+                if(generator != null) {
+                    try {
+                        generator.dispose();
+                    } catch(Throwable e) {
+                        //Ignore
+                    }
                 }
             }
-        }
+        });
     }
 }

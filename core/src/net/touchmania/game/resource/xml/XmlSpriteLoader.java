@@ -2,13 +2,13 @@ package net.touchmania.game.resource.xml;
 
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
-public class XmlNinePatchLoader extends XmlDrawableLoader {
-    public XmlNinePatchLoader(XmlTheme theme) {
+public class XmlSpriteLoader extends XmlDrawableLoader {
+    public XmlSpriteLoader(XmlTheme theme) {
         super(theme);
     }
 
     @Override
-    public XmlNinePatchLoader copy() {
+    public XmlSpriteLoader copy() {
         return null;
     }
 

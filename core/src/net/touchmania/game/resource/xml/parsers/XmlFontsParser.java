@@ -133,14 +133,10 @@ public class XmlFontsParser extends XmlMapResourceParser<XmlFontLoader> {
             return "font";
         }
 
-        /*
-         * Referencing a declared font is like extending it.
-         * Attributes of the extended font can be overridden.*/
         @Override
         public XmlFontLoader resolveReference(String resourceId) {
-            //Font definition is extending another declared font
             XmlFontLoader loader = getResolvedValues().get(resourceId);
-            return loader != null ? new XmlFontLoader(loader) : null;
+            return new XmlFontLoader(loader);
         }
 
         @Override
@@ -148,7 +144,7 @@ public class XmlFontsParser extends XmlMapResourceParser<XmlFontLoader> {
             if(value == null || value.isEmpty()) {
                 throw new XmlParseException("Invalid font file! File name cannot be null or empty!");
             }
-            return new XmlFontLoader(getResourceFile().sibling(value));
+            return new XmlFontLoader(getResourceFile().sibling("fonts").child(value));
         }
     }
 

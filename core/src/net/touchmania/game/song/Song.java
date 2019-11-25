@@ -20,6 +20,8 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 import net.touchmania.game.song.sim.SimFormat;
 
+import java.util.List;
+
 /**
  * @author flood2d
  */
@@ -66,5 +68,5 @@ public class Song {
     public float sampleLength = -1.0f;
     public DisplayBPM displayBPM;
     public boolean selectable = true;
-    public Array<Chart> charts;
+    public List<Chart> charts;
 }

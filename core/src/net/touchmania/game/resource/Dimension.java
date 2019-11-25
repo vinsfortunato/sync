@@ -48,8 +48,4 @@ public class Dimension {
     public int getIntValue() {
         return (int) getValue();
     }
-
-    public Dimension copy() {
-        return new Dimension(baseValue);
-    }
 }

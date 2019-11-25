@@ -76,14 +76,11 @@ public class XmlValuesParser extends XmlMapResourceParser<Object> {
         @Override
         public Boolean resolveReference(String resourceId) throws XmlParseException {
             Object value = getResolvedValues().get(resourceId);
-            if(value != null) {
-                if(value instanceof Boolean) {
-                    return (Boolean) value;
-                }
-                throw new XmlParseException(String.format(
-                        "Incompatible reference! Trying to cast '%s' to boolean!", value.getClass().getName()));
+            if(value instanceof Boolean) {
+                return (Boolean) value;
             }
-            return null;
+            throw new XmlParseException(String.format(
+                    "Incompatible reference! Trying to cast '%s' to boolean!", value.getClass().getName()));
         }
     };
 
@@ -91,14 +88,11 @@ public class XmlValuesParser extends XmlMapResourceParser<Object> {
         @Override
         public Float resolveReference(String resourceId) throws XmlParseException {
             Object value = getResolvedValues().get(resourceId);
-            if(value != null) {
-                if(value instanceof Float) {
-                    return (Float) value;
-                }
-                throw new XmlParseException(String.format(
-                        "Incompatible reference! Trying to cast '%s' to float!", value.getClass().getName()));
+            if(value instanceof Float) {
+                return (Float) value;
             }
-            return null;
+            throw new XmlParseException(String.format(
+                    "Incompatible reference! Trying to cast '%s' to float!", value.getClass().getName()));
         }
     };
 
@@ -106,14 +100,11 @@ public class XmlValuesParser extends XmlMapResourceParser<Object> {
         @Override
         public Integer resolveReference(String resourceId) throws XmlParseException {
             Object value = getResolvedValues().get(resourceId);
-            if(value != null) {
-                if(value instanceof Integer) {
-                    return (Integer) value;
-                }
-                throw new XmlParseException(String.format(
-                        "Incompatible reference! Trying to cast '%s' to integer!", value.getClass().getName()));
+            if(value instanceof Integer) {
+                return (Integer) value;
             }
-            return null;
+            throw new XmlParseException(String.format(
+                    "Incompatible reference! Trying to cast '%s' to integer!", value.getClass().getName()));
         }
     };
 
@@ -121,14 +112,11 @@ public class XmlValuesParser extends XmlMapResourceParser<Object> {
         @Override
         public Long resolveReference(String resourceId) throws XmlParseException {
             Object value = getResolvedValues().get(resourceId);
-            if(value != null) {
-                if(value instanceof Long) {
-                    return (Long) value;
-                }
-                throw new XmlParseException(String.format(
-                        "Incompatible reference! Trying to cast '%s' to duration long!", value.getClass().getName()));
+            if(value instanceof Long) {
+                return (Long) value;
             }
-            return null;
+            throw new XmlParseException(String.format(
+                    "Incompatible reference! Trying to cast '%s' to duration long!", value.getClass().getName()));
         }
     };
 
@@ -136,14 +124,11 @@ public class XmlValuesParser extends XmlMapResourceParser<Object> {
         @Override
         public Float resolveReference(String resourceId) throws XmlParseException {
             Object value = getResolvedValues().get(resourceId);
-            if(value != null) {
-                if(value instanceof Float) {
-                    return (Float) value;
-                }
-                throw new XmlParseException(String.format(
-                        "Incompatible reference! Trying to cast '%s' to percent float!", value.getClass().getName()));
+            if(value instanceof Float) {
+                return (Float) value;
             }
-            return null;
+            throw new XmlParseException(String.format(
+                    "Incompatible reference! Trying to cast '%s' to percent float!", value.getClass().getName()));
         }
     };
 }

@@ -16,6 +16,7 @@
 
 package net.touchmania.game.resource.xml;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
@@ -23,8 +24,13 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.utils.Disposable;
+import net.touchmania.game.Game;
 import net.touchmania.game.resource.*;
 import net.touchmania.game.resource.xml.parsers.XmlStyleParser;
+import net.touchmania.game.util.Loader;
+import net.touchmania.game.util.ui.DPI;
+import net.touchmania.game.util.ui.TexturePath;
 
 import java.util.*;
 
@@ -47,7 +53,8 @@ public class XmlTheme implements Theme {
     private List<Locale> langs;
 
     private int groupId = 0;
-    private Map<String, Set<Integer>> loadedResources;
+    private Map<Long, Set<Integer>> resourceGroups = new HashMap<>();
+    private Map<Long, Disposable> loadedResources = new HashMap<>();
 
     public XmlTheme(FileHandle manifestFile) {
         this.manifestFile = manifestFile;
@@ -249,7 +256,78 @@ public class XmlTheme implements Theme {
 
     @Override
     public void endGroup(int groupId) {
-        //TODO
+        Iterator<Long> resIds = loadedResources.keySet().iterator();
+        while(resIds.hasNext()) {
+            Long resId = resIds.next();
+            Set<Integer> groups = resourceGroups.get(resId);
+            if(groups.remove(groupId) && groups.isEmpty()) {
+                //Resource no more required, dispose
+                resourceGroups.remove(resId);
+                Disposable res = loadedResources.get(resId);
+                res.dispose();
+            }
+            resIds.remove();
+        }
+    }
+
+    public <R extends Disposable> R load(long id, Class<R> type, Loader<R> loader) throws Exception {
+        int groupId = this.groupId;
+        R res;
+
+        if(loadedResources.containsKey(id)) {
+            //Preloaded resource
+            res = type.cast(loadedResources.get(id));
+        } else {
+            //Load resource and track
+            res = loader.load();
+            loadedResources.put(id, res);
+        }
+
+        //Bind resource to group
+        Set<Integer> groups = resourceGroups.get(id);
+        if(groups == null) {
+            groups = new HashSet<>();
+            resourceGroups.put(id, groups);
+        }
+        groups.add(groupId);
+
+        return res;
+    }
+
+    @Override
+    public TexturePath getTexturePath(String path) {
+        //Resolve texture path
+        FileHandle drawablesDir = manifestFile.sibling("drawables");
+        FileHandle textureFile;
+
+        DPI dpi = Game.instance().getBackend().getDeviceDPI();
+        String dpiDirName = null;
+        switch(dpi) {
+            case LOW:       dpiDirName = "low";         break;
+            case MEDIUM:    dpiDirName = "medium";      break;
+            case HIGH:      dpiDirName = "high";        break;
+        }
+
+        //Search inside drawables/<dpi>/ dir first
+        textureFile = drawablesDir.child(dpiDirName).child(path);
+        if(!textureFile.exists()) {
+            //Dpi specific texture not found
+            //Search inside drawables/ dir
+            textureFile = drawablesDir.child(path);
+            if(!textureFile.exists()) {
+                //Texture not found in this theme
+                if(hasFallbackTheme() && getFallbackTheme() instanceof XmlTheme) {
+                    //Search inside fallback theme
+                    return getFallbackTheme().getTexturePath(path);
+                } else {
+                    //Return absolute texture path
+                    return () -> Gdx.files.absolute(path);
+                }
+            }
+        }
+
+        final FileHandle f = textureFile;
+        return () -> f;
     }
 
     public void setManifest(XmlThemeManifest manifest) {

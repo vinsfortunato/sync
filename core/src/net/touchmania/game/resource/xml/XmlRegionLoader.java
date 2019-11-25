@@ -8,16 +8,16 @@ public class XmlRegionLoader extends XmlDrawableLoader {
     public int width;
     public int height;
 
-    public XmlRegionLoader() {
-        super();
+    public XmlRegionLoader(XmlTheme theme) {
+        super(theme);
     }
 
     public XmlRegionLoader(XmlRegionLoader loader) {
         super(loader);
-        this.x = loader.x;
-        this.y = loader.y;
-        this.width = loader.width;
-        this.height = loader.height;
+        x = loader.x;
+        y = loader.y;
+        width = loader.width;
+        height = loader.height;
     }
 
     @Override

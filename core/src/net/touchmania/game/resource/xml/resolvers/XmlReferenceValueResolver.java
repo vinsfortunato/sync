@@ -19,55 +19,62 @@ package net.touchmania.game.resource.xml.resolvers;
 import net.touchmania.game.util.xml.XmlParseException;
 import net.touchmania.game.util.xml.XmlValueResolver;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
- * Resolve values that can reference resources of the same type. If the value
+ * Resolve values that can reference resources. If the value
  * isn't referencing a resource it will be parsed as a simple value (A simple value
- * is a value that doesn't reference another resource of the same type).
+ * is a value that doesn't reference another resource).
  * @param <T> the type of the value to resolve.
  */
 public abstract class XmlReferenceValueResolver<T> implements XmlValueResolver<T> {
+    public static Pattern REFERENCE_REGEX = Pattern.compile("[0-9a-zA-Z_-]+:[0-9a-zA-Z_-]+");
+
     @Override
     public T resolve(String value) throws XmlParseException {
         T result;
-        if(isReference(value)) {
-            //Resolve the reference from the resource id
-            result = resolveReference(getReferenceId(value));
+        Matcher matcher = REFERENCE_REGEX.matcher(value.trim());
+        if(matcher.matches()) {
+            //Reference value
+            String referenceType = matcher.group(1);
+            String referenceId = matcher.group(2);
+            if(checkReferenceType(referenceType)) {
+                //Resolve the reference from the reference id
+                result = resolveReference(referenceId);
+            } else {
+                throw new XmlParseException("Incompatible reference type!");
+            }
         } else {
+            //Simple value
             result = resolveValue(value);
         }
         return result;
     }
 
-    /**
-     * Checks if the given value is a reference of another resource.
-     * @return true if the value is referencing, false otherwise.
-     */
     public boolean isReference(String value) {
-         return value.trim().startsWith(getResourceTypeName() + ":");
+        return REFERENCE_REGEX.matcher(value.trim()).matches();
     }
 
-    /**
-     * Gets the identifier of the resource that the given value is referencing.
-     * @param value the value
-     * @return the referenced resource id.
-     * @throws XmlParseException if the given value is not a reference or the resource identifier is invalid.
-     */
-    public String getReferenceId(String value) throws XmlParseException {
-        if(isReference(value)) {
-            //Prepare the value
-            value = value.trim();
-            //Value is referencing a resource. Remove resource type from reference declaration.
-            String resourceId = value.substring(value.indexOf(":") + 1);
-            //Returns identifier after checking its validity
-            return XmlIdentifierResolver.GLOBAL_IDENTIFIER_RESOLVER.resolve(resourceId);
-        } else {
-            throw new XmlParseException(String.format("The value '%s' is not a reference!", value));
+    public String getReferenceId(String value) {
+        Matcher matcher = REFERENCE_REGEX.matcher(value.trim());
+        if(matcher.matches()) {
+            return matcher.group(2);
         }
+        return null;
     }
 
     /**
-     * Returns the resource type name. It is used to check if the
-     * value is referencing a resource.
+     * Checks if the given reference type is compatible.
+     * <p>Base implementation will check if the reference type is the same of {@link #getResourceTypeName()}. </p>
+     * @return true if the reference type is compatible, false otherwise.
+     */
+    public boolean checkReferenceType(String type) {
+         return type.equals(getResourceTypeName());
+    }
+
+    /**
+     * Returns the resource type name.
      * @return the resource type name.
      */
     protected abstract String getResourceTypeName();
@@ -78,13 +85,14 @@ public abstract class XmlReferenceValueResolver<T> implements XmlValueResolver<T
      * thrown.
      * @param resourceId the resource identifier.
      * @return the referenced resource value, never null.
-     * @throws XmlParseException if there's no declared resource with the given id and type.
+     * @throws XmlParseException if there's no declared resource with the given id and type or the
+     * referenced resource is incompatible (e.g. int resource referencing string resource).
      */
     public abstract T resolveReference(String resourceId) throws XmlParseException;
 
     /**
      * Parse the given value as a simple value (A value that is not referencing another resource).
-     * @param value the value, can be null.
+     * @param value the value, can be null (e.g. when using self closing tags).
      * @return the parsed value.
      * @throws XmlParseException if the value cannot be parsed correctly.
      */

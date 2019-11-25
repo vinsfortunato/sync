@@ -18,7 +18,6 @@ package net.touchmania.game.resource.xml.parsers;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import net.touchmania.game.resource.Dimension;
@@ -29,12 +28,14 @@ import net.touchmania.game.util.xml.XmlParser;
 import net.touchmania.game.util.xml.XmlValueResolver;
 import static net.touchmania.game.resource.xml.resolvers.XmlTextureFilterResolver.GLOBAL_TEXTURE_FILTER_RESOLVER;
 import static net.touchmania.game.resource.xml.resolvers.XmlTextureWrapResolver.GLOBAL_TEXTURE_WRAP_RESOLVER;
+import static net.touchmania.game.resource.xml.resolvers.XmlPixmapFormatResolver.GLOBAL_PIXMAP_FORMAT_RESOLVER;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class XmlDrawablesParser extends XmlMapResourceParser<XmlDrawableLoader> {
+    private final XmlTheme theme;
     private final XmlValueResolver<Dimension> dimensionResolver;
     private final XmlValueResolver<Boolean> booleanResolver;
     private final XmlValueResolver<Color> colorResolver;
@@ -53,6 +54,7 @@ public class XmlDrawablesParser extends XmlMapResourceParser<XmlDrawableLoader> 
      */
     public XmlDrawablesParser(FileHandle resourceFile, XmlTheme theme) {
         super(resourceFile);
+        this.theme = theme;
 
         //Init resolvers
         this.dimensionResolver = XmlDimensionResolver.from(theme);
@@ -128,24 +130,46 @@ public class XmlDrawablesParser extends XmlMapResourceParser<XmlDrawableLoader> 
     @Override
     protected void parseAttributes(String id, XmlDrawableLoader value, XmlParser.Element element) throws XmlParseException {
         for (ObjectMap.Entry<String, String> attribute : element.getAttributes()) {
+            String key = attribute.key;
+            String val = attribute.value;
+
             //Skip id attribute
-            if(attribute.key.equals("id")) continue;
+            if(key.equals("id")) continue;
 
             //Parse attribute
-            if(value instanceof XmlTextureLoader && parseAttribute((XmlTextureLoader) value, attribute.key, attribute.value)) continue;
-            if(value instanceof XmlRegionLoader  && parseAttribute((XmlRegionLoader)  value, attribute.key, attribute.value)) continue;
+            if(parseAttribute(value, key, val))                                                               continue;
+            if(value instanceof XmlTextureLoader && parseAttribute((XmlTextureLoader) value, key, val))       continue;
+            if(value instanceof XmlRegionLoader && parseAttribute((XmlRegionLoader)  value, key, val))        continue;
+            if(value instanceof XmlSpriteLoader && parseAttribute((XmlSpriteLoader)  value, key, val))        continue;
+            if(value instanceof XmlNinePatchLoader  && parseAttribute((XmlNinePatchLoader)  value, key, val)) continue;
 
             throw new XmlParseException(String.format(
                     "Unrecognised attribute with name '%s' and value '%s'!", attribute.key, attribute.value));
         }
     }
 
+    private boolean parseAttribute(XmlDrawableLoader loader, String name, String value) throws XmlParseException {
+        switch(name) {
+            case "minWidth":     loader.minWidth = floatResolver.resolve(value);                                 break;
+            case "minHeight":    loader.minHeight = floatResolver.resolve(value);                                break;
+            case "leftWidth":    loader.leftWidth = floatResolver.resolve(value);                                break;
+            case "rightWidth":   loader.rightWidth = floatResolver.resolve(value);                               break;
+            case "topHeight":    loader.topHeight = floatResolver.resolve(value);                                break;
+            case "bottomHeight": loader.bottomHeight = floatResolver.resolve(value);                             break;
+            default: return false; //Unrecognised attribute
+        }
+
+        return true;
+    }
+
     private boolean parseAttribute(XmlTextureLoader loader, String name, String value) throws XmlParseException {
         switch(name) {
-            case "minFilter": loader.minFilter = GLOBAL_TEXTURE_FILTER_RESOLVER.resolve(value);                 break;
-            case "maxFilter": loader.magFilter = GLOBAL_TEXTURE_FILTER_RESOLVER.resolve(value);                 break;
-            case "uWrap":     loader.uWrap = GLOBAL_TEXTURE_WRAP_RESOLVER.resolve(value);                       break;
-            case "vWrap":     loader.vWrap = GLOBAL_TEXTURE_WRAP_RESOLVER.resolve(value);                       break;
+            case "minFilter":  loader.minFilter = GLOBAL_TEXTURE_FILTER_RESOLVER.resolve(value);                 break;
+            case "maxFilter":  loader.magFilter = GLOBAL_TEXTURE_FILTER_RESOLVER.resolve(value);                 break;
+            case "uWrap":      loader.uWrap = GLOBAL_TEXTURE_WRAP_RESOLVER.resolve(value);                       break;
+            case "vWrap":      loader.vWrap = GLOBAL_TEXTURE_WRAP_RESOLVER.resolve(value);                       break;
+            case "format":     loader.format = GLOBAL_PIXMAP_FORMAT_RESOLVER.resolve(value);                     break;
+            case "useMipMaps": loader.useMipMaps = booleanResolver.resolve(value);                               break;
             default: return false; //Unrecognised attribute
         }
 
@@ -154,10 +178,28 @@ public class XmlDrawablesParser extends XmlMapResourceParser<XmlDrawableLoader> 
 
     private boolean parseAttribute(XmlRegionLoader loader, String name, String value) throws XmlParseException {
         switch(name) {
-            case "x": loader.x = dimensionResolver.resolve(value).getIntValue();                                break;
-            case "y": loader.y = dimensionResolver.resolve(value).getIntValue();                                break;
-            case "width": loader.width = dimensionResolver.resolve(value).getIntValue();                        break;
-            case "height": loader.height = dimensionResolver.resolve(value).getIntValue();                      break;
+            case "x": loader.x = dimensionResolver.resolve(value).getIntValue();                                 break;
+            case "y": loader.y = dimensionResolver.resolve(value).getIntValue();                                 break;
+            case "width": loader.width = dimensionResolver.resolve(value).getIntValue();                         break;
+            case "height": loader.height = dimensionResolver.resolve(value).getIntValue();                       break;
+            default: return false; //Unrecognised attribute
+        }
+
+        return true;
+    }
+
+    private boolean parseAttribute(XmlSpriteLoader loader, String name, String value) throws XmlParseException {
+        switch(name) { //TODO
+            case "x": break;
+            default: return false; //Unrecognised attribute
+        }
+
+        return true;
+    }
+
+    private boolean parseAttribute(XmlNinePatchLoader loader, String name, String value) throws XmlParseException {
+        switch(name) { //TODO
+            case "x": break;
             default: return false; //Unrecognised attribute
         }
 
@@ -174,10 +216,10 @@ public class XmlDrawablesParser extends XmlMapResourceParser<XmlDrawableLoader> 
     @Override
     protected void checkRootChild(XmlParser.Element element) throws XmlParseException {
         switch(element.getName()) {
-            case "sprite":
-            case "ninepatch":
             case "texture":
             case "region":
+            case "sprite":
+            case "ninepatch":
             case "drawable":
                 return;
             default:
@@ -188,21 +230,150 @@ public class XmlDrawablesParser extends XmlMapResourceParser<XmlDrawableLoader> 
     @Override
     protected XmlReferenceValueResolver<XmlDrawableLoader> getResolver(XmlParser.Element element) {
         switch (element.getName()) {
-            case "sprite":
-                return spriteResolver;
-            case "ninepatch":
-                return ninepatchResolver;
-            case "texture":
-                return textureResolver;
-            case "region":
-                return regionResolver;
-            case "drawable":
-                return drawableResolver;
+            case "texture":     return textureResolver;
+            case "region":      return regionResolver;
+            case "sprite":      return spriteResolver;
+            case "drawable":    return drawableResolver;
+            case "ninepatch":   return ninepatchResolver;
             default:
                 throw new IllegalArgumentException("Unexpected element name!");
         }
     }
 
+    /**
+     * Used to resolve {@code <texture>} resource values.
+     */
+    private class XmlTextureDrawableLoaderResolver extends XmlDrawableLoaderResolver {
+        @Override
+        public XmlTextureLoader resolveReference(String resourceId) throws XmlParseException {
+            XmlDrawableLoader loader = getResolvedValues().get(resourceId);
+            if(loader instanceof XmlTextureLoader) {
+                return ((XmlTextureLoader)loader).copy();
+            }
+            throw new XmlParseException(String.format(
+                    "Incompatible reference! Trying to cast '%s' to XmlTextureLoader!", loader.getClass().getName()));
+        }
+
+        @Override
+        public XmlTextureLoader resolveValue(String value) throws XmlParseException {
+            if(value == null || value.isEmpty()) {
+                throw new XmlParseException("Invalid texture file! File name cannot be null or empty!");
+            }
+            return new XmlTextureLoader(theme, theme.getTexturePath(value));
+        }
+
+        @Override
+        public boolean checkReferenceType(String type) {
+            switch(type) {
+                case "drawable":
+                case "texture":
+                    return true;
+            }
+            return false;
+        }
+    }
+
+    /**
+     * Used to resolve {@code <region>} resource values.
+     */
+    private class XmlRegionDrawableLoaderResolver extends XmlDrawableLoaderResolver {
+        @Override
+        public XmlRegionLoader resolveReference(String resourceId) throws XmlParseException {
+            XmlDrawableLoader loader = getResolvedValues().get(resourceId);
+            if(loader instanceof XmlRegionLoader) {
+                return ((XmlRegionLoader)loader).copy();
+            }
+            throw new XmlParseException(String.format(
+                    "Incompatible reference! Trying to cast '%s' to XmlRegionLoader!", loader.getClass().getName()));
+        }
+
+        @Override
+        public XmlRegionLoader resolveValue(String value) throws XmlParseException {
+            //TODO
+            return null;
+        }
+
+        @Override
+        public boolean checkReferenceType(String type) {
+            switch(type) {
+                case "drawable":
+                case "texture":
+                case "region":
+                    return true;
+            }
+            return false;
+        }
+    }
+
+    /**
+     * Used to resolve {@code <sprite>} resource values.
+     */
+    private class XmlSpriteDrawableLoaderResolver extends XmlDrawableLoaderResolver {
+        @Override
+        public XmlSpriteLoader resolveReference(String resourceId) throws XmlParseException {
+            XmlDrawableLoader loader = getResolvedValues().get(resourceId);
+            if(loader instanceof XmlSpriteLoader) {
+                return ((XmlSpriteLoader)loader).copy();
+            }
+            throw new XmlParseException(String.format(
+                    "Incompatible reference! Trying to cast '%s' to XmlSpriteLoader!", loader.getClass().getName()));
+        }
+
+        @Override
+        public XmlSpriteLoader resolveValue(String value) throws XmlParseException {
+            //TODO
+            return null;
+        }
+
+        @Override
+        public boolean checkReferenceType(String type) {
+            switch(type) {
+                case "drawable":
+                case "texture":
+                case "region":
+                case "sprite":
+                    return true;
+            }
+            return false;
+        }
+    }
+
+    /**
+     * Used to resolve {@code <ninepatch>} resource values.
+     */
+    private class XmlNinepatchDrawableLoaderResolver extends XmlDrawableLoaderResolver {
+        @Override
+        public XmlNinePatchLoader resolveReference(String resourceId) throws XmlParseException {
+            XmlDrawableLoader loader = getResolvedValues().get(resourceId);
+            if(loader instanceof XmlNinePatchLoader) {
+                return ((XmlNinePatchLoader)loader).copy();
+            }
+            throw new XmlParseException(String.format(
+                    "Incompatible reference! Trying to cast '%s' to XmlNinePatchLoader!", loader.getClass().getName()));
+        }
+
+        @Override
+        public XmlNinePatchLoader resolveValue(String value) throws XmlParseException {
+            //TODO
+            return null;
+        }
+
+        @Override
+        public boolean checkReferenceType(String type) {
+            switch(type) {
+                case "drawable":
+                case "texture":
+                case "region":
+                case "ninepatch":
+                    return true;
+            }
+            return false;
+        }
+    }
+
+    /**
+     * Used to resolve {@code <drawable>} resource values.
+     */
     private class XmlDrawableLoaderResolver extends XmlReferenceValueResolver<XmlDrawableLoader> {
         @Override
         protected String getResourceTypeName() {
@@ -218,55 +389,20 @@ public class XmlDrawablesParser extends XmlMapResourceParser<XmlDrawableLoader> 
         @Override
         public XmlDrawableLoader resolveValue(String value) throws XmlParseException {
             //<drawable> is used only for referencing. So no need to parse value.
-            throw new XmlParseException("Unexpected behavior.");
-        }
-    }
-
-    private class XmlTextureDrawableLoaderResolver extends XmlDrawableLoaderResolver {
-        @Override
-        public XmlDrawableLoader resolveReference(String resourceId) throws XmlParseException {
-            return null;
+            throw new XmlParseException("Illegal value. Drawable resource value must be a reference!");
         }
 
         @Override
-        public XmlDrawableLoader resolveValue(String value) throws XmlParseException {
-            return null;
-        }
-    }
-
-    private class XmlSpriteDrawableLoaderResolver extends XmlDrawableLoaderResolver {
-        @Override
-        public XmlDrawableLoader resolveReference(String resourceId) throws XmlParseException {
-            return null;
-        }
-
-        @Override
-        public XmlDrawableLoader resolveValue(String value) throws XmlParseException {
-            return null;
-        }
-    }
-
-    private class XmlNinepatchDrawableLoaderResolver extends XmlDrawableLoaderResolver {
-        @Override
-        public XmlDrawableLoader resolveReference(String resourceId) throws XmlParseException {
-            return null;
-        }
-
-        @Override
-        public XmlDrawableLoader resolveValue(String value) throws XmlParseException {
-            return null;
-        }
-    }
-
-    private class XmlRegionDrawableLoaderResolver extends XmlDrawableLoaderResolver {
-        @Override
-        public XmlDrawableLoader resolveReference(String resourceId) throws XmlParseException {
-            return null;
-        }
-
-        @Override
-        public XmlDrawableLoader resolveValue(String value) throws XmlParseException {
-            return null;
+        public boolean checkReferenceType(String type) {
+            switch(type) {
+                case "drawable":
+                case "texture":
+                case "region":
+                case "sprite":
+                case "ninepatch":
+                    return true;
+            }
+            return false;
         }
     }
 }

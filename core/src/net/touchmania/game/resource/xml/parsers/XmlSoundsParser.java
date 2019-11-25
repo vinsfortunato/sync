@@ -63,13 +63,10 @@ public class XmlSoundsParser extends XmlMapResourceParser<XmlSoundLoader> {
             return "sound";
         }
 
-        /* Referencing a declared sound is like extending it.
-         * Attributes of the extended sound can be overridden.*/
         @Override
         public XmlSoundLoader resolveReference(String resourceId) {
-            //Sound definition is extending another declared sound
             XmlSoundLoader loader = getResolvedValues().get(resourceId);
-            return loader != null ? loader.copy() : null;
+            return new XmlSoundLoader(loader);
         }
 
         @Override

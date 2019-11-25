@@ -3,7 +3,9 @@
     <!-- Texture from file -->
     <texture id="texture1"
              minFilter="nearest" magFilter="nearest"
-             uWrap="repeat" vWrap="repeat">play_dance_receptor.png</texture>
+             uWrap="repeat" vWrap="repeat"
+             format="rgba8888"
+             useMipMaps="false">play_dance_receptor.png</texture>
 
     <!-- Texture by referencing another texture resource -->
     <texture id="texture2">texture:texture1</texture>

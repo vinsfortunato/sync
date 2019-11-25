@@ -68,6 +68,8 @@ public abstract class XmlMapResourceParser<T> extends XmlResourceParser<Map<Stri
             XmlReferenceValueResolver<T> resolver = getResolver(element);
             T value = resolver.resolve(element.getText());
             if(value != null) {
+                /* TODO this assumes that values cannot be null. Should null be allowed as a value?
+                        XmlReferenceValueResolver should be changed accordingly too.    */
                 //Mark as resolved
                 markResolved(id, value, element);
             } else {

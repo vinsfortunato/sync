@@ -5,6 +5,7 @@ import net.touchmania.game.util.Copy;
 import net.touchmania.game.util.Loader;
 
 public abstract class XmlDrawableLoader implements Loader<Drawable>, Copy {
+    public XmlTheme theme;
     public float minWidth;
     public float minHeight;
     public float leftWidth;
@@ -12,19 +13,22 @@ public abstract class XmlDrawableLoader implements Loader<Drawable>, Copy {
     public float topHeight;
     public float bottomHeight;
 
-    public XmlDrawableLoader() {}
+    public XmlDrawableLoader(XmlTheme theme) {
+        this.theme = theme;
+    }
 
     /**
      * Copy constructor.
      * @param loader the loader to copy.
      */
     public XmlDrawableLoader(XmlDrawableLoader loader) {
-        loader.minWidth = minWidth;
-        loader.minHeight = minHeight;
-        loader.leftWidth = leftWidth;
-        loader.rightWidth = rightWidth;
-        loader.topHeight = topHeight;
-        loader.bottomHeight = bottomHeight;
+        theme = loader.theme;
+        minWidth = loader.minWidth;
+        minHeight = loader.minHeight;
+        leftWidth = loader.leftWidth;
+        rightWidth = loader.rightWidth;
+        topHeight = loader.topHeight;
+        bottomHeight = loader.bottomHeight;
     }
 
     @Override
