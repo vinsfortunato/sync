@@ -7,9 +7,13 @@ public class XmlSpriteLoader extends XmlDrawableLoader {
         super(theme);
     }
 
+    public XmlSpriteLoader(XmlSpriteLoader loader) {
+        super(loader);
+    }
+
     @Override
     public XmlSpriteLoader copy() {
-        return null;
+        return new XmlSpriteLoader(this);
     }
 
     @Override

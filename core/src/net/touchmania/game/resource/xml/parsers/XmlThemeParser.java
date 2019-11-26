@@ -41,14 +41,15 @@ public class XmlThemeParser extends XmlResourceParser<XmlTheme> {
     @Override
     public XmlTheme parse() throws Exception {
         XmlTheme theme = super.parse(); //Parse theme.xml (theme manifest)
+        parseLangs(theme);              //Parse langs.xml (language resources)
+        parseValues(theme);             //Parse values.xml (value resources)
         parseColors(theme);             //Parse colors.xml (color resources)
         parseDimens(theme);             //Parse dimens.xml (dimension resources)
-        parseValues(theme);             //Parse values.xml (value resources)
-        parseLangs(theme);              //Parse langs.xml (language resources)
+        parseStrings(theme);            //Parse strings/strings_{locale}.xml based on active locale (strings resources)
         parseFonts(theme);              //Parse fonts.xml (font resources)
         parseSounds(theme);             //Parse sounds.xml (sound resources)
         parseMusics(theme);             //Parse musics.xml (music resources)
-        parseStrings(theme);            //Parse strings/strings_{locale}.xml based on active/supported locale (strings resources)
+        parseDrawables(theme);          //Parse drawables.xml (drawable resources)
         return theme;
     }
 
@@ -75,6 +76,20 @@ public class XmlThemeParser extends XmlResourceParser<XmlTheme> {
         }
     }
 
+    private void parseLangs(XmlTheme theme) throws Exception {
+        FileHandle langFile = getResourceFile().sibling("langs.xml");
+        if(langFile.exists()) {
+            theme.setLanguages(new XmlLangsParser(langFile, theme).parse());
+        }
+    }
+
+    private void parseValues(XmlTheme theme) throws Exception {
+        FileHandle valuesFile = getResourceFile().sibling("values.xml");
+        if(valuesFile.exists()) {
+            theme.setValues(new XmlValuesParser(valuesFile, theme).parse());
+        }
+    }
+
     private void parseColors(XmlTheme theme) throws Exception {
         FileHandle colorsFile = getResourceFile().sibling("colors.xml");
         if(colorsFile.exists()) {
@@ -86,41 +101,6 @@ public class XmlThemeParser extends XmlResourceParser<XmlTheme> {
         FileHandle dimensFile = getResourceFile().sibling("dimens.xml");
         if(dimensFile.exists()) {
             theme.setDimensions(new XmlDimensParser(dimensFile, theme).parse());
-        }
-    }
-    
-    private void parseValues(XmlTheme theme) throws Exception {
-        FileHandle valuesFile = getResourceFile().sibling("values.xml");
-        if(valuesFile.exists()) {
-            theme.setValues(new XmlValuesParser(valuesFile, theme).parse());
-        }
-    }
-
-    private void parseFonts(XmlTheme theme) throws Exception {
-        FileHandle fontsFile = getResourceFile().sibling("fonts.xml");
-        if(fontsFile.exists()) {
-            theme.setFonts(new XmlFontsParser(fontsFile, theme).parse());
-        }
-    }
-
-    private void parseSounds(XmlTheme theme) throws Exception {
-        FileHandle soundsFile = getResourceFile().sibling("sounds.xml");
-        if(soundsFile.exists()) {
-            theme.setSounds(new XmlSoundsParser(soundsFile, theme).parse());
-        }
-    }
-
-    private void parseMusics(XmlTheme theme) throws Exception {
-        FileHandle musicsFile = getResourceFile().sibling("musics.xml");
-        if(musicsFile.exists()) {
-            theme.setMusics(new XmlMusicsParser(musicsFile, theme).parse());
-        }
-    }
-
-    private void parseLangs(XmlTheme theme) throws Exception {
-        FileHandle langFile = getResourceFile().sibling("langs.xml");
-        if(langFile.exists()) {
-            theme.setLanguages(new XmlLangsParser(langFile, theme).parse());
         }
     }
 
@@ -163,6 +143,34 @@ public class XmlThemeParser extends XmlResourceParser<XmlTheme> {
                 XmlStringsParser parser = new XmlStringsParser(stringsFile, theme);
                 theme.setStrings(parser.parse());
             }
+        }
+    }
+
+    private void parseFonts(XmlTheme theme) throws Exception {
+        FileHandle fontsFile = getResourceFile().sibling("fonts.xml");
+        if(fontsFile.exists()) {
+            theme.setFonts(new XmlFontsParser(fontsFile, theme).parse());
+        }
+    }
+
+    private void parseSounds(XmlTheme theme) throws Exception {
+        FileHandle soundsFile = getResourceFile().sibling("sounds.xml");
+        if(soundsFile.exists()) {
+            theme.setSounds(new XmlSoundsParser(soundsFile, theme).parse());
+        }
+    }
+
+    private void parseMusics(XmlTheme theme) throws Exception {
+        FileHandle musicsFile = getResourceFile().sibling("musics.xml");
+        if(musicsFile.exists()) {
+            theme.setMusics(new XmlMusicsParser(musicsFile, theme).parse());
+        }
+    }
+
+    private void parseDrawables(XmlTheme theme) throws Exception {
+        FileHandle drawablesFile = getResourceFile().sibling("drawables.xml");
+        if(drawablesFile.exists()) {
+            theme.setDrawables(new XmlDrawablesParser(drawablesFile, theme).parse());
         }
     }
 

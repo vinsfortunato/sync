@@ -7,9 +7,13 @@ public class XmlNinePatchLoader extends XmlDrawableLoader {
         super(theme);
     }
 
+    public XmlNinePatchLoader(XmlNinePatchLoader loader) {
+        super(loader);
+    }
+
     @Override
     public XmlNinePatchLoader copy() {
-        return null;
+        return new XmlNinePatchLoader(this);
     }
 
     @Override

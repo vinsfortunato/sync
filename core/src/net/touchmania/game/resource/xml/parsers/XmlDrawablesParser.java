@@ -137,14 +137,16 @@ public class XmlDrawablesParser extends XmlMapResourceParser<XmlDrawableLoader> 
             if(key.equals("id")) continue;
 
             //Parse attribute
-            if(parseAttribute(value, key, val))                                                               continue;
-            if(value instanceof XmlTextureLoader && parseAttribute((XmlTextureLoader) value, key, val))       continue;
-            if(value instanceof XmlRegionLoader && parseAttribute((XmlRegionLoader)  value, key, val))        continue;
-            if(value instanceof XmlSpriteLoader && parseAttribute((XmlSpriteLoader)  value, key, val))        continue;
-            if(value instanceof XmlNinePatchLoader  && parseAttribute((XmlNinePatchLoader)  value, key, val)) continue;
+            boolean parsed = false;
+            if(parseAttribute(value, key, val))                                                             parsed = true;
+            if(value instanceof XmlTextureLoader   && parseAttribute((XmlTextureLoader)   value, key, val)) parsed = true;
+            if(value instanceof XmlRegionLoader    && parseAttribute((XmlRegionLoader)    value, key, val)) parsed = true;
+            if(value instanceof XmlSpriteLoader    && parseAttribute((XmlSpriteLoader)    value, key, val)) parsed = true;
+            if(value instanceof XmlNinePatchLoader && parseAttribute((XmlNinePatchLoader) value, key, val)) parsed = true;
 
-            throw new XmlParseException(String.format(
-                    "Unrecognised attribute with name '%s' and value '%s'!", attribute.key, attribute.value));
+            if(!parsed)
+                throw new XmlParseException(String.format(
+                        "Unrecognised attribute with name '%s' and value '%s'!", attribute.key, attribute.value));
         }
     }
 
@@ -281,16 +283,22 @@ public class XmlDrawablesParser extends XmlMapResourceParser<XmlDrawableLoader> 
         public XmlRegionLoader resolveReference(String resourceId) throws XmlParseException {
             XmlDrawableLoader loader = getResolvedValues().get(resourceId);
             if(loader instanceof XmlRegionLoader) {
-                return ((XmlRegionLoader)loader).copy();
+                return new XmlRegionLoader((XmlRegionLoader)loader);
             }
+            if(loader instanceof XmlTextureLoader) {
+                return new XmlRegionLoader((XmlTextureLoader)loader);
+            }
+
             throw new XmlParseException(String.format(
-                    "Incompatible reference! Trying to cast '%s' to XmlRegionLoader!", loader.getClass().getName()));
+                    "Incompatible reference! Trying to convert '%s' to XmlRegionLoader!", loader.getClass().getName()));
         }
 
         @Override
         public XmlRegionLoader resolveValue(String value) throws XmlParseException {
-            //TODO
-            return null;
+            if(value == null || value.isEmpty()) {
+                throw new XmlParseException("Invalid texture file! File name cannot be null or empty!");
+            }
+            return new XmlRegionLoader(theme, theme.getTexturePath(value));
         }
 
         @Override

@@ -52,6 +52,7 @@ public class XmlTheme implements Theme {
     /* Supported languages */
     private List<Locale> langs;
 
+    /* Resource groups */
     private int groupId = 0;
     private Map<Long, Set<Integer>> resourceGroups = new HashMap<>();
     private Map<Long, Disposable> loadedResources = new HashMap<>();
@@ -80,9 +81,22 @@ public class XmlTheme implements Theme {
         return hasFallbackTheme() ? getFallbackTheme().getStyle(id) : null;
     }
 
+    public void setDrawables(Map<String, XmlDrawableLoader> drawables) {
+        this.drawables = drawables;
+    }
+
     @Override
     public Drawable getDrawable(String id) {
-        //TODO getDrawable
+        if(drawables != null) {
+            XmlDrawableLoader loader = drawables.get(id);
+            if(loader != null) {
+                try {
+                    return loader.load();
+                } catch (Exception e) {
+                    //TODO log exception
+                }
+            }
+        }
         return hasFallbackTheme() ? getFallbackTheme().getDrawable(id) : null;
     }
 
@@ -270,6 +284,39 @@ public class XmlTheme implements Theme {
         }
     }
 
+    /**
+     * Load a disposable resource.
+     * <ul>
+     *     <li> If the requested resource is not cached it will be loaded using
+     *     the provided loader, inserted into the cache, bind to the active group and returned.</li>
+     *     <li> If the requested resource is cached it will be retrieved from the cache, bind
+     *     to the active group and returned.</li>
+     * </ul>
+     * <p>Id must identify a resource based on its path and its load configuration. Id is used to address the same
+     * resource loaded with a particular configuration. Resources with the same path but different load configuration
+     * should have a different id (e.g. same texture file but different filter). </p>
+     * <p>Loaded resources will be disposed when all the bind groups are ended by using {@link #endGroup(int)}.</p>
+     * <p>Usage example:
+     * <pre>
+     * {@code
+     * //Create an id by hashing the texture path and the configuration (format, useMipMaps properties).
+     * HashFunction hf = Hashing.murmur3_128();
+     * HashCode hc = hf.newHasher()
+     *       .putString(file.path(), Charsets.UTF_8)
+     *       .putInt(format.hashCode())
+     *       .putBoolean(useMipMaps).hash();
+     *
+     * //Load the texture by providing the generated id, the type class and a loader.
+     * Texture texture = theme.load(hc.asLong(), Texture.class, () -> new Texture(file, format, useMipMaps));
+     * }
+     * </pre> </p>
+     * @param id the resource id.
+     * @param type the class type of the resource.
+     * @param loader the resource loader. It will perform the actual load when the resource isn't present in the cache.
+     * @param <R>
+     * @return
+     * @throws Exception
+     */
     public <R extends Disposable> R load(long id, Class<R> type, Loader<R> loader) throws Exception {
         int groupId = this.groupId;
         R res;
@@ -363,5 +410,10 @@ public class XmlTheme implements Theme {
 
     @Override
     public void dispose() {
+        for(Disposable disposable : loadedResources.values()) {
+            disposable.dispose();
+        }
+        loadedResources.clear();
+        resourceGroups.clear();
     }
 }

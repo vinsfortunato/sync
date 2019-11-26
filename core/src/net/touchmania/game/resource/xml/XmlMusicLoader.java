@@ -21,9 +21,15 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.GdxRuntimeException;
+import com.google.common.base.Charsets;
+import com.google.common.hash.HashCode;
+import com.google.common.hash.HashFunction;
+import com.google.common.hash.Hashing;
 import net.touchmania.game.util.Loader;
 
 public class XmlMusicLoader implements Loader<Music>, Cloneable {
+    private XmlTheme theme;
+
     /** The sound file **/
     public final FileHandle file;
 
@@ -31,7 +37,8 @@ public class XmlMusicLoader implements Loader<Music>, Cloneable {
      * Creates a loader from a sound file.
      * @param file the sound file.
      */
-    public XmlMusicLoader(FileHandle file) {
+    public XmlMusicLoader(XmlTheme theme, FileHandle file) {
+        this.theme = theme;
         this.file = file;
     }
 
@@ -40,14 +47,22 @@ public class XmlMusicLoader implements Loader<Music>, Cloneable {
      * @param loader the loader to copy.
      */
     public XmlMusicLoader(XmlMusicLoader loader) {
-        this(loader.file);
+        this(loader.theme, loader.file);
     }
 
+    @Override
     public Music load() throws Exception {
-        try {
-            return Gdx.audio.newMusic(file);
-        } catch(GdxRuntimeException e) {
-            throw new Exception("Music cannot be loaded correctly!", e);
-        }
+        HashFunction hf = Hashing.murmur3_128();
+        HashCode hc = hf.newHasher()
+                .putString(file.path(), Charsets.UTF_8)
+                .putString("music", Charsets.UTF_8).hash();
+
+        return theme.load(hc.asLong(), Music.class, () -> {
+            try {
+                return Gdx.audio.newMusic(file);
+            } catch(GdxRuntimeException e) {
+                throw new Exception("Music cannot be loaded correctly!", e);
+            }
+        });
     }
 }

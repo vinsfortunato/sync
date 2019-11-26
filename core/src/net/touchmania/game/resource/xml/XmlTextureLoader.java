@@ -11,7 +11,6 @@ import com.google.common.base.Charsets;
 import com.google.common.hash.HashCode;
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
-import net.touchmania.game.util.Loader;
 import net.touchmania.game.util.ui.TexturePath;
 
 import java.io.IOException;
@@ -41,6 +40,20 @@ public class XmlTextureLoader extends XmlDrawableLoader {
 
     @Override
     public Drawable load() throws Exception {
+        Texture texture = loadTexture();
+        //TODO set min/mag filters;
+        //TODO set uWrap/vWrap
+        TextureRegionDrawable drawable = new TextureRegionDrawable(texture);
+        drawable.setMinWidth(minWidth);
+        drawable.setMinHeight(minHeight);
+        drawable.setLeftWidth(leftWidth);
+        drawable.setRightWidth(rightWidth);
+        drawable.setTopHeight(topHeight);
+        drawable.setBottomHeight(bottomHeight);
+        return drawable;
+    }
+
+    protected Texture loadTexture() throws Exception {
         FileHandle file = path.getFile();
         if(!file.exists()) {
             throw new IOException(String.format("Texture file not found at '%s'!", file.path()));
@@ -52,18 +65,7 @@ public class XmlTextureLoader extends XmlDrawableLoader {
                 .putInt(format.hashCode())
                 .putBoolean(useMipMaps).hash();
 
-        Texture texture = theme.load(hc.asLong(), Texture.class, () -> new Texture(file, format, useMipMaps));
-
-        //TODO set min/mag filters;
-        //TODO set uWrap/vWrap
-        TextureRegionDrawable drawable = new TextureRegionDrawable(texture);
-        drawable.setMinWidth(minWidth);
-        drawable.setMinHeight(minHeight);
-        drawable.setLeftWidth(leftWidth);
-        drawable.setRightWidth(rightWidth);
-        drawable.setTopHeight(topHeight);
-        drawable.setBottomHeight(bottomHeight);
-        return drawable;
+        return theme.load(hc.asLong(), Texture.class, () -> new Texture(file, format, useMipMaps));
     }
 
     @Override

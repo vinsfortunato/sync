@@ -5,7 +5,7 @@ import net.touchmania.game.util.Copy;
 import net.touchmania.game.util.Loader;
 
 public abstract class XmlDrawableLoader implements Loader<Drawable>, Copy {
-    public XmlTheme theme;
+    public final XmlTheme theme;
     public float minWidth;
     public float minHeight;
     public float leftWidth;
