@@ -37,7 +37,7 @@ public abstract class XmlFloatResolver extends XmlReferenceValueResolver<Float> 
 
     @Override
     protected String getResourceTypeName() {
-        return "value";
+        return "float";
     }
 
     @Override

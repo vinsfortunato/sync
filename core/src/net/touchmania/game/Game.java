@@ -18,9 +18,13 @@ package net.touchmania.game;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import net.touchmania.game.player.PlayerManager;
 import net.touchmania.game.song.SongManager;
 import net.touchmania.game.resource.ResourceProvider;
@@ -55,8 +59,8 @@ public class Game implements ApplicationListener {
 		this.settings = new GameSettings();
 		this.executors = new ExecutorManager();
 		this.assets = new AssetManager();
-		this.screens = new ScreenManager();
 		this.themes = new ThemeManager();
+		this.screens = new ScreenManager();
 		this.songs = new SongManager();
 		this.players = new PlayerManager();
 

@@ -39,7 +39,7 @@ public abstract class XmlBooleanResolver extends XmlReferenceValueResolver<Boole
 
     @Override
     protected String getResourceTypeName() {
-        return "value";
+        return "boolean";
     }
 
     @Override

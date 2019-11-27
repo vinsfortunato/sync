@@ -30,6 +30,7 @@ import net.touchmania.game.util.xml.XmlParser;
 import net.touchmania.game.util.xml.XmlValueResolver;
 
 public class XmlFontsParser extends XmlMapResourceParser<XmlFontLoader> {
+    private final XmlTheme theme;
     private final XmlValueResolver<Dimension> dimensionResolver;
     private final XmlValueResolver<Boolean> booleanResolver;
     private final XmlValueResolver<Color> colorResolver;
@@ -47,6 +48,7 @@ public class XmlFontsParser extends XmlMapResourceParser<XmlFontLoader> {
      */
     public XmlFontsParser(FileHandle resourceFile, XmlTheme theme) {
         super(resourceFile);
+        this.theme = theme;
 
         //Init resolvers
         this.dimensionResolver = XmlDimensionResolver.from(theme);
@@ -144,7 +146,7 @@ public class XmlFontsParser extends XmlMapResourceParser<XmlFontLoader> {
             if(value == null || value.isEmpty()) {
                 throw new XmlParseException("Invalid font file! File name cannot be null or empty!");
             }
-            return new XmlFontLoader(getResourceFile().sibling("fonts").child(value));
+            return new XmlFontLoader(theme, getResourceFile().sibling("fonts").child(value));
         }
     }
 

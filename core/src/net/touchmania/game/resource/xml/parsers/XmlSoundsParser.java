@@ -24,6 +24,7 @@ import net.touchmania.game.util.xml.XmlParseException;
 import net.touchmania.game.util.xml.XmlParser;
 
 public class XmlSoundsParser extends XmlMapResourceParser<XmlSoundLoader> {
+    private final XmlTheme theme;
     private XmlSoundLoaderResolver soundLoaderResolver;
 
     /**
@@ -32,6 +33,7 @@ public class XmlSoundsParser extends XmlMapResourceParser<XmlSoundLoader> {
      */
     public XmlSoundsParser(FileHandle resourceFile, XmlTheme theme) {
         super(resourceFile);
+        this.theme = theme;
 
         //Create a new instance for every reference resolver.
         this.soundLoaderResolver = new XmlSoundLoaderResolver();
@@ -75,7 +77,7 @@ public class XmlSoundsParser extends XmlMapResourceParser<XmlSoundLoader> {
                 throw new XmlParseException("Invalid sound file! File name cannot be null or empty!");
             }
 
-            return new XmlSoundLoader(getResourceFile().sibling("sounds").child(value));
+            return new XmlSoundLoader(theme, getResourceFile().sibling("sounds").child(value));
         }
     }
 }

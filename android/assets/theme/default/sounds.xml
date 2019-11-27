@@ -28,8 +28,4 @@
 
     <!-- By referencing another predeclared sound -->
     <sound id="test_16">sound:test_13</sound>
-
-    <music id="music_0">music1.mp3</music>
-
-    <music id="music_1">music:music_0</music>
 </sounds>

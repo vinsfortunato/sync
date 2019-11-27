@@ -19,13 +19,21 @@ package net.touchmania.game.ui.screen.play;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
 import net.touchmania.game.Game;
 import net.touchmania.game.round.Round;
 import net.touchmania.game.song.*;
+import net.touchmania.game.song.note.TapNote;
 import net.touchmania.game.song.sim.SimParser;
 import net.touchmania.game.util.concurrent.DoneListener;
 import net.touchmania.game.ui.Screen;
@@ -42,6 +50,7 @@ public class GameScreen implements Screen {
     private BeatmapView beatmapView;
 
     private Music music;
+    private Round round;
 
     private GameScreen() {
         Game.instance().getDisposer().manage(this);
@@ -54,7 +63,6 @@ public class GameScreen implements Screen {
         /* TODO TEST START */
         FileHandle fh = Gdx.files.external("touchmania/Songs/ITG Rodeo Tournament 8/012 - Into Dust");
 
-        Gdx.app.log("test", String.valueOf(fh.exists()));
         SongLoader sl = new SongLoader(fh);
 
         try {
@@ -66,12 +74,13 @@ public class GameScreen implements Screen {
                 }
             }
 
-            Round round = new Round(chart);
+            round = new Round(chart);
             SimParser parser = song.simFormat.newParser();
             parser.init(Files.toString(song.simFile.file(), Charsets.UTF_8));
             chart.beatmap = parser.parseBeatmap(chart);
-            beatmapView = new BeatmapView(round);
 
+
+            beatmapView = new BeatmapView(round);
             music = Gdx.audio.newMusic(Gdx.files.external(song.directory.path() + "/" + song.musicPath));
         } catch (Exception e) {
             System.err.println("Cannot read song!");
@@ -84,6 +93,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void show(Stage stage) {
+        stage.getActors().clear();
         Table table = new Table();
         table.setFillParent(true);
         stage.addActor(table);

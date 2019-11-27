@@ -28,7 +28,7 @@ public abstract class XmlDurationResolver extends XmlReferenceValueResolver<Long
 
     @Override
     protected String getResourceTypeName() {
-        return "value";
+        return "duration";
     }
 
     @Override

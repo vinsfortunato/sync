@@ -6,8 +6,6 @@ import net.touchmania.game.util.Loader;
 
 public abstract class XmlDrawableLoader implements Loader<Drawable>, Copy {
     public final XmlTheme theme;
-    public float minWidth;
-    public float minHeight;
     public float leftWidth;
     public float rightWidth;
     public float topHeight;
@@ -23,8 +21,6 @@ public abstract class XmlDrawableLoader implements Loader<Drawable>, Copy {
      */
     public XmlDrawableLoader(XmlDrawableLoader loader) {
         theme = loader.theme;
-        minWidth = loader.minWidth;
-        minHeight = loader.minHeight;
         leftWidth = loader.leftWidth;
         rightWidth = loader.rightWidth;
         topHeight = loader.topHeight;

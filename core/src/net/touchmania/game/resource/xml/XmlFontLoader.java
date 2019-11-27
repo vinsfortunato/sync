@@ -25,7 +25,10 @@ import com.google.common.base.Charsets;
 import com.google.common.hash.HashCode;
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
+import net.touchmania.game.Game;
 import net.touchmania.game.util.Loader;
+
+import java.util.Objects;
 
 /**
  * Generates a font from its file by using FreeType font engine. Check
@@ -54,16 +57,16 @@ public class XmlFontLoader implements Loader<BitmapFont>, Cloneable {
         parameter.size = loader.parameter.size;
         parameter.mono = loader.parameter.mono;
         parameter.hinting = loader.parameter.hinting;
-        parameter.color = new Color(loader.parameter.color);
+        parameter.color = loader.parameter.color != null ? new Color(loader.parameter.color) : null;
         parameter.gamma = loader.parameter.gamma;
         parameter.renderCount = loader.parameter.renderCount;
         parameter.borderWidth = loader.parameter.borderWidth;
-        parameter.borderColor = new Color(loader.parameter.borderColor);
+        parameter.borderColor = loader.parameter.borderColor != null ? new Color(loader.parameter.borderColor) : null;
         parameter.borderStraight = loader.parameter.borderStraight;
         parameter.borderGamma = loader.parameter.borderGamma;
         parameter.shadowOffsetX = loader.parameter.shadowOffsetX;
         parameter.shadowOffsetY = loader.parameter.shadowOffsetY;
-        parameter.shadowColor = new Color(loader.parameter.shadowColor);
+        parameter.shadowColor = loader.parameter.shadowColor != null ? new Color(loader.parameter.shadowColor) : null;
         parameter.spaceX = loader.parameter.spaceX;
         parameter.spaceY = loader.parameter.spaceY;
         parameter.characters = loader.parameter.characters;
@@ -82,7 +85,7 @@ public class XmlFontLoader implements Loader<BitmapFont>, Cloneable {
                 .putString(file.path(), Charsets.UTF_8)
                 .putInt(parameter.size)
                 .putBoolean(parameter.mono)
-                .putInt(parameter.hinting.hashCode())
+                .putInt(Objects.hashCode(parameter.hinting))
                 .putInt(parameter.color != null ? parameter.color.toIntBits() : 0)
                 .putFloat(parameter.gamma)
                 .putInt(parameter.renderCount)
@@ -99,8 +102,8 @@ public class XmlFontLoader implements Loader<BitmapFont>, Cloneable {
                 .putBoolean(parameter.kerning)
                 .putBoolean(parameter.flip)
                 .putBoolean(parameter.genMipMaps)
-                .putInt(parameter.minFilter.hashCode())
-                .putInt(parameter.magFilter.hashCode())
+                .putInt(Objects.hashCode(parameter.minFilter))
+                .putInt(Objects.hashCode(parameter.magFilter))
                 .putBoolean(parameter.incremental).hash();
 
         return theme.load(hc.asLong(), BitmapFont.class, () -> {

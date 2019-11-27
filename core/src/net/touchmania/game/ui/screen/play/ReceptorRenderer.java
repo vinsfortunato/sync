@@ -1,7 +1,13 @@
 package net.touchmania.game.ui.screen.play;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TransformDrawable;
 import net.touchmania.game.Game;
 import net.touchmania.game.round.Round;
 import net.touchmania.game.song.note.NotePanel;
@@ -24,7 +30,38 @@ public class ReceptorRenderer {
      * @param time the current time relative to the start of the music track.
      */
     public void draw(Batch batch, NotePanel panel, double beat, double time) {
+        Drawable drawable = getReceptorDrawable(panel, beat, time);
+        float width = drawable.getMinWidth();
+        float height = drawable.getMinHeight();
+        float x = getReceptorX(panel, beat, time);
+        float y = getReceptorY(panel, beat, time);
+        float originX = x + width / 2.0f;
+        float originY = y + height / 2.0f;
+        float rotation = getReceptorRotation(panel, beat, time);
+        float scaleX = getReceptorScaleX(panel, beat, time);
+        float scaleY = getReceptorScaleY(panel, beat, time);
 
+        drawable.draw(batch, x, y, width, height);
+
+        if(drawable instanceof TransformDrawable) {
+            TransformDrawable transformDrawable = (TransformDrawable) drawable;
+            /**
+            System.out.println(
+                    "panel:" + panel.name() +
+                    " X:" + x +
+                    " Y:" + y +
+                    " OX:" + originX +
+                    " OY:" + originY +
+                    " W:" + width +
+                    " H:" + height +
+                    " SX:" + scaleX +
+                    " SY:" + scaleY +
+                    " ROT:" + rotation);
+            **/
+            //transformDrawable.draw(batch, 0, 0, 0, 0, 256, 256, 1.0f, 1.0f, 0);
+        } else {
+            //drawable.draw(batch, x, y, width, height);
+        }
     }
 
     /**
@@ -35,6 +72,16 @@ public class ReceptorRenderer {
      * @return the x position of the receptor inside the view.
      */
     public float getReceptorX(NotePanel panel, double beat, double time) {
+        Drawable drawable = getReceptorDrawable(panel, beat, time);
+        float width = drawable.getMinWidth();
+        switch(panel) {
+            case DOWN:
+                return width;
+            case UP:
+                return width * 2.0f;
+            case RIGHT:
+                return width * 3.0f;
+        }
         return 0.0f;
     }
 
@@ -79,6 +126,14 @@ public class ReceptorRenderer {
      * @return the receptor rotation in degrees.
      */
     public float getReceptorRotation(NotePanel panel, double beat, double time) {
+        switch(panel) {
+            case RIGHT:
+                return 90.0f;
+            case UP:
+                return 180.0f;
+            case LEFT:
+                return 270.0f;
+        }
         return 0.0f;
     }
 

@@ -30,9 +30,8 @@ import java.util.Map;
 
 public class XmlThemeParser extends XmlResourceParser<XmlTheme> {
     /**
-     * Create a resource parser from its file.
-     *
-     * @param resourceFile the resource file.
+     * Create a theme parser from its manifest file.
+     * @param resourceFile the theme manifest file.
      */
     public XmlThemeParser(FileHandle resourceFile) {
         super(resourceFile);

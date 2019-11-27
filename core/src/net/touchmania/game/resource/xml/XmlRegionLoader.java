@@ -49,8 +49,6 @@ public class XmlRegionLoader extends XmlTextureLoader {
 
         //Set drawable
         TextureRegionDrawable drawable = new TextureRegionDrawable(region);
-        drawable.setMinWidth(minWidth);
-        drawable.setMinHeight(minHeight);
         drawable.setLeftWidth(leftWidth);
         drawable.setRightWidth(rightWidth);
         drawable.setTopHeight(topHeight);

@@ -27,12 +27,15 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Disposable;
 import net.touchmania.game.Game;
 import net.touchmania.game.resource.*;
+import net.touchmania.game.resource.Dimension;
 import net.touchmania.game.resource.xml.parsers.XmlStyleParser;
 import net.touchmania.game.util.Loader;
 import net.touchmania.game.util.ui.DPI;
 import net.touchmania.game.util.ui.TexturePath;
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 public class XmlTheme implements Theme {
     private Theme fallback;
@@ -56,6 +59,52 @@ public class XmlTheme implements Theme {
     private int groupId = 0;
     private Map<Long, Set<Integer>> resourceGroups = new HashMap<>();
     private Map<Long, Disposable> loadedResources = new HashMap<>();
+
+    //TODO remove
+    public void test() {
+        //Prints all resources
+        System.out.println("Printing drawables");
+        for(String s : drawables.keySet()) {
+            XmlDrawableLoader v = drawables.get(s);
+            System.out.println(s + ":" + v);
+        }
+        System.out.println("Printing colors");
+        for(String s : colors.keySet()) {
+            Color v = colors.get(s);
+            System.out.println(s + ": " + v);
+        }
+        System.out.println("Printing dimens");
+        for(String s : dimens.keySet()) {
+            Dimension v = dimens.get(s);
+            System.out.println(s + ": " + v);
+        }
+        System.out.println("Printing fonts");
+        for(String s : fonts.keySet()) {
+            XmlFontLoader v = fonts.get(s);
+            System.out.println(s + ": " + v);
+        }
+        System.out.println("Printing sounds");
+        for(String s : sounds.keySet()) {
+            XmlSoundLoader v = sounds.get(s);
+            System.out.println(s + ": " + v);
+        }
+        System.out.println("Printing musics");
+        for(String s : musics.keySet()) {
+            XmlMusicLoader v = musics.get(s);
+            System.out.println(s + ": " + v);
+        }
+        System.out.println("Printing values");
+        for(String s : values.keySet()) {
+            Object v = values.get(s);
+            System.out.println(s + ": " + v);
+        }
+        System.out.println("Printing strings");
+        for(String s : strings.keySet()) {
+            String v = strings.get(s);
+            System.out.println(s + ": " + v);
+        }
+
+    }
 
     public XmlTheme(FileHandle manifestFile) {
         this.manifestFile = manifestFile;
@@ -93,7 +142,7 @@ public class XmlTheme implements Theme {
                 try {
                     return loader.load();
                 } catch (Exception e) {
-                    //TODO log exception
+                    Gdx.app.error("Theme", "Couldn't load drawable!", e);
                 }
             }
         }
@@ -141,7 +190,7 @@ public class XmlTheme implements Theme {
                 try {
                     return generator.load();
                 } catch (Exception e) {
-                    //TODO log exception
+                    Gdx.app.error("Theme", "Couldn't load font!", e);
                 }
             }
         }
@@ -160,7 +209,7 @@ public class XmlTheme implements Theme {
                 try {
                     return loader.load();
                 } catch (Exception e) {
-                    //TODO log exception
+                    Gdx.app.error("Theme", "Couldn't load sound!", e);
                 }
             }
         }
@@ -179,7 +228,7 @@ public class XmlTheme implements Theme {
                 try {
                     return loader.load();
                 } catch (Exception e) {
-                    //TODO log exception
+                    Gdx.app.error("Theme", "Couldn't load music!", e);
                 }
             }
         }

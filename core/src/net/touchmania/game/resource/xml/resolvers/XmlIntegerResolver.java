@@ -37,7 +37,7 @@ public abstract class XmlIntegerResolver extends XmlReferenceValueResolver<Integ
 
     @Override
     protected String getResourceTypeName() {
-        return "value";
+        return "int";
     }
 
     @Override

@@ -29,7 +29,7 @@ import java.util.regex.Pattern;
  * @param <T> the type of the value to resolve.
  */
 public abstract class XmlReferenceValueResolver<T> implements XmlValueResolver<T> {
-    public static Pattern REFERENCE_REGEX = Pattern.compile("[0-9a-zA-Z_-]+:[0-9a-zA-Z_-]+");
+    public static Pattern REFERENCE_REGEX = Pattern.compile("([0-9a-zA-Z_-]+):([0-9a-zA-Z_-]+)");
 
     @Override
     public T resolve(String value) throws XmlParseException {

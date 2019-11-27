@@ -1,39 +1,34 @@
 <drawables>
-    <sprite scaleX="1.0" scaleY="1.0"
-              padLeft="0" padRight="0" padTop="0" padBottom="0"
-              rotate="180" opacity="1.0" tint="color:my_tint"
-              flip="false">
-    </sprite>
-
-    <ninepatch left="10" right="10" top="10" bottom="10">drawable:play_dance_note_tap_4</ninepatch>
-
     <!-- Textures -->
-    <texture id="play_dance_receptor" minFilter="nearest" magFilter="nearest" uWrap="repeat" vWrap="repeat">play_dance_receptor.png</texture>
+    <texture id="play_dance_notes">play_dance_notes.png</texture>
+
+    <!-- Receptor -->
+    <region id="play_dance_receptor" x="512" y="0" width="256" height="256">texture:play_dance_notes</region>
 
     <!-- Tap notes -->
-    <region id="play_dance_note_tap_4"  x="0" y="0"    width="256" height="256">play_dance_note_tap.png</region>
-    <region id="play_dance_note_tap_8"  x="0" y="256"  width="256" height="256">play_dance_note_tap.png</region>
-    <region id="play_dance_note_tap_12" x="0" y="512"  width="256" height="256">play_dance_note_tap.png</region>
-    <region id="play_dance_note_tap_16" x="0" y="768"  width="256" height="256">play_dance_note_tap.png</region>
-    <region id="play_dance_note_tap_24" x="0" y="1024" width="256" height="256">play_dance_note_tap.png</region>
-    <region id="play_dance_note_tap_32" x="0" y="1280" width="256" height="256">play_dance_note_tap.png</region>
-    <region id="play_dance_note_tap_48" x="0" y="1536" width="256" height="256">play_dance_note_tap.png</region>
-    <region id="play_dance_note_tap_64" x="0" y="1792" width="256" height="256">play_dance_note_tap.png</region>
+    <region id="play_dance_note_tap_4"   x="0"   y="0"   width="256" height="256">texture:play_dance_notes</region>
+    <region id="play_dance_note_tap_8"   x="0"   y="256" width="256" height="256">texture:play_dance_notes</region>
+    <region id="play_dance_note_tap_12"  x="0"   y="512" width="256" height="256">texture:play_dance_notes</region>
+    <region id="play_dance_note_tap_16"  x="0"   y="768" width="256" height="256">texture:play_dance_notes</region>
+    <region id="play_dance_note_tap_24"  x="256" y="0"   width="256" height="256">texture:play_dance_notes</region>
+    <region id="play_dance_note_tap_32"  x="256" y="256" width="256" height="256">texture:play_dance_notes</region>
+    <region id="play_dance_note_tap_48"  x="256" y="512" width="256" height="256">texture:play_dance_notes</region>
+    <region id="play_dance_note_tap_64"  x="256" y="768" width="256" height="256">texture:play_dance_notes</region>
+    <region id="play_dance_note_tap_192" x="256" y="768" width="256" height="256">texture:play_dance_notes</region>
 
     <!-- Hold note -->
-    <drawable id="play_dance_note_hold_head_8" >drawable:play_dance_note_tap_8</drawable>
-    <drawable id="play_dance_note_hold_head_12">drawable:play_dance_note_tap_12</drawable>
-    <drawable id="play_dance_note_hold_head_16">drawable:play_dance_note_tap_16</drawable>
-    <drawable id="play_dance_note_hold_head_24">drawable:play_dance_note_tap_24</drawable>
-    <drawable id="play_dance_note_hold_head_32">drawable:play_dance_note_tap_32</drawable>
-    <drawable id="play_dance_note_hold_head_48">drawable:play_dance_note_tap_48</drawable>
-    <drawable id="play_dance_note_hold_head_64">drawable:play_dance_note_tap_64</drawable>
-    <region id="play_dance_note_hold_tail_inactive" x="0" y="0" width="0" height="0">play_dance_note_hold_roll.png</region>
-    <region id="play_dance_note_hold_tail_active"   x="0" y="0" width="0" height="0">play_dance_note_hold_roll.png</region>
-    <region id="play_dance_note_hold_body_inactive" x="0" y="0" width="0" height="0">play_dance_note_hold_roll.png</region>
-    <region id="play_dance_note_hold_body_active"   x="0" y="0" width="0" height="0">play_dance_note_hold_roll.png</region>
-    <region id="play_dance_note_hold_conn_inactive" x="0" y="0" width="0" height="0">play_dance_note_hold_roll.png</region>
-    <region id="play_dance_note_hold_conn_active"   x="0" y="0" width="0" height="0">play_dance_note_hold_roll.png</region>
+    <drawable id="play_dance_note_hold_head_8"  >drawable:play_dance_note_tap_8</drawable>
+    <drawable id="play_dance_note_hold_head_12" >drawable:play_dance_note_tap_12</drawable>
+    <drawable id="play_dance_note_hold_head_16" >drawable:play_dance_note_tap_16</drawable>
+    <drawable id="play_dance_note_hold_head_24" >drawable:play_dance_note_tap_24</drawable>
+    <drawable id="play_dance_note_hold_head_32" >drawable:play_dance_note_tap_32</drawable>
+    <drawable id="play_dance_note_hold_head_48" >drawable:play_dance_note_tap_48</drawable>
+    <drawable id="play_dance_note_hold_head_64" >drawable:play_dance_note_tap_64</drawable>
+    <drawable id="play_dance_note_hold_head_192">drawable:play_dance_note_tap_192</drawable>
+    <region id="play_dance_note_hold_body_inactive" x="768" y="256" width="256" height="126">texture:play_dance_notes</region>
+    <region id="play_dance_note_hold_body_active"   x="768" y="768" width="256" height="126">texture:play_dance_notes</region>
+    <region id="play_dance_note_hold_tail_inactive" x="768" y="382" width="256" height="130">texture:play_dance_notes</region>
+    <region id="play_dance_note_hold_tail_active"   x="768" y="894" width="256" height="130">texture:play_dance_notes</region>
 
     <!-- Roll note -->
     <drawable id="play_dance_note_roll_head_8" >drawable:play_dance_note_tap_8</drawable>
@@ -43,14 +38,12 @@
     <drawable id="play_dance_note_roll_head_32">drawable:play_dance_note_tap_32</drawable>
     <drawable id="play_dance_note_roll_head_48">drawable:play_dance_note_tap_48</drawable>
     <drawable id="play_dance_note_roll_head_64">drawable:play_dance_note_tap_64</drawable>
-    <region id="play_dance_note_roll_tail_inactive" x="0" y="0" width="0" height="0">play_dance_note_hold_roll.png</region>
-    <region id="play_dance_note_roll_tail_active"   x="0" y="0" width="0" height="0">play_dance_note_hold_roll.png</region>
-    <region id="play_dance_note_roll_body_inactive" x="0" y="0" width="0" height="0">play_dance_note_hold_roll.png</region>
-    <region id="play_dance_note_roll_body_active"   x="0" y="0" width="0" height="0">play_dance_note_hold_roll.png</region>
-    <region id="play_dance_note_roll_conn_inactive" x="0" y="0" width="0" height="0">play_dance_note_hold_roll.png</region>
-    <region id="play_dance_note_roll_conn_active"   x="0" y="0" width="0" height="0">play_dance_note_hold_roll.png</region>
+    <drawable id="play_dance_note_roll_head_192">drawable:play_dance_note_tap_192</drawable>
+    <region id="play_dance_note_roll_body_inactive" x="768" y="256" width="256" height="126">texture:play_dance_notes</region>
+    <region id="play_dance_note_roll_body_active"   x="768" y="768" width="256" height="126">texture:play_dance_notes</region>
+    <region id="play_dance_note_roll_tail_inactive" x="768" y="382" width="256" height="130">texture:play_dance_notes</region>
+    <region id="play_dance_note_roll_tail_active"   x="768" y="894" width="256" height="130">texture:play_dance_notes</region>
 
     <!-- Mine note -->
-    <texture id="play_dance_note_mine">play_dance_note_mine.png</texture>
-
+    <region id="play_dance_note_mine" x="512" y="768" width="256" height="256">texture:play_dance_notes</region>
 </drawables>

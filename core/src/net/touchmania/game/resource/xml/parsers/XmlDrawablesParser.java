@@ -121,9 +121,8 @@ public class XmlDrawablesParser extends XmlMapResourceParser<XmlDrawableLoader> 
         for(Integer i : includes.keySet()) {
             Array<XmlParser.Element> elems = includes.get(i).getChildren();
             children.addAll(elems, i + increasedSize, elems.size);
-            increasedSize += elems.size;
             children.removeIndex(i + increasedSize);
-            increasedSize -= 1;
+            increasedSize += elems.size - 1;
         }
     }
 
@@ -152,8 +151,6 @@ public class XmlDrawablesParser extends XmlMapResourceParser<XmlDrawableLoader> 
 
     private boolean parseAttribute(XmlDrawableLoader loader, String name, String value) throws XmlParseException {
         switch(name) {
-            case "minWidth":     loader.minWidth = floatResolver.resolve(value);                                 break;
-            case "minHeight":    loader.minHeight = floatResolver.resolve(value);                                break;
             case "leftWidth":    loader.leftWidth = floatResolver.resolve(value);                                break;
             case "rightWidth":   loader.rightWidth = floatResolver.resolve(value);                               break;
             case "topHeight":    loader.topHeight = floatResolver.resolve(value);                                break;

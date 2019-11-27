@@ -1,7 +1,13 @@
 package net.touchmania.game.ui.screen.play;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import net.touchmania.game.Game;
 import net.touchmania.game.round.Round;
 import net.touchmania.game.song.Beatmap;
@@ -35,6 +41,16 @@ public class BeatmapView extends Widget {
     @Override
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
+
+        //TODO REMOVE
+        /**
+        ShapeRenderer renderer = new ShapeRenderer();
+        renderer.begin(ShapeRenderer.ShapeType.Filled);
+        renderer.setColor(new Color(0xb3e5fc));
+        renderer.rect(0, 0, getWidth(), getHeight());
+        renderer.end();
+         **/
+        //END
 
         Timing timing = getRound().getTiming();
 

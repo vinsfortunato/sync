@@ -28,7 +28,7 @@ public abstract class XmlPercentResolver extends XmlReferenceValueResolver<Float
 
     @Override
     protected String getResourceTypeName() {
-        return "value";
+        return "percent";
     }
 
     @Override
