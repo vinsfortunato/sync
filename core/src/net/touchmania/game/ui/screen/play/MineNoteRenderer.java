@@ -25,8 +25,6 @@ import net.touchmania.game.song.note.NotePanel;
  * @author flood2d
  */
 public class MineNoteRenderer extends BaseNoteRenderer {
-    /* Resources */
-    private Drawable noteDrawable = Game.instance().getResources().getDrawable("play_dance_mine");
 
     public MineNoteRenderer(BeatmapView view) {
         super(view);
@@ -41,6 +39,6 @@ public class MineNoteRenderer extends BaseNoteRenderer {
 
     @Override
     public Drawable getNoteDrawable(NotePanel panel, Note note, double beat, double time) {
-        return noteDrawable;
+        return null;
     }
 }

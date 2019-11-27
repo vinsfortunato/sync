@@ -1,15 +1,32 @@
 package net.touchmania.game.resource.xml.parsers;
 
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.files.FileHandle;
-import net.touchmania.game.resource.xml.XmlMusicLoader;
+import net.touchmania.game.resource.lazy.MusicResource;
+import net.touchmania.game.resource.lazy.Resource;
 import net.touchmania.game.resource.xml.XmlTheme;
+import net.touchmania.game.resource.xml.resolvers.XmlMusicResolver;
 import net.touchmania.game.resource.xml.resolvers.XmlReferenceValueResolver;
 import net.touchmania.game.util.xml.XmlParseException;
 import net.touchmania.game.util.xml.XmlParser;
 
-public class XmlMusicsParser extends XmlMapResourceParser<XmlMusicLoader> {
+public class XmlMusicsParser extends XmlMapResourceParser<Resource<Music>> {
     private final XmlTheme theme;
-    private XmlMusicLoaderResolver musicLoaderResolver;
+    private XmlMusicResolver musicResolver = new XmlMusicResolver() {
+        @Override
+        public Resource<Music> resolveReference(String resourceId) {
+            MusicResource resource = (MusicResource) getResolvedValues().get(resourceId);
+            return new MusicResource(resource);
+        }
+
+        @Override
+        public Resource<Music> resolveValue(String value) throws XmlParseException {
+            if(value == null || value.isEmpty()) {
+                throw new XmlParseException("Invalid music file! File name cannot be null or empty!");
+            }
+            return new MusicResource(getResourceFile().sibling("musics").sibling(value));
+        }
+    };
 
     /**
      * Create a resource parser from its file.
@@ -18,9 +35,6 @@ public class XmlMusicsParser extends XmlMapResourceParser<XmlMusicLoader> {
     public XmlMusicsParser(FileHandle resourceFile, XmlTheme theme) {
         super(resourceFile);
         this.theme = theme;
-
-        //Create a new instance for every reference resolver.
-        this.musicLoaderResolver = new XmlMusicLoaderResolver();
     }
 
     @Override
@@ -39,28 +53,7 @@ public class XmlMusicsParser extends XmlMapResourceParser<XmlMusicLoader> {
     }
 
     @Override
-    protected XmlReferenceValueResolver<XmlMusicLoader> getResolver(XmlParser.Element element) {
-        return musicLoaderResolver;
-    }
-
-    private class XmlMusicLoaderResolver extends XmlReferenceValueResolver<XmlMusicLoader> {
-        @Override
-        protected String getResourceTypeName() {
-            return "music";
-        }
-
-        @Override
-        public XmlMusicLoader resolveReference(String resourceId) {
-            XmlMusicLoader loader = getResolvedValues().get(resourceId);
-            return new XmlMusicLoader(loader);
-        }
-
-        @Override
-        public XmlMusicLoader resolveValue(String value) throws XmlParseException {
-            if(value == null || value.isEmpty()) {
-                throw new XmlParseException("Invalid music file! File name cannot be null or empty!");
-            }
-            return new XmlMusicLoader(theme, getResourceFile().sibling("musics").sibling(value));
-        }
+    protected XmlReferenceValueResolver<Resource<Music>> getResolver(XmlParser.Element element) {
+        return musicResolver;
     }
 }

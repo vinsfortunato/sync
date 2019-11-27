@@ -18,9 +18,12 @@ package net.touchmania.game.resource.xml.parsers;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
-import net.touchmania.game.resource.Dimension;
+import net.touchmania.game.resource.*;
+import net.touchmania.game.resource.lazy.DrawableResource;
+import net.touchmania.game.resource.lazy.Resource;
 import net.touchmania.game.resource.xml.*;
 import net.touchmania.game.resource.xml.resolvers.*;
 import net.touchmania.game.util.xml.XmlParseException;
@@ -34,19 +37,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class XmlDrawablesParser extends XmlMapResourceParser<XmlDrawableLoader> {
+public class XmlDrawablesParser extends XmlMapResourceParser<net.touchmania.game.resource.lazy.Resource<Drawable>> {
     private final XmlTheme theme;
-    private final XmlValueResolver<Dimension> dimensionResolver;
-    private final XmlValueResolver<Boolean> booleanResolver;
-    private final XmlValueResolver<Color> colorResolver;
-    private final XmlValueResolver<Float> floatResolver;
-    private final XmlValueResolver<Integer> integerResolver;
-    private final XmlValueResolver<String> stringResolver;
-    private final XmlReferenceValueResolver<XmlDrawableLoader> drawableResolver;
-    private final XmlReferenceValueResolver<XmlDrawableLoader> spriteResolver;
-    private final XmlReferenceValueResolver<XmlDrawableLoader> ninepatchResolver;
-    private final XmlReferenceValueResolver<XmlDrawableLoader> textureResolver;
-    private final XmlReferenceValueResolver<XmlDrawableLoader> regionResolver;
 
     /**
      * Create a resource parser from its file.
@@ -63,15 +55,10 @@ public class XmlDrawablesParser extends XmlMapResourceParser<XmlDrawableLoader> 
         this.floatResolver = XmlFloatResolver.from(theme);
         this.integerResolver = XmlIntegerResolver.from(theme);
         this.stringResolver = XmlStringResolver.from(theme);
-        this.drawableResolver = new XmlDrawableLoaderResolver();
-        this.spriteResolver = new XmlSpriteDrawableLoaderResolver();
-        this.ninepatchResolver = new XmlNinepatchDrawableLoaderResolver();
-        this.textureResolver = new XmlTextureDrawableLoaderResolver();
-        this.regionResolver = new XmlRegionDrawableLoaderResolver();
     }
 
     @Override
-    public Map<String, XmlDrawableLoader> parse(XmlParser.Element root) throws XmlParseException {
+    public Map<String, net.touchmania.game.resource.lazy.Resource<Drawable>> parse(XmlParser.Element root) throws XmlParseException {
         //Merge xml included files into root
         mergeIncludes(root);
         return super.parse(root);
@@ -127,7 +114,7 @@ public class XmlDrawablesParser extends XmlMapResourceParser<XmlDrawableLoader> 
     }
 
     @Override
-    protected void parseAttributes(String id, XmlDrawableLoader value, XmlParser.Element element) throws XmlParseException {
+    protected void parseAttributes(String id, net.touchmania.game.resource.lazy.Resource<Drawable> value, XmlParser.Element element) throws XmlParseException {
         for (ObjectMap.Entry<String, String> attribute : element.getAttributes()) {
             String key = attribute.key;
             String val = attribute.value;
@@ -137,11 +124,11 @@ public class XmlDrawablesParser extends XmlMapResourceParser<XmlDrawableLoader> 
 
             //Parse attribute
             boolean parsed = false;
-            if(parseAttribute(value, key, val))                                                             parsed = true;
-            if(value instanceof XmlTextureLoader   && parseAttribute((XmlTextureLoader)   value, key, val)) parsed = true;
-            if(value instanceof XmlRegionLoader    && parseAttribute((XmlRegionLoader)    value, key, val)) parsed = true;
-            if(value instanceof XmlSpriteLoader    && parseAttribute((XmlSpriteLoader)    value, key, val)) parsed = true;
-            if(value instanceof XmlNinePatchLoader && parseAttribute((XmlNinePatchLoader) value, key, val)) parsed = true;
+            if(value instanceof net.touchmania.game.resource.lazy.DrawableResource && parseAttribute((net.touchmania.game.resource.lazy.DrawableResource)  value, key, val)) parsed = true;
+            if(value instanceof net.touchmania.game.resource.lazy.TextureResource && parseAttribute((net.touchmania.game.resource.lazy.TextureResource)   value, key, val)) parsed = true;
+            if(value instanceof net.touchmania.game.resource.lazy.RegionResource && parseAttribute((net.touchmania.game.resource.lazy.RegionResource)    value, key, val)) parsed = true;
+            if(value instanceof net.touchmania.game.resource.lazy.SpriteResource && parseAttribute((net.touchmania.game.resource.lazy.SpriteResource)    value, key, val)) parsed = true;
+            if(value instanceof net.touchmania.game.resource.lazy.NinepatchResource && parseAttribute((net.touchmania.game.resource.lazy.NinepatchResource) value, key, val)) parsed = true;
 
             if(!parsed)
                 throw new XmlParseException(String.format(
@@ -149,45 +136,45 @@ public class XmlDrawablesParser extends XmlMapResourceParser<XmlDrawableLoader> 
         }
     }
 
-    private boolean parseAttribute(XmlDrawableLoader loader, String name, String value) throws XmlParseException {
+    private boolean parseAttribute(net.touchmania.game.resource.lazy.DrawableResource resource, String name, String value) throws XmlParseException {
         switch(name) {
-            case "leftWidth":    loader.leftWidth = floatResolver.resolve(value);                                break;
-            case "rightWidth":   loader.rightWidth = floatResolver.resolve(value);                               break;
-            case "topHeight":    loader.topHeight = floatResolver.resolve(value);                                break;
-            case "bottomHeight": loader.bottomHeight = floatResolver.resolve(value);                             break;
+            case "leftWidth":    resource.leftWidth = floatResolver.resolve(value);                               break;
+            case "rightWidth":   resource.rightWidth = floatResolver.resolve(value);                              break;
+            case "topHeight":    resource.topHeight = floatResolver.resolve(value);                               break;
+            case "bottomHeight": resource.bottomHeight = floatResolver.resolve(value);                            break;
             default: return false; //Unrecognised attribute
         }
 
         return true;
     }
 
-    private boolean parseAttribute(XmlTextureLoader loader, String name, String value) throws XmlParseException {
+    private boolean parseAttribute(net.touchmania.game.resource.lazy.TextureResource resource, String name, String value) throws XmlParseException {
         switch(name) {
-            case "minFilter":  loader.minFilter = GLOBAL_TEXTURE_FILTER_RESOLVER.resolve(value);                 break;
-            case "maxFilter":  loader.magFilter = GLOBAL_TEXTURE_FILTER_RESOLVER.resolve(value);                 break;
-            case "uWrap":      loader.uWrap = GLOBAL_TEXTURE_WRAP_RESOLVER.resolve(value);                       break;
-            case "vWrap":      loader.vWrap = GLOBAL_TEXTURE_WRAP_RESOLVER.resolve(value);                       break;
-            case "format":     loader.format = GLOBAL_PIXMAP_FORMAT_RESOLVER.resolve(value);                     break;
-            case "useMipMaps": loader.useMipMaps = booleanResolver.resolve(value);                               break;
+            case "minFilter":  resource.minFilter = GLOBAL_TEXTURE_FILTER_RESOLVER.resolve(value);                break;
+            case "maxFilter":  resource.magFilter = GLOBAL_TEXTURE_FILTER_RESOLVER.resolve(value);                break;
+            case "uWrap":      resource.uWrap = GLOBAL_TEXTURE_WRAP_RESOLVER.resolve(value);                      break;
+            case "vWrap":      resource.vWrap = GLOBAL_TEXTURE_WRAP_RESOLVER.resolve(value);                      break;
+            case "format":     resource.format = GLOBAL_PIXMAP_FORMAT_RESOLVER.resolve(value);                    break;
+            case "useMipMaps": resource.useMipMaps = booleanResolver.resolve(value);                              break;
             default: return false; //Unrecognised attribute
         }
 
         return true;
     }
 
-    private boolean parseAttribute(XmlRegionLoader loader, String name, String value) throws XmlParseException {
+    private boolean parseAttribute(net.touchmania.game.resource.lazy.RegionResource resource, String name, String value) throws XmlParseException {
         switch(name) {
-            case "x": loader.x = dimensionResolver.resolve(value).getIntValue();                                 break;
-            case "y": loader.y = dimensionResolver.resolve(value).getIntValue();                                 break;
-            case "width": loader.width = dimensionResolver.resolve(value).getIntValue();                         break;
-            case "height": loader.height = dimensionResolver.resolve(value).getIntValue();                       break;
+            case "x":      resource.x = dimensionResolver.resolve(value).getIntValue();                           break;
+            case "y":      resource.y = dimensionResolver.resolve(value).getIntValue();                           break;
+            case "width":  resource.width = dimensionResolver.resolve(value).getIntValue();                       break;
+            case "height": resource.height = dimensionResolver.resolve(value).getIntValue();                      break;
             default: return false; //Unrecognised attribute
         }
 
         return true;
     }
 
-    private boolean parseAttribute(XmlSpriteLoader loader, String name, String value) throws XmlParseException {
+    private boolean parseAttribute(net.touchmania.game.resource.lazy.SpriteResource resource, String name, String value) throws XmlParseException {
         switch(name) { //TODO
             case "x": break;
             default: return false; //Unrecognised attribute
@@ -196,7 +183,7 @@ public class XmlDrawablesParser extends XmlMapResourceParser<XmlDrawableLoader> 
         return true;
     }
 
-    private boolean parseAttribute(XmlNinePatchLoader loader, String name, String value) throws XmlParseException {
+    private boolean parseAttribute(net.touchmania.game.resource.lazy.NinepatchResource resource, String name, String value) throws XmlParseException {
         switch(name) { //TODO
             case "x": break;
             default: return false; //Unrecognised attribute
@@ -227,7 +214,7 @@ public class XmlDrawablesParser extends XmlMapResourceParser<XmlDrawableLoader> 
     }
 
     @Override
-    protected XmlReferenceValueResolver<XmlDrawableLoader> getResolver(XmlParser.Element element) {
+    protected XmlReferenceValueResolver<net.touchmania.game.resource.lazy.Resource<Drawable>> getResolver(XmlParser.Element element) {
         switch (element.getName()) {
             case "texture":     return textureResolver;
             case "region":      return regionResolver;
@@ -239,160 +226,26 @@ public class XmlDrawablesParser extends XmlMapResourceParser<XmlDrawableLoader> 
         }
     }
 
-    /**
-     * Used to resolve {@code <texture>} resource values.
-     */
-    private class XmlTextureDrawableLoaderResolver extends XmlDrawableLoaderResolver {
-        @Override
-        public XmlTextureLoader resolveReference(String resourceId) throws XmlParseException {
-            XmlDrawableLoader loader = getResolvedValues().get(resourceId);
-            if(loader instanceof XmlTextureLoader) {
-                return ((XmlTextureLoader)loader).copy();
-            }
-            throw new XmlParseException(String.format(
-                    "Incompatible reference! Trying to cast '%s' to XmlTextureLoader!", loader.getClass().getName()));
-        }
-
-        @Override
-        public XmlTextureLoader resolveValue(String value) throws XmlParseException {
-            if(value == null || value.isEmpty()) {
-                throw new XmlParseException("Invalid texture file! File name cannot be null or empty!");
-            }
-            return new XmlTextureLoader(theme, theme.getTexturePath(value));
-        }
-
-        @Override
-        public boolean checkReferenceType(String type) {
-            switch(type) {
-                case "drawable":
-                case "texture":
-                    return true;
-            }
-            return false;
-        }
-    }
-
-    /**
-     * Used to resolve {@code <region>} resource values.
-     */
-    private class XmlRegionDrawableLoaderResolver extends XmlDrawableLoaderResolver {
-        @Override
-        public XmlRegionLoader resolveReference(String resourceId) throws XmlParseException {
-            XmlDrawableLoader loader = getResolvedValues().get(resourceId);
-            if(loader instanceof XmlRegionLoader) {
-                return new XmlRegionLoader((XmlRegionLoader)loader);
-            }
-            if(loader instanceof XmlTextureLoader) {
-                return new XmlRegionLoader((XmlTextureLoader)loader);
-            }
-
-            throw new XmlParseException(String.format(
-                    "Incompatible reference! Trying to convert '%s' to XmlRegionLoader!", loader.getClass().getName()));
-        }
-
-        @Override
-        public XmlRegionLoader resolveValue(String value) throws XmlParseException {
-            if(value == null || value.isEmpty()) {
-                throw new XmlParseException("Invalid texture file! File name cannot be null or empty!");
-            }
-            return new XmlRegionLoader(theme, theme.getTexturePath(value));
-        }
-
-        @Override
-        public boolean checkReferenceType(String type) {
-            switch(type) {
-                case "drawable":
-                case "texture":
-                case "region":
-                    return true;
-            }
-            return false;
-        }
-    }
-
-    /**
-     * Used to resolve {@code <sprite>} resource values.
-     */
-    private class XmlSpriteDrawableLoaderResolver extends XmlDrawableLoaderResolver {
-        @Override
-        public XmlSpriteLoader resolveReference(String resourceId) throws XmlParseException {
-            XmlDrawableLoader loader = getResolvedValues().get(resourceId);
-            if(loader instanceof XmlSpriteLoader) {
-                return ((XmlSpriteLoader)loader).copy();
-            }
-            throw new XmlParseException(String.format(
-                    "Incompatible reference! Trying to cast '%s' to XmlSpriteLoader!", loader.getClass().getName()));
-        }
-
-        @Override
-        public XmlSpriteLoader resolveValue(String value) throws XmlParseException {
-            //TODO
-            return null;
-        }
-
-        @Override
-        public boolean checkReferenceType(String type) {
-            switch(type) {
-                case "drawable":
-                case "texture":
-                case "region":
-                case "sprite":
-                    return true;
-            }
-            return false;
-        }
-    }
-
-    /**
-     * Used to resolve {@code <ninepatch>} resource values.
-     */
-    private class XmlNinepatchDrawableLoaderResolver extends XmlDrawableLoaderResolver {
-        @Override
-        public XmlNinePatchLoader resolveReference(String resourceId) throws XmlParseException {
-            XmlDrawableLoader loader = getResolvedValues().get(resourceId);
-            if(loader instanceof XmlNinePatchLoader) {
-                return ((XmlNinePatchLoader)loader).copy();
-            }
-            throw new XmlParseException(String.format(
-                    "Incompatible reference! Trying to cast '%s' to XmlNinePatchLoader!", loader.getClass().getName()));
-        }
-
-        @Override
-        public XmlNinePatchLoader resolveValue(String value) throws XmlParseException {
-            //TODO
-            return null;
-        }
-
-        @Override
-        public boolean checkReferenceType(String type) {
-            switch(type) {
-                case "drawable":
-                case "texture":
-                case "region":
-                case "ninepatch":
-                    return true;
-            }
-            return false;
-        }
-    }
-
-    /**
-     * Used to resolve {@code <drawable>} resource values.
-     */
-    private class XmlDrawableLoaderResolver extends XmlReferenceValueResolver<XmlDrawableLoader> {
+    private final XmlValueResolver<Dimension> dimensionResolver;
+    private final XmlValueResolver<Boolean> booleanResolver;
+    private final XmlValueResolver<Color> colorResolver;
+    private final XmlValueResolver<Float> floatResolver;
+    private final XmlValueResolver<Integer> integerResolver;
+    private final XmlValueResolver<String> stringResolver;
+    private final XmlReferenceValueResolver<net.touchmania.game.resource.lazy.Resource<Drawable>> drawableResolver = new XmlDrawableResolver() {
         @Override
         protected String getResourceTypeName() {
             return "drawable";
         }
 
         @Override
-        public XmlDrawableLoader resolveReference(String resourceId) throws XmlParseException {
-            XmlDrawableLoader loader = getResolvedValues().get(resourceId);
-            return loader != null ? loader.copy() : null;
+        public net.touchmania.game.resource.lazy.Resource<Drawable> resolveReference(String resourceId) throws XmlParseException {
+            net.touchmania.game.resource.lazy.DrawableResource resource = (DrawableResource) getResolvedValues().get(resourceId);
+            return resource != null ? resource.copy() : null;
         }
 
         @Override
-        public XmlDrawableLoader resolveValue(String value) throws XmlParseException {
+        public net.touchmania.game.resource.lazy.Resource<Drawable> resolveValue(String value) throws XmlParseException {
             //<drawable> is used only for referencing. So no need to parse value.
             throw new XmlParseException("Illegal value. Drawable resource value must be a reference!");
         }
@@ -409,5 +262,126 @@ public class XmlDrawablesParser extends XmlMapResourceParser<XmlDrawableLoader> 
             }
             return false;
         }
-    }
+    };
+    private final XmlReferenceValueResolver<net.touchmania.game.resource.lazy.Resource<Drawable>> spriteResolver = new XmlDrawableResolver() {
+        @Override
+        public net.touchmania.game.resource.lazy.Resource<Drawable> resolveReference(String resourceId) throws XmlParseException {
+            net.touchmania.game.resource.lazy.Resource<Drawable> resource = getResolvedValues().get(resourceId);
+            if(resource instanceof net.touchmania.game.resource.lazy.SpriteResource) {
+                return ((net.touchmania.game.resource.lazy.SpriteResource)resource).copy();
+            }
+            throw new XmlParseException(String.format(
+                    "Incompatible reference! Trying to cast '%s' to SpriteResource!", resource.getClass().getName()));
+        }
+
+        @Override
+        public net.touchmania.game.resource.lazy.Resource<Drawable> resolveValue(String value) throws XmlParseException {
+            //TODO
+            return null;
+        }
+
+        @Override
+        public boolean checkReferenceType(String type) {
+            switch(type) {
+                case "drawable":
+                case "texture":
+                case "region":
+                case "sprite":
+                    return true;
+            }
+            return false;
+        }
+    };
+    private final XmlReferenceValueResolver<net.touchmania.game.resource.lazy.Resource<Drawable>> ninepatchResolver = new XmlDrawableResolver() {
+        @Override
+        public net.touchmania.game.resource.lazy.Resource<Drawable> resolveReference(String resourceId) throws XmlParseException {
+            net.touchmania.game.resource.lazy.Resource<Drawable> resource = getResolvedValues().get(resourceId);
+            if(resource instanceof net.touchmania.game.resource.lazy.NinepatchResource) {
+                return ((net.touchmania.game.resource.lazy.NinepatchResource)resource).copy();
+            }
+            throw new XmlParseException(String.format(
+                    "Incompatible reference! Trying to cast '%s' to NinepatchResource!", resource.getClass().getName()));
+        }
+
+        @Override
+        public net.touchmania.game.resource.lazy.Resource<Drawable> resolveValue(String value) throws XmlParseException {
+            //TODO
+            return null;
+        }
+
+        @Override
+        public boolean checkReferenceType(String type) {
+            switch(type) {
+                case "drawable":
+                case "texture":
+                case "region":
+                case "ninepatch":
+                    return true;
+            }
+            return false;
+        }
+    };
+    private final XmlReferenceValueResolver<net.touchmania.game.resource.lazy.Resource<Drawable>> textureResolver = new XmlDrawableResolver() {
+        @Override
+        public net.touchmania.game.resource.lazy.Resource<Drawable> resolveReference(String resourceId) throws XmlParseException {
+            net.touchmania.game.resource.lazy.Resource<Drawable> resource = getResolvedValues().get(resourceId);
+            if(resource instanceof net.touchmania.game.resource.lazy.TextureResource) {
+                return new net.touchmania.game.resource.lazy.TextureResource((net.touchmania.game.resource.lazy.TextureResource)resource);
+            }
+            throw new XmlParseException(String.format(
+                    "Incompatible reference! Trying to cast '%s' to TextureResource!", resource.getClass().getName()));
+        }
+
+        @Override
+        public net.touchmania.game.resource.lazy.Resource<Drawable> resolveValue(String value) throws XmlParseException {
+            if(value == null || value.isEmpty()) {
+                throw new XmlParseException("Invalid texture file! File name cannot be null or empty!");
+            }
+            return new net.touchmania.game.resource.lazy.TextureResource(theme.getTexturePath(value));
+        }
+
+        @Override
+        public boolean checkReferenceType(String type) {
+            switch(type) {
+                case "drawable":
+                case "texture":
+                    return true;
+            }
+            return false;
+        }
+    };
+    private final XmlReferenceValueResolver<net.touchmania.game.resource.lazy.Resource<Drawable>> regionResolver = new XmlDrawableResolver() {
+        @Override
+        public net.touchmania.game.resource.lazy.Resource<Drawable> resolveReference(String resourceId) throws XmlParseException {
+            net.touchmania.game.resource.lazy.Resource<Drawable> resource = getResolvedValues().get(resourceId);
+            if(resource instanceof net.touchmania.game.resource.lazy.RegionResource) {
+                return new net.touchmania.game.resource.lazy.RegionResource((net.touchmania.game.resource.lazy.RegionResource)resource);
+            }
+            if(resource instanceof net.touchmania.game.resource.lazy.TextureResource) {
+                return new net.touchmania.game.resource.lazy.RegionResource((net.touchmania.game.resource.lazy.TextureResource)resource);
+            }
+
+            throw new XmlParseException(String.format(
+                    "Incompatible reference! Trying to convert '%s' to RegionResource!", resource.getClass().getName()));
+        }
+
+        @Override
+        public Resource<Drawable> resolveValue(String value) throws XmlParseException {
+            if(value == null || value.isEmpty()) {
+                throw new XmlParseException("Invalid texture file! File name cannot be null or empty!");
+            }
+            return new net.touchmania.game.resource.lazy.RegionResource(theme.getTexturePath(value));
+        }
+
+        @Override
+        public boolean checkReferenceType(String type) {
+            switch(type) {
+                case "drawable":
+                case "texture":
+                case "region":
+                    return true;
+            }
+            return false;
+        }
+    };
 }

@@ -29,21 +29,12 @@ import net.touchmania.game.util.concurrent.ExecutorManager;
 import java.util.concurrent.Executors;
 
 public class ScreenManager implements Disposable {
-    public static int LOAD_EXECUTOR_ID;
     private Stage stage;
     private Screen currentScreen;
 
     public ScreenManager() {
         Game.instance().getDisposer().manage(this);
-        initLoadExecutor();
         initStage();
-    }
-
-    private void initLoadExecutor() {
-        ExecutorManager executors = Game.instance().getExecutors();
-        LOAD_EXECUTOR_ID = executors.generateId();
-        ListeningExecutorService service = MoreExecutors.listeningDecorator(Executors.newSingleThreadExecutor());
-        executors.putExecutor(LOAD_EXECUTOR_ID, service);
     }
 
     private void initStage() {
@@ -57,24 +48,19 @@ public class ScreenManager implements Disposable {
             //Show the already prepared screen immediately
             showPrepared(screen);
         } else {
-            //Prepare the task async then show it when preparation is done
-            getLoadExecutor().submit(new PrepareScreenTask(screen));
+            //Prepare the screen and show it when ready
+            screen.prepare(() -> Gdx.app.postRunnable(() -> showPrepared(screen)));
         }
     }
 
     private void showPrepared(final Screen screen) {
         if(currentScreen != null) {
             //Show the next screen after hiding the current one
-            currentScreen.hide(new DoneListener() {
-                @Override
-                public void onDone() {
-                    if(getScreenCachePolicy() == ScreenCachePolicy.DISPOSE_ON_HIDE) {
-                        getLoadExecutor().submit(new DisposeScreenTask(currentScreen));
-                    }
-                    stage.clear();
-                    currentScreen = screen;
-                    currentScreen.show(stage);
-                }
+            currentScreen.hide(() -> {
+                screen.dispose();
+                stage.clear();
+                currentScreen = screen;
+                currentScreen.show(stage);
             });
         } else {
             //Show the screen immediately
@@ -100,36 +86,5 @@ public class ScreenManager implements Disposable {
 
     private ScreenCachePolicy getScreenCachePolicy() {
         return Game.instance().getSettings().getScreenCachePolicy();
-    }
-
-    private ListeningExecutorService getLoadExecutor() {
-        return (ListeningExecutorService) Game.instance().getExecutors().getExecutor(LOAD_EXECUTOR_ID);
-    }
-
-    private class PrepareScreenTask implements Runnable {
-        private Screen screen;
-
-        PrepareScreenTask(Screen screen) {
-            this.screen = screen;
-        }
-
-        @Override
-        public void run() {
-            screen.prepare();
-            Gdx.app.postRunnable(() -> showPrepared(screen));
-        }
-    }
-
-    private static class DisposeScreenTask implements Runnable {
-        private Screen screen;
-
-        DisposeScreenTask(Screen screen) {
-            this.screen = screen;
-        }
-
-        @Override
-        public void run() {
-            screen.dispose();
-        }
     }
 }

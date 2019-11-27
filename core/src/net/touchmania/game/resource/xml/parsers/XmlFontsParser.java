@@ -19,17 +19,19 @@ package net.touchmania.game.resource.xml.parsers;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.utils.ObjectMap;
 import net.touchmania.game.resource.Dimension;
-import net.touchmania.game.resource.xml.XmlFontLoader;
+import net.touchmania.game.resource.lazy.FontResource;
+import net.touchmania.game.resource.lazy.Resource;
 import net.touchmania.game.resource.xml.XmlTheme;
 import net.touchmania.game.resource.xml.resolvers.*;
 import net.touchmania.game.util.xml.XmlParseException;
 import net.touchmania.game.util.xml.XmlParser;
 import net.touchmania.game.util.xml.XmlValueResolver;
 
-public class XmlFontsParser extends XmlMapResourceParser<XmlFontLoader> {
+public class XmlFontsParser extends XmlMapResourceParser<Resource<BitmapFont>> {
     private final XmlTheme theme;
     private final XmlValueResolver<Dimension> dimensionResolver;
     private final XmlValueResolver<Boolean> booleanResolver;
@@ -39,7 +41,21 @@ public class XmlFontsParser extends XmlMapResourceParser<XmlFontLoader> {
     private final XmlValueResolver<String> stringResolver;
     private final XmlValueResolver<Texture.TextureFilter> filterResolver;
     private final XmlValueResolver<FreeTypeFontGenerator.Hinting> hintingResolver;
-    private final XmlReferenceValueResolver<XmlFontLoader> fontGeneratorResolver;
+    private final XmlFontResolver fontResolver = new XmlFontResolver() {
+        @Override
+        public Resource<BitmapFont> resolveReference(String resourceId) {
+            Resource<BitmapFont> resource = getResolvedValues().get(resourceId);
+            return  new FontResource((FontResource) resource);
+        }
+
+        @Override
+        public Resource<BitmapFont> resolveValue(String value) throws XmlParseException {
+            if(value == null || value.isEmpty()) {
+                throw new XmlParseException("Invalid font file! File name cannot be null or empty!");
+            }
+            return new FontResource(getResourceFile().sibling("fonts").child(value));
+        }
+    };
 
     /**
      * Create a resource parser from its file.
@@ -59,11 +75,10 @@ public class XmlFontsParser extends XmlMapResourceParser<XmlFontLoader> {
         this.stringResolver = XmlStringResolver.from(theme);
         this.filterResolver = new XmlTextureFilterResolver();
         this.hintingResolver = new XmlHintingResolver();
-        this.fontGeneratorResolver = new XmlFontGeneratorResolver();
     }
 
     @Override
-    protected void parseAttributes(String id, XmlFontLoader value, XmlParser.Element element) throws XmlParseException {
+    protected void parseAttributes(String id, Resource<BitmapFont> value, XmlParser.Element element) throws XmlParseException {
         for (ObjectMap.Entry<String, String> attribute : element.getAttributes()) {
             if (!attribute.key.equals("id") && !parseAttribute(value, attribute.key, attribute.value)) {
                 throw new XmlParseException(String.format(
@@ -87,20 +102,20 @@ public class XmlFontsParser extends XmlMapResourceParser<XmlFontLoader> {
     }
 
     @Override
-    protected XmlReferenceValueResolver<XmlFontLoader> getResolver(XmlParser.Element element) {
-        return fontGeneratorResolver;
+    protected XmlReferenceValueResolver<Resource<BitmapFont>> getResolver(XmlParser.Element element) {
+        return fontResolver;
     }
 
     /**
      * Parses the font element's attribute with the given name and value.
-     * @param generator the result generator.
+     * @param resource the result resource.
      * @param name the attribute name.
      * @param value the attribute value.
      * @return true if the attribute has been recognised and parsed, false if it has not been recognised.
      * @throws XmlParseException if the attribute has been recognised but cannot be parsed correctly.
      */
-    private boolean parseAttribute(XmlFontLoader generator, String name, String value) throws XmlParseException {
-        FreeTypeFontGenerator.FreeTypeFontParameter p = generator.parameter;
+    private boolean parseAttribute(Resource<BitmapFont> resource, String name, String value) throws XmlParseException {
+        FreeTypeFontGenerator.FreeTypeFontParameter p = ((FontResource) resource).parameter;
         switch(name) {
             case "size":           p.size = dimensionResolver.resolve(value).getIntValue();                      break;
             case "mono":           p.mono = booleanResolver.resolve(value);                                      break;
@@ -127,27 +142,6 @@ public class XmlFontsParser extends XmlMapResourceParser<XmlFontLoader> {
             default: return false; //Unrecognised font attribute
         }
         return true;
-    }
-
-    private class XmlFontGeneratorResolver extends XmlReferenceValueResolver<XmlFontLoader> {
-        @Override
-        protected String getResourceTypeName() {
-            return "font";
-        }
-
-        @Override
-        public XmlFontLoader resolveReference(String resourceId) {
-            XmlFontLoader loader = getResolvedValues().get(resourceId);
-            return new XmlFontLoader(loader);
-        }
-
-        @Override
-        public XmlFontLoader resolveValue(String value) throws XmlParseException {
-            if(value == null || value.isEmpty()) {
-                throw new XmlParseException("Invalid font file! File name cannot be null or empty!");
-            }
-            return new XmlFontLoader(theme, getResourceFile().sibling("fonts").child(value));
-        }
     }
 
     private static class XmlHintingResolver implements XmlValueResolver<FreeTypeFontGenerator.Hinting> {

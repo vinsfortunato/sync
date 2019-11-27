@@ -16,25 +16,26 @@
 
 package net.touchmania.game.resource.xml.resolvers;
 
+import net.touchmania.game.resource.lazy.Resource;
 import net.touchmania.game.resource.ResourceProvider;
 import net.touchmania.game.resource.Style;
 import net.touchmania.game.util.xml.XmlParseException;
 
-public abstract class XmlStyleResolver extends XmlReferenceValueResolver<Style> {
+public abstract class XmlStyleResolver extends XmlReferenceValueResolver<Resource<Style>> {
     @Override
     protected String getResourceTypeName() {
         return "style";
     }
 
     @Override
-    public Style resolveValue(String value) throws XmlParseException {
+    public Resource<Style> resolveValue(String value) throws XmlParseException {
         throw new XmlParseException(String.format("Cannot resolve the value '%s'!", value));
     }
 
     public static XmlStyleResolver from(final ResourceProvider provider) {
         return new XmlStyleResolver() {
             @Override
-            public Style resolveReference(String resourceId) throws XmlParseException {
+            public Resource<Style> resolveReference(String resourceId) throws XmlParseException {
                 return provider.getStyle(resourceId);
             }
         };

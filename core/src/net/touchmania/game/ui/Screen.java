@@ -35,7 +35,7 @@ public interface Screen extends Disposable {
      *     </ul>
      * </p>
      */
-    void prepare();
+    void prepare(DoneListener listener);
 
     /**
      * Populate the stage and starts showing animations.

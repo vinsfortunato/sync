@@ -20,12 +20,13 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.google.common.base.Preconditions;
 import net.touchmania.game.Game;
 import net.touchmania.game.resource.Layout;
+import net.touchmania.game.resource.lazy.Resource;
 import net.touchmania.game.resource.ResourceProvider;
 import net.touchmania.game.util.concurrent.DoneListener;
 
 public class LayoutScreen implements Screen {
     private String layoutId;
-    private Layout layout;
+    private Resource<Layout> layout;
 
     public LayoutScreen(String layoutId) {
         Preconditions.checkArgument(layoutId != null && !layoutId.isEmpty(), "Null or empty layout id!");
@@ -33,10 +34,11 @@ public class LayoutScreen implements Screen {
     }
 
     @Override
-    public void prepare() {
+    public void prepare(DoneListener listener) {
         ResourceProvider resources = Game.instance().getResources();
         layout = resources.getLayout(layoutId);
         Preconditions.checkNotNull(layout, String.format("Layout with id '%s' not found!", layoutId));
+        listener.onDone();
     }
 
     @Override

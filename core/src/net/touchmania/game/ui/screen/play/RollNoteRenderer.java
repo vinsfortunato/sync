@@ -27,10 +27,6 @@ import net.touchmania.game.song.note.NotePanel;
  */
 public class RollNoteRenderer extends BaseLengthyNoteRenderer {
     /* Resources */
-    private Drawable noteDrawable = Game.instance().getResources().getDrawable("play_dance_note_roll_head");
-    private Drawable bodyDrawable = Game.instance().getResources().getDrawable("play_dance_note_roll_body");
-    private Drawable connDrawable = Game.instance().getResources().getDrawable("play_dance_note_roll_conn");
-    private Drawable tailDrawable = Game.instance().getResources().getDrawable("play_dance_note_roll_tail");
 
     public RollNoteRenderer(BeatmapView view) {
         super(view);
@@ -38,21 +34,21 @@ public class RollNoteRenderer extends BaseLengthyNoteRenderer {
 
     @Override
     public Drawable getNoteDrawable(NotePanel panel, Note note, double beat, double time) {
-        return noteDrawable;
+        return null;
     }
 
     @Override
     public Drawable getNoteBodyDrawable(NotePanel panel, LengthyNote note, double beat, double time) {
-        return bodyDrawable;
+        return null;
     }
 
     @Override
     public Drawable getNoteConnectorDrawable(NotePanel panel, LengthyNote note, double beat, double time) {
-        return connDrawable;
+        return null;
     }
 
     @Override
     public Drawable getNoteTailDrawable(NotePanel panel, LengthyNote note, double beat, double time) {
-        return tailDrawable;
+        return null;
     }
 }

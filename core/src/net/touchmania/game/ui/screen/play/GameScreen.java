@@ -57,7 +57,7 @@ public class GameScreen implements Screen {
     }
 
     @Override
-    public void prepare() {
+    public void prepare(DoneListener listener) {
         resGroup = Game.instance().getResources().startGroup();
 
         /* TODO TEST START */
@@ -88,6 +88,8 @@ public class GameScreen implements Screen {
         }
         /* TODO TEST END */
 
+        listener.onDone();
+
         prepared = true;
     }
 
@@ -112,7 +114,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void hide(DoneListener listener) {
-
+        listener.onDone();
     }
 
     @Override

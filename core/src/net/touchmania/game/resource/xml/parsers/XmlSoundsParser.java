@@ -16,16 +16,34 @@
 
 package net.touchmania.game.resource.xml.parsers;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
-import net.touchmania.game.resource.xml.XmlSoundLoader;
+import net.touchmania.game.resource.lazy.Resource;
+import net.touchmania.game.resource.lazy.SoundResource;
 import net.touchmania.game.resource.xml.XmlTheme;
 import net.touchmania.game.resource.xml.resolvers.XmlReferenceValueResolver;
+import net.touchmania.game.resource.xml.resolvers.XmlSoundResolver;
 import net.touchmania.game.util.xml.XmlParseException;
 import net.touchmania.game.util.xml.XmlParser;
 
-public class XmlSoundsParser extends XmlMapResourceParser<XmlSoundLoader> {
+public class XmlSoundsParser extends XmlMapResourceParser<Resource<Sound>> {
     private final XmlTheme theme;
-    private XmlSoundLoaderResolver soundLoaderResolver;
+    private XmlSoundResolver soundResolver = new XmlSoundResolver() {
+        @Override
+        public Resource<Sound> resolveReference(String resourceId) {
+            SoundResource resource = (SoundResource) getResolvedValues().get(resourceId);
+            return new SoundResource(resource);
+        }
+
+        @Override
+        public Resource<Sound> resolveValue(String value) throws XmlParseException {
+            if(value == null || value.isEmpty()) {
+                throw new XmlParseException("Invalid sound file! File name cannot be null or empty!");
+            }
+
+            return new SoundResource(getResourceFile().sibling("sounds").child(value));
+        }
+    };
 
     /**
      * Create a resource parser from its file.
@@ -34,9 +52,6 @@ public class XmlSoundsParser extends XmlMapResourceParser<XmlSoundLoader> {
     public XmlSoundsParser(FileHandle resourceFile, XmlTheme theme) {
         super(resourceFile);
         this.theme = theme;
-
-        //Create a new instance for every reference resolver.
-        this.soundLoaderResolver = new XmlSoundLoaderResolver();
     }
 
     @Override
@@ -55,29 +70,7 @@ public class XmlSoundsParser extends XmlMapResourceParser<XmlSoundLoader> {
     }
 
     @Override
-    protected XmlReferenceValueResolver<XmlSoundLoader> getResolver(XmlParser.Element element) {
-        return soundLoaderResolver;
-    }
-
-    private class XmlSoundLoaderResolver extends XmlReferenceValueResolver<XmlSoundLoader> {
-        @Override
-        protected String getResourceTypeName() {
-            return "sound";
-        }
-
-        @Override
-        public XmlSoundLoader resolveReference(String resourceId) {
-            XmlSoundLoader loader = getResolvedValues().get(resourceId);
-            return new XmlSoundLoader(loader);
-        }
-
-        @Override
-        public XmlSoundLoader resolveValue(String value) throws XmlParseException {
-            if(value == null || value.isEmpty()) {
-                throw new XmlParseException("Invalid sound file! File name cannot be null or empty!");
-            }
-
-            return new XmlSoundLoader(theme, getResourceFile().sibling("sounds").child(value));
-        }
+    protected XmlReferenceValueResolver<Resource<Sound>> getResolver(XmlParser.Element element) {
+        return soundResolver;
     }
 }

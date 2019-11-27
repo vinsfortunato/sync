@@ -88,6 +88,7 @@ public class XmlTableParser extends XmlWidgetGroupParser<Table> {
 
         //Parse the Cell style
         if (element.hasAttribute("style")) {
+            /** TODO
             Style style = styleResolver().resolve(element.getAttribute("style"));
             for (String attributeName : style.getAttributeNames()) {
                 //Don't parse overridden attributes
@@ -95,6 +96,7 @@ public class XmlTableParser extends XmlWidgetGroupParser<Table> {
                     parseCellAttributeOrThrow(cell, attributeName, style.getAttributeValue(attributeName));
                 }
             }
+             **/
         }
 
         //Parse the Cell attributes
@@ -116,7 +118,7 @@ public class XmlTableParser extends XmlWidgetGroupParser<Table> {
 
         switch (name) {
             case "align":      table.align(GLOBAL_ALIGN_RESOLVER.resolve(value));                               break;
-            case "background": table.background(drawableResolver().resolve(value));                             break;
+            //case "background": table.background(drawableResolver().resolve(value));                             break; TODO
             case "padLeft":    table.padLeft(dimensionResolver().resolve(value).getValue());                    break;
             case "padRight":   table.padRight(dimensionResolver().resolve(value).getValue());                   break;
             case "padTop":     table.padTop(dimensionResolver().resolve(value).getValue());                     break;

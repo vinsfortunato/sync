@@ -23,6 +23,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.ObjectMap;
 import net.touchmania.game.resource.Dimension;
 import net.touchmania.game.resource.Layout;
+import net.touchmania.game.resource.lazy.Resource;
 import net.touchmania.game.resource.Style;
 import net.touchmania.game.util.xml.XmlElementParser;
 import net.touchmania.game.util.xml.XmlParseException;
@@ -51,13 +52,15 @@ public abstract class XmlActorParser<T extends Actor> implements XmlElementParse
 
         //Parse style
         if(element.hasAttribute("style")) {
-            Style style = styleResolver().resolve(element.getAttribute("style"));
+            /** TODO PARSE STYLE
+            Resource<Style> style = styleResolver().resolve(element.getAttribute("style"));
             for(String attributeName : style.getAttributeNames()) {
                 //Don't parse overridden attributes
                 if(!element.hasAttribute(attributeName)) {
                     parseAttributeOrThrow(actor, attributeName, style.getAttributeValue(attributeName));
                 }
             }
+             **/
         }
 
         //Parse attributes
@@ -156,16 +159,16 @@ public abstract class XmlActorParser<T extends Actor> implements XmlElementParse
     }
 
     /* Reference resolvers access methods */
-    public XmlValueResolver<Color>      colorResolver()     { return getLayoutParser().colorResolver;       }
-    public XmlValueResolver<Dimension>  dimensionResolver() { return getLayoutParser().dimensionResolver;   }
-    public XmlValueResolver<String>     stringResolver()    { return getLayoutParser().stringResolver;      }
-    public XmlValueResolver<Layout>     layoutResolver()    { return getLayoutParser().layoutResolver;      }
-    public XmlValueResolver<Style>      styleResolver()     { return getLayoutParser().styleResolver;       }
-    public XmlValueResolver<Drawable>   drawableResolver()  { return getLayoutParser().drawableResolver;    }
-    public XmlValueResolver<BitmapFont> fontResolver()      { return getLayoutParser().fontResolver;        }
-    public XmlValueResolver<Integer>    integerResolver()   { return getLayoutParser().integerResolver;     }
-    public XmlValueResolver<Float>      floatResolver()     { return getLayoutParser().floatResolver;       }
-    public XmlValueResolver<Boolean>    booleanResolver()   { return getLayoutParser().booleanResolver;     }
-    public XmlValueResolver<Long>       durationResolver()  { return getLayoutParser().durationResolver;    }
-    public XmlValueResolver<Float>      percentResolver()   { return getLayoutParser().percentResolver;     }
+    public XmlValueResolver<Color>                colorResolver()     { return getLayoutParser().colorResolver;       }
+    public XmlValueResolver<Dimension>            dimensionResolver() { return getLayoutParser().dimensionResolver;   }
+    public XmlValueResolver<String>               stringResolver()    { return getLayoutParser().stringResolver;      }
+    public XmlValueResolver<Resource<Layout>>     layoutResolver()    { return getLayoutParser().layoutResolver;      }
+    public XmlValueResolver<Resource<Style>>      styleResolver()     { return getLayoutParser().styleResolver;       }
+    public XmlValueResolver<Resource<Drawable>>   drawableResolver()  { return getLayoutParser().drawableResolver;    }
+    public XmlValueResolver<Resource<BitmapFont>> fontResolver()      { return getLayoutParser().fontResolver;        }
+    public XmlValueResolver<Integer>              integerResolver()   { return getLayoutParser().integerResolver;     }
+    public XmlValueResolver<Float>                floatResolver()     { return getLayoutParser().floatResolver;       }
+    public XmlValueResolver<Boolean>              booleanResolver()   { return getLayoutParser().booleanResolver;     }
+    public XmlValueResolver<Long>                 durationResolver()  { return getLayoutParser().durationResolver;    }
+    public XmlValueResolver<Float>                percentResolver()   { return getLayoutParser().percentResolver;     }
 }

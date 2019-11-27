@@ -22,16 +22,14 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Disposable;
-import net.touchmania.game.util.ui.TexturePath;
+import net.touchmania.game.resource.lazy.Resource;
 
 /**
  * <p>Manages and provides resources.</p>
  *
- * <p> Getting a resource by using one of the defined getter methods
- * will automatically load the resource when necessary. Loading
- * a resource can take some time therefore getting a resource during
- * rendering should be avoided. It is better to get resources
- * outside the rendering thread and during preparation phases.</p>
+ * <p> Getting a resource by using one of the defined getter methods.
+ * Some resources need to be loaded before being used. A {@link net.touchmania.game.resource.lazy.Resource}
+ * object will be returned for those resource.</p>
  *
  * <p> Some resources need to be disposed when they are no longer needed.
  * Methods {@link #startGroup()} and {@link #endGroup(int)} can be used to
@@ -46,21 +44,21 @@ public interface ResourceProvider extends Disposable {
      * @param id the layout id.
      * @return the layout with the given id, or null if there's no layout with the given id.
      */
-    Layout getLayout(String id);
+    net.touchmania.game.resource.lazy.Resource<Layout> getLayout(String id);
 
     /**
      * Gets the style with the given id.
      * @param id the style id.
      * @return the style with the given id, or null if there's no style with the given id.
      */
-    Style getStyle(String id);
+    net.touchmania.game.resource.lazy.Resource<Style> getStyle(String id);
 
     /**
      * Gets the drawable with the given id.
      * @param id the drawable id.
      * @return the drawable with the given id, or null if there's no drawable with the given id.
      */
-    Drawable getDrawable(String id);
+    net.touchmania.game.resource.lazy.Resource<Drawable> getDrawable(String id);
 
     /**
      * Gets the color with the given id.
@@ -81,21 +79,21 @@ public interface ResourceProvider extends Disposable {
      * @param id the font id.
      * @return the font with the given id, or null if there's no font with the given id.
      */
-    BitmapFont getFont(String id);
+    net.touchmania.game.resource.lazy.Resource<BitmapFont> getFont(String id);
 
     /**
      * Gets the sound with the given id.
      * @param id the sound id.
      * @return the sound with the given id, or null if there's no sound with the given id.
      */
-    Sound getSound(String id);
+    net.touchmania.game.resource.lazy.Resource<Sound> getSound(String id);
 
     /**
      * Gets the music with the given id.
      * @param id the music id.
      * @return the music with the given id, or null if there's no music with the given id.
      */
-    Music getMusic(String id);
+    Resource<Music> getMusic(String id);
 
     /**
      * Gets the string with the given id.

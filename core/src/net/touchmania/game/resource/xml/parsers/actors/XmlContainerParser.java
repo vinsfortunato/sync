@@ -37,7 +37,7 @@ public class XmlContainerParser extends XmlWidgetGroupParser<Container<Actor>> {
 
         switch(name) {
             case "align":      container.align(XmlAlignResolver.GLOBAL_ALIGN_RESOLVER.resolve(value));           break;
-            case "background": container.setBackground(drawableResolver().resolve(value));                       break;
+            //case "background": container.setBackground(drawableResolver().resolve(value));                       break;TODO
             case "fillX":      if(booleanResolver().resolve(value)) container.fillX();                           break;
             case "fillY":      if(booleanResolver().resolve(value)) container.fillY();                           break;
             case "clip":       container.setClip(booleanResolver().resolve(value));                              break;

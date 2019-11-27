@@ -57,13 +57,14 @@ public abstract class XmlColorResolver extends XmlReferenceValueResolver<Color> 
             } else {
                 hexValue = matcher.group(1);
             }
+
             return Color.valueOf(hexValue);
         }
 
         //Try to match rgb function
         matcher = RGB_REGEX.matcher(value.trim());
         if(matcher.find()) {
-            String params[] = matcher.group(1).split(",");
+            String[] params = matcher.group(1).split(",");
             return new Color(
                     Integer.parseInt(params[0]) / 255f,
                     Integer.parseInt(params[1]) / 255f,
@@ -74,7 +75,7 @@ public abstract class XmlColorResolver extends XmlReferenceValueResolver<Color> 
         //Try to match rgba function
         matcher = RGBA_REGEX.matcher(value.trim());
         if(matcher.find()) {
-            String params[] = matcher.group(1).split(",");
+            String[] params = matcher.group(1).split(",");
             return new Color(
                     Integer.parseInt(params[0]) / 255f,
                     Integer.parseInt(params[1]) / 255f,

@@ -17,24 +17,25 @@
 package net.touchmania.game.resource.xml.resolvers;
 
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import net.touchmania.game.resource.lazy.Resource;
 import net.touchmania.game.resource.ResourceProvider;
 import net.touchmania.game.util.xml.XmlParseException;
 
-public abstract class XmlFontResolver extends XmlReferenceValueResolver<BitmapFont> {
+public abstract class XmlFontResolver extends XmlReferenceValueResolver<Resource<BitmapFont>> {
     @Override
     protected String getResourceTypeName() {
         return "font";
     }
 
     @Override
-    public BitmapFont resolveValue(String value) throws XmlParseException {
+    public Resource<BitmapFont> resolveValue(String value) throws XmlParseException {
         throw new XmlParseException(String.format("Cannot resolve the value '%s'", value));
     }
 
     public static XmlFontResolver from(final ResourceProvider provider) {
         return new XmlFontResolver() {
             @Override
-            public BitmapFont resolveReference(String resourceId) {
+            public Resource<BitmapFont> resolveReference(String resourceId) {
                 return provider.getFont(resourceId);
             }
         };

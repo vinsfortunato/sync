@@ -21,19 +21,17 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Disposable;
 import net.touchmania.game.Game;
 import net.touchmania.game.resource.*;
 import net.touchmania.game.resource.Dimension;
-import net.touchmania.game.resource.xml.parsers.XmlStyleParser;
+import net.touchmania.game.resource.lazy.Resource;
 import net.touchmania.game.util.Loader;
 import net.touchmania.game.util.ui.DPI;
 import net.touchmania.game.util.ui.TexturePath;
 
-import java.awt.*;
 import java.util.*;
 import java.util.List;
 
@@ -43,12 +41,12 @@ public class XmlTheme implements Theme {
     private XmlThemeManifest manifest;
 
     /* Resource maps */
-    private Map<String, XmlDrawableLoader> drawables;
+    private Map<String, net.touchmania.game.resource.lazy.Resource<Drawable>> drawables;
     private Map<String, Color> colors;
     private Map<String, Dimension> dimens;
-    private Map<String, XmlFontLoader> fonts;
-    private Map<String, XmlSoundLoader> sounds;
-    private Map<String, XmlMusicLoader> musics;
+    private Map<String, net.touchmania.game.resource.lazy.Resource<BitmapFont>> fonts;
+    private Map<String, net.touchmania.game.resource.lazy.Resource<Sound>> sounds;
+    private Map<String, net.touchmania.game.resource.lazy.Resource<Music>> musics;
     private Map<String, String> strings;
     private Map<String, Object> values;
 
@@ -57,67 +55,20 @@ public class XmlTheme implements Theme {
 
     /* Resource groups */
     private int groupId = 0;
-    private Map<Long, Set<Integer>> resourceGroups = new HashMap<>();
-    private Map<Long, Disposable> loadedResources = new HashMap<>();
-
-    //TODO remove
-    public void test() {
-        //Prints all resources
-        System.out.println("Printing drawables");
-        for(String s : drawables.keySet()) {
-            XmlDrawableLoader v = drawables.get(s);
-            System.out.println(s + ":" + v);
-        }
-        System.out.println("Printing colors");
-        for(String s : colors.keySet()) {
-            Color v = colors.get(s);
-            System.out.println(s + ": " + v);
-        }
-        System.out.println("Printing dimens");
-        for(String s : dimens.keySet()) {
-            Dimension v = dimens.get(s);
-            System.out.println(s + ": " + v);
-        }
-        System.out.println("Printing fonts");
-        for(String s : fonts.keySet()) {
-            XmlFontLoader v = fonts.get(s);
-            System.out.println(s + ": " + v);
-        }
-        System.out.println("Printing sounds");
-        for(String s : sounds.keySet()) {
-            XmlSoundLoader v = sounds.get(s);
-            System.out.println(s + ": " + v);
-        }
-        System.out.println("Printing musics");
-        for(String s : musics.keySet()) {
-            XmlMusicLoader v = musics.get(s);
-            System.out.println(s + ": " + v);
-        }
-        System.out.println("Printing values");
-        for(String s : values.keySet()) {
-            Object v = values.get(s);
-            System.out.println(s + ": " + v);
-        }
-        System.out.println("Printing strings");
-        for(String s : strings.keySet()) {
-            String v = strings.get(s);
-            System.out.println(s + ": " + v);
-        }
-
-    }
 
     public XmlTheme(FileHandle manifestFile) {
         this.manifestFile = manifestFile;
     }
 
     @Override
-    public Layout getLayout(String id) {
+    public net.touchmania.game.resource.lazy.Resource<Layout> getLayout(String id) {
         //TODO getLayout
         return hasFallbackTheme() ? getFallbackTheme().getLayout(id) : null;
     }
 
     @Override
-    public Style getStyle(String id) {
+    public net.touchmania.game.resource.lazy.Resource<Style> getStyle(String id) {
+        /** TODO
         FileHandle stylesDir = manifestFile.sibling("styles");
         if(stylesDir.exists()) {
             try {
@@ -127,23 +78,20 @@ public class XmlTheme implements Theme {
                 //TODO log exception
             }
         }
+         **/
         return hasFallbackTheme() ? getFallbackTheme().getStyle(id) : null;
     }
 
-    public void setDrawables(Map<String, XmlDrawableLoader> drawables) {
+    public void setDrawables(Map<String, net.touchmania.game.resource.lazy.Resource<Drawable>> drawables) {
         this.drawables = drawables;
     }
 
     @Override
-    public Drawable getDrawable(String id) {
+    public net.touchmania.game.resource.lazy.Resource<Drawable> getDrawable(String id) {
         if(drawables != null) {
-            XmlDrawableLoader loader = drawables.get(id);
-            if(loader != null) {
-                try {
-                    return loader.load();
-                } catch (Exception e) {
-                    Gdx.app.error("Theme", "Couldn't load drawable!", e);
-                }
+            net.touchmania.game.resource.lazy.Resource<Drawable> resource = drawables.get(id);
+            if(resource != null) {
+                return resource;
             }
         }
         return hasFallbackTheme() ? getFallbackTheme().getDrawable(id) : null;
@@ -156,9 +104,9 @@ public class XmlTheme implements Theme {
     @Override
     public Color getColor(String id) {
         if(colors != null) {
-            Color color = colors.get(id);
-            if(color != null) {
-                return color;
+            Color resource = colors.get(id);
+            if(resource != null) {
+                return resource;
             }
         }
         return hasFallbackTheme() ? getFallbackTheme().getColor(id) : null;
@@ -170,66 +118,54 @@ public class XmlTheme implements Theme {
     @Override
     public Dimension getDimension(String id) {
         if(dimens != null) {
-            Dimension dimen = dimens.get(id);
-            if(dimen != null) {
-                return dimen;
+            Dimension resource = dimens.get(id);
+            if(resource != null) {
+                return resource;
             }
         }
         return hasFallbackTheme() ? getFallbackTheme().getDimension(id) : null;
     }
 
-    public void setFonts(Map<String, XmlFontLoader> fonts) {
+    public void setFonts(Map<String, net.touchmania.game.resource.lazy.Resource<BitmapFont>> fonts) {
         this.fonts = fonts;
     }
 
     @Override
-    public BitmapFont getFont(String id) {
+    public net.touchmania.game.resource.lazy.Resource<BitmapFont> getFont(String id) {
         if(fonts != null) {
-            XmlFontLoader generator = fonts.get(id);
-            if(generator != null) {
-                try {
-                    return generator.load();
-                } catch (Exception e) {
-                    Gdx.app.error("Theme", "Couldn't load font!", e);
-                }
+            net.touchmania.game.resource.lazy.Resource<BitmapFont> resource = fonts.get(id);
+            if(resource != null) {
+                return resource;
             }
         }
         return hasFallbackTheme() ? getFallbackTheme().getFont(id) : null;
     }
 
-    public void setSounds(Map<String, XmlSoundLoader> sounds) {
+    public void setSounds(Map<String, net.touchmania.game.resource.lazy.Resource<Sound>> sounds) {
         this.sounds = sounds;
     }
 
     @Override
-    public Sound getSound(String id) {
+    public net.touchmania.game.resource.lazy.Resource<Sound> getSound(String id) {
         if(sounds != null) {
-            XmlSoundLoader loader = sounds.get(id);
-            if(loader != null) {
-                try {
-                    return loader.load();
-                } catch (Exception e) {
-                    Gdx.app.error("Theme", "Couldn't load sound!", e);
-                }
+            net.touchmania.game.resource.lazy.Resource<Sound> resource = sounds.get(id);
+            if(resource != null) {
+                return resource;
             }
         }
         return hasFallbackTheme() ? getFallbackTheme().getSound(id) : null;
     }
 
-    public void setMusics(Map<String, XmlMusicLoader> musics) {
+    public void setMusics(Map<String, net.touchmania.game.resource.lazy.Resource<Music>> musics) {
         this.musics = musics;
     }
 
     @Override
-    public Music getMusic(String id) {
+    public net.touchmania.game.resource.lazy.Resource<Music> getMusic(String id) {
         if(musics != null) {
-            XmlMusicLoader loader = musics.get(id);
-            if(loader != null) {
-                try {
-                    return loader.load();
-                } catch (Exception e) {
-                    Gdx.app.error("Theme", "Couldn't load music!", e);
-                }
+            Resource<Music> resource = musics.get(id);
+            if(resource != null) {
+                return resource;
             }
         }
 
@@ -319,75 +255,7 @@ public class XmlTheme implements Theme {
 
     @Override
     public void endGroup(int groupId) {
-        Iterator<Long> resIds = loadedResources.keySet().iterator();
-        while(resIds.hasNext()) {
-            Long resId = resIds.next();
-            Set<Integer> groups = resourceGroups.get(resId);
-            if(groups.remove(groupId) && groups.isEmpty()) {
-                //Resource no more required, dispose
-                resourceGroups.remove(resId);
-                Disposable res = loadedResources.get(resId);
-                res.dispose();
-            }
-            resIds.remove();
-        }
-    }
 
-    /**
-     * Load a disposable resource.
-     * <ul>
-     *     <li> If the requested resource is not cached it will be loaded using
-     *     the provided loader, inserted into the cache, bind to the active group and returned.</li>
-     *     <li> If the requested resource is cached it will be retrieved from the cache, bind
-     *     to the active group and returned.</li>
-     * </ul>
-     * <p>Id must identify a resource based on its path and its load configuration. Id is used to address the same
-     * resource loaded with a particular configuration. Resources with the same path but different load configuration
-     * should have a different id (e.g. same texture file but different filter). </p>
-     * <p>Loaded resources will be disposed when all the bind groups are ended by using {@link #endGroup(int)}.</p>
-     * <p>Usage example:
-     * <pre>
-     * {@code
-     * //Create an id by hashing the texture path and the configuration (format, useMipMaps properties).
-     * HashFunction hf = Hashing.murmur3_128();
-     * HashCode hc = hf.newHasher()
-     *       .putString(file.path(), Charsets.UTF_8)
-     *       .putInt(format.hashCode())
-     *       .putBoolean(useMipMaps).hash();
-     *
-     * //Load the texture by providing the generated id, the type class and a loader.
-     * Texture texture = theme.load(hc.asLong(), Texture.class, () -> new Texture(file, format, useMipMaps));
-     * }
-     * </pre> </p>
-     * @param id the resource id.
-     * @param type the class type of the resource.
-     * @param loader the resource loader. It will perform the actual load when the resource isn't present in the cache.
-     * @param <R>
-     * @return
-     * @throws Exception
-     */
-    public <R extends Disposable> R load(long id, Class<R> type, Loader<R> loader) throws Exception {
-        int groupId = this.groupId;
-        R res;
-
-        if(loadedResources.containsKey(id)) {
-            //Preloaded resource
-            res = type.cast(loadedResources.get(id));
-        } else {
-            //Load resource and track
-            res = loader.load();
-            loadedResources.put(id, res);
-        }
-
-        //Bind resource to group
-        Set<Integer> groups = resourceGroups.get(id);
-        if(groups == null) {
-            groups = new HashSet<>();
-            resourceGroups.put(id, groups);
-        }
-        groups.add(groupId);
-
-        return res;
     }
 
     @Override
@@ -459,10 +327,5 @@ public class XmlTheme implements Theme {
 
     @Override
     public void dispose() {
-        for(Disposable disposable : loadedResources.values()) {
-            disposable.dispose();
-        }
-        loadedResources.clear();
-        resourceGroups.clear();
     }
 }

@@ -17,25 +17,25 @@
 package net.touchmania.game.resource.xml.resolvers;
 
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
+import net.touchmania.game.resource.lazy.Resource;
 import net.touchmania.game.resource.ResourceProvider;
 import net.touchmania.game.util.xml.XmlParseException;
 
-public abstract class XmlMusicResolver extends XmlReferenceValueResolver<Music> {
+public abstract class XmlMusicResolver extends XmlReferenceValueResolver<Resource<Music>> {
     @Override
     protected String getResourceTypeName() {
         return "music";
     }
 
     @Override
-    public Music resolveValue(String value) throws XmlParseException {
+    public Resource<Music> resolveValue(String value) throws XmlParseException {
         throw new XmlParseException(String.format("Cannot resolve the value '%s'", value));
     }
 
     public static XmlMusicResolver from(final ResourceProvider provider) {
         return new XmlMusicResolver() {
             @Override
-            public Music resolveReference(String resourceId) {
+            public Resource<Music> resolveReference(String resourceId) {
                 return provider.getMusic(resourceId);
             }
         };

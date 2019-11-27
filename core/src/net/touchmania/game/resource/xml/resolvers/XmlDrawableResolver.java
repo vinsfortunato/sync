@@ -17,24 +17,25 @@
 package net.touchmania.game.resource.xml.resolvers;
 
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import net.touchmania.game.resource.lazy.Resource;
 import net.touchmania.game.resource.ResourceProvider;
 import net.touchmania.game.util.xml.XmlParseException;
 
-public abstract class XmlDrawableResolver extends XmlReferenceValueResolver<Drawable> {
+public abstract class XmlDrawableResolver extends XmlReferenceValueResolver<Resource<Drawable>> {
     @Override
     protected String getResourceTypeName() {
         return "drawable";
     }
 
     @Override
-    public Drawable resolveValue(String value) throws XmlParseException {
+    public Resource<Drawable> resolveValue(String value) throws XmlParseException {
         throw new XmlParseException(String.format("Cannot resolve the value '%s'!", value));
     }
 
     public static XmlDrawableResolver from(final ResourceProvider provider) {
         return new XmlDrawableResolver() {
             @Override
-            public Drawable resolveReference(String resourceId) throws XmlParseException {
+            public Resource<Drawable> resolveReference(String resourceId) throws XmlParseException {
                 return provider.getDrawable(resourceId);
             }
         };

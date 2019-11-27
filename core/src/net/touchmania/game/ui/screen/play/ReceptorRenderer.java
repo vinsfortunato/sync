@@ -1,14 +1,10 @@
 package net.touchmania.game.ui.screen.play;
 
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TransformDrawable;
 import net.touchmania.game.Game;
+import net.touchmania.game.resource.lazy.Resource;
 import net.touchmania.game.round.Round;
 import net.touchmania.game.song.note.NotePanel;
 
@@ -16,10 +12,15 @@ public class ReceptorRenderer {
     private BeatmapView view;
 
     /* Resources */
-    private Drawable receptorDrawable = Game.instance().getResources().getDrawable("play_dance_receptor");
+    private Resource<Drawable> receptorDrawable;
 
     public ReceptorRenderer(BeatmapView view) {
         this.view = view;
+
+        //Prepare resources
+        receptorDrawable = Game.instance().getResources().getDrawable("play_dance_receptor");
+        if(receptorDrawable != null)
+            receptorDrawable.load();
     }
 
     /**
@@ -31,36 +32,25 @@ public class ReceptorRenderer {
      */
     public void draw(Batch batch, NotePanel panel, double beat, double time) {
         Drawable drawable = getReceptorDrawable(panel, beat, time);
+        if(drawable == null) {
+            return;
+        }
+
         float width = drawable.getMinWidth();
         float height = drawable.getMinHeight();
         float x = getReceptorX(panel, beat, time);
         float y = getReceptorY(panel, beat, time);
-        float originX = x + width / 2.0f;
-        float originY = y + height / 2.0f;
+        float originX = width / 2.0f;
+        float originY = height / 2.0f;
         float rotation = getReceptorRotation(panel, beat, time);
         float scaleX = getReceptorScaleX(panel, beat, time);
         float scaleY = getReceptorScaleY(panel, beat, time);
 
-        drawable.draw(batch, x, y, width, height);
-
         if(drawable instanceof TransformDrawable) {
             TransformDrawable transformDrawable = (TransformDrawable) drawable;
-            /**
-            System.out.println(
-                    "panel:" + panel.name() +
-                    " X:" + x +
-                    " Y:" + y +
-                    " OX:" + originX +
-                    " OY:" + originY +
-                    " W:" + width +
-                    " H:" + height +
-                    " SX:" + scaleX +
-                    " SY:" + scaleY +
-                    " ROT:" + rotation);
-            **/
-            //transformDrawable.draw(batch, 0, 0, 0, 0, 256, 256, 1.0f, 1.0f, 0);
+            transformDrawable.draw(batch, x, y, originX, originY, width, height, scaleX, scaleY, rotation);
         } else {
-            //drawable.draw(batch, x, y, width, height);
+            drawable.draw(batch, x, y, width * scaleX, height * scaleY);
         }
     }
 
@@ -73,6 +63,8 @@ public class ReceptorRenderer {
      */
     public float getReceptorX(NotePanel panel, double beat, double time) {
         Drawable drawable = getReceptorDrawable(panel, beat, time);
+        if(drawable == null) return 0.0f;
+
         float width = drawable.getMinWidth();
         switch(panel) {
             case DOWN:
@@ -93,7 +85,7 @@ public class ReceptorRenderer {
      * @return the y position of the receptor inside the view.
      */
     public float getReceptorY(NotePanel panel, double beat, double time) {
-        return 0.0f;
+        return 512f;
     }
 
     /**
@@ -168,7 +160,7 @@ public class ReceptorRenderer {
      * @return the receptor drawable.
      */
     public Drawable getReceptorDrawable(NotePanel panel, double beat, double time) {
-        return receptorDrawable;
+        return receptorDrawable != null ? receptorDrawable.get() : null;
     }
 
     /**
