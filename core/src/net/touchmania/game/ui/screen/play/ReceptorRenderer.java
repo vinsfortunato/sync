@@ -19,8 +19,7 @@ public class ReceptorRenderer {
 
         //Prepare resources
         receptorDrawable = Game.instance().getResources().getDrawable("play_dance_receptor");
-        if(receptorDrawable != null)
-            receptorDrawable.load();
+        receptorDrawable.load();
     }
 
     /**

@@ -62,7 +62,7 @@ public class TimingTest {
             for(double i = 0.0D; i < 162.0D; i+= 1.0D) {
                 System.out.println("Time " + i + " = " + timing.getBeatAt(i) + " beat");
             }
-        } catch (InvalidTimingDataException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

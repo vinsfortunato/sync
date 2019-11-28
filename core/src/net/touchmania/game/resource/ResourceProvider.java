@@ -26,17 +26,21 @@ import net.touchmania.game.resource.lazy.Resource;
 
 /**
  * <p>Manages and provides resources.</p>
- *
  * <p> Getting a resource by using one of the defined getter methods.
- * Some resources need to be loaded before being used. A {@link net.touchmania.game.resource.lazy.Resource}
- * object will be returned for those resource.</p>
- *
+ * Some resources need to be loaded before being used. A {@link Resource}
+ * object will be returned for those resource and can be used to manage the
+ * required resource. The resource provider is intended to be used during rendering
+ * so it must not block.</p>
  * <p> Some resources need to be disposed when they are no longer needed.
  * Methods {@link #startGroup()} and {@link #endGroup(int)} can be used to
- * keep track of loaded resources and dispose them when they are no longer needed.
- * By starting a group all resources loaded after group creation will be added to
- * the group. Resources can be added to multiple groups and will only be disposed
- * when all their groups are ended. </p>
+ * keep track of loaded resources and dispose them when they are no longer needed. </p>
+ * <p> By starting a group all resources loaded after group creation will be bind to
+ * the group. Resources can be added to multiple groups thus it is possible to start
+ * more than one group. Loaded resources will be bind to all active groups. </p>
+ * <p> A resource will be disposed when all its bind groups are ended. </p>
+ * <p> A resource loaded with {@link Resource} will automatically be bind
+ * to the active groups. {@link #isGroupLoading(int)} can be used to check if resources
+ * bind to the given group are still loading. </p>
  */
 public interface ResourceProvider extends Disposable {
     /**
@@ -44,21 +48,21 @@ public interface ResourceProvider extends Disposable {
      * @param id the layout id.
      * @return the layout with the given id, or null if there's no layout with the given id.
      */
-    net.touchmania.game.resource.lazy.Resource<Layout> getLayout(String id);
+    Resource<Layout> getLayout(String id);
 
     /**
      * Gets the style with the given id.
      * @param id the style id.
      * @return the style with the given id, or null if there's no style with the given id.
      */
-    net.touchmania.game.resource.lazy.Resource<Style> getStyle(String id);
+    Resource<Style> getStyle(String id);
 
     /**
      * Gets the drawable with the given id.
      * @param id the drawable id.
      * @return the drawable with the given id, or null if there's no drawable with the given id.
      */
-    net.touchmania.game.resource.lazy.Resource<Drawable> getDrawable(String id);
+    Resource<Drawable> getDrawable(String id);
 
     /**
      * Gets the color with the given id.
@@ -79,14 +83,14 @@ public interface ResourceProvider extends Disposable {
      * @param id the font id.
      * @return the font with the given id, or null if there's no font with the given id.
      */
-    net.touchmania.game.resource.lazy.Resource<BitmapFont> getFont(String id);
+    Resource<BitmapFont> getFont(String id);
 
     /**
      * Gets the sound with the given id.
      * @param id the sound id.
      * @return the sound with the given id, or null if there's no sound with the given id.
      */
-    net.touchmania.game.resource.lazy.Resource<Sound> getSound(String id);
+    Resource<Sound> getSound(String id);
 
     /**
      * Gets the music with the given id.
@@ -152,4 +156,11 @@ public interface ResourceProvider extends Disposable {
      * @param groupId the group id.
      */
     void endGroup(int groupId);
+
+    /**
+     * Check if resources bind to the given group are still loading.
+     * @param groupId the group id.
+     * @return true if bind resources are still loading, false otherwise.
+     */
+    boolean isGroupLoading(int groupId);
 }

@@ -22,53 +22,49 @@ import net.touchmania.game.util.concurrent.DoneListener;
 
 public interface Screen extends Disposable {
     /**
-     * Prepares the screen resources and performs required
-     * time expensive computations. Actors that require resources should
-     * be initialized inside this method to let them load necessary resources and
-     * avoid blocking the rendering thread.
-     * <p>This method is executed on a separate thread.</p>
-     * <p>
-     *     {@link #isPrepared()} must return:
-     *     <ul>
-     *         <li><code>false</code> during method computation </li>
-     *         <li><code>true</code> immediately after method computation </li>
-     *     </ul>
-     * </p>
+     * Prepares the screen.
+     * <p>This method is executed on rendering thread so it must not block
+     * and must be fast.</p>
+     * <p> This method should prepare the screen by loading required resources.
+     * It should not block thus resources that require some time to load must
+     * be loaded asynchronously.</p>
+     * <p> The provided callback should be called when preparation completes.
+     * It should be called on the rendering thread. </p>
+     * @param doneCallback done callback. Must be called on the rendering thread when
+     * preparation completes. (e.g. all resources have been loaded, and required
+     * tasks have been terminated).
      */
-    void prepare(DoneListener listener);
+    void prepare(Runnable doneCallback);
 
     /**
-     * Populate the stage and starts showing animations.
-     * This method is executed on rendering thread so it must not block
-     * and must be fast.
+     * Shows the screen.
+     * <p>This method is executed on rendering thread so it must not block
+     * and must be fast.</p>
+     * <p> Populate the stage and starts showing animations. </p>
      * @param stage a clean stage.
      */
     void show(Stage stage);
 
     /**
-     * Starts hiding the screen. Hiding animations should be started here.
-     * This method is executed on rendering thread so it must not block
-     * and must be fast. The given listener must be notified when
-     * the screen hiding process is complete.
-     * @param listener the listener to notify when hiding process is complete.
+     * Hides the screen.
+     * <p> This method is executed on rendering thread so it must not block
+     * and must be fast.</p>
+     * <p> Hiding animations should be started here. </p>
+     * <p> The provided callback should be called when hiding completes. It should
+     * be called on the rendering thread.</p>
+     * @param doneCallback the done callback. Must be called on the rendering thread
+     * when hiding completes. (e.g. when all hiding animations completes).
      */
-    void hide(DoneListener listener);
+    void hide(Runnable doneCallback);
 
     /**
-     * Disposes the screen resources. This methods is executed
-     * on a separate thread.
-     * <p>
-     *     {@link #isPrepared()} must return false during and
-     *     immediately after method computation.
-     * </p>
+     * This is called at each render tick to update the screen status.
      */
-    @Override
-    void dispose();
+    void update();
 
     /**
-     * Returns true if {@link #prepare()} terminated its computation and
-     * {@link #dispose()} has not been called yet.
-     * @return true if the screen is prepared.
+     * Returns true if the screen is prepared and required resources are ready.
+     * @return true if the screen is prepared, false otherwise.
      */
     boolean isPrepared();
 }

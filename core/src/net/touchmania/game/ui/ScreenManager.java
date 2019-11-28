@@ -31,41 +31,48 @@ import java.util.concurrent.Executors;
 public class ScreenManager implements Disposable {
     private Stage stage;
     private Screen currentScreen;
+    private Screen nextScreen;
 
     public ScreenManager() {
         Game.instance().getDisposer().manage(this);
-        initStage();
-    }
 
-    private void initStage() {
+        //Init stage
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
     }
 
     public void show(Screen screen) {
         Preconditions.checkNotNull(screen, "Screen cannot be null!");
-        if(screen.isPrepared()) {
+        if(nextScreen != null) {
+            //TODO Is still loading? Block or dispose
+        }
+        nextScreen = screen;
+
+        if(nextScreen.isPrepared()) {
             //Show the already prepared screen immediately
-            showPrepared(screen);
+            showNextScreen();
         } else {
             //Prepare the screen and show it when ready
-            screen.prepare(() -> Gdx.app.postRunnable(() -> showPrepared(screen)));
+            screen.prepare(this::showNextScreen);
         }
     }
 
-    private void showPrepared(final Screen screen) {
+    private void showNextScreen() {
         if(currentScreen != null) {
             //Show the next screen after hiding the current one
             currentScreen.hide(() -> {
-                screen.dispose();
+                if(getScreenCachePolicy() == ScreenCachePolicy.DISPOSE_ON_HIDE)
+                    currentScreen.dispose();
                 stage.clear();
-                currentScreen = screen;
+                currentScreen = nextScreen;
+                nextScreen = null;
                 currentScreen.show(stage);
             });
         } else {
             //Show the screen immediately
             stage.clear();
-            currentScreen = screen;
+            currentScreen = nextScreen;
+            nextScreen = null;
             currentScreen.show(stage);
         }
     }
@@ -80,6 +87,15 @@ public class ScreenManager implements Disposable {
     }
 
     public void render() {
+        //Update the active screens
+        if(currentScreen != null) {
+            currentScreen.update();
+        }
+        if(nextScreen != null) {
+            nextScreen.update();
+        }
+
+        //Update and render stage
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
     }

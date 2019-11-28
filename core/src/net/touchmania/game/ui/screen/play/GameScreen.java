@@ -31,6 +31,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
 import net.touchmania.game.Game;
+import net.touchmania.game.resource.ResourceProvider;
 import net.touchmania.game.round.Round;
 import net.touchmania.game.song.*;
 import net.touchmania.game.song.note.TapNote;
@@ -43,7 +44,14 @@ import net.touchmania.game.ui.Screen;
  */
 public class GameScreen implements Screen {
     private static GameScreen instance;
+
+    /* True if the screen is still preparing */
+    private boolean preparing = false;
+    /* True if the screen is prepared and ready to be shown */
     private boolean prepared = false;
+    /* The preparation done callback */
+    private Runnable prepareDoneCallback;
+
     private int resGroup;
 
     /* Widgets */
@@ -57,10 +65,16 @@ public class GameScreen implements Screen {
     }
 
     @Override
-    public void prepare(DoneListener listener) {
+    public void prepare(Runnable doneCallback) {
+        preparing = true;
+        prepareDoneCallback = doneCallback;
         resGroup = Game.instance().getResources().startGroup();
 
-        /* TODO TEST START */
+        test();
+    }
+
+    //TODO
+    private void test() {
         FileHandle fh = Gdx.files.external("touchmania/Songs/ITG Rodeo Tournament 8/012 - Into Dust");
 
         SongLoader sl = new SongLoader(fh);
@@ -79,18 +93,12 @@ public class GameScreen implements Screen {
             parser.init(Files.toString(song.simFile.file(), Charsets.UTF_8));
             chart.beatmap = parser.parseBeatmap(chart);
 
-
             beatmapView = new BeatmapView(round);
             music = Gdx.audio.newMusic(Gdx.files.external(song.directory.path() + "/" + song.musicPath));
         } catch (Exception e) {
             System.err.println("Cannot read song!");
             e.printStackTrace();
         }
-        /* TODO TEST END */
-
-        listener.onDone();
-
-        prepared = true;
     }
 
     @Override
@@ -113,8 +121,20 @@ public class GameScreen implements Screen {
     }
 
     @Override
-    public void hide(DoneListener listener) {
-        listener.onDone();
+    public void hide(Runnable doneCallback) {
+        doneCallback.run();
+    }
+
+    @Override
+    public void update() {
+        if(preparing) {
+            //Check and update preparation status
+            if(!Game.instance().getResources().isGroupLoading(resGroup)) {
+                preparing = false;
+                prepared = true;
+                prepareDoneCallback.run();
+            }
+        }
     }
 
     @Override

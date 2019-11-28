@@ -23,12 +23,10 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.badlogic.gdx.utils.Disposable;
 import net.touchmania.game.Game;
 import net.touchmania.game.resource.*;
 import net.touchmania.game.resource.Dimension;
 import net.touchmania.game.resource.lazy.Resource;
-import net.touchmania.game.util.Loader;
 import net.touchmania.game.util.ui.DPI;
 import net.touchmania.game.util.ui.TexturePath;
 
@@ -41,12 +39,12 @@ public class XmlTheme implements Theme {
     private XmlThemeManifest manifest;
 
     /* Resource maps */
-    private Map<String, net.touchmania.game.resource.lazy.Resource<Drawable>> drawables;
+    private Map<String, Resource<Drawable>> drawables;
     private Map<String, Color> colors;
     private Map<String, Dimension> dimens;
-    private Map<String, net.touchmania.game.resource.lazy.Resource<BitmapFont>> fonts;
-    private Map<String, net.touchmania.game.resource.lazy.Resource<Sound>> sounds;
-    private Map<String, net.touchmania.game.resource.lazy.Resource<Music>> musics;
+    private Map<String, Resource<BitmapFont>> fonts;
+    private Map<String, Resource<Sound>> sounds;
+    private Map<String, Resource<Music>> musics;
     private Map<String, String> strings;
     private Map<String, Object> values;
 
@@ -61,13 +59,13 @@ public class XmlTheme implements Theme {
     }
 
     @Override
-    public net.touchmania.game.resource.lazy.Resource<Layout> getLayout(String id) {
+    public Resource<Layout> getLayout(String id) {
         //TODO getLayout
         return hasFallbackTheme() ? getFallbackTheme().getLayout(id) : null;
     }
 
     @Override
-    public net.touchmania.game.resource.lazy.Resource<Style> getStyle(String id) {
+    public Resource<Style> getStyle(String id) {
         /** TODO
         FileHandle stylesDir = manifestFile.sibling("styles");
         if(stylesDir.exists()) {
@@ -82,14 +80,14 @@ public class XmlTheme implements Theme {
         return hasFallbackTheme() ? getFallbackTheme().getStyle(id) : null;
     }
 
-    public void setDrawables(Map<String, net.touchmania.game.resource.lazy.Resource<Drawable>> drawables) {
+    public void setDrawables(Map<String, Resource<Drawable>> drawables) {
         this.drawables = drawables;
     }
 
     @Override
-    public net.touchmania.game.resource.lazy.Resource<Drawable> getDrawable(String id) {
+    public Resource<Drawable> getDrawable(String id) {
         if(drawables != null) {
-            net.touchmania.game.resource.lazy.Resource<Drawable> resource = drawables.get(id);
+            Resource<Drawable> resource = drawables.get(id);
             if(resource != null) {
                 return resource;
             }
@@ -126,14 +124,14 @@ public class XmlTheme implements Theme {
         return hasFallbackTheme() ? getFallbackTheme().getDimension(id) : null;
     }
 
-    public void setFonts(Map<String, net.touchmania.game.resource.lazy.Resource<BitmapFont>> fonts) {
+    public void setFonts(Map<String, Resource<BitmapFont>> fonts) {
         this.fonts = fonts;
     }
 
     @Override
-    public net.touchmania.game.resource.lazy.Resource<BitmapFont> getFont(String id) {
+    public Resource<BitmapFont> getFont(String id) {
         if(fonts != null) {
-            net.touchmania.game.resource.lazy.Resource<BitmapFont> resource = fonts.get(id);
+            Resource<BitmapFont> resource = fonts.get(id);
             if(resource != null) {
                 return resource;
             }
@@ -141,14 +139,14 @@ public class XmlTheme implements Theme {
         return hasFallbackTheme() ? getFallbackTheme().getFont(id) : null;
     }
 
-    public void setSounds(Map<String, net.touchmania.game.resource.lazy.Resource<Sound>> sounds) {
+    public void setSounds(Map<String, Resource<Sound>> sounds) {
         this.sounds = sounds;
     }
 
     @Override
-    public net.touchmania.game.resource.lazy.Resource<Sound> getSound(String id) {
+    public Resource<Sound> getSound(String id) {
         if(sounds != null) {
-            net.touchmania.game.resource.lazy.Resource<Sound> resource = sounds.get(id);
+            Resource<Sound> resource = sounds.get(id);
             if(resource != null) {
                 return resource;
             }
@@ -156,12 +154,12 @@ public class XmlTheme implements Theme {
         return hasFallbackTheme() ? getFallbackTheme().getSound(id) : null;
     }
 
-    public void setMusics(Map<String, net.touchmania.game.resource.lazy.Resource<Music>> musics) {
+    public void setMusics(Map<String, Resource<Music>> musics) {
         this.musics = musics;
     }
 
     @Override
-    public net.touchmania.game.resource.lazy.Resource<Music> getMusic(String id) {
+    public Resource<Music> getMusic(String id) {
         if(musics != null) {
             Resource<Music> resource = musics.get(id);
             if(resource != null) {
@@ -256,6 +254,11 @@ public class XmlTheme implements Theme {
     @Override
     public void endGroup(int groupId) {
 
+    }
+
+    @Override
+    public boolean isGroupLoading(int groupId) {
+        return false;
     }
 
     @Override

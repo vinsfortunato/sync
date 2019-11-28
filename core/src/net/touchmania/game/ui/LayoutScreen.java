@@ -34,26 +34,29 @@ public class LayoutScreen implements Screen {
     }
 
     @Override
-    public void prepare(DoneListener listener) {
+    public void prepare(Runnable doneCallback) {
         ResourceProvider resources = Game.instance().getResources();
         layout = resources.getLayout(layoutId);
         Preconditions.checkNotNull(layout, String.format("Layout with id '%s' not found!", layoutId));
-        listener.onDone();
+        doneCallback.run();
     }
 
     @Override
     public void show(Stage stage) {
-
+        //TODO
     }
 
     @Override
-    public void hide(DoneListener listener) {
-
+    public void hide(Runnable doneCallback) {
+        //TODO
     }
+
+    @Override
+    public void update() {}
 
     @Override
     public void dispose() {
-
+        //TODO
     }
 
     @Override

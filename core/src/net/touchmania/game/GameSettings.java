@@ -31,7 +31,7 @@ public class GameSettings {
      * higher priority have higher indexes).**/
     public List<SimFormat> simFormatPriorityList = new ArrayList<>();
 
-    private ScreenCachePolicy screenCachePolicy = ScreenCachePolicy.KEEP_IN_MEMORY;
+    private ScreenCachePolicy screenCachePolicy = ScreenCachePolicy.DISPOSE_ON_HIDE;
 
     public GameSettings() {
         simFormatPriorityList.add(SimFormat.DWI);
