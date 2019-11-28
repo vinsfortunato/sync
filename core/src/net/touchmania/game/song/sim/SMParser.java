@@ -47,7 +47,7 @@ import java.util.regex.Pattern;
  */
 public class SMParser extends TagSimParser {
     /** Pattern that matches the display bpm syntax **/
-    private static Pattern DISPLAY_BPM_PATTERN = Pattern.compile("(\\*)|(\\d+)(\\s*:\\s*(\\d+))?");
+    private static Pattern DISPLAY_BPM_PATTERN = Pattern.compile("(\\*)|(?:(\\d+)(?:\\.\\d+)?)(?:\\s*:\\s*(?:(\\d+)(?:\\.\\d+)?))?");
     /** Pattern that matches the BPMs and stops syntax **/
     protected static Pattern TIMING_DATA_PATTERN = Pattern.compile("([+-]?\\d+(\\.\\d+)?)\\s*=\\s*(\\+?\\d+(\\.\\d+)?)");
 
@@ -142,15 +142,15 @@ public class SMParser extends TagSimParser {
         String value = dataSupplier.getHeaderTagValue("DISPLAYBPM");
         if(value != null) {
             Matcher matcher = DISPLAY_BPM_PATTERN.matcher(value);
-            if(matcher.find()) {
-                if(!matcher.group(1).isEmpty()) {
+            if(matcher.matches()) {
+                if(matcher.group(1) != null) {
                     return new DisplayBPM.RandomDisplayBPM();
                 }
 
-                if(!matcher.group(4).isEmpty()) {
+                if(matcher.group(3) != null) {
                     return new DisplayBPM.RangeDisplayBPM(
-                            Integer.parseInt(matcher.group(2)),
-                            Integer.parseInt(matcher.group(4)));
+                            Integer.parseInt(matcher.group(3)),
+                            Integer.parseInt(matcher.group(2)));
                 }
 
                 return new DisplayBPM.StaticDisplayBPM(
@@ -357,7 +357,7 @@ public class SMParser extends TagSimParser {
                 for(int l = 0; l < measure.length(); l+=getPanelsCount()) {
                     //Read each character of the current line and parse it
                     for(int m = 0; m < getPanelsCount(); m++) {
-                        parseNote(getPanelFromIndex(m), currentBeat, measure.charAt(l));
+                        parseNote(getPanelFromIndex(m), currentBeat, measure.charAt(l+m));
                     }
                     currentBeat += resolution.noteDistance;
                 }
