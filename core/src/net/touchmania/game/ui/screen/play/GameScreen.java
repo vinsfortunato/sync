@@ -76,7 +76,7 @@ public class GameScreen implements Screen {
 
     //TODO
     private void test() {
-        FileHandle fh = Gdx.files.external("touchmania/Songs/ITG Rodeo Tournament 8/010 - Holic");
+        FileHandle fh = Gdx.files.external("touchmania/Songs/ITG Rodeo Tournament 8/012 - Pancakes");
 
         SongLoader sl = new SongLoader(fh);
 

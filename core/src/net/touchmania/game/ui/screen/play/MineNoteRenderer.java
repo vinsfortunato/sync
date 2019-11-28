@@ -18,6 +18,7 @@ package net.touchmania.game.ui.screen.play;
 
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import net.touchmania.game.Game;
+import net.touchmania.game.resource.lazy.Resource;
 import net.touchmania.game.song.note.Note;
 import net.touchmania.game.song.note.NotePanel;
 
@@ -26,8 +27,13 @@ import net.touchmania.game.song.note.NotePanel;
  */
 public class MineNoteRenderer extends BaseNoteRenderer {
 
+    private Resource<Drawable> mineDrawable;
+
     public MineNoteRenderer(BeatmapView view) {
         super(view);
+
+        mineDrawable = Game.instance().getResources().getDrawable("play_dance_note_mine");
+        mineDrawable.load();
     }
 
     @Override
@@ -39,6 +45,6 @@ public class MineNoteRenderer extends BaseNoteRenderer {
 
     @Override
     public Drawable getNoteDrawable(NotePanel panel, Note note, double beat, double time) {
-        return null;
+        return mineDrawable.get();
     }
 }

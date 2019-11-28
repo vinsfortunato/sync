@@ -17,6 +17,7 @@
     <region id="play_dance_note_tap_192" x="256" y="768" width="256" height="256">texture:play_dance_notes</region>
 
     <!-- Hold note -->
+    <drawable id="play_dance_note_hold_head_4"  >drawable:play_dance_note_tap_4</drawable>
     <drawable id="play_dance_note_hold_head_8"  >drawable:play_dance_note_tap_8</drawable>
     <drawable id="play_dance_note_hold_head_12" >drawable:play_dance_note_tap_12</drawable>
     <drawable id="play_dance_note_hold_head_16" >drawable:play_dance_note_tap_16</drawable>
@@ -31,6 +32,7 @@
     <region id="play_dance_note_hold_tail_active"   x="768" y="894" width="256" height="130">texture:play_dance_notes</region>
 
     <!-- Roll note -->
+    <drawable id="play_dance_note_roll_head_4" >drawable:play_dance_note_tap_4</drawable>
     <drawable id="play_dance_note_roll_head_8" >drawable:play_dance_note_tap_8</drawable>
     <drawable id="play_dance_note_roll_head_12">drawable:play_dance_note_tap_12</drawable>
     <drawable id="play_dance_note_roll_head_16">drawable:play_dance_note_tap_16</drawable>

@@ -64,7 +64,7 @@ public abstract class BaseNoteRenderer implements NoteRenderer {
     public float getNoteY(NotePanel panel, Note note, double beat, double time) {
         Drawable drawable = getNoteDrawable(panel, note, beat, time);
         float height = drawable.getMinHeight();
-        float speedMod = 1.0f;
+        float speedMod = 2.5f;
         return (float) -(height * speedMod * (note.getBeat() - beat));
     }
 
@@ -120,12 +120,6 @@ public abstract class BaseNoteRenderer implements NoteRenderer {
         float y = receptorY + getNoteY(panel, note, beat, time);
         float width = drawable.getMinWidth();
         float height = drawable.getMinHeight();
-
-        /**
-        System.out.println(String.format("x:%f y:%f w:%f h:%f rx:%f ry=%f vw=%f vh=%f b=%f nb=%f",
-                x,y,width, height, receptorX, receptorY, viewWidth, viewHeight, beat, note.getBeat()));
-        **/
-
         return x < viewWidth && x + width > 0 && y < viewHeight && y + height > 0;
     }
 

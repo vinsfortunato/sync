@@ -18,6 +18,7 @@ public class TapNoteRenderer extends BaseNoteRenderer {
     private Resource<Drawable> note8Drawable;
     private Resource<Drawable> note12Drawable;
     private Resource<Drawable> note16Drawable;
+    private Resource<Drawable> note24Drawable;
     private Resource<Drawable> note32Drawable;
     private Resource<Drawable> note48Drawable;
     private Resource<Drawable> note64Drawable;
@@ -34,6 +35,7 @@ public class TapNoteRenderer extends BaseNoteRenderer {
         (note8Drawable   = resources.getDrawable("play_dance_note_tap_8"  )).load();
         (note12Drawable  = resources.getDrawable("play_dance_note_tap_12" )).load();
         (note16Drawable  = resources.getDrawable("play_dance_note_tap_16" )).load();
+        (note24Drawable  = resources.getDrawable("play_dance_note_tap_24" )).load();
         (note32Drawable  = resources.getDrawable("play_dance_note_tap_32" )).load();
         (note48Drawable  = resources.getDrawable("play_dance_note_tap_48" )).load();
         (note64Drawable  = resources.getDrawable("play_dance_note_tap_64" )).load();
@@ -48,6 +50,7 @@ public class TapNoteRenderer extends BaseNoteRenderer {
             case NOTE_8TH:   return note8Drawable.get();
             case NOTE_12TH:  return note12Drawable.get();
             case NOTE_16TH:  return note16Drawable.get();
+            case NOTE_24TH:  return note24Drawable.get();
             case NOTE_32ND:  return note32Drawable.get();
             case NOTE_48TH:  return note48Drawable.get();
             case NOTE_64TH:  return note64Drawable.get();

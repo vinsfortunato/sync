@@ -36,16 +36,6 @@ public class BeatmapView extends Widget {
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
 
-        //TODO REMOVE
-        /**
-        ShapeRenderer renderer = new ShapeRenderer();
-        renderer.begin(ShapeRenderer.ShapeType.Filled);
-        renderer.setColor(new Color(0xb3e5fc));
-        renderer.rect(0, 0, getWidth(), getHeight());
-        renderer.end();
-         **/
-        //END
-
         Timing timing = getRound().getTiming();
 
         //Get current time and beat
@@ -53,6 +43,7 @@ public class BeatmapView extends Widget {
         double beat = timing.getBeatAt(time);
 
         //Draw panels
+
         for(NotePanel panel : panels) {
             drawReceptor(batch, panel, beat, time);
             drawNotes(batch, panel, beat, time);
