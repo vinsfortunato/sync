@@ -41,7 +41,7 @@ import java.util.regex.Pattern;
  */
 public class DWIParser extends TagSimParser {
     /** Pattern that matches the display bpm syntax **/
-    private static Pattern DISPLAY_BPM_PATTERN = Pattern.compile("(\\*)|(\\d+)(\\s*\\.\\.\\s*(\\d+))?");
+    private static Pattern DISPLAY_BPM_PATTERN = Pattern.compile("(\\*)|(?:(\\d+)(?:\\.\\d+)?)(?:\\s*:\\s*(?:(\\d+)(?:\\.\\d+)?))?");
     /** Pattern that matches the BPMs and stops syntax **/
     private static Pattern BPM_STOP_PATTERN = Pattern.compile("([+-]?\\d+(\\.\\d+)?)\\s*=\\s*(\\+?\\d+(\\.\\d+)?)");
 
@@ -136,15 +136,15 @@ public class DWIParser extends TagSimParser {
         String value = dataSupplier.getHeaderTagValue("DISPLAYBPM");
         if(value != null) {
             Matcher matcher = DISPLAY_BPM_PATTERN.matcher(value);
-            if(matcher.find()) {
-                if(!matcher.group(1).isEmpty()) {
+            if(matcher.matches()) {
+                if(matcher.group(1) != null) {
                     return new DisplayBPM.RandomDisplayBPM();
                 }
 
-                if(!matcher.group(4).isEmpty()) {
+                if(matcher.group(3) != null) {
                     return new DisplayBPM.RangeDisplayBPM(
-                            Integer.parseInt(matcher.group(2)),
-                            Integer.parseInt(matcher.group(4)));
+                            Integer.parseInt(matcher.group(3)),
+                            Integer.parseInt(matcher.group(2)));
                 }
 
                 return new DisplayBPM.StaticDisplayBPM(
