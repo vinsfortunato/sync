@@ -58,7 +58,8 @@ public interface Screen extends Disposable {
     void hide(Runnable doneCallback);
 
     /**
-     * This is called at each render tick to update the screen status.
+     * This is called at each render tick to update the screen status
+     * only if it the screen is shown or preparing to be shown.
      */
     void update();
 
