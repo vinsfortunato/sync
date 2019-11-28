@@ -1,5 +1,6 @@
 package net.touchmania.game.round;
 
+import com.badlogic.gdx.audio.Music;
 import net.touchmania.game.song.Chart;
 import net.touchmania.game.song.InvalidTimingDataException;
 import net.touchmania.game.song.Timing;
@@ -9,6 +10,7 @@ public class Round {
     private Timing timing;
     private Score score;
     private Life life;
+    private Music music;
 
     public Round(Chart chart) {
         this.chart = chart;
@@ -20,7 +22,11 @@ public class Round {
     }
 
     public double getCurrentTime() {
-        return 0.0D;
+        return music.getPosition();
+    }
+
+    public void setMusic(Music music) {
+        this.music = music;
     }
 
     public Timing getTiming() {

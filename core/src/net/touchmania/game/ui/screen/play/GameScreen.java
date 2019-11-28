@@ -34,6 +34,7 @@ import net.touchmania.game.Game;
 import net.touchmania.game.resource.ResourceProvider;
 import net.touchmania.game.round.Round;
 import net.touchmania.game.song.*;
+import net.touchmania.game.song.note.NotePanel;
 import net.touchmania.game.song.note.TapNote;
 import net.touchmania.game.song.sim.SimParser;
 import net.touchmania.game.util.concurrent.DoneListener;
@@ -75,7 +76,7 @@ public class GameScreen implements Screen {
 
     //TODO
     private void test() {
-        FileHandle fh = Gdx.files.external("touchmania/Songs/ITG Rodeo Tournament 8/012 - Into Dust");
+        FileHandle fh = Gdx.files.external("touchmania/Songs/ITG Rodeo Tournament 8/010 - Holic");
 
         SongLoader sl = new SongLoader(fh);
 
@@ -95,6 +96,7 @@ public class GameScreen implements Screen {
 
             beatmapView = new BeatmapView(round);
             music = Gdx.audio.newMusic(Gdx.files.external(song.directory.path() + "/" + song.musicPath));
+            round.setMusic(music);
         } catch (Exception e) {
             System.err.println("Cannot read song!");
             e.printStackTrace();

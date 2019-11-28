@@ -1,13 +1,7 @@
 package net.touchmania.game.ui.screen.play;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import net.touchmania.game.Game;
 import net.touchmania.game.round.Round;
 import net.touchmania.game.song.Beatmap;
@@ -74,24 +68,20 @@ public class BeatmapView extends Widget {
 
         //Calculate view x, y, width and height to use for note rendering.
         //View position is relative to the receptor position.
-        float viewX = -receptorRenderer.getReceptorX(panel, beat, time);
-        float viewY = -receptorRenderer.getReceptorY(panel, beat, time);
+        float receptorX = receptorRenderer.getReceptorX(panel, beat, time);
+        float receptorY = receptorRenderer.getReceptorY(panel, beat, time);
         float viewW = getWidth();
         float viewH = getHeight();
         Note note;
         NoteRenderer renderer;
 
         //Get the render starting note
-        note = findStartingNote(panel, beat, time, viewX, viewY, viewW, viewH);
-        if(note == null) {
-            //Nothing to draw
-            return;
-        }
+        note = findStartingNote(panel, beat, time, receptorX, receptorY, viewW, viewH);
 
         //Start by rendering the starting note, then render next notes until a note
         //outside the view is found or the end of the beatmap is reached.
-        while(note != null && (renderer = getNoteRenderer(note)).isNoteInsideView(panel, note, beat, time, viewX, viewY, viewW, viewH)) {
-            renderer.draw(batch, panel, note, beat, time);
+        while(note != null && (renderer = getNoteRenderer(note)).isNoteInsideView(panel, note, beat, time, receptorX, receptorY, viewW, viewH)) {
+            renderer.draw(batch, panel, note, beat, time, receptorX, receptorY);
             note = beatmap.higherNote(panel, note.getBeat());
         }
     }
@@ -102,12 +92,15 @@ public class BeatmapView extends Widget {
      * @param panel the note panel
      * @param beat the current beat
      * @param time the current time
+     * @param receptorX the receptor x position inside the view
+     * @param receptorY the receptor y position inside the view
+     * @param viewW the view width
+     * @param viewH the view height
      * @return the render starting note, or null if there are no notes to render.
      */
     private Note findStartingNote(NotePanel panel, double beat, double time,
-                                  float viewX, float viewY, float viewW, float viewH) {
+                                  float receptorX, float receptorY, float viewW, float viewH) {
         Beatmap beatmap = getBeatmap();
-
 
         if(!beatmap.hasNotes(panel)) {
             //There is no note inside the beatmap for the given panel.
@@ -123,7 +116,7 @@ public class BeatmapView extends Widget {
 
         while(note != null) {
             renderer = getNoteRenderer(note);
-            if(renderer.isNoteInsideView(panel, note, beat, time, viewX, viewY, viewW, viewH)) {
+            if(renderer.isNoteInsideView(panel, note, beat, time, receptorX, receptorY, viewW, viewH)) {
                 note = beatmap.lowerNote(panel, note.getBeat());
             } else {
                 break;
@@ -134,7 +127,7 @@ public class BeatmapView extends Widget {
 
         if(note != null) {
             renderer = getNoteRenderer(note);
-            if(renderer.isNoteInsideView(panel, note, beat, time, viewX, viewY, viewW, viewH)) {
+            if(renderer.isNoteInsideView(panel, note, beat, time, receptorX, receptorY, viewW, viewH)) {
                 return note;
             }
         }

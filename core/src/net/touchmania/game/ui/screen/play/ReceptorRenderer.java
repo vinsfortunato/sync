@@ -84,7 +84,7 @@ public class ReceptorRenderer {
      * @return the y position of the receptor inside the view.
      */
     public float getReceptorY(NotePanel panel, double beat, double time) {
-        return 512f;
+        return 1920f - 256 - 64;
     }
 
     /**

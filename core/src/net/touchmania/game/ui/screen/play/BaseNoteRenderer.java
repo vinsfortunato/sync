@@ -17,6 +17,8 @@
 package net.touchmania.game.ui.screen.play;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TransformDrawable;
 import net.touchmania.game.round.Round;
 import net.touchmania.game.song.note.Note;
 import net.touchmania.game.song.note.NotePanel;
@@ -29,28 +31,51 @@ public abstract class BaseNoteRenderer implements NoteRenderer {
     }
 
     @Override
-    public void draw(Batch batch, NotePanel panel, Note note, double beat, double time) {
+    public void draw(Batch batch, NotePanel panel, Note note, double beat, double time, float receptorX, float receptorY) {
+        Drawable drawable = getNoteDrawable(panel, note, beat, time);
+        if(drawable == null) { //TODO at this point drawable should not be null
+            return;
+        }
 
+        float width = drawable.getMinWidth();
+        float height = drawable.getMinHeight();
+        float x = receptorX + getNoteX(panel, note, beat, time);
+        float y = receptorY + getNoteY(panel, note, beat, time);
+        float originX = width / 2.0f;
+        float originY = height / 2.0f;
+        float rotation = getNoteRotation(panel, note, beat, time);
+        float scaleX = getNoteScaleX(panel, note, beat, time);
+        float scaleY = getNoteScaleY(panel, note, beat, time);
+
+        if(drawable instanceof TransformDrawable) {
+            TransformDrawable transformDrawable = (TransformDrawable) drawable;
+            transformDrawable.draw(batch, x, y, originX, originY, width, height, scaleX, scaleY, rotation);
+        } else {
+            drawable.draw(batch, x, y, width * scaleX, height * scaleY);
+        }
     }
 
     @Override
     public float getNoteX(NotePanel panel, Note note, double beat, double time) {
-        return 0;
+        return 0.0f;
     }
 
     @Override
     public float getNoteY(NotePanel panel, Note note, double beat, double time) {
-        return 0;
+        Drawable drawable = getNoteDrawable(panel, note, beat, time);
+        float height = drawable.getMinHeight();
+        float speedMod = 1.0f;
+        return (float) -(height * speedMod * (note.getBeat() - beat));
     }
 
     @Override
     public float getNoteScaleX(NotePanel panel, Note note, double beat, double time) {
-        return 0;
+        return 1.0f;
     }
 
     @Override
     public float getNoteScaleY(NotePanel panel, Note note, double beat, double time) {
-        return 0;
+        return 1.0f;
     }
 
     @Override
@@ -75,17 +100,33 @@ public abstract class BaseNoteRenderer implements NoteRenderer {
 
     @Override
     public float getNoteOpacity(NotePanel panel, Note note, double beat, double time) {
-        return 0;
+        return 1.0f;
     }
 
     @Override
     public boolean isNoteVisible(NotePanel panel, Note note, double beat, double time) {
-        return false;
+        return true;
     }
 
     @Override
-    public boolean isNoteInsideView(NotePanel panel, Note note, double beat, double time, float viewX, float viewY, float viewWidth, float viewHeight) {
-        return false;
+    public boolean isNoteInsideView(NotePanel panel, Note note, double beat, double time,
+                                    float receptorX, float receptorY, float viewWidth, float viewHeight) {
+        Drawable drawable = getNoteDrawable(panel, note, beat, time);
+        if(drawable == null) { //TODO at this point drawable should not be null
+            return false;
+        }
+
+        float x = receptorX + getNoteX(panel, note, beat, time);
+        float y = receptorY + getNoteY(panel, note, beat, time);
+        float width = drawable.getMinWidth();
+        float height = drawable.getMinHeight();
+
+        /**
+        System.out.println(String.format("x:%f y:%f w:%f h:%f rx:%f ry=%f vw=%f vh=%f b=%f nb=%f",
+                x,y,width, height, receptorX, receptorY, viewWidth, viewHeight, beat, note.getBeat()));
+        **/
+
+        return x < viewWidth && x + width > 0 && y < viewHeight && y + height > 0;
     }
 
     @Override

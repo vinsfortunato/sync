@@ -17,7 +17,6 @@
 package net.touchmania.game.ui.screen.play;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import net.touchmania.game.round.Judgment;
 import net.touchmania.game.round.Round;
@@ -26,14 +25,16 @@ import net.touchmania.game.song.note.NotePanel;
 
 public interface NoteRenderer {
     /**
-     * Draw a note to the batch. The batch is translated to the receptor position.
+     * Draw a note to the batch. Batch is translated to the view position.
      * @param batch the batch.
      * @param panel the note panel.
      * @param note the note to draw.
      * @param beat the current beat.
      * @param time the current time relative to the start of the music track.
+     * @param receptorX the receptor x position inside the view.
+     * @param receptorY the receptor y position inside the view.
      */
-    void draw(Batch batch, NotePanel panel, Note note, double beat, double time);
+    void draw(Batch batch, NotePanel panel, Note note, double beat, double time, float receptorX, float receptorY);
 
     /**
      * Gets note x position relative to receptor x position.
@@ -109,19 +110,20 @@ public interface NoteRenderer {
 
     /**
      * Checks if the given note is inside the view.
-     * Only notes inside the view will be drawn.
+     * Only notes inside the view will be drawn. It should ignore
+     * note properties like opacity and visibility.
      * @param panel the note panel.
      * @param note the note.
      * @param beat the current beat.
      * @param time the current time relative to the start of the music track.
-     * @param viewX the view x position relative to the receptor x.
-     * @param viewY the view y position relative to the receptor y.
+     * @param receptorX the receptor x position inside the view.
+     * @param receptorY the receptor y position inside the view.
      * @param viewWidth the view width.
      * @param viewHeight the view height.
      * @return true if the given note is inside the view, false otherwise.
      */
     boolean isNoteInsideView(NotePanel panel, Note note, double beat, double time,
-                             float viewX, float viewY, float viewWidth, float viewHeight);
+                             float receptorX, float receptorY, float viewWidth, float viewHeight);
 
     /**
      * Gets note drawable.
