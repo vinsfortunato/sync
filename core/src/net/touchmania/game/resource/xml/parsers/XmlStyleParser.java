@@ -17,8 +17,9 @@
 package net.touchmania.game.resource.xml.parsers;
 
 import com.badlogic.gdx.files.FileHandle;
+import net.touchmania.game.resource.xml.XmlStyle;
+import net.touchmania.game.resource.xml.XmlTheme;
 import net.touchmania.game.util.xml.XmlParseException;
-import net.touchmania.game.resource.xml.*;
 import net.touchmania.game.util.xml.XmlParser;
 
 import java.util.HashMap;
@@ -41,6 +42,7 @@ public class XmlStyleParser extends XmlResourceParser<XmlStyle> {
 
         for(int i = 0; i < root.getChildCount(); i++) {
             XmlParser.Element element = root.getChild(i);
+
             if(!element.getName().equals("attribute")) {
                 throw new XmlParseException(String.format("Unexpected element name '%s'! Expected to be 'attribute'!", element.getName()));
             }

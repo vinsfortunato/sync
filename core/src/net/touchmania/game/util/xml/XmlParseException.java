@@ -16,6 +16,8 @@
 
 package net.touchmania.game.util.xml;
 
+import com.badlogic.gdx.files.FileHandle;
+
 import java.io.IOException;
 
 public class XmlParseException extends IOException {
@@ -31,5 +33,33 @@ public class XmlParseException extends IOException {
 
     public XmlParseException(Throwable cause) {
         super(cause);
+    }
+
+    public XmlParseException(FileHandle file, XmlParser.Element element) {
+        this(getLineMessage(file, element));
+    }
+
+    public XmlParseException(String message, FileHandle file, XmlParser.Element element) {
+        this(getLineMessage(file, element) + " " + message);
+    }
+
+    public XmlParseException(String message, Throwable cause, FileHandle file, XmlParser.Element element) {
+        this(getLineMessage(file, element) + " " + message, cause);
+    }
+
+    public XmlParseException(Throwable cause, FileHandle file, XmlParser.Element element) {
+        this(getLineMessage(file, element), cause);
+    }
+
+    private static String getLineMessage(FileHandle file, XmlParser.Element element) {
+        StringBuilder builder = new StringBuilder();
+        builder.append("Cannot parse xml element ");
+        builder.append(element.getName());
+        builder.append(" at line ");
+        builder.append(element.getLineNumber());
+        builder.append(" in file '");
+        builder.append(file.path());
+        builder.append("'.");
+        return builder.toString();
     }
 }

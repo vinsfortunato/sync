@@ -18,7 +18,7 @@ package net.touchmania.game.resource.xml.resolvers;
 
 import net.touchmania.game.resource.Dimension;
 import net.touchmania.game.resource.ResourceProvider;
-import net.touchmania.game.resource.xml.exception.XmlReferenceNotFoundException;
+import net.touchmania.game.resource.xml.XmlReferenceNotFoundException;
 import net.touchmania.game.util.xml.XmlParseException;
 
 public abstract class XmlDimensionResolver extends XmlReferenceResolver<Dimension> {

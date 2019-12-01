@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package net.touchmania.game.resource.xml.exception;
+package net.touchmania.game.resource.xml;
 
 import net.touchmania.game.util.xml.XmlParseException;
 

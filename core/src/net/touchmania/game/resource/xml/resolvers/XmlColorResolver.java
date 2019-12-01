@@ -18,7 +18,7 @@ package net.touchmania.game.resource.xml.resolvers;
 
 import com.badlogic.gdx.graphics.Color;
 import net.touchmania.game.resource.ResourceProvider;
-import net.touchmania.game.resource.xml.exception.XmlReferenceNotFoundException;
+import net.touchmania.game.resource.xml.XmlReferenceNotFoundException;
 import net.touchmania.game.util.xml.XmlParseException;
 
 import java.util.regex.Matcher;

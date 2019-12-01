@@ -17,8 +17,8 @@
 package net.touchmania.game.util.xml;
 
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.utils.*;
 import com.badlogic.gdx.utils.StringBuilder;
+import com.badlogic.gdx.utils.*;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -343,10 +343,11 @@ public class XmlParser {
             }
         }
 
+        int lineNumber = 1;
+        for (int i = 0; i < p; i++)
+            if (data[i] == '\n') lineNumber++;
+
         if (p < pe) {
-            int lineNumber = 1;
-            for (int i = 0; i < p; i++)
-                if (data[i] == '\n') lineNumber++;
             throw new XmlParseException("Error parsing XML on line " + lineNumber + " near: "
                     + new String(data, p, Math.min(32, pe - p)));
         } else if (elements.size() != 0) {
@@ -355,6 +356,7 @@ public class XmlParser {
             throw new XmlParseException("Error parsing XML, unclosed element: " + element.getName());
         }
         Element root = this.root;
+        root.lineNumber = lineNumber;
         this.root = null;
         return root;
     }
@@ -470,6 +472,7 @@ public class XmlParser {
         private Array<Element> children;
         private String text;
         private Element parent;
+        private int lineNumber;
 
         public Element(String name, Element parent) {
             this.name = name;
@@ -631,6 +634,10 @@ public class XmlParser {
          */
         public Element getParent() {
             return parent;
+        }
+
+        public int getLineNumber() {
+            return lineNumber;
         }
 
         @Override

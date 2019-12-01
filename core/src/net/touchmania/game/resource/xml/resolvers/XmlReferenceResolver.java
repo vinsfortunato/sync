@@ -17,8 +17,8 @@
 package net.touchmania.game.resource.xml.resolvers;
 
 import com.google.common.base.Preconditions;
-import net.touchmania.game.resource.xml.exception.XmlReferenceNotCompatibleException;
-import net.touchmania.game.resource.xml.exception.XmlReferenceNotFoundException;
+import net.touchmania.game.resource.xml.XmlReferenceNotCompatibleException;
+import net.touchmania.game.resource.xml.XmlReferenceNotFoundException;
 import net.touchmania.game.util.xml.XmlParseException;
 import net.touchmania.game.util.xml.XmlValueResolver;
 

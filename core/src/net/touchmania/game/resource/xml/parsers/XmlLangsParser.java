@@ -40,7 +40,7 @@ public class XmlLangsParser extends XmlResourceParser<List<Locale>>{
             //Check if lang is default
             boolean isDefault =
                     element.hasAttribute("default") &&
-                    XmlBooleanResolver.GLOBAL_BOOLEAN_RESOLVER.resolve(element.getAttribute("default"));
+                            XmlBooleanResolver.GLOBAL_BOOLEAN_RESOLVER.resolve(element.getAttribute("default"));
 
             //Check for duplicates
             if(langs.contains(lang)) {

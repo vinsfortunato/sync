@@ -18,8 +18,8 @@ package net.touchmania.game.resource.xml.parsers;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
+import net.touchmania.game.resource.xml.XmlReferenceNotFoundException;
 import net.touchmania.game.resource.xml.XmlTheme;
-import net.touchmania.game.resource.xml.exception.XmlReferenceNotFoundException;
 import net.touchmania.game.resource.xml.resolvers.XmlColorResolver;
 import net.touchmania.game.resource.xml.resolvers.XmlReferenceResolver;
 import net.touchmania.game.util.xml.XmlParseException;

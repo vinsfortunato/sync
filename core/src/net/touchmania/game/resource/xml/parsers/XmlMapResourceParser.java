@@ -17,7 +17,7 @@
 package net.touchmania.game.resource.xml.parsers;
 
 import com.badlogic.gdx.files.FileHandle;
-import net.touchmania.game.resource.xml.exception.XmlReferenceNotFoundException;
+import net.touchmania.game.resource.xml.XmlReferenceNotFoundException;
 import net.touchmania.game.resource.xml.resolvers.XmlReferenceResolver;
 import net.touchmania.game.util.xml.XmlParseException;
 import net.touchmania.game.util.xml.XmlParser;
