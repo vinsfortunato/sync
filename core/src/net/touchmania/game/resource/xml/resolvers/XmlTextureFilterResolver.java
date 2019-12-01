@@ -9,10 +9,6 @@ public class XmlTextureFilterResolver implements XmlValueResolver<Texture.Textur
 
     @Override
     public Texture.TextureFilter resolve(String value) throws XmlParseException {
-        if(value == null || value.isEmpty()) {
-            throw new XmlParseException("Invalid filter value! Value cannot be null or empty!");
-        }
-
         switch(value.trim().toLowerCase()) {
             case "nearest": return Texture.TextureFilter.Nearest;
             case "linear": return Texture.TextureFilter.Linear;

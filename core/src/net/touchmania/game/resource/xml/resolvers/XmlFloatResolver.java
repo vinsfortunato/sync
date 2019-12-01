@@ -17,21 +17,20 @@
 package net.touchmania.game.resource.xml.resolvers;
 
 import net.touchmania.game.resource.ResourceProvider;
+import net.touchmania.game.resource.xml.exception.XmlReferenceNotFoundException;
 import net.touchmania.game.util.xml.XmlParseException;
 import net.touchmania.game.util.xml.XmlValueResolver;
 
-public abstract class XmlFloatResolver extends XmlReferenceValueResolver<Float> {
+public abstract class XmlFloatResolver extends XmlReferenceResolver<Float> {
     /** Global Float primitive resolver. */
     public static XmlValueResolver<Float> GLOBAL_FLOAT_RESOLVER = new XmlValueResolver<Float>() {
-
         @Override
         public Float resolve(String value) throws XmlParseException {
-            if(value != null) {
-                try {
-                    return Float.parseFloat(value);
-                } catch(NumberFormatException e) {}
+            try {
+                return Float.parseFloat(value);
+            } catch(NumberFormatException e) {
+                throw new XmlParseException(String.format("Invalid float value '%s'!", value));
             }
-            throw new XmlParseException(String.format("Invalid float value '%s'!", value));
         }
     };
 
@@ -42,19 +41,24 @@ public abstract class XmlFloatResolver extends XmlReferenceValueResolver<Float> 
 
     @Override
     public Float resolveValue(String value) throws XmlParseException {
-        if(value != null) {
-            try {
-                return Float.parseFloat(value);
-            } catch(NumberFormatException e) {}
+        try {
+            return Float.parseFloat(value);
+        } catch(NumberFormatException e) {
+            throw new XmlParseException(String.format("Invalid float value '%s'!", value));
         }
-        throw new XmlParseException(String.format("Invalid float value '%s'!", value));
     }
 
     public static XmlFloatResolver from(final ResourceProvider provider) {
         return new XmlFloatResolver() {
             @Override
-            public Float resolveReference(String resourceId) throws XmlParseException {
-                return provider.getFloat(resourceId);
+            public Float resolveReference(String resourceId) throws XmlReferenceNotFoundException {
+                Float value = provider.getFloat(resourceId);
+
+                if(value == null)
+                    throw new XmlReferenceNotFoundException(
+                            String.format("Cannot resolve reference with id '%s'", resourceId));
+
+                return value;
             }
         };
     }

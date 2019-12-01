@@ -18,9 +18,10 @@ package net.touchmania.game.resource.xml.resolvers;
 
 import net.touchmania.game.resource.Dimension;
 import net.touchmania.game.resource.ResourceProvider;
+import net.touchmania.game.resource.xml.exception.XmlReferenceNotFoundException;
 import net.touchmania.game.util.xml.XmlParseException;
 
-public abstract class XmlDimensionResolver extends XmlReferenceValueResolver<Dimension> {
+public abstract class XmlDimensionResolver extends XmlReferenceResolver<Dimension> {
     @Override
     protected String getResourceTypeName() {
         return "dimen";
@@ -28,9 +29,6 @@ public abstract class XmlDimensionResolver extends XmlReferenceValueResolver<Dim
 
     @Override
     public Dimension resolveValue(String value) throws XmlParseException {
-        if(value == null || value.isEmpty()) {
-            throw new XmlParseException("Invalid dimension value! Value cannot be empty or null!");
-        }
         try {
             return new Dimension(Float.parseFloat(value));
         } catch(NumberFormatException e) {
@@ -41,8 +39,14 @@ public abstract class XmlDimensionResolver extends XmlReferenceValueResolver<Dim
     public static XmlDimensionResolver from(final ResourceProvider provider) {
         return new XmlDimensionResolver() {
             @Override
-            public Dimension resolveReference(String resourceId) {
-                return provider.getDimension(resourceId);
+            public Dimension resolveReference(String resourceId) throws XmlReferenceNotFoundException {
+                Dimension dimen = provider.getDimension(resourceId);
+
+                if(dimen == null)
+                    throw new XmlReferenceNotFoundException(
+                            String.format("Cannot resolve reference with id '%s'", resourceId));
+
+                return dimen;
             }
         };
     }

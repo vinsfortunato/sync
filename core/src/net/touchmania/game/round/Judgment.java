@@ -16,9 +16,6 @@
 
 package net.touchmania.game.round;
 
-/**
- * @author flood2d
- */
 public enum Judgment {
     MARVELOUS,
     PERFECT,

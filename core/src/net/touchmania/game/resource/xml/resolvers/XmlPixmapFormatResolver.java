@@ -9,10 +9,6 @@ public class XmlPixmapFormatResolver implements XmlValueResolver<Format> {
 
     @Override
     public Format resolve(String value) throws XmlParseException {
-        if(value == null || value.isEmpty()) {
-            throw new XmlParseException("Invalid format value! Value cannot be null or empty!");
-        }
-
         //TODO
         switch(value.trim().toLowerCase()) {
 

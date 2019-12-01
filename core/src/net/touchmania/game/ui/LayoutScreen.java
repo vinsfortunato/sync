@@ -20,9 +20,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.google.common.base.Preconditions;
 import net.touchmania.game.Game;
 import net.touchmania.game.resource.Layout;
-import net.touchmania.game.resource.lazy.Resource;
 import net.touchmania.game.resource.ResourceProvider;
-import net.touchmania.game.util.concurrent.DoneListener;
+import net.touchmania.game.resource.lazy.Resource;
 
 public class LayoutScreen implements Screen {
     private String layoutId;

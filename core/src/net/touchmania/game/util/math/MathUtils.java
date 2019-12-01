@@ -16,18 +16,14 @@
 
 package net.touchmania.game.util.math;
 
-/**
- * @author flood2d
- */
 public final class MathUtils {
     /**
-     * Can be used to restrict a value to a given range.
-     *
-     * @param <T>
+     * Restrict a value to a given range.
+     * @param <T> a comparable type.
      * @param min range minimum.
      * @param max range maximum.
      * @param value value to clamp.
-     * @return min if value < min, max if value > max, value otherwise.</>
+     * @return min if value is less than min, max if value is greater than max, value otherwise.</>
      */
     public static <T extends Comparable<T>> T clamp(T min, T max, T value) {
         if (min == null || value == null || max == null) {

@@ -19,16 +19,17 @@ package net.touchmania.game.resource.xml.parsers;
 import com.badlogic.gdx.files.FileHandle;
 import net.touchmania.game.resource.Dimension;
 import net.touchmania.game.resource.xml.XmlTheme;
-import net.touchmania.game.resource.xml.resolvers.XmlReferenceValueResolver;
+import net.touchmania.game.resource.xml.exception.XmlReferenceNotFoundException;
+import net.touchmania.game.resource.xml.resolvers.XmlDimensionResolver;
+import net.touchmania.game.resource.xml.resolvers.XmlReferenceResolver;
 import net.touchmania.game.util.xml.XmlParseException;
 import net.touchmania.game.util.xml.XmlParser;
-import net.touchmania.game.resource.xml.resolvers.XmlDimensionResolver;
 
 public class XmlDimensParser extends XmlMapResourceParser<Dimension> {
     private XmlDimensionResolver dimenResolver = new XmlDimensionResolver() {
         @Override
-        public Dimension resolveReference(String resourceId) {
-            return getResolvedValues().get(resourceId);
+        public Dimension resolveReference(String resourceId) throws XmlReferenceNotFoundException {
+            return getResolvedValueOrThrow(resourceId);
         }
     };
 
@@ -55,7 +56,7 @@ public class XmlDimensParser extends XmlMapResourceParser<Dimension> {
     }
 
     @Override
-    protected XmlReferenceValueResolver<Dimension> getResolver(XmlParser.Element element) {
+    protected XmlReferenceResolver<Dimension> getResolver(XmlParser.Element element) {
         return dimenResolver;
     }
 }

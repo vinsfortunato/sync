@@ -18,12 +18,13 @@ package net.touchmania.game.resource.xml.parsers;
 
 import com.badlogic.gdx.files.FileHandle;
 import net.touchmania.game.Game;
-import net.touchmania.game.util.FileUtils;
+import net.touchmania.game.resource.xml.XmlTheme;
+import net.touchmania.game.resource.xml.XmlThemeManifest;
 import net.touchmania.game.resource.xml.resolvers.XmlIntegerResolver;
 import net.touchmania.game.util.xml.XmlParseException;
-import net.touchmania.game.resource.xml.*;
 import net.touchmania.game.util.xml.XmlParser;
 
+import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -117,14 +118,14 @@ public class XmlThemeParser extends XmlResourceParser<XmlTheme> {
                 //Current active game language is supported by the theme
                 //Parse active lang strings
                 FileHandle stringsFile = getStringsFile(active);
-                FileUtils.checkFilePresence(stringsFile);
+                checkFilePresence(stringsFile);
                 XmlStringsParser parser = new XmlStringsParser(stringsFile, theme);
                 Map<String, String> strings = parser.parse();
 
                 //Parse default language if active isn't already default
                 if(index != 0) {
                     stringsFile = getStringsFile(langs.get(0)); //Get default theme lang
-                    FileUtils.checkFilePresence(stringsFile);
+                    checkFilePresence(stringsFile);
                     parser = new XmlStringsParser(stringsFile, theme);
                     Map<String, String> defStrings = parser.parse();
 
@@ -138,7 +139,7 @@ public class XmlThemeParser extends XmlResourceParser<XmlTheme> {
                 //Current active game language is not supported by the theme
                 //Parse default theme lang strings
                 FileHandle stringsFile = getStringsFile(langs.get(0));
-                FileUtils.checkFilePresence(stringsFile);
+                checkFilePresence(stringsFile);
                 XmlStringsParser parser = new XmlStringsParser(stringsFile, theme);
                 theme.setStrings(parser.parse());
             }
@@ -177,5 +178,11 @@ public class XmlThemeParser extends XmlResourceParser<XmlTheme> {
         return getResourceFile()
                 .sibling("strings")
                 .child(String.format("strings_%s_%s.xml", locale.getLanguage(), locale.getCountry()));
+    }
+
+    private static void checkFilePresence(FileHandle file) throws FileNotFoundException {
+        if(!file.exists()) {
+            throw new FileNotFoundException(String.format("Required file '%s' not found!", file.path()));
+        }
     }
 }

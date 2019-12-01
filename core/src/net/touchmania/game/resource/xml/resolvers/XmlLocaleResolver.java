@@ -10,10 +10,6 @@ public class XmlLocaleResolver implements XmlValueResolver<Locale> {
 
     @Override
     public Locale resolve(String value) throws XmlParseException {
-        if(value == null || value.isEmpty()) {
-            throw new XmlParseException("Invalid locale value! Value cannot be null or empty!");
-        }
-
         //Prepare the value for parsing by removing leading/trailing spaces
         value = value.trim();
 

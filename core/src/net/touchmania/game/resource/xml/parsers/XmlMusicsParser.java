@@ -5,8 +5,10 @@ import com.badlogic.gdx.files.FileHandle;
 import net.touchmania.game.resource.lazy.MusicResource;
 import net.touchmania.game.resource.lazy.Resource;
 import net.touchmania.game.resource.xml.XmlTheme;
+import net.touchmania.game.resource.xml.exception.XmlReferenceNotCompatibleException;
+import net.touchmania.game.resource.xml.exception.XmlReferenceNotFoundException;
 import net.touchmania.game.resource.xml.resolvers.XmlMusicResolver;
-import net.touchmania.game.resource.xml.resolvers.XmlReferenceValueResolver;
+import net.touchmania.game.resource.xml.resolvers.XmlReferenceResolver;
 import net.touchmania.game.util.xml.XmlParseException;
 import net.touchmania.game.util.xml.XmlParser;
 
@@ -14,9 +16,13 @@ public class XmlMusicsParser extends XmlMapResourceParser<Resource<Music>> {
     private final XmlTheme theme;
     private XmlMusicResolver musicResolver = new XmlMusicResolver() {
         @Override
-        public Resource<Music> resolveReference(String resourceId) {
-            MusicResource resource = (MusicResource) getResolvedValues().get(resourceId);
-            return new MusicResource(resource);
+        public Resource<Music> resolveReference(String resourceId) throws XmlReferenceNotFoundException, XmlReferenceNotCompatibleException {
+            Resource<Music> resource = getResolvedValueOrThrow(resourceId);
+
+            if(resource instanceof MusicResource)
+                return new MusicResource((MusicResource) resource);
+
+            throw XmlReferenceNotCompatibleException.incompatibleType(resource.getClass(), MusicResource.class);
         }
 
         @Override
@@ -53,7 +59,7 @@ public class XmlMusicsParser extends XmlMapResourceParser<Resource<Music>> {
     }
 
     @Override
-    protected XmlReferenceValueResolver<Resource<Music>> getResolver(XmlParser.Element element) {
+    protected XmlReferenceResolver<Resource<Music>> getResolver(XmlParser.Element element) {
         return musicResolver;
     }
 }

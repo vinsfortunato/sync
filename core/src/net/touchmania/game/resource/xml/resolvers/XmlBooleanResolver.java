@@ -17,22 +17,22 @@
 package net.touchmania.game.resource.xml.resolvers;
 
 import net.touchmania.game.resource.ResourceProvider;
+import net.touchmania.game.resource.xml.exception.XmlReferenceNotFoundException;
 import net.touchmania.game.util.xml.XmlParseException;
 import net.touchmania.game.util.xml.XmlValueResolver;
 
-public abstract class XmlBooleanResolver extends XmlReferenceValueResolver<Boolean> {
+public abstract class XmlBooleanResolver extends XmlReferenceResolver<Boolean> {
     /** Global Boolean primitive resolver. */
     public static XmlValueResolver<Boolean> GLOBAL_BOOLEAN_RESOLVER = new XmlValueResolver<Boolean>() {
         @Override
         public Boolean resolve(String value) throws XmlParseException {
-            if(value != null) {
-                value = value.trim();
-                if(value.equalsIgnoreCase("true")) {
-                    return true;
-                } else if(value.equalsIgnoreCase("false")) {
-                    return false;
-                }
+            value = value.trim();
+            if(value.equalsIgnoreCase("true")) {
+                return true;
+            } else if(value.equalsIgnoreCase("false")) {
+                return false;
             }
+
             throw new XmlParseException(String.format("Invalid boolean value '%s'! Must be 'true' or 'false'!", value));
         }
     };
@@ -44,22 +44,27 @@ public abstract class XmlBooleanResolver extends XmlReferenceValueResolver<Boole
 
     @Override
     public Boolean resolveValue(String value) throws XmlParseException {
-        if(value != null) {
-            value = value.trim();
-            if(value.equalsIgnoreCase("true")) {
-                return true;
-            } else if(value.equalsIgnoreCase("false")) {
-                return false;
-            }
+        value = value.trim();
+        if(value.equalsIgnoreCase("true")) {
+            return true;
+        } else if(value.equalsIgnoreCase("false")) {
+            return false;
         }
+
         throw new XmlParseException(String.format("Invalid boolean value '%s'! Must be 'true' or 'false'!", value));
     }
 
     public static XmlBooleanResolver from(final ResourceProvider provider) {
         return new XmlBooleanResolver() {
             @Override
-            public Boolean resolveReference(String resourceId) {
-                return provider.getBoolean(resourceId);
+            public Boolean resolveReference(String resourceId) throws XmlReferenceNotFoundException {
+                Boolean bool = provider.getBoolean(resourceId);
+
+                if(bool == null)
+                    throw new XmlReferenceNotFoundException(
+                            String.format("Cannot resolve reference with id '%s'", resourceId));
+
+                return bool;
             }
         };
     }

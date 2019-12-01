@@ -26,10 +26,6 @@ public class XmlTouchableResolver implements XmlValueResolver<Touchable> {
 
     @Override
     public Touchable resolve(String value) throws XmlParseException {
-        if(value == null || value.isEmpty()) {
-            throw new XmlParseException("Invalid Touchable value! Value cannot be empty or null!");
-        }
-
         switch(value) {
             case "enabled": return Touchable.enabled;
             case "disabled": return Touchable.disabled;

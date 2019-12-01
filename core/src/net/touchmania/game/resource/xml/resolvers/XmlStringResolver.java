@@ -17,9 +17,10 @@
 package net.touchmania.game.resource.xml.resolvers;
 
 import net.touchmania.game.resource.ResourceProvider;
+import net.touchmania.game.resource.xml.exception.XmlReferenceNotFoundException;
 import net.touchmania.game.util.xml.XmlParseException;
 
-public abstract class XmlStringResolver extends XmlReferenceValueResolver<String> {
+public abstract class XmlStringResolver extends XmlReferenceResolver<String> {
     @Override
     protected String getResourceTypeName() {
         return "string";
@@ -27,17 +28,20 @@ public abstract class XmlStringResolver extends XmlReferenceValueResolver<String
 
     @Override
     public String resolveValue(String value) throws XmlParseException {
-        if(value == null || value.isEmpty()) {
-            throw new XmlParseException("Invalid string value! Value cannot be empty or null!");
-        }
         return value;
     }
 
     public static XmlStringResolver from(final ResourceProvider provider) {
         return new XmlStringResolver() {
             @Override
-            public String resolveReference(String resourceId) {
-                return provider.getString(resourceId);
+            public String resolveReference(String resourceId) throws XmlReferenceNotFoundException {
+                String string = provider.getString(resourceId);
+
+                if(string == null)
+                    throw new XmlReferenceNotFoundException(
+                            String.format("Cannot resolve reference with id '%s'", resourceId));
+
+                return string;
             }
         };
     }

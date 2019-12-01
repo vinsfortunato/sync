@@ -17,13 +17,14 @@
 package net.touchmania.game.resource.xml.resolvers;
 
 import net.touchmania.game.resource.ResourceProvider;
+import net.touchmania.game.resource.xml.exception.XmlReferenceNotFoundException;
 import net.touchmania.game.util.xml.XmlParseException;
 
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public abstract class XmlDurationResolver extends XmlReferenceValueResolver<Long> {
+public abstract class XmlDurationResolver extends XmlReferenceResolver<Long> {
     private static final Pattern TIME_REGEX = Pattern.compile("(?:\\d+:)?(?:\\d{1,2}:)?(?:\\d{1,2}(?:\\.\\d+)?)");
 
     @Override
@@ -33,17 +34,8 @@ public abstract class XmlDurationResolver extends XmlReferenceValueResolver<Long
 
     @Override
     public Long resolveValue(String value) throws XmlParseException {
-        if(value == null) {
-            throw new XmlParseException("Value cannot be null");
-        }
-
         //Prepare the value for parsing by removing leading/trailing spaces
         value = value.trim();
-
-        if(value.isEmpty()) {
-            //Consider empty values as 0ms durations.
-            return 0L;
-        }
 
         //Check if duration is expressed in the HH:MM:SS.MILLIS format
         Matcher matcher = TIME_REGEX.matcher(value);
@@ -91,8 +83,14 @@ public abstract class XmlDurationResolver extends XmlReferenceValueResolver<Long
     public static XmlDurationResolver from(final ResourceProvider provider) {
         return new XmlDurationResolver() {
             @Override
-            public Long resolveReference(String resourceId) throws XmlParseException {
-                return provider.getDuration(resourceId);
+            public Long resolveReference(String resourceId) throws XmlReferenceNotFoundException {
+                Long duration = provider.getDuration(resourceId);
+
+                if(duration == null)
+                    throw new XmlReferenceNotFoundException(
+                            String.format("Cannot resolve reference with id '%s'", resourceId));
+
+                return duration;
             }
         };
     }

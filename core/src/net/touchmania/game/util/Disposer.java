@@ -16,7 +16,6 @@
 
 package net.touchmania.game.util;
 
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.google.common.base.Preconditions;
 

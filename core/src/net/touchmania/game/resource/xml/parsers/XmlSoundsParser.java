@@ -21,7 +21,9 @@ import com.badlogic.gdx.files.FileHandle;
 import net.touchmania.game.resource.lazy.Resource;
 import net.touchmania.game.resource.lazy.SoundResource;
 import net.touchmania.game.resource.xml.XmlTheme;
-import net.touchmania.game.resource.xml.resolvers.XmlReferenceValueResolver;
+import net.touchmania.game.resource.xml.exception.XmlReferenceNotCompatibleException;
+import net.touchmania.game.resource.xml.exception.XmlReferenceNotFoundException;
+import net.touchmania.game.resource.xml.resolvers.XmlReferenceResolver;
 import net.touchmania.game.resource.xml.resolvers.XmlSoundResolver;
 import net.touchmania.game.util.xml.XmlParseException;
 import net.touchmania.game.util.xml.XmlParser;
@@ -30,9 +32,13 @@ public class XmlSoundsParser extends XmlMapResourceParser<Resource<Sound>> {
     private final XmlTheme theme;
     private XmlSoundResolver soundResolver = new XmlSoundResolver() {
         @Override
-        public Resource<Sound> resolveReference(String resourceId) {
-            SoundResource resource = (SoundResource) getResolvedValues().get(resourceId);
-            return new SoundResource(resource);
+        public Resource<Sound> resolveReference(String resourceId) throws XmlReferenceNotFoundException, XmlReferenceNotCompatibleException {
+            Resource<Sound> resource = getResolvedValueOrThrow(resourceId);
+
+            if(resource instanceof SoundResource)
+                return new SoundResource((SoundResource) resource);
+
+            throw XmlReferenceNotCompatibleException.incompatibleType(resource.getClass(), SoundResource.class);
         }
 
         @Override
@@ -70,7 +76,7 @@ public class XmlSoundsParser extends XmlMapResourceParser<Resource<Sound>> {
     }
 
     @Override
-    protected XmlReferenceValueResolver<Resource<Sound>> getResolver(XmlParser.Element element) {
+    protected XmlReferenceResolver<Resource<Sound>> getResolver(XmlParser.Element element) {
         return soundResolver;
     }
 }

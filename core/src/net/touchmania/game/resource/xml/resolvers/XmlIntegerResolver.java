@@ -17,21 +17,21 @@
 package net.touchmania.game.resource.xml.resolvers;
 
 import net.touchmania.game.resource.ResourceProvider;
+import net.touchmania.game.resource.xml.exception.XmlReferenceNotFoundException;
 import net.touchmania.game.util.xml.XmlParseException;
 import net.touchmania.game.util.xml.XmlValueResolver;
 
-public abstract class XmlIntegerResolver extends XmlReferenceValueResolver<Integer> {
+public abstract class XmlIntegerResolver extends XmlReferenceResolver<Integer> {
     /** Global Integer primitive resolver. */
     public static XmlValueResolver<Integer> GLOBAL_INT_RESOLVER = new XmlValueResolver<Integer>() {
 
         @Override
         public Integer resolve(String value) throws XmlParseException {
-            if(value != null) {
-                try {
-                    return Integer.parseInt(value);
-                } catch(NumberFormatException e) {}
+            try {
+                return Integer.parseInt(value);
+            } catch(NumberFormatException e) {
+                throw new XmlParseException(String.format("Invalid int value '%s'!", value));
             }
-            throw new XmlParseException(String.format("Invalid int value '%s'!", value));
         }
     };
 
@@ -42,19 +42,24 @@ public abstract class XmlIntegerResolver extends XmlReferenceValueResolver<Integ
 
     @Override
     public Integer resolveValue(String value) throws XmlParseException {
-        if(value != null) {
-            try {
-                return Integer.parseInt(value);
-            } catch(NumberFormatException e) {}
+        try {
+            return Integer.parseInt(value);
+        } catch(NumberFormatException e) {
+            throw new XmlParseException(String.format("Invalid int value '%s'!", value));
         }
-        throw new XmlParseException(String.format("Invalid int value '%s'!", value));
     }
 
     public static XmlIntegerResolver from(final ResourceProvider provider) {
         return new XmlIntegerResolver() {
             @Override
-            public Integer resolveReference(String resourceId) throws XmlParseException {
-                return provider.getInt(resourceId);
+            public Integer resolveReference(String resourceId) throws XmlReferenceNotFoundException {
+                Integer integer = provider.getInt(resourceId);
+
+                if(integer == null)
+                    throw new XmlReferenceNotFoundException(
+                            String.format("Cannot resolve reference with id '%s'", resourceId));
+
+                return integer;
             }
         };
     }

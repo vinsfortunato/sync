@@ -9,10 +9,6 @@ public class XmlTextureWrapResolver implements XmlValueResolver<TextureWrap> {
 
     @Override
     public TextureWrap resolve(String value) throws XmlParseException {
-        if(value == null || value.isEmpty()) {
-            throw new XmlParseException("Invalid wrap value! Value cannot be null or empty!");
-        }
-
         //TODO
         switch(value.trim().toLowerCase()) {
 

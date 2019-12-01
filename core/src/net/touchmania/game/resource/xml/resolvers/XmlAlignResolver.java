@@ -30,10 +30,6 @@ public class XmlAlignResolver implements XmlValueResolver<Integer> {
 
     @Override
     public Integer resolve(String value) throws XmlParseException {
-        if(value == null || value.isEmpty()) {
-            throw new XmlParseException("Invalid align value! Value cannot be null or empty!");
-        }
-
         //Prepare the value for parsing by removing leading/trailing spaces
         value = value.trim();
 

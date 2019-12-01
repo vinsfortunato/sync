@@ -25,8 +25,8 @@ public interface XmlValueResolver<T> {
     /**
      * Resolve a value by parsing a simple value or by resolving it
      * in a more complex way.
-     * @param value the value to resolve, can be null.
-     * @return the resolved value.
+     * @param value the value to resolve, not null, not empty.
+     * @return the resolved value, never null.
      * @throws XmlParseException if the value cannot be resolved correctly.
      */
     T resolve(String value) throws XmlParseException;

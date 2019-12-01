@@ -18,7 +18,8 @@ package net.touchmania.game.resource.xml.parsers;
 
 import com.badlogic.gdx.files.FileHandle;
 import net.touchmania.game.resource.xml.XmlTheme;
-import net.touchmania.game.resource.xml.resolvers.XmlReferenceValueResolver;
+import net.touchmania.game.resource.xml.exception.XmlReferenceNotFoundException;
+import net.touchmania.game.resource.xml.resolvers.XmlReferenceResolver;
 import net.touchmania.game.resource.xml.resolvers.XmlStringResolver;
 import net.touchmania.game.util.xml.XmlParseException;
 import net.touchmania.game.util.xml.XmlParser;
@@ -26,8 +27,8 @@ import net.touchmania.game.util.xml.XmlParser;
 public class XmlStringsParser extends XmlMapResourceParser<String>{
     private XmlStringResolver stringResolver = new XmlStringResolver() {
         @Override
-        public String resolveReference(String resourceId) {
-            return getResolvedValues().get(resourceId);
+        public String resolveReference(String resourceId) throws XmlReferenceNotFoundException {
+            return getResolvedValueOrThrow(resourceId);
         }
     };
 
@@ -40,7 +41,7 @@ public class XmlStringsParser extends XmlMapResourceParser<String>{
     }
 
     @Override
-    protected XmlReferenceValueResolver<String> getResolver(XmlParser.Element element) {
+    protected XmlReferenceResolver<String> getResolver(XmlParser.Element element) {
         return stringResolver;
     }
 

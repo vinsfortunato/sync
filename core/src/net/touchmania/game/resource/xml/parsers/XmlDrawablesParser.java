@@ -23,18 +23,21 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import net.touchmania.game.resource.Dimension;
 import net.touchmania.game.resource.lazy.*;
-import net.touchmania.game.resource.xml.*;
+import net.touchmania.game.resource.xml.XmlTheme;
+import net.touchmania.game.resource.xml.exception.XmlReferenceNotCompatibleException;
+import net.touchmania.game.resource.xml.exception.XmlReferenceNotFoundException;
 import net.touchmania.game.resource.xml.resolvers.*;
 import net.touchmania.game.util.xml.XmlParseException;
 import net.touchmania.game.util.xml.XmlParser;
 import net.touchmania.game.util.xml.XmlValueResolver;
-import static net.touchmania.game.resource.xml.resolvers.XmlTextureFilterResolver.GLOBAL_TEXTURE_FILTER_RESOLVER;
-import static net.touchmania.game.resource.xml.resolvers.XmlTextureWrapResolver.GLOBAL_TEXTURE_WRAP_RESOLVER;
-import static net.touchmania.game.resource.xml.resolvers.XmlPixmapFormatResolver.GLOBAL_PIXMAP_FORMAT_RESOLVER;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
+import static net.touchmania.game.resource.xml.resolvers.XmlPixmapFormatResolver.GLOBAL_PIXMAP_FORMAT_RESOLVER;
+import static net.touchmania.game.resource.xml.resolvers.XmlTextureFilterResolver.GLOBAL_TEXTURE_FILTER_RESOLVER;
+import static net.touchmania.game.resource.xml.resolvers.XmlTextureWrapResolver.GLOBAL_TEXTURE_WRAP_RESOLVER;
 
 public class XmlDrawablesParser extends XmlMapResourceParser<Resource<Drawable>> {
     private final XmlTheme theme;
@@ -83,7 +86,7 @@ public class XmlDrawablesParser extends XmlMapResourceParser<Resource<Drawable>>
 
                 //Parse include file
                 XmlParser parser = new XmlParser();
-                XmlParser.Element includeRoot = null;
+                XmlParser.Element includeRoot;
                 try {
                     includeRoot = parser.parse(includeFile);
                 } catch (IOException e) {
@@ -213,7 +216,7 @@ public class XmlDrawablesParser extends XmlMapResourceParser<Resource<Drawable>>
     }
 
     @Override
-    protected XmlReferenceValueResolver<Resource<Drawable>> getResolver(XmlParser.Element element) {
+    protected XmlReferenceResolver<Resource<Drawable>> getResolver(XmlParser.Element element) {
         switch (element.getName()) {
             case "texture":     return textureResolver;
             case "region":      return regionResolver;
@@ -225,22 +228,25 @@ public class XmlDrawablesParser extends XmlMapResourceParser<Resource<Drawable>>
         }
     }
 
+    /* Resolvers */
     private final XmlValueResolver<Dimension> dimensionResolver;
     private final XmlValueResolver<Boolean> booleanResolver;
     private final XmlValueResolver<Color> colorResolver;
     private final XmlValueResolver<Float> floatResolver;
     private final XmlValueResolver<Integer> integerResolver;
     private final XmlValueResolver<String> stringResolver;
-    private final XmlReferenceValueResolver<Resource<Drawable>> drawableResolver = new XmlDrawableResolver() {
-        @Override
-        protected String getResourceTypeName() {
-            return "drawable";
-        }
 
+    /* Drawable resolver */
+    private final XmlReferenceResolver<Resource<Drawable>> drawableResolver = new XmlDrawableResolver() {
         @Override
-        public Resource<Drawable> resolveReference(String resourceId) throws XmlParseException {
-            DrawableResource resource = (DrawableResource) getResolvedValues().get(resourceId);
-            return resource != null ? resource.copy() : null;
+        public Resource<Drawable> resolveReference(String resourceId) throws XmlReferenceNotFoundException, XmlReferenceNotCompatibleException {
+            Resource<Drawable> resource = getResolvedValueOrThrow(resourceId);
+
+            if(resource instanceof DrawableResource) {
+                return ((DrawableResource)resource).copy();
+            }
+
+            throw XmlReferenceNotCompatibleException.incompatibleType(resource.getClass(), DrawableResource.class);
         }
 
         @Override
@@ -250,27 +256,29 @@ public class XmlDrawablesParser extends XmlMapResourceParser<Resource<Drawable>>
         }
 
         @Override
-        public boolean checkReferenceType(String type) {
+        public void checkReferenceType(String type) throws XmlReferenceNotCompatibleException {
             switch(type) {
                 case "drawable":
                 case "texture":
                 case "region":
                 case "sprite":
                 case "ninepatch":
-                    return true;
+                    return;
             }
-            return false;
+            throw new XmlReferenceNotCompatibleException("Incompatible drawable reference type!");
         }
     };
-    private final XmlReferenceValueResolver<Resource<Drawable>> spriteResolver = new XmlDrawableResolver() {
+
+    /* Sprite resolver */
+    private final XmlReferenceResolver<Resource<Drawable>> spriteResolver = new XmlDrawableResolver() {
         @Override
-        public Resource<Drawable> resolveReference(String resourceId) throws XmlParseException {
-            Resource<Drawable> resource = getResolvedValues().get(resourceId);
-            if(resource instanceof SpriteResource) {
+        public Resource<Drawable> resolveReference(String resourceId) throws XmlReferenceNotFoundException, XmlReferenceNotCompatibleException {
+            Resource<Drawable> resource = getResolvedValueOrThrow(resourceId);
+
+            if(resource instanceof SpriteResource)
                 return ((SpriteResource)resource).copy();
-            }
-            throw new XmlParseException(String.format(
-                    "Incompatible reference! Trying to cast '%s' to SpriteResource!", resource.getClass().getName()));
+
+            throw XmlReferenceNotCompatibleException.incompatibleType(resource.getClass(), SpriteResource.class);
         }
 
         @Override
@@ -280,26 +288,28 @@ public class XmlDrawablesParser extends XmlMapResourceParser<Resource<Drawable>>
         }
 
         @Override
-        public boolean checkReferenceType(String type) {
+        public void checkReferenceType(String type) throws XmlReferenceNotCompatibleException {
             switch(type) {
                 case "drawable":
                 case "texture":
                 case "region":
                 case "sprite":
-                    return true;
+                    return;
             }
-            return false;
+            throw new XmlReferenceNotCompatibleException("Incompatible sprite reference type!");
         }
     };
-    private final XmlReferenceValueResolver<Resource<Drawable>> ninepatchResolver = new XmlDrawableResolver() {
+
+    /* Ninepatch Resolver */
+    private final XmlReferenceResolver<Resource<Drawable>> ninepatchResolver = new XmlDrawableResolver() {
         @Override
-        public Resource<Drawable> resolveReference(String resourceId) throws XmlParseException {
-            Resource<Drawable> resource = getResolvedValues().get(resourceId);
-            if(resource instanceof NinepatchResource) {
+        public Resource<Drawable> resolveReference(String resourceId) throws XmlReferenceNotFoundException, XmlReferenceNotCompatibleException  {
+            Resource<Drawable> resource = getResolvedValueOrThrow(resourceId);
+
+            if(resource instanceof NinepatchResource)
                 return ((NinepatchResource)resource).copy();
-            }
-            throw new XmlParseException(String.format(
-                    "Incompatible reference! Trying to cast '%s' to NinepatchResource!", resource.getClass().getName()));
+
+            throw XmlReferenceNotCompatibleException.incompatibleType(resource.getClass(), NinepatchResource.class);
         }
 
         @Override
@@ -309,78 +319,74 @@ public class XmlDrawablesParser extends XmlMapResourceParser<Resource<Drawable>>
         }
 
         @Override
-        public boolean checkReferenceType(String type) {
+        public void checkReferenceType(String type) throws XmlReferenceNotCompatibleException {
             switch(type) {
                 case "drawable":
                 case "texture":
                 case "region":
                 case "ninepatch":
-                    return true;
+                    return;
             }
-            return false;
+            throw new XmlReferenceNotCompatibleException("Incompatible ninepatch reference type!");
         }
     };
-    private final XmlReferenceValueResolver<Resource<Drawable>> textureResolver = new XmlDrawableResolver() {
+
+    /* Texture resolver */
+    private final XmlReferenceResolver<Resource<Drawable>> textureResolver = new XmlDrawableResolver() {
         @Override
-        public Resource<Drawable> resolveReference(String resourceId) throws XmlParseException {
-            Resource<Drawable> resource = getResolvedValues().get(resourceId);
-            if(resource instanceof TextureResource) {
+        public Resource<Drawable> resolveReference(String resourceId) throws XmlReferenceNotFoundException, XmlReferenceNotCompatibleException {
+            Resource<Drawable> resource = getResolvedValueOrThrow(resourceId);
+
+            if(resource instanceof TextureResource)
                 return new TextureResource((TextureResource)resource);
-            }
-            throw new XmlParseException(String.format(
-                    "Incompatible reference! Trying to cast '%s' to TextureResource!", resource.getClass().getName()));
+
+            throw XmlReferenceNotCompatibleException.incompatibleType(resource.getClass(), TextureResource.class);
         }
 
         @Override
-        public Resource<Drawable> resolveValue(String value) throws XmlParseException {
-            if(value == null || value.isEmpty()) {
-                throw new XmlParseException("Invalid texture file! File name cannot be null or empty!");
-            }
+        public Resource<Drawable> resolveValue(String value) {
             return new TextureResource(theme.getTexturePath(value));
         }
 
         @Override
-        public boolean checkReferenceType(String type) {
+        public void checkReferenceType(String type) throws XmlReferenceNotCompatibleException {
             switch(type) {
                 case "drawable":
                 case "texture":
-                    return true;
+                    return;
             }
-            return false;
+            throw new XmlReferenceNotCompatibleException("Incompatible texture reference type!");
         }
     };
-    private final XmlReferenceValueResolver<Resource<Drawable>> regionResolver = new XmlDrawableResolver() {
-        @Override
-        public Resource<Drawable> resolveReference(String resourceId) throws XmlParseException {
-            Resource<Drawable> resource = getResolvedValues().get(resourceId);
-            if(resource instanceof RegionResource) {
-                return new RegionResource((RegionResource)resource);
-            }
-            if(resource instanceof TextureResource) {
-                return new RegionResource((TextureResource)resource);
-            }
 
-            throw new XmlParseException(String.format(
-                    "Incompatible reference! Trying to convert '%s' to RegionResource!", resource.getClass().getName()));
+    /* Region resolver */
+    private final XmlReferenceResolver<Resource<Drawable>> regionResolver = new XmlDrawableResolver() {
+        @Override
+        public Resource<Drawable> resolveReference(String resourceId) throws XmlReferenceNotFoundException, XmlReferenceNotCompatibleException {
+            Resource<Drawable> resource = getResolvedValueOrThrow(resourceId);
+
+            if(resource instanceof RegionResource)
+                return new RegionResource((RegionResource)resource);
+            if(resource instanceof TextureResource)
+                return new RegionResource((TextureResource)resource);
+
+            throw XmlReferenceNotCompatibleException.incompatibleType(resource.getClass(), RegionResource.class);
         }
 
         @Override
         public Resource<Drawable> resolveValue(String value) throws XmlParseException {
-            if(value == null || value.isEmpty()) {
-                throw new XmlParseException("Invalid texture file! File name cannot be null or empty!");
-            }
             return new RegionResource(theme.getTexturePath(value));
         }
 
         @Override
-        public boolean checkReferenceType(String type) {
+        public void checkReferenceType(String type) throws XmlReferenceNotCompatibleException {
             switch(type) {
                 case "drawable":
                 case "texture":
                 case "region":
-                    return true;
+                    return;
             }
-            return false;
+            throw new XmlReferenceNotCompatibleException("Incompatible region reference type!");
         }
     };
 }

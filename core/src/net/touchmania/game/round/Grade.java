@@ -16,8 +16,5 @@
 
 package net.touchmania.game.round;
 
-/**
- * @author flood2d
- */
 public class Grade {
 }

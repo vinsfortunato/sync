@@ -34,9 +34,6 @@ public class XmlIdentifierResolver implements XmlValueResolver<String> {
 
     @Override
     public String resolve(String value) throws XmlParseException {
-        if(value == null) {
-            throw new XmlParseException("Id not found!");
-        }
         value = value.trim();
         if (!ID_REGEX.matcher(value).matches()) {
             throw new XmlParseException("Invalid id! Id can contain only alphanumeric characters plus _ and -!");

@@ -16,9 +16,6 @@
 
 package net.touchmania.game.round;
 
-/**
- * @author flood2d
- */
 public class JudgeWindow {
     private float marvelousWindow = 0.0225f; //22.5ms
     private float perfectWindow = 0.045f;    //45ms

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Vincenzo Fortunato
+ * Copyright 2019 Vincenzo Fortunato
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,11 +14,23 @@
  * limitations under the License.
  */
 
-package net.touchmania.game.util.concurrent;
+package net.touchmania.game.resource.xml.exception;
 
-/**
- * Gets notified when something has been done.
- */
-public interface DoneListener {
-    void onDone();
+import net.touchmania.game.util.xml.XmlParseException;
+
+public class XmlReferenceNotFoundException extends XmlParseException {
+    public XmlReferenceNotFoundException() {
+    }
+
+    public XmlReferenceNotFoundException(String message) {
+        super(message);
+    }
+
+    public XmlReferenceNotFoundException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public XmlReferenceNotFoundException(Throwable cause) {
+        super(cause);
+    }
 }

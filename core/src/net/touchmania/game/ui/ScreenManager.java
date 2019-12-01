@@ -21,12 +21,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.google.common.base.Preconditions;
-import com.google.common.util.concurrent.*;
 import net.touchmania.game.Game;
-import net.touchmania.game.util.concurrent.DoneListener;
-import net.touchmania.game.util.concurrent.ExecutorManager;
-
-import java.util.concurrent.Executors;
 
 public class ScreenManager implements Disposable {
     private Stage stage;

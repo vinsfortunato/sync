@@ -4,9 +4,9 @@
     <!-- From ttf file -->
     <font id="test_12"
           size="12"
-          color="color:white"
+          color="#ffffff"
           borderWidth="5"
-          borderColor="color:red">test.ttf</font>
+          borderColor="#ff0000">test.ttf</font>
 
     <!-- By referencing another predeclared font and overriding its attributes -->
     <font id="test_14"

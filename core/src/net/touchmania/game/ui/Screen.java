@@ -18,7 +18,6 @@ package net.touchmania.game.ui;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Disposable;
-import net.touchmania.game.util.concurrent.DoneListener;
 
 public interface Screen extends Disposable {
     /**

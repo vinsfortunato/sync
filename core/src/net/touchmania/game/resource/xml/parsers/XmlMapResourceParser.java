@@ -17,7 +17,8 @@
 package net.touchmania.game.resource.xml.parsers;
 
 import com.badlogic.gdx.files.FileHandle;
-import net.touchmania.game.resource.xml.resolvers.XmlReferenceValueResolver;
+import net.touchmania.game.resource.xml.exception.XmlReferenceNotFoundException;
+import net.touchmania.game.resource.xml.resolvers.XmlReferenceResolver;
 import net.touchmania.game.util.xml.XmlParseException;
 import net.touchmania.game.util.xml.XmlParser;
 
@@ -30,8 +31,8 @@ import static net.touchmania.game.resource.xml.resolvers.XmlIdentifierResolver.G
 /**
  * Parses resources that presents data as a map. The xml resource must
  * have only one root element and root element's children must have an id
- * and no children (children are ignored). Additional xml elements attributes
- * are parsed when the value is resolved.
+ * and no children. Additional xml elements attributes are parsed when
+ * the value is resolved.
  * @param <T> the type of the resource.
  */
 public abstract class XmlMapResourceParser<T> extends XmlResourceParser<Map<String, T>> {
@@ -48,7 +49,6 @@ public abstract class XmlMapResourceParser<T> extends XmlResourceParser<Map<Stri
 
     @Override
     public Map<String, T> parse(XmlParser.Element root) throws XmlParseException {
-        //Initialize maps
         resolved = new HashMap<>(root.getChildCount());
         unresolved = new HashMap<>();
 
@@ -64,18 +64,21 @@ public abstract class XmlMapResourceParser<T> extends XmlResourceParser<Map<Stri
                 throw new XmlParseException(String.format("Duplicated id '%s'", id));
             }
 
-            //Attempt to resolve the resource value
-            XmlReferenceValueResolver<T> resolver = getResolver(element);
-            T value = resolver.resolve(element.getText());
-            if(value != null) {
-                /* TODO this assumes that values cannot be null. Should null be allowed as a value?
-                        XmlReferenceValueResolver should be changed accordingly too.    */
-                //Mark as resolved
-                markResolved(id, value, element);
-            } else {
+            //Resolve the resource value
+            XmlReferenceResolver<T> resolver = getResolver(element);
+
+            T value;
+
+            try {
+                value = resolver.resolve(element.getText());
+            } catch(XmlReferenceNotFoundException e) {
                 //Mark as unresolved
-                markUnresolved(id, resolver.getReferenceId(element.getText()), element);
+                markUnresolved(id, XmlReferenceResolver.getReferenceId(element.getText()), element);
+                continue;
             }
+
+            //Mark as resolved
+            markResolved(id, value, element);
         }
 
         if(!unresolved.isEmpty()) {
@@ -89,7 +92,7 @@ public abstract class XmlMapResourceParser<T> extends XmlResourceParser<Map<Stri
                     exceptionMessage.append(", ");
                 }
             }
-            throw new XmlParseException(exceptionMessage.toString());
+            throw new XmlReferenceNotFoundException(exceptionMessage.toString());
         }
 
         return resolved;
@@ -110,7 +113,8 @@ public abstract class XmlMapResourceParser<T> extends XmlResourceParser<Map<Stri
                 //Remove from unresolved
                 UnresolvedResource resource = unresolved.remove(unresolvedId);
                 //Use resolver to resolve reference and create a copy of the referenced value
-                markResolved(unresolvedId, getResolver(resource.element).resolveReference(resource.referenceId), resource.element);
+                XmlReferenceResolver<T> resolver = getResolver(resource.element);
+                markResolved(unresolvedId, resolver.resolveReference(resource.resourceId), resource.element);
             }
         }
     }
@@ -121,7 +125,7 @@ public abstract class XmlMapResourceParser<T> extends XmlResourceParser<Map<Stri
 
     private String findUnresolvedId(String referenceId) {
         for(Map.Entry<String, UnresolvedResource> entry : unresolved.entrySet()) {
-            if(entry.getValue().referenceId.equals(referenceId)) {
+            if(entry.getValue().resourceId.equals(referenceId)) {
                 return entry.getKey();
             }
         }
@@ -139,7 +143,7 @@ public abstract class XmlMapResourceParser<T> extends XmlResourceParser<Map<Stri
      * @param element the element that has the value to resolve.
      * @return the resolver.
      */
-    protected abstract XmlReferenceValueResolver<T> getResolver(XmlParser.Element element);
+    protected abstract XmlReferenceResolver<T> getResolver(XmlParser.Element element);
 
     /**
      * Parse additional element attributes onto the given value of the resource with the given id.
@@ -158,12 +162,28 @@ public abstract class XmlMapResourceParser<T> extends XmlResourceParser<Map<Stri
         return resolved;
     }
 
-    private static class UnresolvedResource {
-        public String referenceId;
-        public XmlParser.Element element;
+    /**
+     * Gets the resolved resource with the given resource id.
+     * If a resource with the given id cannot be found throws an {@link XmlReferenceNotFoundException}.
+     * @param resourceId the resource id, not null.
+     * @return the resolved resource, never null.
+     * @throws XmlReferenceNotFoundException if a resource with the given id has not been resolved.
+     */
+    protected T getResolvedValueOrThrow(String resourceId) throws XmlReferenceNotFoundException {
+        T resource = getResolvedValues().get(resourceId);
+        if(resource == null) {
+            throw new XmlReferenceNotFoundException(
+                    String.format("Cannot resolve reference with id %s", resourceId));
+        }
+        return resource;
+    }
 
-        public UnresolvedResource(String referenceId, XmlParser.Element element) {
-            this.referenceId = referenceId;
+    private static class UnresolvedResource {
+        private String resourceId;
+        private XmlParser.Element element;
+
+        UnresolvedResource(String resourceId, XmlParser.Element element) {
+            this.resourceId = resourceId;
             this.element = element;
         }
     }

@@ -16,14 +16,15 @@
 
 package net.touchmania.game.resource.xml.resolvers;
 
-import net.touchmania.game.util.math.MathUtils;
 import net.touchmania.game.resource.ResourceProvider;
+import net.touchmania.game.resource.xml.exception.XmlReferenceNotFoundException;
+import net.touchmania.game.util.math.MathUtils;
 import net.touchmania.game.util.xml.XmlParseException;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public abstract class XmlPercentResolver extends XmlReferenceValueResolver<Float> {
+public abstract class XmlPercentResolver extends XmlReferenceResolver<Float> {
     private static final Pattern PERCENT_REGEX = Pattern.compile("(?:100(?:\\.0+)?|[1-9]?\\d(?:[.,]\\d+)?)\\s*%");
 
     @Override
@@ -33,17 +34,8 @@ public abstract class XmlPercentResolver extends XmlReferenceValueResolver<Float
 
     @Override
     public Float resolveValue(String value) throws XmlParseException {
-        if(value == null) {
-            throw new XmlParseException("Value cannot be null");
-        }
-
         //Prepare the value for parsing by removing leading/trailing spaces
         value = value.trim();
-
-        if(value.isEmpty()) {
-            //Consider empty values as 0%
-            return 0.0f;
-        }
 
         Matcher matcher = PERCENT_REGEX.matcher(value);
         if(matcher.matches()) {
@@ -67,8 +59,14 @@ public abstract class XmlPercentResolver extends XmlReferenceValueResolver<Float
     public static XmlPercentResolver from(final ResourceProvider provider) {
         return new XmlPercentResolver() {
             @Override
-            public Float resolveReference(String resourceId) throws XmlParseException {
-                return provider.getPercent(resourceId);
+            public Float resolveReference(String resourceId) throws XmlReferenceNotFoundException {
+                Float percent = provider.getPercent(resourceId);
+
+                if(percent == null)
+                    throw new XmlReferenceNotFoundException(
+                            String.format("Cannot resolve reference with id '%s'", resourceId));
+
+                return percent;
             }
         };
     }

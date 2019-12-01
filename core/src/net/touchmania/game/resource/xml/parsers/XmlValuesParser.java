@@ -18,6 +18,8 @@ package net.touchmania.game.resource.xml.parsers;
 
 import com.badlogic.gdx.files.FileHandle;
 import net.touchmania.game.resource.xml.XmlTheme;
+import net.touchmania.game.resource.xml.exception.XmlReferenceNotCompatibleException;
+import net.touchmania.game.resource.xml.exception.XmlReferenceNotFoundException;
 import net.touchmania.game.resource.xml.resolvers.*;
 import net.touchmania.game.util.xml.XmlParseException;
 import net.touchmania.game.util.xml.XmlParser;
@@ -54,7 +56,7 @@ public class XmlValuesParser extends XmlMapResourceParser<Object> {
 
     @Override
     @SuppressWarnings("unchecked")
-    public XmlReferenceValueResolver getResolver(XmlParser.Element element) {
+    public XmlReferenceResolver getResolver(XmlParser.Element element) {
         switch (element.getName()) {
             case "boolean":
                 return booleanResolver;
@@ -72,63 +74,64 @@ public class XmlValuesParser extends XmlMapResourceParser<Object> {
     }
 
     /* Resolvers */
-    private XmlReferenceValueResolver<Boolean> booleanResolver = new XmlBooleanResolver() {
+    private XmlReferenceResolver<Boolean> booleanResolver = new XmlBooleanResolver() {
         @Override
-        public Boolean resolveReference(String resourceId) throws XmlParseException {
-            Object value = getResolvedValues().get(resourceId);
-            if(value instanceof Boolean) {
+        public Boolean resolveReference(String resourceId) throws XmlReferenceNotFoundException, XmlReferenceNotCompatibleException {
+            Object value = getResolvedValueOrThrow(resourceId);
+
+            if(value instanceof Boolean)
                 return (Boolean) value;
-            }
-            throw new XmlParseException(String.format(
-                    "Incompatible reference! Trying to cast '%s' to boolean!", value.getClass().getName()));
+
+            throw XmlReferenceNotCompatibleException.incompatibleType(value.getClass(), Boolean.class);
         }
     };
 
-    private XmlReferenceValueResolver<Float> floatResolver = new XmlFloatResolver() {
+    private XmlReferenceResolver<Float> floatResolver = new XmlFloatResolver() {
         @Override
-        public Float resolveReference(String resourceId) throws XmlParseException {
-            Object value = getResolvedValues().get(resourceId);
-            if(value instanceof Float) {
+        public Float resolveReference(String resourceId) throws XmlReferenceNotFoundException, XmlReferenceNotCompatibleException {
+            Object value = getResolvedValueOrThrow(resourceId);
+
+            if(value instanceof Float)
                 return (Float) value;
-            }
-            throw new XmlParseException(String.format(
-                    "Incompatible reference! Trying to cast '%s' to float!", value.getClass().getName()));
+
+            throw XmlReferenceNotCompatibleException.incompatibleType(value.getClass(), Float.class);
         }
     };
 
-    private XmlReferenceValueResolver<Integer> integerResolver = new XmlIntegerResolver() {
+    private XmlReferenceResolver<Integer> integerResolver = new XmlIntegerResolver() {
         @Override
-        public Integer resolveReference(String resourceId) throws XmlParseException {
-            Object value = getResolvedValues().get(resourceId);
-            if(value instanceof Integer) {
+        public Integer resolveReference(String resourceId) throws XmlReferenceNotFoundException, XmlReferenceNotCompatibleException {
+            Object value = getResolvedValueOrThrow(resourceId);
+
+            if(value instanceof Integer)
                 return (Integer) value;
-            }
-            throw new XmlParseException(String.format(
-                    "Incompatible reference! Trying to cast '%s' to integer!", value.getClass().getName()));
+
+            throw XmlReferenceNotCompatibleException.incompatibleType(value.getClass(), Integer.class);
         }
     };
 
-    private XmlReferenceValueResolver<Long> durationResolver = new XmlDurationResolver() {
+    private XmlReferenceResolver<Long> durationResolver = new XmlDurationResolver() {
         @Override
-        public Long resolveReference(String resourceId) throws XmlParseException {
-            Object value = getResolvedValues().get(resourceId);
-            if(value instanceof Long) {
+        public Long resolveReference(String resourceId) throws XmlReferenceNotFoundException, XmlReferenceNotCompatibleException {
+            Object value = getResolvedValueOrThrow(resourceId);
+
+            if(value instanceof Long)
                 return (Long) value;
-            }
-            throw new XmlParseException(String.format(
-                    "Incompatible reference! Trying to cast '%s' to duration long!", value.getClass().getName()));
+
+            throw XmlReferenceNotCompatibleException.incompatibleType(value.getClass(), Long.class);
         }
     };
 
-    private XmlReferenceValueResolver<Float> percentResolver = new XmlPercentResolver() {
+    private XmlReferenceResolver<Float> percentResolver = new XmlPercentResolver() {
         @Override
-        public Float resolveReference(String resourceId) throws XmlParseException {
-            Object value = getResolvedValues().get(resourceId);
+        public Float resolveReference(String resourceId) throws XmlReferenceNotFoundException, XmlReferenceNotCompatibleException {
+            Object value = getResolvedValueOrThrow(resourceId);
+
             if(value instanceof Float) {
                 return (Float) value;
             }
-            throw new XmlParseException(String.format(
-                    "Incompatible reference! Trying to cast '%s' to percent float!", value.getClass().getName()));
+
+            throw XmlReferenceNotCompatibleException.incompatibleType(value.getClass(), Float.class);
         }
     };
 }

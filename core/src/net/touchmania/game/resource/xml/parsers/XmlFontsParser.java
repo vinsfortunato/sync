@@ -26,6 +26,8 @@ import net.touchmania.game.resource.Dimension;
 import net.touchmania.game.resource.lazy.FontResource;
 import net.touchmania.game.resource.lazy.Resource;
 import net.touchmania.game.resource.xml.XmlTheme;
+import net.touchmania.game.resource.xml.exception.XmlReferenceNotCompatibleException;
+import net.touchmania.game.resource.xml.exception.XmlReferenceNotFoundException;
 import net.touchmania.game.resource.xml.resolvers.*;
 import net.touchmania.game.util.xml.XmlParseException;
 import net.touchmania.game.util.xml.XmlParser;
@@ -43,16 +45,17 @@ public class XmlFontsParser extends XmlMapResourceParser<Resource<BitmapFont>> {
     private final XmlValueResolver<FreeTypeFontGenerator.Hinting> hintingResolver;
     private final XmlFontResolver fontResolver = new XmlFontResolver() {
         @Override
-        public Resource<BitmapFont> resolveReference(String resourceId) {
-            Resource<BitmapFont> resource = getResolvedValues().get(resourceId);
-            return  new FontResource((FontResource) resource);
+        public Resource<BitmapFont> resolveReference(String resourceId) throws XmlReferenceNotFoundException, XmlReferenceNotCompatibleException {
+            Resource<BitmapFont> resource = getResolvedValueOrThrow(resourceId);
+
+            if(resource instanceof FontResource)
+                return new FontResource((FontResource) resource);
+
+            throw XmlReferenceNotCompatibleException.incompatibleType(resource.getClass(), FontResource.class);
         }
 
         @Override
-        public Resource<BitmapFont> resolveValue(String value) throws XmlParseException {
-            if(value == null || value.isEmpty()) {
-                throw new XmlParseException("Invalid font file! File name cannot be null or empty!");
-            }
+        public Resource<BitmapFont> resolveValue(String value) {
             return new FontResource(getResourceFile().sibling("fonts").child(value));
         }
     };
@@ -102,7 +105,7 @@ public class XmlFontsParser extends XmlMapResourceParser<Resource<BitmapFont>> {
     }
 
     @Override
-    protected XmlReferenceValueResolver<Resource<BitmapFont>> getResolver(XmlParser.Element element) {
+    protected XmlReferenceResolver<Resource<BitmapFont>> getResolver(XmlParser.Element element) {
         return fontResolver;
     }
 

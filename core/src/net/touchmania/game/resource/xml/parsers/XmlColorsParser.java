@@ -19,18 +19,18 @@ package net.touchmania.game.resource.xml.parsers;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import net.touchmania.game.resource.xml.XmlTheme;
-import net.touchmania.game.util.ui.ColorUtils;
+import net.touchmania.game.resource.xml.exception.XmlReferenceNotFoundException;
 import net.touchmania.game.resource.xml.resolvers.XmlColorResolver;
-import net.touchmania.game.resource.xml.resolvers.XmlReferenceValueResolver;
+import net.touchmania.game.resource.xml.resolvers.XmlReferenceResolver;
 import net.touchmania.game.util.xml.XmlParseException;
 import net.touchmania.game.util.xml.XmlParser;
 
 public class XmlColorsParser extends XmlMapResourceParser<Color> {
     private XmlColorResolver colorResolver = new XmlColorResolver() {
         @Override
-        public Color resolveReference(String resourceId) throws XmlParseException {
-            Color color = getResolvedValues().get(resourceId);
-            return ColorUtils.copy(color);
+        public Color resolveReference(String resourceId) throws XmlReferenceNotFoundException {
+            Color color = getResolvedValueOrThrow(resourceId);
+            return new Color(color.r, color.g, color.b, color.a);
         }
     };
 
@@ -57,7 +57,7 @@ public class XmlColorsParser extends XmlMapResourceParser<Color> {
     }
 
     @Override
-    protected XmlReferenceValueResolver<Color> getResolver(XmlParser.Element element) {
+    protected XmlReferenceResolver<Color> getResolver(XmlParser.Element element) {
         return colorResolver;
     }
 }

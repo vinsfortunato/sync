@@ -16,9 +16,6 @@
 
 package net.touchmania.game.player;
 
-/**
- * @author flood2d
- */
 public interface Player {
     /**
      * @return player nickname.
@@ -31,10 +28,9 @@ public interface Player {
     long getTotalScore();
 
     /**
-     * Gets player accuracy. 100.0f is the maximum accuracy, 0.0f is
+     * Gets player accuracy. 1.0 is the maximum accuracy, 0.0 is
      * the minimum accuracy.
-     *
-     * @return player accuracy, a value between 100.0f and 0.0f.
+     * @return player accuracy, a value between 1.0 and 0.0.
      */
     float getAccuracy();
 

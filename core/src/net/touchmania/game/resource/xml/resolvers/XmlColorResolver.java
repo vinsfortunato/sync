@@ -18,12 +18,13 @@ package net.touchmania.game.resource.xml.resolvers;
 
 import com.badlogic.gdx.graphics.Color;
 import net.touchmania.game.resource.ResourceProvider;
+import net.touchmania.game.resource.xml.exception.XmlReferenceNotFoundException;
 import net.touchmania.game.util.xml.XmlParseException;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public abstract class XmlColorResolver extends XmlReferenceValueResolver<Color> {
+public abstract class XmlColorResolver extends XmlReferenceResolver<Color> {
     private static final Pattern HEX_REGEX = Pattern.compile("#((?:[0-9a-fA-F]{2}){3,4})|#([0-9a-fA-F]{3,4})");
     private static final Pattern RGB_REGEX = Pattern.compile("rgb\\((\\d{1,3}(?:,\\d{1,3}){2})\\)");
     private static final Pattern RGBA_REGEX = Pattern.compile("rgba\\((\\d{1,3}(?:,\\d{1,3}){2},(?:[01]?\\.\\d+))\\)");
@@ -35,10 +36,6 @@ public abstract class XmlColorResolver extends XmlReferenceValueResolver<Color> 
 
     @Override
     public Color resolveValue(String value) throws XmlParseException {
-        if(value == null || value.isEmpty()) {
-            throw new XmlParseException("Invalid color value! Value cannot be null or empty!");
-        }
-
         //Prepare the value for parsing by removing all whitespaces
         value = value.replaceAll("\\s", "");
 
@@ -89,8 +86,14 @@ public abstract class XmlColorResolver extends XmlReferenceValueResolver<Color> 
     public static XmlColorResolver from(final ResourceProvider provider) {
         return new XmlColorResolver() {
             @Override
-            public Color resolveReference(String resourceId) throws XmlParseException {
-                return provider.getColor(resourceId);
+            public Color resolveReference(String resourceId) throws XmlReferenceNotFoundException {
+                Color color = provider.getColor(resourceId);
+
+                if(color == null)
+                    throw new XmlReferenceNotFoundException(
+                            String.format("Cannot resolve reference with id '%s'", resourceId));
+
+                return color;
             }
         };
     }
