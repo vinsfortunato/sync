@@ -150,10 +150,6 @@ public class XmlFontsParser extends XmlMapResourceParser<Resource<BitmapFont>> {
     private static class XmlHintingResolver implements XmlValueResolver<FreeTypeFontGenerator.Hinting> {
         @Override
         public FreeTypeFontGenerator.Hinting resolve(String value) throws XmlParseException {
-            if(value == null || value.isEmpty()) {
-                throw new XmlParseException("Invalid hinting value! Value cannot be null or empty!");
-            }
-
             switch(value.trim().toLowerCase()) {
                 case "none": return FreeTypeFontGenerator.Hinting.None;
                 case "slight": return FreeTypeFontGenerator.Hinting.Slight;
@@ -166,7 +162,6 @@ public class XmlFontsParser extends XmlMapResourceParser<Resource<BitmapFont>> {
                 case "autofull":
                 case "auto_full": return FreeTypeFontGenerator.Hinting.AutoFull;
             }
-
             throw new XmlParseException(String.format("Invalid align format for value '%s'!", value));
         }
     }

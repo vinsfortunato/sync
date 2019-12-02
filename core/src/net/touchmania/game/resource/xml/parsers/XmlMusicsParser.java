@@ -26,10 +26,7 @@ public class XmlMusicsParser extends XmlMapResourceParser<Resource<Music>> {
         }
 
         @Override
-        public Resource<Music> resolveValue(String value) throws XmlParseException {
-            if(value == null || value.isEmpty()) {
-                throw new XmlParseException("Invalid music file! File name cannot be null or empty!");
-            }
+        public Resource<Music> resolveValue(String value) {
             return new MusicResource(getResourceFile().sibling("musics").sibling(value));
         }
     };

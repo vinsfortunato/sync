@@ -43,10 +43,6 @@ public class XmlSoundsParser extends XmlMapResourceParser<Resource<Sound>> {
 
         @Override
         public Resource<Sound> resolveValue(String value) throws XmlParseException {
-            if(value == null || value.isEmpty()) {
-                throw new XmlParseException("Invalid sound file! File name cannot be null or empty!");
-            }
-
             return new SoundResource(getResourceFile().sibling("sounds").child(value));
         }
     };

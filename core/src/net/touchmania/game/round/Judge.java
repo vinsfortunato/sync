@@ -14,22 +14,10 @@
  * limitations under the License.
  */
 
-package net.touchmania.game.resource.xml;
+package net.touchmania.game.round;
 
-import net.touchmania.game.util.xml.XmlParseException;
+public class Judge {
 
-public class XmlReferenceNotFoundException extends XmlParseException {
-    public XmlReferenceNotFoundException() {}
 
-    public XmlReferenceNotFoundException(String message) {
-        super(message);
-    }
 
-    public XmlReferenceNotFoundException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public XmlReferenceNotFoundException(Throwable cause) {
-        super(cause);
-    }
 }

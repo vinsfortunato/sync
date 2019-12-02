@@ -118,14 +118,14 @@ public class XmlThemeParser extends XmlResourceParser<XmlTheme> {
                 //Current active game language is supported by the theme
                 //Parse active lang strings
                 FileHandle stringsFile = getStringsFile(active);
-                checkFilePresence(stringsFile);
+                existsOrThrow(stringsFile);
                 XmlStringsParser parser = new XmlStringsParser(stringsFile, theme);
                 Map<String, String> strings = parser.parse();
 
                 //Parse default language if active isn't already default
                 if(index != 0) {
                     stringsFile = getStringsFile(langs.get(0)); //Get default theme lang
-                    checkFilePresence(stringsFile);
+                    existsOrThrow(stringsFile);
                     parser = new XmlStringsParser(stringsFile, theme);
                     Map<String, String> defStrings = parser.parse();
 
@@ -139,7 +139,7 @@ public class XmlThemeParser extends XmlResourceParser<XmlTheme> {
                 //Current active game language is not supported by the theme
                 //Parse default theme lang strings
                 FileHandle stringsFile = getStringsFile(langs.get(0));
-                checkFilePresence(stringsFile);
+                existsOrThrow(stringsFile);
                 XmlStringsParser parser = new XmlStringsParser(stringsFile, theme);
                 theme.setStrings(parser.parse());
             }
@@ -180,7 +180,7 @@ public class XmlThemeParser extends XmlResourceParser<XmlTheme> {
                 .child(String.format("strings_%s_%s.xml", locale.getLanguage(), locale.getCountry()));
     }
 
-    private static void checkFilePresence(FileHandle file) throws FileNotFoundException {
+    private static void existsOrThrow(FileHandle file) throws FileNotFoundException {
         if(!file.exists()) {
             throw new FileNotFoundException(String.format("Required file '%s' not found!", file.path()));
         }

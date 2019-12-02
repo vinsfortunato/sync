@@ -20,8 +20,7 @@ import net.touchmania.game.util.xml.XmlParseException;
 
 public class XmlReferenceNotCompatibleException extends XmlParseException {
 
-    public XmlReferenceNotCompatibleException() {
-    }
+    public XmlReferenceNotCompatibleException() {}
 
     public XmlReferenceNotCompatibleException(String message) {
         super(message);

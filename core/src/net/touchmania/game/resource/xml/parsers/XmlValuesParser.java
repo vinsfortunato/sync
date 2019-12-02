@@ -127,9 +127,8 @@ public class XmlValuesParser extends XmlMapResourceParser<Object> {
         public Float resolveReference(String resourceId) throws XmlReferenceNotFoundException, XmlReferenceNotCompatibleException {
             Object value = getResolvedValueOrThrow(resourceId);
 
-            if(value instanceof Float) {
+            if(value instanceof Float)
                 return (Float) value;
-            }
 
             throw XmlReferenceNotCompatibleException.incompatibleType(value.getClass(), Float.class);
         }

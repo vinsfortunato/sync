@@ -23,14 +23,15 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import net.touchmania.game.resource.lazy.Resource;
+import net.touchmania.game.resource.Dimension;
+import net.touchmania.game.resource.Layout;
 import net.touchmania.game.resource.Style;
+import net.touchmania.game.resource.lazy.Resource;
+import net.touchmania.game.resource.xml.XmlLayout;
+import net.touchmania.game.resource.xml.XmlTheme;
 import net.touchmania.game.resource.xml.parsers.actors.*;
 import net.touchmania.game.resource.xml.resolvers.*;
 import net.touchmania.game.util.xml.XmlParseException;
-import net.touchmania.game.resource.Dimension;
-import net.touchmania.game.resource.Layout;
-import net.touchmania.game.resource.xml.*;
 import net.touchmania.game.util.xml.XmlParser;
 import net.touchmania.game.util.xml.XmlValueResolver;
 
@@ -146,7 +147,6 @@ public class XmlLayoutParser extends XmlResourceParser<XmlLayout> {
             case "Stack": return new XmlStackParser(this);
             case "Table": return new XmlTableParser(this);
         }
-
         throw new XmlParseException(String.format("Unrecognised element with name '%s'", elementName));
     }
 }
