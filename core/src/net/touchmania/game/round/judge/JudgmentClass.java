@@ -14,10 +14,15 @@
  * limitations under the License.
  */
 
-package net.touchmania.game.round;
+package net.touchmania.game.round.judge;
 
-public class Judge {
-
-
-
+public enum JudgmentClass {
+    MARVELOUS,
+    PERFECT,
+    GREAT,
+    GOOD,
+    BOO,
+    MISS,
+    OK,
+    NG
 }

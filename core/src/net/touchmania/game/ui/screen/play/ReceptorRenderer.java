@@ -29,7 +29,7 @@ public class ReceptorRenderer {
      * @param beat the current beat.
      * @param time the current time relative to the start of the music track.
      */
-    public void draw(Batch batch, NotePanel panel, double beat, double time) {
+    public void draw(Batch batch, int panel, double beat, double time) {
         Drawable drawable = getReceptorDrawable(panel, beat, time);
         if(drawable == null) {
             return;
@@ -60,17 +60,17 @@ public class ReceptorRenderer {
      * @param time the current time relative to the start of the music track.
      * @return the x position of the receptor inside the view.
      */
-    public float getReceptorX(NotePanel panel, double beat, double time) {
+    public float getReceptorX(int panel, double beat, double time) {
         Drawable drawable = getReceptorDrawable(panel, beat, time);
         if(drawable == null) return 0.0f;
 
         float width = drawable.getMinWidth();
         switch(panel) {
-            case DOWN:
+            case NotePanel.DOWN:
                 return width;
-            case UP:
+            case NotePanel.UP:
                 return width * 2.0f;
-            case RIGHT:
+            case NotePanel.RIGHT:
                 return width * 3.0f;
         }
         return 0.0f;
@@ -83,7 +83,7 @@ public class ReceptorRenderer {
      * @param time the current time relative to the start of the music track.
      * @return the y position of the receptor inside the view.
      */
-    public float getReceptorY(NotePanel panel, double beat, double time) {
+    public float getReceptorY(int panel, double beat, double time) {
         return 1920f - 256 - 64;
     }
 
@@ -94,7 +94,7 @@ public class ReceptorRenderer {
      * @param time the current time relative to the start of the music track.
      * @return the receptor scale x.
      */
-    public float getReceptorScaleX(NotePanel panel, double beat, double time) {
+    public float getReceptorScaleX(int panel, double beat, double time) {
         return 1.0f;
     }
 
@@ -105,7 +105,7 @@ public class ReceptorRenderer {
      * @param time the current time relative to the start of the music track.
      * @return the receptor scale y.
      */
-    public float getReceptorScaleY(NotePanel panel, double beat, double time) {
+    public float getReceptorScaleY(int panel, double beat, double time) {
         return 1.0f;
     }
 
@@ -116,13 +116,13 @@ public class ReceptorRenderer {
      * @param time the current time relative to the start of the music track.
      * @return the receptor rotation in degrees.
      */
-    public float getReceptorRotation(NotePanel panel, double beat, double time) {
+    public float getReceptorRotation(int panel, double beat, double time) {
         switch(panel) {
-            case RIGHT:
+            case NotePanel.RIGHT:
                 return 90.0f;
-            case UP:
+            case NotePanel.UP:
                 return 180.0f;
-            case LEFT:
+            case NotePanel.LEFT:
                 return 270.0f;
         }
         return 0.0f;
@@ -135,7 +135,7 @@ public class ReceptorRenderer {
      * @param time the current time relative to the start of the music track.
      * @return the receptor opacity. 0.0f if the note is invisible, 1.0f if the note is fully opaque.
      */
-    public float getReceptorOpacity(NotePanel panel, double beat, double time) {
+    public float getReceptorOpacity(int panel, double beat, double time) {
         return 1.0f;
     }
 
@@ -147,7 +147,7 @@ public class ReceptorRenderer {
      * @param time the current time relative to the start of the music track.
      * @return true if the receptor is visible and must be drawn.
      */
-    public boolean isReceptorVisible(NotePanel panel, double beat, double time) {
+    public boolean isReceptorVisible(int panel, double beat, double time) {
         return true;
     }
 
@@ -158,7 +158,7 @@ public class ReceptorRenderer {
      * @param time the current time relative to the start of the music track.
      * @return the receptor drawable.
      */
-    public Drawable getReceptorDrawable(NotePanel panel, double beat, double time) {
+    public Drawable getReceptorDrawable(int panel, double beat, double time) {
         return receptorDrawable != null ? receptorDrawable.get() : null;
     }
 

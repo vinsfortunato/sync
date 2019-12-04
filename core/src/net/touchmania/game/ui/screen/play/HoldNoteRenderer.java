@@ -20,7 +20,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import net.touchmania.game.Game;
 import net.touchmania.game.resource.ResourceProvider;
 import net.touchmania.game.resource.lazy.Resource;
-import net.touchmania.game.song.note.*;
+import net.touchmania.game.song.note.HoldNote;
+import net.touchmania.game.song.note.LengthyNote;
+import net.touchmania.game.song.note.Note;
 
 /**
  * @author flood2d
@@ -59,7 +61,12 @@ public class HoldNoteRenderer extends BaseLengthyNoteRenderer {
     }
 
     @Override
-    public Drawable getNoteDrawable(NotePanel panel, Note note, double beat, double time) {
+    public boolean isNoteVisible(int panel, Note note, double beat, double time) {
+        return true;
+    }
+
+    @Override
+    public Drawable getNoteDrawable(int panel, Note note, double beat, double time) {
         HoldNote holdNote = (HoldNote) note;
         switch (holdNote.getResolution()) {
             case NOTE_4TH:   return head4Drawable.get();
@@ -76,17 +83,17 @@ public class HoldNoteRenderer extends BaseLengthyNoteRenderer {
     }
 
     @Override
-    public Drawable getNoteBodyDrawable(NotePanel panel, LengthyNote note, double beat, double time) {
+    public Drawable getNoteBodyDrawable(int panel, LengthyNote note, double beat, double time) {
         return isActive(panel, note, beat, time) ? bodyActiveDrawable.get() : bodyInactiveDrawable.get();
     }
 
     @Override
-    public Drawable getNoteConnectorDrawable(NotePanel panel, LengthyNote note, double beat, double time) {
+    public Drawable getNoteConnectorDrawable(int panel, LengthyNote note, double beat, double time) {
         return null;
     }
 
     @Override
-    public Drawable getNoteTailDrawable(NotePanel panel, LengthyNote note, double beat, double time) {
+    public Drawable getNoteTailDrawable(int panel, LengthyNote note, double beat, double time) {
         return isActive(panel, note, beat, time) ? tailActiveDrawable.get() : tailInactiveDrawable.get();
     }
 }

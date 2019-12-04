@@ -20,7 +20,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import net.touchmania.game.Game;
 import net.touchmania.game.resource.lazy.Resource;
 import net.touchmania.game.song.note.Note;
-import net.touchmania.game.song.note.NotePanel;
 
 /**
  * @author flood2d
@@ -37,14 +36,19 @@ public class MineNoteRenderer extends BaseNoteRenderer {
     }
 
     @Override
-    public float getNoteRotation(NotePanel panel, Note note, double beat, double time) {
+    public float getNoteRotation(int panel, Note note, double beat, double time) {
         float degrees = -60f * (float) beat;
         degrees %= 360f;
         return degrees;
     }
 
     @Override
-    public Drawable getNoteDrawable(NotePanel panel, Note note, double beat, double time) {
+    public boolean isNoteVisible(int panel, Note note, double beat, double time) {
+        return true;
+    }
+
+    @Override
+    public Drawable getNoteDrawable(int panel, Note note, double beat, double time) {
         return mineDrawable.get();
     }
 }

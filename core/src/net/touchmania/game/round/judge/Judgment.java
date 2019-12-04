@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Vincenzo Fortunato
+ * Copyright 2019 Vincenzo Fortunato
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,29 +14,26 @@
  * limitations under the License.
  */
 
-package net.touchmania.game.song.note;
+package net.touchmania.game.round.judge;
 
 /**
- * @author flood2d
+ * Provides judgment data for a note.
  */
-public class TapNote extends Note {
-    private NoteResolution resolution;
+public abstract class Judgment {
+    private double genTime;
 
-    public TapNote(double beat) {
-        super(beat);
-        this.resolution = NoteResolution.valueFromBeat(beat);
-    }
-
-    @Override
-    public boolean canBeJudged() {
-        return true;
+    /**
+     * @param genTime the judgment's generation time relative to the start of the music track.
+     */
+    public Judgment(double genTime) {
+        this.genTime = genTime;
     }
 
     /**
-     * Gets the note resolution calculated from the note beat.
-     * @return the note resolution.
+     * Get the time relative to the music track when the judgment has been generated.
+     * @return the judgment's generation time relative to the start of the music track.
      */
-    public NoteResolution getResolution() {
-        return resolution;
+    public double getGenTime() {
+        return genTime;
     }
 }

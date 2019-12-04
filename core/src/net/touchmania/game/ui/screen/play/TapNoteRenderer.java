@@ -4,13 +4,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import net.touchmania.game.Game;
 import net.touchmania.game.resource.ResourceProvider;
 import net.touchmania.game.resource.lazy.Resource;
+import net.touchmania.game.round.judge.JudgmentKeeper;
+import net.touchmania.game.round.judge.TapJudgement;
 import net.touchmania.game.song.note.Note;
-import net.touchmania.game.song.note.NotePanel;
-import net.touchmania.game.song.note.NoteResolution;
 import net.touchmania.game.song.note.TapNote;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class TapNoteRenderer extends BaseNoteRenderer {
     /* Resources */
@@ -43,7 +40,23 @@ public class TapNoteRenderer extends BaseNoteRenderer {
     }
 
     @Override
-    public Drawable getNoteDrawable(NotePanel panel, Note note, double beat, double time) {
+    public boolean isNoteVisible(int panel, Note note, double beat, double time) {
+        JudgmentKeeper judgments = getRound().getJudge().getJudgmentKeeper();
+        TapJudgement judgment = (TapJudgement) judgments.getJudgment(panel, note);
+
+        if(judgment != null) {
+            switch (judgment.getJudgmentClass()) {
+                case MARVELOUS:
+                case PERFECT:
+                case GREAT:
+                    return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public Drawable getNoteDrawable(int panel, Note note, double beat, double time) {
         TapNote tapNote = (TapNote) note;
         switch (tapNote.getResolution()) {
             case NOTE_4TH:   return note4Drawable.get();

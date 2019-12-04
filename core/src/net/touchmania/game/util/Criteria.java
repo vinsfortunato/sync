@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Vincenzo Fortunato
+ * Copyright 2019 Vincenzo Fortunato
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,18 +14,8 @@
  * limitations under the License.
  */
 
-package net.touchmania.game.song.note;
+package net.touchmania.game.util;
 
-/**
- * @author flood2d
- */
-public class FakeNote extends Note {
-    public FakeNote(double beat) {
-        super(beat);
-    }
-
-    @Override
-    public boolean canBeJudged() {
-        return false;
-    }
+public interface Criteria<T> {
+    boolean isValid(T value);
 }

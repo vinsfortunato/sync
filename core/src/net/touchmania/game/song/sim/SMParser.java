@@ -18,26 +18,9 @@ package net.touchmania.game.song.sim;
 
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
-import net.touchmania.game.song.Beatmap;
-import net.touchmania.game.song.Chart;
-import net.touchmania.game.song.ChartType;
-import net.touchmania.game.song.DisplayBPM;
-import net.touchmania.game.song.GrooveRadar;
-import net.touchmania.game.song.TimingData;
-import net.touchmania.game.song.note.AutoKeySoundNote;
-import net.touchmania.game.song.note.FakeNote;
-import net.touchmania.game.song.note.HoldNote;
-import net.touchmania.game.song.note.LengthyNote;
-import net.touchmania.game.song.note.LiftNote;
-import net.touchmania.game.song.note.MineNote;
-import net.touchmania.game.song.note.Note;
-import net.touchmania.game.song.note.NotePanel;
-import net.touchmania.game.song.note.NoteResolution;
-import net.touchmania.game.song.note.RollNote;
-import net.touchmania.game.song.note.TapNote;
+import net.touchmania.game.song.*;
+import net.touchmania.game.song.note.*;
 
-import java.util.Map;
-import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -357,7 +340,11 @@ public class SMParser extends TagSimParser {
                 for(int l = 0; l < measure.length(); l+=getPanelsCount()) {
                     //Read each character of the current line and parse it
                     for(int m = 0; m < getPanelsCount(); m++) {
-                        parseNote(getPanelFromIndex(m), currentBeat, measure.charAt(l+m));
+                        int panel = getPanelFromIndex(m);
+                        if(panel == -1) {
+                            throw new SimParseException("Invalid note panel!");
+                        }
+                        parseNote(panel, currentBeat, measure.charAt(l+m));
                     }
                     currentBeat += resolution.noteDistance;
                 }
@@ -372,7 +359,7 @@ public class SMParser extends TagSimParser {
          * @param c the character representing the note.
          * @throws SimParseException if the note cannot be parsed correctly.
          */
-        public void parseNote(NotePanel panel, double beat, char c) throws SimParseException {
+        public void parseNote(int panel, double beat, char c) throws SimParseException {
             switch(c) {
                 case '1':
                     beatmap.putNote(panel, new TapNote(beat));
@@ -417,7 +404,7 @@ public class SMParser extends TagSimParser {
          * @return the note panel related to the given measure line index, or
          * null if there's no panel associated to the given index.
          */
-        public abstract NotePanel getPanelFromIndex(int index);
+        public abstract int getPanelFromIndex(int index);
     }
 
     protected static class DanceSingleBeatmapParser extends BeatmapParser {
@@ -430,7 +417,7 @@ public class SMParser extends TagSimParser {
             return ChartType.DANCE_SINGLE.panels;
         }
 
-        public NotePanel getPanelFromIndex(int index) {
+        public int getPanelFromIndex(int index) {
             switch(index) {
                 case 0:
                     return NotePanel.LEFT;
@@ -441,7 +428,7 @@ public class SMParser extends TagSimParser {
                 case 3:
                     return NotePanel.RIGHT;
             }
-            return null;
+            return -1;
         }
     }
 
@@ -456,7 +443,7 @@ public class SMParser extends TagSimParser {
         }
 
         @Override
-        public NotePanel getPanelFromIndex(int index) {
+        public int getPanelFromIndex(int index) {
             switch(index) {
                 case 0:
                     return NotePanel.LEFT_DOWN;
@@ -469,7 +456,7 @@ public class SMParser extends TagSimParser {
                 case 4:
                     return NotePanel.RIGHT_DOWN;
             }
-            return null;
+            return -1;
         }
     }
 }

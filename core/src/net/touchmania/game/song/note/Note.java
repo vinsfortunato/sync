@@ -16,13 +16,13 @@
 
 package net.touchmania.game.song.note;
 
+import com.google.common.collect.ComparisonChain;
 import net.touchmania.game.song.Beatmap;
 
 import javax.annotation.Nonnull;
 
 /**
  * Represents a {@link Beatmap} note.
- * @author flood2d
  */
 public abstract class Note implements Comparable<Note> {
     private double beat;
@@ -39,8 +39,13 @@ public abstract class Note implements Comparable<Note> {
         return beat;
     }
 
+    public abstract boolean canBeJudged();
+
     @Override
     public int compareTo(@Nonnull Note o) {
-        return Double.compare(getBeat(), o.getBeat());
+        return ComparisonChain
+                .start()
+                .compare(getBeat(), o.getBeat())
+                .result();
     }
 }

@@ -20,6 +20,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
@@ -49,6 +50,7 @@ public class GameScreen implements Screen {
 
     /* Widgets */
     private BeatmapView beatmapView;
+    private ControlsView controlsView;
 
     private Music music;
     private Round round;
@@ -85,7 +87,9 @@ public class GameScreen implements Screen {
             SimParser parser = song.simFormat.newParser();
             parser.init(Files.toString(song.simFile.file(), Charsets.UTF_8));
             chart.beatmap = parser.parseBeatmap(chart);
+            chart.beatmap.tempClear();
 
+            controlsView = new ControlsView(round);
             beatmapView = new BeatmapView(round);
             music = Gdx.audio.newMusic(Gdx.files.external(song.directory.path() + "/" + song.musicPath));
             round.setMusic(music);
@@ -98,18 +102,30 @@ public class GameScreen implements Screen {
     @Override
     public void show(Stage stage) {
         stage.getActors().clear();
-        Table table = new Table();
-        table.setFillParent(true);
-        stage.addActor(table);
-        table.setDebug(true); //TODO
+        Stack stack = new Stack();
+        stack.setFillParent(true);
+        stage.addActor(stack);
+        stack.setDebug(true); //TODO
 
-        table.add(beatmapView)
+        Table controlsTable = new Table();
+        controlsTable.add(controlsView)
                 .padLeft(0)
                 .padTop(0)
                 .width(1080)
                 .height(1920);
+        controlsTable.left().top();
 
-        table.left().top();
+        Table beatmapTable = new Table();
+        beatmapTable.setFillParent(true);
+        beatmapTable.add(beatmapView)
+                .padLeft(0)
+                .padTop(0)
+                .width(1080)
+                .height(1920);
+        beatmapTable.left().top();
+
+        stack.add(beatmapTable);
+        stack.add(controlsTable);
 
         music.play();
     }
@@ -128,6 +144,8 @@ public class GameScreen implements Screen {
                 prepared = true;
                 prepareDoneCallback.run();
             }
+        } else {
+            round.update();
         }
     }
 

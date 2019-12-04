@@ -16,6 +16,9 @@
 
 package net.touchmania.game.round;
 
+import net.touchmania.game.round.judge.Judgment;
+import net.touchmania.game.round.judge.JudgmentHandler;
+
 public class Score implements JudgmentHandler {
 
     /**
@@ -50,11 +53,6 @@ public class Score implements JudgmentHandler {
 
     @Override
     public void handleJudgment(double time, Judgment judgment) {
-
-    }
-
-    @Override
-    public void handleMineExplosion(double time) {
 
     }
 }

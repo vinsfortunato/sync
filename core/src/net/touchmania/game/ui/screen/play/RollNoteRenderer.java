@@ -17,10 +17,8 @@
 package net.touchmania.game.ui.screen.play;
 
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import net.touchmania.game.Game;
 import net.touchmania.game.song.note.LengthyNote;
 import net.touchmania.game.song.note.Note;
-import net.touchmania.game.song.note.NotePanel;
 
 /**
  * @author flood2d
@@ -33,22 +31,27 @@ public class RollNoteRenderer extends BaseLengthyNoteRenderer {
     }
 
     @Override
-    public Drawable getNoteDrawable(NotePanel panel, Note note, double beat, double time) {
+    public boolean isNoteVisible(int panel, Note note, double beat, double time) {
+        return true;
+    }
+
+    @Override
+    public Drawable getNoteDrawable(int panel, Note note, double beat, double time) {
         return null;
     }
 
     @Override
-    public Drawable getNoteBodyDrawable(NotePanel panel, LengthyNote note, double beat, double time) {
+    public Drawable getNoteBodyDrawable(int panel, LengthyNote note, double beat, double time) {
         return null;
     }
 
     @Override
-    public Drawable getNoteConnectorDrawable(NotePanel panel, LengthyNote note, double beat, double time) {
+    public Drawable getNoteConnectorDrawable(int panel, LengthyNote note, double beat, double time) {
         return null;
     }
 
     @Override
-    public Drawable getNoteTailDrawable(NotePanel panel, LengthyNote note, double beat, double time) {
+    public Drawable getNoteTailDrawable(int panel, LengthyNote note, double beat, double time) {
         return null;
     }
 }

@@ -18,10 +18,9 @@ package net.touchmania.game.ui.screen.play;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import net.touchmania.game.round.Judgment;
 import net.touchmania.game.round.Round;
+import net.touchmania.game.round.judge.JudgmentClass;
 import net.touchmania.game.song.note.Note;
-import net.touchmania.game.song.note.NotePanel;
 
 public interface NoteRenderer {
     /**
@@ -34,7 +33,7 @@ public interface NoteRenderer {
      * @param receptorX the receptor x position inside the view.
      * @param receptorY the receptor y position inside the view.
      */
-    void draw(Batch batch, NotePanel panel, Note note, double beat, double time, float receptorX, float receptorY);
+    void draw(Batch batch, int panel, Note note, double beat, double time, float receptorX, float receptorY);
 
     /**
      * Gets note x position relative to receptor x position.
@@ -44,7 +43,7 @@ public interface NoteRenderer {
      * @param time the current time relative to the start of the music track.
      * @return the x position relative to the receptor x position.
      */
-    float getNoteX(NotePanel panel, Note note, double beat, double time);
+    float getNoteX(int panel, Note note, double beat, double time);
 
     /**
      * Gets note y position relative to receptor y position.
@@ -54,7 +53,7 @@ public interface NoteRenderer {
      * @param time the current time relative to the start of the music track.
      * @return the y position relative to the receptor y position.
      */
-    float getNoteY(NotePanel panel, Note note, double beat, double time);
+    float getNoteY(int panel, Note note, double beat, double time);
 
     /**
      * Gets note scale x. Scale is applied to the note texture.
@@ -64,7 +63,7 @@ public interface NoteRenderer {
      * @param time current time relative to the start of the music track.
      * @return the note scale x.
      */
-    float getNoteScaleX(NotePanel panel, Note note, double beat, double time);
+    float getNoteScaleX(int panel, Note note, double beat, double time);
 
     /**
      * Gets note scale y. Scale is applied to the note texture.
@@ -74,7 +73,7 @@ public interface NoteRenderer {
      * @param time the current time relative to the start of the music track.
      * @return the note scale y.
      */
-    float getNoteScaleY(NotePanel panel, Note note, double beat, double time);
+    float getNoteScaleY(int panel, Note note, double beat, double time);
 
     /**
      * Gets note rotation in degrees with the origin in the center of the note texture.
@@ -84,7 +83,7 @@ public interface NoteRenderer {
      * @param time the current time relative to the start of the music track.
      * @return the note rotation in degrees.
      */
-    float getNoteRotation(NotePanel panel, Note note, double beat, double time);
+    float getNoteRotation(int panel, Note note, double beat, double time);
 
     /**
      * Gets note opacity, a value from 0.0f to 1.0f (inclusive).
@@ -94,19 +93,19 @@ public interface NoteRenderer {
      * @param time the current time relative to the start of the music track.
      * @return the note opacity. 0.0f if the note is invisible, 1.0f if the note is fully opaque.
      */
-    float getNoteOpacity(NotePanel panel, Note note, double beat, double time);
+    float getNoteOpacity(int panel, Note note, double beat, double time);
 
     /**
      * Checks if the given note is visible. If it isn't visible
      * the note will not be drawn. For example, tap notes with a judgment
-     * greater than {@link Judgment#GOOD} are invisible.
+     * greater than {@link JudgmentClass#GOOD} are invisible.
      * @param panel the note panel.
      * @param note the note.
      * @param beat the current beat.
      * @param time the current time relative to the start of the music track.
      * @return true if the note is visible and must be drawn.
      */
-    boolean isNoteVisible(NotePanel panel, Note note, double beat, double time);
+    boolean isNoteVisible(int panel, Note note, double beat, double time);
 
     /**
      * Checks if the given note is inside the view.
@@ -122,7 +121,7 @@ public interface NoteRenderer {
      * @param viewHeight the view height.
      * @return true if the given note is inside the view, false otherwise.
      */
-    boolean isNoteInsideView(NotePanel panel, Note note, double beat, double time,
+    boolean isNoteInsideView(int panel, Note note, double beat, double time,
                              float receptorX, float receptorY, float viewWidth, float viewHeight);
 
     /**
@@ -133,7 +132,7 @@ public interface NoteRenderer {
      * @param time current time relative to the start of the music track.
      * @return the note drawable.
      */
-    Drawable getNoteDrawable(NotePanel panel, Note note, double beat, double time);
+    Drawable getNoteDrawable(int panel, Note note, double beat, double time);
 
     /**
      * Gets the round currently being played.

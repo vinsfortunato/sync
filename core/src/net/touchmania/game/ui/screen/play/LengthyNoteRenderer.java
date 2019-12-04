@@ -18,7 +18,6 @@ package net.touchmania.game.ui.screen.play;
 
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import net.touchmania.game.song.note.LengthyNote;
-import net.touchmania.game.song.note.NotePanel;
 
 /**
  * @author flood2d
@@ -32,7 +31,7 @@ public interface LengthyNoteRenderer extends NoteRenderer {
      * @param time current time relative to the start of the music track.
      * @return the x position relative to the receptor x position.
      */
-    float getTailX(NotePanel panel, LengthyNote note, double beat, double time);
+    float getTailX(int panel, LengthyNote note, double beat, double time);
 
     /**
      * Gets note tail y position relative to receptor y position.
@@ -42,7 +41,7 @@ public interface LengthyNoteRenderer extends NoteRenderer {
      * @param time current time relative to the start of the music track.
      * @return the y position relative to the receptor y position.
      */
-    float getTailY(NotePanel panel, LengthyNote note, double beat, double time);
+    float getTailY(int panel, LengthyNote note, double beat, double time);
 
     /**
      * Checks if the note is active. For example hold/roll notes are active
@@ -53,7 +52,7 @@ public interface LengthyNoteRenderer extends NoteRenderer {
      * @param time current time relative to the start of the music track.
      * @return true if the note is active, false otherwise.
      */
-    boolean isActive(NotePanel panel, LengthyNote note, double beat, double time);
+    boolean isActive(int panel, LengthyNote note, double beat, double time);
 
     /**
      * Gets the note body drawable. That is the drawable that is put after
@@ -64,19 +63,19 @@ public interface LengthyNoteRenderer extends NoteRenderer {
      * @param time current time relative to the start of the music track.
      * @return the note body drawable.
      */
-    Drawable getNoteBodyDrawable(NotePanel panel, LengthyNote note, double beat, double time);
+    Drawable getNoteBodyDrawable(int panel, LengthyNote note, double beat, double time);
 
     /**
      * Gets the note connector drawable. That is the drawable that is put between the
-     * {@link #getNoteBodyDrawable(NotePanel, LengthyNote, double, double)} and the
-     * {@link #getNoteTailDrawable(NotePanel, LengthyNote, double, double)} to connect them.
+     * {@link #getNoteBodyDrawable(int, LengthyNote, double, double)} and the
+     * {@link #getNoteTailDrawable(int, LengthyNote, double, double)} to connect them.
      * @param panel the note panel.
      * @param note the note.
      * @param beat the note beat.
      * @param time current time relative to the start of the music track.
      * @return the note connector drawable.
      */
-    Drawable getNoteConnectorDrawable(NotePanel panel, LengthyNote note, double beat, double time);
+    Drawable getNoteConnectorDrawable(int panel, LengthyNote note, double beat, double time);
 
     /**
      * Gets the note tail drawable. That is the drawable that is put at the end of the note.
@@ -86,5 +85,5 @@ public interface LengthyNoteRenderer extends NoteRenderer {
      * @param time current time relative to the start of the music track.
      * @return the note tail drawable.
      */
-    Drawable getNoteTailDrawable(NotePanel panel, LengthyNote note, double beat, double time);
+    Drawable getNoteTailDrawable(int panel, LengthyNote note, double beat, double time);
 }

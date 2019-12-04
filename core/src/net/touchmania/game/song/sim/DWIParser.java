@@ -17,21 +17,11 @@
 package net.touchmania.game.song.sim;
 
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.IntSet;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.badlogic.gdx.utils.ObjectSet;
-import net.touchmania.game.song.Beatmap;
-import net.touchmania.game.song.Chart;
-import net.touchmania.game.song.ChartType;
-import net.touchmania.game.song.DisplayBPM;
-import net.touchmania.game.song.TimingData;
-import net.touchmania.game.song.note.HoldNote;
-import net.touchmania.game.song.note.Note;
-import net.touchmania.game.song.note.NotePanel;
-import net.touchmania.game.song.note.NoteResolution;
-import net.touchmania.game.song.note.TapNote;
+import net.touchmania.game.song.*;
+import net.touchmania.game.song.note.*;
 
-import java.util.Map;
-import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -294,9 +284,9 @@ public class DWIParser extends TagSimParser {
         private boolean combining = false;
         private boolean holdFlag = false;
         /** Contains currently hold panels **/
-        private ObjectSet<NotePanel> holdingPanelSet = new ObjectSet<>();
+        private IntSet holdingPanelSet = new IntSet();
         /** Contains combined panels **/
-        private ObjectSet<NotePanel> combinePanelSet = new ObjectSet<>();
+        private IntSet combinePanelSet = new IntSet();
 
         BeatmapParser(String beatmapData) {
             this.beatmapData = beatmapData.replaceAll("\\s", ""); //Remove whitespaces
@@ -349,7 +339,7 @@ public class DWIParser extends TagSimParser {
                     break;
                 default:
                     //It is a note character.
-                    NotePanel[] panels = parseNoteCharacter(dataChar);
+                    int[] panels = parseNoteCharacter(dataChar);
                     if(combining) {
                         combinePanelSet.addAll(panels);
                     } else if(holdFlag) {
@@ -361,8 +351,8 @@ public class DWIParser extends TagSimParser {
             }
         }
 
-        private void putPanels(NotePanel... panels) throws SimParseException {
-            for(NotePanel panel : panels) {
+        private void putPanels(int ... panels) throws SimParseException {
+            for(int panel : panels) {
                 if(holdingPanelSet.remove(panel)) {
                     //Parsing hold tail
                     Note lastNote = beatmap.lastNote(panel);
@@ -382,7 +372,7 @@ public class DWIParser extends TagSimParser {
             currentBeat += resolution.noteDistance;
         }
 
-        private void holdPanels(NotePanel... panels) throws SimParseException{
+        private void holdPanels(int ... panels) throws SimParseException{
             if(panels.length == 0) {
                 throw new SimParseException("Invalid beatmap data! No panel specified for hold note.");
             }
@@ -404,10 +394,11 @@ public class DWIParser extends TagSimParser {
             this.combining = combining;
             if(!combining && combinePanelSet.size > 0) {
                 //Combine panels
-                NotePanel[] panels = new NotePanel[combinePanelSet.size];
+                int[] panels = new int[combinePanelSet.size];
                 int i = 0;
-                for(NotePanel panel : combinePanelSet) {
-                    panels[i] = panel;
+                IntSet.IntSetIterator it = combinePanelSet.iterator();
+                while(it.hasNext) {
+                    panels[i] = it.next();
                     i++;
                 }
                 combinePanelSet.clear();
@@ -419,19 +410,19 @@ public class DWIParser extends TagSimParser {
             }
         }
 
-        private NotePanel[] parseNoteCharacter(char noteChar) throws SimParseException {
+        private int[] parseNoteCharacter(char noteChar) throws SimParseException {
             switch(noteChar) {
-                case '1': return new NotePanel[] {NotePanel.LEFT, NotePanel.DOWN};
-                case '2': return new NotePanel[] {NotePanel.DOWN};
-                case '3': return new NotePanel[] {NotePanel.DOWN, NotePanel.RIGHT};
-                case '4': return new NotePanel[] {NotePanel.LEFT};
-                case '6': return new NotePanel[] {NotePanel.RIGHT};
-                case '7': return new NotePanel[] {NotePanel.UP, NotePanel.LEFT};
-                case '8': return new NotePanel[] {NotePanel.UP};
-                case '9': return new NotePanel[] {NotePanel.UP, NotePanel.RIGHT};
-                case 'A': return new NotePanel[] {NotePanel.UP, NotePanel.DOWN};
-                case 'B': return new NotePanel[] {NotePanel.LEFT, NotePanel.RIGHT};
-                case '0': return new NotePanel[0];
+                case '1': return new int[] {NotePanel.LEFT, NotePanel.DOWN};
+                case '2': return new int[] {NotePanel.DOWN};
+                case '3': return new int[] {NotePanel.DOWN, NotePanel.RIGHT};
+                case '4': return new int[] {NotePanel.LEFT};
+                case '6': return new int[] {NotePanel.RIGHT};
+                case '7': return new int[] {NotePanel.UP, NotePanel.LEFT};
+                case '8': return new int[] {NotePanel.UP};
+                case '9': return new int[] {NotePanel.UP, NotePanel.RIGHT};
+                case 'A': return new int[] {NotePanel.UP, NotePanel.DOWN};
+                case 'B': return new int[] {NotePanel.LEFT, NotePanel.RIGHT};
+                case '0': return new int[0];
             }
             throw new SimParseException("Invalid beatmap data! Unrecognised data character!");
         }

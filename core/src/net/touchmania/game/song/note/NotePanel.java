@@ -18,25 +18,25 @@ package net.touchmania.game.song.note;
 
 import net.touchmania.game.GameMode;
 
-public enum NotePanel {
-    LEFT_UP,
-    LEFT,
-    LEFT_DOWN,
-    DOWN ,
-    RIGHT_DOWN,
-    RIGHT ,
-    RIGHT_UP,
-    UP,
-    CENTER;
+public class NotePanel {
+    public static final int LEFT_UP = 0;
+    public static final int LEFT = 1;
+    public static final int LEFT_DOWN = 2;
+    public static final int DOWN = 3;
+    public static final int RIGHT_DOWN = 4;
+    public static final int RIGHT = 5;
+    public static final int RIGHT_UP = 6;
+    public static final int UP = 7;
+    public static final int CENTER = 8;
 
-    public static NotePanel[] getModePanels(GameMode mode) {
+    public static int[] getModePanels(GameMode mode) {
         switch (mode) {
             case DANCE:
-                return new NotePanel[] { LEFT, DOWN, UP, RIGHT };
+                return new int[] { LEFT, DOWN, UP, RIGHT };
             case PUMP:
-                return new NotePanel[] { LEFT_DOWN, LEFT_UP, CENTER, RIGHT_UP, RIGHT_DOWN };
+                return new int[] { LEFT_DOWN, LEFT_UP, CENTER, RIGHT_UP, RIGHT_DOWN };
         }
 
-        return new NotePanel[0];
+        return new int[0];
     }
 }

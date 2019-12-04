@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Vincenzo Fortunato
+ * Copyright 2019 Vincenzo Fortunato
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,7 @@
 
 package net.touchmania.game.round;
 
-public interface JudgmentHandler {
-
-    void handleJudgment(double time, Judgment judgment);
-
-    void handleMineExplosion(double time);
+public enum ControlState {
+    PRESSED,
+    RELEASED
 }

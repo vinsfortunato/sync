@@ -24,6 +24,11 @@ public class LengthyNote extends Note {
         this(beat, 0);
     }
 
+    @Override
+    public boolean canBeJudged() {
+        return true;
+    }
+
     /**
      *
      * @param beat the note head beat.

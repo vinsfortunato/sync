@@ -23,4 +23,9 @@ public class LiftNote extends Note {
     public LiftNote(double beat) {
         super(beat);
     }
+
+    @Override
+    public boolean canBeJudged() {
+        return true;
+    }
 }

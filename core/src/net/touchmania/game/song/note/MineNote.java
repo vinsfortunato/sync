@@ -23,4 +23,9 @@ public class MineNote extends Note {
     public MineNote(double beat) {
         super(beat);
     }
+
+    @Override
+    public boolean canBeJudged() {
+        return true;
+    }
 }

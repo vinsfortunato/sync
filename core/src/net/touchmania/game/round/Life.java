@@ -16,6 +16,9 @@
 
 package net.touchmania.game.round;
 
+import net.touchmania.game.round.judge.Judgment;
+import net.touchmania.game.round.judge.JudgmentHandler;
+
 public class Life implements JudgmentHandler {
     /**
      * Gets the life value at the given time, where time is relative to the start of the music track.
@@ -29,11 +32,6 @@ public class Life implements JudgmentHandler {
 
     @Override
     public void handleJudgment(double time, Judgment judgment) {
-
-    }
-
-    @Override
-    public void handleMineExplosion(double time) {
 
     }
 }

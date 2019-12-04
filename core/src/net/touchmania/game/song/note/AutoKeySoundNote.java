@@ -23,4 +23,9 @@ public class AutoKeySoundNote extends Note {
     public AutoKeySoundNote(double beat) {
         super(beat);
     }
+
+    @Override
+    public boolean canBeJudged() {
+        return false;
+    }
 }

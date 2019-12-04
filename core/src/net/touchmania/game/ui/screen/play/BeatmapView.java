@@ -25,7 +25,7 @@ public class BeatmapView extends Widget {
     private LiftNoteRenderer liftNoteRenderer = new LiftNoteRenderer(this);
     private FakeNoteRenderer fakeNoteRenderer = new FakeNoteRenderer(this);
 
-    private NotePanel[] panels = NotePanel.getModePanels(Game.instance().getSettings().getGameMode());
+    private int[] panels = NotePanel.getModePanels(Game.instance().getSettings().getGameMode());
 
     public BeatmapView(Round round) {
         super();
@@ -44,17 +44,17 @@ public class BeatmapView extends Widget {
 
         //Draw panels
 
-        for(NotePanel panel : panels) {
+        for(int panel : panels) {
             drawReceptor(batch, panel, beat, time);
             drawNotes(batch, panel, beat, time);
         }
     }
 
-    private void drawReceptor(Batch batch, NotePanel panel, double beat, double time) {
+    private void drawReceptor(Batch batch, int panel, double beat, double time) {
         receptorRenderer.draw(batch, panel, beat, time);
     }
 
-    private void drawNotes(Batch batch, NotePanel panel, double beat, double time) {
+    private void drawNotes(Batch batch, int panel, double beat, double time) {
         Beatmap beatmap = getBeatmap();
 
         //Calculate view x, y, width and height to use for note rendering.
@@ -89,7 +89,7 @@ public class BeatmapView extends Widget {
      * @param viewH the view height
      * @return the render starting note, or null if there are no notes to render.
      */
-    private Note findStartingNote(NotePanel panel, double beat, double time,
+    private Note findStartingNote(int panel, double beat, double time,
                                   float receptorX, float receptorY, float viewW, float viewH) {
         Beatmap beatmap = getBeatmap();
 

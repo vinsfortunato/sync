@@ -31,9 +31,13 @@ public abstract class BaseNoteRenderer implements NoteRenderer {
     }
 
     @Override
-    public void draw(Batch batch, NotePanel panel, Note note, double beat, double time, float receptorX, float receptorY) {
+    public void draw(Batch batch, int panel, Note note, double beat, double time, float receptorX, float receptorY) {
         Drawable drawable = getNoteDrawable(panel, note, beat, time);
         if(drawable == null) { //TODO at this point drawable should not be null
+            return;
+        }
+
+        if(!isNoteVisible(panel, note, beat, time)) {
             return;
         }
 
@@ -56,12 +60,12 @@ public abstract class BaseNoteRenderer implements NoteRenderer {
     }
 
     @Override
-    public float getNoteX(NotePanel panel, Note note, double beat, double time) {
+    public float getNoteX(int panel, Note note, double beat, double time) {
         return 0.0f;
     }
 
     @Override
-    public float getNoteY(NotePanel panel, Note note, double beat, double time) {
+    public float getNoteY(int panel, Note note, double beat, double time) {
         Drawable drawable = getNoteDrawable(panel, note, beat, time);
         float height = drawable.getMinHeight();
         float speedMod = 2.5f;
@@ -69,29 +73,29 @@ public abstract class BaseNoteRenderer implements NoteRenderer {
     }
 
     @Override
-    public float getNoteScaleX(NotePanel panel, Note note, double beat, double time) {
+    public float getNoteScaleX(int panel, Note note, double beat, double time) {
         return 1.0f;
     }
 
     @Override
-    public float getNoteScaleY(NotePanel panel, Note note, double beat, double time) {
+    public float getNoteScaleY(int panel, Note note, double beat, double time) {
         return 1.0f;
     }
 
     @Override
-    public float getNoteRotation(NotePanel panel, Note note, double beat, double time) {
+    public float getNoteRotation(int panel, Note note, double beat, double time) {
         float rotation = 0.0f; //for panels: down, right_down, center.
         switch(panel) { //rotate texture according to the panel
-            case LEFT:
-            case LEFT_DOWN:
+            case NotePanel.LEFT:
+            case NotePanel.LEFT_DOWN:
                 rotation = -90f;
                 break;
-            case UP:
-            case LEFT_UP:
+            case NotePanel.UP:
+            case NotePanel.LEFT_UP:
                 rotation = 180f;
                 break;
-            case RIGHT:
-            case RIGHT_UP:
+            case NotePanel.RIGHT:
+            case NotePanel.RIGHT_UP:
                 rotation = 90f;
                 break;
         }
@@ -99,17 +103,12 @@ public abstract class BaseNoteRenderer implements NoteRenderer {
     }
 
     @Override
-    public float getNoteOpacity(NotePanel panel, Note note, double beat, double time) {
+    public float getNoteOpacity(int panel, Note note, double beat, double time) {
         return 1.0f;
     }
 
     @Override
-    public boolean isNoteVisible(NotePanel panel, Note note, double beat, double time) {
-        return true;
-    }
-
-    @Override
-    public boolean isNoteInsideView(NotePanel panel, Note note, double beat, double time,
+    public boolean isNoteInsideView(int panel, Note note, double beat, double time,
                                     float receptorX, float receptorY, float viewWidth, float viewHeight) {
         Drawable drawable = getNoteDrawable(panel, note, beat, time);
         if(drawable == null) { //TODO at this point drawable should not be null

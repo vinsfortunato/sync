@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Vincenzo Fortunato
+ * Copyright 2019 Vincenzo Fortunato
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,18 +14,16 @@
  * limitations under the License.
  */
 
-package net.touchmania.game.song.note;
+package net.touchmania.game.round;
 
-/**
- * @author flood2d
- */
-public class FakeNote extends Note {
-    public FakeNote(double beat) {
-        super(beat);
-    }
+public class ControlStateChangeEvent {
+    public final int panel;
+    public final ControlState state;
+    public final double time;
 
-    @Override
-    public boolean canBeJudged() {
-        return false;
+    public ControlStateChangeEvent(int panel, ControlState state, double time) {
+        this.panel = panel;
+        this.state = state;
+        this.time = time;
     }
 }

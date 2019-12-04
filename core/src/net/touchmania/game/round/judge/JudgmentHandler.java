@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Vincenzo Fortunato
+ * Copyright 2019 Vincenzo Fortunato
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,9 @@
  * limitations under the License.
  */
 
-package net.touchmania.game.round;
+package net.touchmania.game.round.judge;
 
-public enum Judgment {
-    MARVELOUS,
-    PERFECT,
-    GREAT,
-    GOOD,
-    BOO,
-    MISS,
-    OK,
-    NG
+public interface JudgmentHandler {
+
+    void handleJudgment(double time, Judgment judgment);
 }

@@ -16,13 +16,10 @@
 
 package net.touchmania.game.ui.screen.play;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import net.touchmania.game.song.note.LengthyNote;
 import net.touchmania.game.song.note.Note;
-import net.touchmania.game.song.note.NotePanel;
 
 /**
  * @author flood2d
@@ -33,7 +30,7 @@ public abstract class BaseLengthyNoteRenderer extends BaseNoteRenderer implement
     }
 
     @Override
-    public void draw(Batch batch, NotePanel panel, Note note, double beat, double time, float receptorX, float receptorY) {
+    public void draw(Batch batch, int panel, Note note, double beat, double time, float receptorX, float receptorY) {
         Drawable noteDrawable = getNoteDrawable(panel, note, beat, time);
         Drawable bodyDrawable = getNoteBodyDrawable(panel, (LengthyNote) note, beat, time);
         Drawable tailDrawable = getNoteTailDrawable(panel, (LengthyNote) note, beat, time);
@@ -58,27 +55,16 @@ public abstract class BaseLengthyNoteRenderer extends BaseNoteRenderer implement
         }
         tailDrawable.draw(batch, tailX, tailY, tailDrawable.getMinWidth(), tailDrawable.getMinHeight());
 
-        /**
-        batch.end();
-        ShapeRenderer renderer = new ShapeRenderer();
-        renderer.begin(ShapeRenderer.ShapeType.Line);
-        renderer.setColor(Color.RED);
-        renderer.rect(noteX, noteY, noteDrawable.getMinWidth(), noteDrawable.getMinHeight());
-        renderer.end();
-        batch.begin();
-         **/
-
-
         super.draw(batch, panel, note, beat, time, receptorX, receptorY);
     }
 
     @Override
-    public float getTailX(NotePanel panel, LengthyNote note, double beat, double time) {
+    public float getTailX(int panel, LengthyNote note, double beat, double time) {
         return 0.0f;
     }
 
     @Override
-    public float getTailY(NotePanel panel, LengthyNote note, double beat, double time) {
+    public float getTailY(int panel, LengthyNote note, double beat, double time) {
         Drawable drawable = getNoteDrawable(panel, note, beat, time);
         float height = drawable.getMinHeight();
         float speedMod = 2.5f;
@@ -86,12 +72,12 @@ public abstract class BaseLengthyNoteRenderer extends BaseNoteRenderer implement
     }
 
     @Override
-    public boolean isActive(NotePanel panel, LengthyNote note, double beat, double time) {
+    public boolean isActive(int panel, LengthyNote note, double beat, double time) {
         return false;
     }
 
     @Override
-    public boolean isNoteInsideView(NotePanel panel, Note note, double beat, double time, float receptorX, float receptorY, float viewWidth, float viewHeight) {
+    public boolean isNoteInsideView(int panel, Note note, double beat, double time, float receptorX, float receptorY, float viewWidth, float viewHeight) {
         if(!super.isNoteInsideView(panel, note, beat, time, receptorX, receptorY, viewWidth, viewHeight)) {
             //Head not inside view, check trail
             Drawable noteDrawable = getNoteDrawable(panel, note, beat, time);
