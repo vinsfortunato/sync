@@ -13,13 +13,14 @@ public class Round {
     private Life life;
     private Music music;
     private Judge judge;
-    private Controls controls;
+    private PanelState panelState;
 
     public Round(Chart chart) {
         this.chart = chart;
         this.timing = new Timing(chart.song.timingData);
+        this.panelState = new PanelState();
         this.judge = new Judge(this, new JudgeCriteria());
-        this.controls = new Controls(this);
+        this.panelState.addListener(this.judge);
     }
 
     public Chart getChart() {
@@ -42,8 +43,8 @@ public class Round {
         return judge;
     }
 
-    public Controls getControls() {
-        return controls;
+    public PanelState getPanelState() {
+        return panelState;
     }
 
     public void update() {

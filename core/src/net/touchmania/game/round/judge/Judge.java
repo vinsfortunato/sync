@@ -19,8 +19,7 @@ package net.touchmania.game.round.judge;
 import com.badlogic.gdx.utils.IntMap;
 import net.touchmania.game.Game;
 import net.touchmania.game.GameMode;
-import net.touchmania.game.round.ControlState;
-import net.touchmania.game.round.ControlStateChangeEvent;
+import net.touchmania.game.round.PanelState;
 import net.touchmania.game.round.Round;
 import net.touchmania.game.song.Beatmap;
 import net.touchmania.game.song.Timing;
@@ -28,7 +27,7 @@ import net.touchmania.game.song.note.Note;
 import net.touchmania.game.song.note.NotePanel;
 import net.touchmania.game.song.note.TapNote;
 
-public class Judge {
+public class Judge implements PanelState.PanelStateListener {
     private Round round;
     private JudgmentKeeper judgments;
     private JudgeCriteria criteria;
@@ -52,36 +51,6 @@ public class Judge {
 
         //Init note judges
         tapNoteJudge = new TapNoteJudge();
-    }
-
-    public void handleEvent(ControlStateChangeEvent event) {
-        //Update all notes before event time
-        update(event.time);
-
-        Timing timing = getRound().getTiming();
-        Beatmap beatmap = getRound().getChart().beatmap;
-        JudgmentKeeper judgments = getJudgmentKeeper();
-        double eventBeat = timing.getBeatAt(event.time);
-        double evalBeat = getEvaluatedBeat(event.panel);
-
-        Note note;
-        if(eventBeat < evalBeat) {
-            //Judge higher note
-            note = beatmap.higherNote(event.panel, eventBeat, Note::canBeJudged);
-        } else {
-            Note floorNote = beatmap.floorNote(event.panel, eventBeat, Note::canBeJudged);
-            if(floorNote != null && !judgments.hasJudgment(event.panel, floorNote.getBeat())) {
-                //Judge floor note
-                note = floorNote;
-            } else {
-                //Judge higher note
-                note = beatmap.higherNote(event.panel, eventBeat, Note::canBeJudged);
-            }
-        }
-
-        if(note != null) {
-            handleNoteEvent(event.panel, note, event);
-        }
     }
 
     /**
@@ -109,6 +78,37 @@ public class Judge {
         }
     }
 
+    @Override
+    public void onPanelStateChange(int panel, double time, boolean pressed) {
+        //Update all notes before event time
+        update(time);
+
+        Timing timing = getRound().getTiming();
+        Beatmap beatmap = getRound().getChart().beatmap;
+        JudgmentKeeper judgments = getJudgmentKeeper();
+        double eventBeat = timing.getBeatAt(time);
+        double evalBeat = getEvaluatedBeat(panel);
+
+        Note note;
+        if(eventBeat < evalBeat) {
+            //Judge higher note
+            note = beatmap.higherNote(panel, eventBeat, Note::canBeJudged);
+        } else {
+            Note floorNote = beatmap.floorNote(panel, eventBeat, Note::canBeJudged);
+            if(floorNote != null && !judgments.hasJudgment(panel, floorNote.getBeat())) {
+                //Judge floor note
+                note = floorNote;
+            } else {
+                //Judge higher note
+                note = beatmap.higherNote(panel, eventBeat, Note::canBeJudged);
+            }
+        }
+
+        if(note != null) {
+            onPanelStateChange(panel, time, pressed, note);
+        }
+    }
+
     private void updateNote(int panel, Note note, double currentTime, double currentBeat) {
         //Dispatch to the appropriate judge
         if(note instanceof TapNote) {
@@ -116,10 +116,10 @@ public class Judge {
         }
     }
 
-    private void handleNoteEvent(int panel, Note note, ControlStateChangeEvent event) {
+    private void onPanelStateChange(int panel, double time, boolean pressed, Note note) {
         //Dispatch to the appropriate judge
         if(note instanceof TapNote) {
-            tapNoteJudge.handleEvent(panel, (TapNote) note, event);
+            tapNoteJudge.onPanelStateChange(panel, time, pressed, (TapNote) note);
         }
     }
 
@@ -170,12 +170,12 @@ public class Judge {
         void update(int panel, N note, double time, double beat);
 
         /**
-         * Handle event and update unjudged note status.
+         * Called when a panel changes state and update unjudged note status.
          * @param panel the panel.
+         * @param time the time in seconds relative to the start of the music track.
          * @param note the unjudged note.
-         * @param event the event.
          */
-        void handleEvent(int panel, N note, ControlStateChangeEvent event);
+        void onPanelStateChange(int panel, double time, boolean pressed, N note);
     }
 
     private class TapNoteJudge implements NoteJudge<TapNote> {
@@ -207,15 +207,15 @@ public class Judge {
         }
 
         @Override
-        public void handleEvent(int panel, TapNote note, ControlStateChangeEvent event) {
-            if(event.state == ControlState.PRESSED) {
+        public void onPanelStateChange(int panel, double time, boolean pressed, TapNote note) {
+            if(pressed) {
                 Timing timing = getRound().getTiming();
                 double noteTime = timing.getTimeAt(note.getBeat());
-                double timingError = noteTime - event.time;
+                double timingError = noteTime - time;
                 JudgmentClass judgmentClass = getJudgmentClass(timingError);
                 if(judgmentClass != JudgmentClass.MISS) {
                     //Note judged. Emit judgment
-                    Judgment judgment = new TapJudgement(event.time, timingError, judgmentClass);
+                    Judgment judgment = new TapJudgement(time, timingError, judgmentClass);
                     emitJudgment(panel, note, judgment);
                     //Update evaluated beat
                     setEvaluatedBeat(panel, note.getBeat());

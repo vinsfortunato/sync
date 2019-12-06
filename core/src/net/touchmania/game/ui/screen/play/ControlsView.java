@@ -25,7 +25,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 import com.badlogic.gdx.utils.IntArray;
-import net.touchmania.game.round.Controls;
+import net.touchmania.game.round.PanelState;
 import net.touchmania.game.round.Round;
 import net.touchmania.game.song.note.NotePanel;
 
@@ -45,9 +45,6 @@ public class ControlsView extends Widget {
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
         batch.end();
-
-        float baseX = getWidth() / 2 - controlWidth * 1.5f;
-        float baseY = 50;
 
         ShapeRenderer renderer = new ShapeRenderer();
         renderer.setAutoShapeType(true);
@@ -77,7 +74,7 @@ public class ControlsView extends Widget {
                     panel = NotePanel.DOWN;
                     break;
             }
-            if(getControls().isPressed(panel)) {
+            if(getControls().isPressedAt(panel, round.getCurrentTime())) {
                 rect.getCenter(center);
                 renderer.setColor(new Color(1, 0, 0, 0.3f));
                 renderer.set(ShapeRenderer.ShapeType.Filled);
@@ -95,25 +92,25 @@ public class ControlsView extends Widget {
 
     private Rectangle getLeftRect() {
         float baseX = getWidth() / 2 - controlWidth * 1.5f;
-        float baseY = 50;
+        float baseY = 100;
         return new Rectangle(baseX, baseY + controlHeight, controlWidth, controlHeight);
     }
 
     private Rectangle getRightRect() {
         float baseX = getWidth() / 2 - controlWidth * 1.5f;
-        float baseY = 50;
+        float baseY = 100;
         return new Rectangle(baseX + controlWidth * 2, baseY + controlHeight, controlWidth, controlHeight);
     }
 
     private Rectangle getUpRect() {
         float baseX = getWidth() / 2 - controlWidth * 1.5f;
-        float baseY = 50;
+        float baseY = 100;
         return new Rectangle(baseX + controlWidth, baseY + controlHeight * 2, controlWidth, controlHeight);
     }
 
     private Rectangle getDownRect() {
         float baseX = getWidth() / 2 - controlWidth * 1.5f;
-        float baseY = 50;
+        float baseY = 100;
         return new Rectangle(baseX + controlWidth, baseY, controlWidth, controlHeight);
     }
 
@@ -121,8 +118,8 @@ public class ControlsView extends Widget {
         return (float) Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
     }
 
-    private Controls getControls() {
-        return round.getControls();
+    private PanelState getControls() {
+        return round.getPanelState();
     }
 
     class GameControlsInputListener extends InputListener {
@@ -139,28 +136,28 @@ public class ControlsView extends Widget {
                     if(!leftPointers.contains(pointer)) {
                         removePointer(pointer);
                         leftPointers.add(pointer);
-                        getControls().setPressed(noteColumn, true, round.getCurrentTime());
+                        getControls().setPressed(noteColumn, round.getCurrentTime());
                     }
                     break;
                 case NotePanel.DOWN:
                     if(!downPointers.contains(pointer)) {
                         removePointer(pointer);
                         downPointers.add(pointer);
-                        getControls().setPressed(noteColumn, true, round.getCurrentTime());
+                        getControls().setPressed(noteColumn, round.getCurrentTime());
                     }
                     break;
                 case NotePanel.UP:
                     if(!upPointers.contains(pointer)) {
                         removePointer(pointer);
                         upPointers.add(pointer);
-                        getControls().setPressed(noteColumn, true, round.getCurrentTime());
+                        getControls().setPressed(noteColumn, round.getCurrentTime());
                     }
                     break;
                 case NotePanel.RIGHT:
                     if(!rightPointers.contains(pointer)) {
                         removePointer(pointer);
                         rightPointers.add(pointer);
-                        getControls().setPressed(noteColumn, true, round.getCurrentTime());
+                        getControls().setPressed(noteColumn, round.getCurrentTime());
                     }
                     break;
             }
@@ -169,7 +166,7 @@ public class ControlsView extends Widget {
         @Override
         public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
             int noteColumn = getNearControl(x, y);
-            getControls().setPressed(noteColumn, true, round.getCurrentTime());
+            getControls().setPressed(noteColumn, round.getCurrentTime());
             switch(noteColumn) {
                 case NotePanel.LEFT:
                     leftPointers.add(pointer);
@@ -223,18 +220,18 @@ public class ControlsView extends Widget {
         }
 
         private void removePointer(int pointer) {
-             Controls controls = getControls();
+             PanelState panelState = getControls();
             if(leftPointers.removeValue(pointer) && leftPointers.size == 0) {
-                controls.setPressed(NotePanel.LEFT, false, round.getCurrentTime());
+                panelState.setReleased(NotePanel.LEFT, round.getCurrentTime());
             }
             else if(rightPointers.removeValue(pointer) && rightPointers.size == 0) {
-                controls.setPressed(NotePanel.RIGHT, false, round.getCurrentTime());
+                panelState.setReleased(NotePanel.RIGHT, round.getCurrentTime());
             }
             else if(downPointers.removeValue(pointer) && downPointers.size == 0) {
-                controls.setPressed(NotePanel.DOWN, false, round.getCurrentTime());
+                panelState.setReleased(NotePanel.DOWN, round.getCurrentTime());
             }
             else if(upPointers.removeValue(pointer) && upPointers.size == 0) {
-                controls.setPressed(NotePanel.UP, false, round.getCurrentTime());
+                panelState.setReleased(NotePanel.UP, round.getCurrentTime());
             }
         }
     }

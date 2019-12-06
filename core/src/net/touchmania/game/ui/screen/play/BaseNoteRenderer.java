@@ -16,6 +16,7 @@
 
 package net.touchmania.game.ui.screen.play;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TransformDrawable;
@@ -50,6 +51,12 @@ public abstract class BaseNoteRenderer implements NoteRenderer {
         float rotation = getNoteRotation(panel, note, beat, time);
         float scaleX = getNoteScaleX(panel, note, beat, time);
         float scaleY = getNoteScaleY(panel, note, beat, time);
+        float opacity = getNoteOpacity(panel, note, beat, time);
+
+        //Set opacity
+        Color color = new Color(batch.getColor());
+        color.a = opacity;
+        batch.setColor(color);
 
         if(drawable instanceof TransformDrawable) {
             TransformDrawable transformDrawable = (TransformDrawable) drawable;

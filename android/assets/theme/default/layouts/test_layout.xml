@@ -1,17 +1,17 @@
 <layout>
-    <Table width="fill_parent"
-           height="fill_parent"
-           alignment="right|bottom">
-        <Row>
-            <Cell>
-                <Slider></Slider>
-            </Cell>
-            <Cell>
-                <Slider></Slider>
-            </Cell>
-        </Row>
-        <Row>
-            <!-- other cells -->
-        </Row>
-    </Table>
+<Table width="fill_parent"
+       height="fill_parent"
+       alignment="right|bottom">
+    <Row>
+        <Cell>
+            <Slider></Slider>
+        </Cell>
+        <Cell>
+            <Slider></Slider>
+        </Cell>
+    </Row>
+    <Row>
+        <!-- other cells -->
+    </Row>
+</Table>
 </layout>
