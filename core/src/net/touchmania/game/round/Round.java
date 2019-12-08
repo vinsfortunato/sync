@@ -14,6 +14,7 @@ public class Round {
     private Music music;
     private Judge judge;
     private PanelState panelState;
+    private long nanoStartTime = 0;
 
     public Round(Chart chart) {
         this.chart = chart;
@@ -28,7 +29,16 @@ public class Round {
     }
 
     public double getCurrentTime() {
-        return music.getPosition();
+        if(nanoStartTime == 0) {
+            return music.getPosition();
+        } else {
+            long timeMillis = (System.nanoTime() - nanoStartTime) / 1_000_000;
+            return ((double) timeMillis) / 1000D;
+        }
+    }
+
+    public long getNanoStartTime() {
+         return nanoStartTime;
     }
 
     public void setMusic(Music music) {
@@ -43,11 +53,22 @@ public class Round {
         return judge;
     }
 
+
     public PanelState getPanelState() {
         return panelState;
     }
 
     public void update() {
         judge.update(getCurrentTime());
+        if(nanoStartTime == 0 && music.getPosition() > 0) {
+            long musicPosMillis = (long) (music.getPosition() * 1000D);
+            nanoStartTime = System.nanoTime() - musicPosMillis * 1_000_000;
+            //System.out.println();
+            //System.out.println("START AT " + musicPosMillis);
+        } else if(nanoStartTime != 0) {
+            long musicPosMillis = ((long) (music.getPosition() * 1000D));
+            long calcPosNanos = System.nanoTime() - nanoStartTime;
+            //System.out.println(musicPosMillis + " " + calcPosNanos);
+        }
     }
 }

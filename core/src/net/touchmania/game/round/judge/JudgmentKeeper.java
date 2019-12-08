@@ -32,6 +32,8 @@ import static net.touchmania.game.util.TimingUtils.toBeatId;
 public class JudgmentKeeper {
     private IntMap<LongMap<Judgment>> judgments = new IntMap<>();
 
+    private Judgment lastJudgment;
+
     public JudgmentKeeper() {}
 
     public JudgmentKeeper(Beatmap beatmap) {
@@ -80,11 +82,18 @@ public class JudgmentKeeper {
     }
 
     public Judgment putJudgment(int panel, double beat, Judgment judgment) {
+        //Update last judgment, TODO TEMP
+        lastJudgment = judgment;
+
         LongMap<Judgment> panelJudgments = judgments.get(panel);
         if(panelJudgments == null) {
             panelJudgments = new LongMap<>();
             judgments.put(panel, panelJudgments);
         }
         return panelJudgments.put(toBeatId(beat), judgment);
+    }
+
+    public Judgment getLastJudgment() {
+        return lastJudgment;
     }
 }

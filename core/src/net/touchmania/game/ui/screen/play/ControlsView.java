@@ -16,6 +16,8 @@
 
 package net.touchmania.game.ui.screen.play;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -129,35 +131,76 @@ public class ControlsView extends Widget {
         private IntArray rightPointers = new IntArray();
 
         @Override
+        public boolean keyDown(InputEvent event, int keycode) {
+            long eventTimeNanos = Gdx.input.getCurrentEventTime() - round.getNanoStartTime();
+            double eventTimeSeconds = (double) (eventTimeNanos / 1_000_000) / 1000D;
+            if(keycode == Input.Keys.Y) {
+                getControls().setPressed(NotePanel.UP, eventTimeSeconds);
+            }
+            if(keycode == Input.Keys.G) {
+                getControls().setPressed(NotePanel.LEFT, eventTimeSeconds);
+            }
+            if(keycode == Input.Keys.H) {
+                getControls().setPressed(NotePanel.DOWN, eventTimeSeconds);
+            }
+            if(keycode == Input.Keys.J) {
+                getControls().setPressed(NotePanel.RIGHT, eventTimeSeconds);
+            }
+            return true;
+        }
+
+        @Override
+        public boolean keyUp(InputEvent event, int keycode) {
+            long eventTimeNanos = Gdx.input.getCurrentEventTime() - round.getNanoStartTime();
+            double eventTimeSeconds = (double) (eventTimeNanos / 1_000_000) / 1000D;
+            if(keycode == Input.Keys.Y) {
+                getControls().setReleased(NotePanel.UP, eventTimeSeconds);
+            }
+            if(keycode == Input.Keys.G) {
+                getControls().setReleased(NotePanel.LEFT, eventTimeSeconds);
+            }
+            if(keycode == Input.Keys.H) {
+                getControls().setReleased(NotePanel.DOWN, eventTimeSeconds);
+            }
+            if(keycode == Input.Keys.J) {
+                getControls().setReleased(NotePanel.RIGHT, eventTimeSeconds);
+            }
+            return true;
+        }
+
+        @Override
         public void touchDragged (InputEvent event, float x, float y, int pointer) {
             int noteColumn = getNearControl(x, y);
+            long eventTimeNanos = Gdx.input.getCurrentEventTime() - round.getNanoStartTime();
+            double eventTimeSeconds = (double) (eventTimeNanos / 1_000_000) / 1000D;
+
             switch(noteColumn) {
                 case NotePanel.LEFT:
                     if(!leftPointers.contains(pointer)) {
                         removePointer(pointer);
                         leftPointers.add(pointer);
-                        getControls().setPressed(noteColumn, round.getCurrentTime());
+                        getControls().setPressed(noteColumn, eventTimeSeconds);
                     }
                     break;
                 case NotePanel.DOWN:
                     if(!downPointers.contains(pointer)) {
                         removePointer(pointer);
                         downPointers.add(pointer);
-                        getControls().setPressed(noteColumn, round.getCurrentTime());
+                        getControls().setPressed(noteColumn, eventTimeSeconds);
                     }
                     break;
                 case NotePanel.UP:
                     if(!upPointers.contains(pointer)) {
                         removePointer(pointer);
                         upPointers.add(pointer);
-                        getControls().setPressed(noteColumn, round.getCurrentTime());
+                        getControls().setPressed(noteColumn, eventTimeSeconds);
                     }
                     break;
                 case NotePanel.RIGHT:
                     if(!rightPointers.contains(pointer)) {
                         removePointer(pointer);
                         rightPointers.add(pointer);
-                        getControls().setPressed(noteColumn, round.getCurrentTime());
+                        getControls().setPressed(noteColumn, eventTimeSeconds);
                     }
                     break;
             }
@@ -166,7 +209,11 @@ public class ControlsView extends Widget {
         @Override
         public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
             int noteColumn = getNearControl(x, y);
-            getControls().setPressed(noteColumn, round.getCurrentTime());
+
+            long eventTimeNanos = Gdx.input.getCurrentEventTime() - round.getNanoStartTime();
+            double eventTimeSeconds = (double) (eventTimeNanos / 1_000_000) / 1000D;
+
+            getControls().setPressed(noteColumn, eventTimeSeconds);
             switch(noteColumn) {
                 case NotePanel.LEFT:
                     leftPointers.add(pointer);
@@ -221,17 +268,21 @@ public class ControlsView extends Widget {
 
         private void removePointer(int pointer) {
              PanelState panelState = getControls();
+
+            long eventTimeNanos = Gdx.input.getCurrentEventTime() - round.getNanoStartTime();
+            double eventTimeSeconds = (double) (eventTimeNanos / 1_000_000) / 1000D;
+
             if(leftPointers.removeValue(pointer) && leftPointers.size == 0) {
-                panelState.setReleased(NotePanel.LEFT, round.getCurrentTime());
+                panelState.setReleased(NotePanel.LEFT, eventTimeSeconds);
             }
             else if(rightPointers.removeValue(pointer) && rightPointers.size == 0) {
-                panelState.setReleased(NotePanel.RIGHT, round.getCurrentTime());
+                panelState.setReleased(NotePanel.RIGHT, eventTimeSeconds);
             }
             else if(downPointers.removeValue(pointer) && downPointers.size == 0) {
-                panelState.setReleased(NotePanel.DOWN, round.getCurrentTime());
+                panelState.setReleased(NotePanel.DOWN, eventTimeSeconds);
             }
             else if(upPointers.removeValue(pointer) && upPointers.size == 0) {
-                panelState.setReleased(NotePanel.UP, round.getCurrentTime());
+                panelState.setReleased(NotePanel.UP, eventTimeSeconds);
             }
         }
     }

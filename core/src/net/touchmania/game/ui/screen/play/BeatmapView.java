@@ -43,7 +43,6 @@ public class BeatmapView extends Widget {
         double beat = timing.getBeatAt(time);
 
         //Draw panels
-
         for(int panel : panels) {
             drawReceptor(batch, panel, beat, time);
             drawNotes(batch, panel, beat, time);

@@ -14,6 +14,7 @@ public class DesktopLauncher implements Backend {
 
 	private void startGame() {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+		config.foregroundFPS = 144;
 		new LwjglApplication(new Game(this), config);
 	}
 
@@ -24,6 +25,6 @@ public class DesktopLauncher implements Backend {
 
 	@Override
 	public DPI getDeviceDPI() {
-		return null;
+		return DPI.LOW;
 	}
 }

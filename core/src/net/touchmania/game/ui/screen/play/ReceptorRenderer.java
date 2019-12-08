@@ -135,7 +135,7 @@ public class ReceptorRenderer {
      * @return the y position of the receptor inside the view.
      */
     public float getReceptorY(int panel, double beat, double time) {
-        return 1920f - 256 - 64;
+        return 1080 - 256 - 64;
     }
 
     /**

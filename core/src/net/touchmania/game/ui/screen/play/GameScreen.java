@@ -16,6 +16,7 @@
 
 package net.touchmania.game.ui.screen.play;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.files.FileHandle;
@@ -51,6 +52,7 @@ public class GameScreen implements Screen {
     /* Widgets */
     private BeatmapView beatmapView;
     private ControlsView controlsView;
+    private JudgmentView judgmentView;
 
     private Music music;
     private Round round;
@@ -70,7 +72,14 @@ public class GameScreen implements Screen {
 
     //TODO
     private void test() {
-        FileHandle fh = Gdx.files.external("touchmania/Songs/ITG Rodeo Tournament 8/011 - Pistolero");
+        FileHandle fh;
+        if(Gdx.app.getType() == Application.ApplicationType.Desktop) {
+            fh = Gdx.files.absolute("E:/Program Files/StepMania 5.1/Songs/ITG Rodeo Tournament 8/011 - Pistolero");
+        } else {
+            fh = Gdx.files.external("touchmania/Songs/ITG Rodeo Tournament 8/011 - Pistolero");
+        }
+
+        System.out.println(fh.path());
 
         SongLoader sl = new SongLoader(fh);
 
@@ -91,7 +100,17 @@ public class GameScreen implements Screen {
 
             controlsView = new ControlsView(round);
             beatmapView = new BeatmapView(round);
-            music = Gdx.audio.newMusic(Gdx.files.external(song.directory.path() + "/" + song.musicPath));
+            judgmentView = new JudgmentView(round);
+
+
+            FileHandle musicFile;
+            if(Gdx.app.getType() == Application.ApplicationType.Desktop) {
+                musicFile = Gdx.files.absolute(song.directory.path() + "/" + song.musicPath);
+            } else {
+                musicFile = Gdx.files.external(song.directory.path() + "/" + song.musicPath);
+            }
+
+            music = Gdx.audio.newMusic(musicFile);
             round.setMusic(music);
         } catch (Exception e) {
             System.err.println("Cannot read song!");
@@ -111,8 +130,8 @@ public class GameScreen implements Screen {
         controlsTable.add(controlsView)
                 .padLeft(0)
                 .padTop(0)
-                .width(1080)
-                .height(1920);
+                .width(1920)
+                .height(1080);
         controlsTable.left().top();
 
         Table beatmapTable = new Table();
@@ -120,13 +139,24 @@ public class GameScreen implements Screen {
         beatmapTable.add(beatmapView)
                 .padLeft(0)
                 .padTop(0)
-                .width(1080)
-                .height(1920);
+                .width(1920)
+                .height(1080);
         beatmapTable.left().top();
 
+        Table judgmentsTable = new Table();
+        judgmentsTable.setFillParent(true);
+        judgmentsTable.add(judgmentView)
+                .padLeft(0)
+                .padTop(0)
+                .width(1920)
+                .height(1080);
+        judgmentsTable.left().top();
+
         stack.add(beatmapTable);
+        stack.add(judgmentView);
         stack.add(controlsTable);
 
+        stage.setKeyboardFocus(controlsView);
         music.play();
     }
 
