@@ -31,8 +31,8 @@ public class PanelState {
 
     /**
      * Set the panel state at the given time. If the panel
-     * state at the given time is the same as the one trying to be
-     * set it will be ignored. Listeners will be notified only
+     * state at the given time is the same as the one that is being set
+     * it will be ignored. Listeners will be notified only
      * if the state actually change.
      * @param panel the panel
      * @param time the time in seconds
@@ -121,12 +121,14 @@ public class PanelState {
         TreeMap<Double, Boolean> states = panelStates.get(panel);
         if(states != null && !states.isEmpty()) {
             Map.Entry<Double, Boolean> state = states.floorEntry(time);
-            boolean pressed = state.getValue();
-            if(pressed) {
-                return state.getKey();
-            } else {
-                state = states.lowerEntry(state.getKey());
-                return state.getKey();
+            if(state != null) {
+                boolean pressed = state.getValue();
+                if(pressed) {
+                    return state.getKey();
+                } else {
+                    state = states.lowerEntry(state.getKey());
+                    return state.getKey();
+                }
             }
         }
         return Double.MAX_VALUE;
@@ -143,12 +145,14 @@ public class PanelState {
         TreeMap<Double, Boolean> states = panelStates.get(panel);
         if(states != null && !states.isEmpty()) {
             Map.Entry<Double, Boolean> state = states.floorEntry(time);
-            boolean pressed = state.getValue();
-            if(!pressed) {
-                return state.getKey();
-            } else {
-                state = states.lowerEntry(state.getKey());
-                return state.getKey();
+            if(state != null) {
+                boolean pressed = state.getValue();
+                if(!pressed) {
+                    return state.getKey();
+                } else {
+                    state = states.lowerEntry(state.getKey());
+                    return state.getKey();
+                }
             }
         }
         return Double.MIN_VALUE;

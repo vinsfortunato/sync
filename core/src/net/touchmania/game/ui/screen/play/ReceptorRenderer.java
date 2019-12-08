@@ -1,5 +1,7 @@
 package net.touchmania.game.ui.screen.play;
 
+import com.badlogic.gdx.Application;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
@@ -135,7 +137,8 @@ public class ReceptorRenderer {
      * @return the y position of the receptor inside the view.
      */
     public float getReceptorY(int panel, double beat, double time) {
-        return 1080 - 256 - 64;
+        boolean desktop = Gdx.app.getType() == Application.ApplicationType.Desktop;
+        return (desktop ? 1080 : 1920) - 256 - 64;
     }
 
     /**

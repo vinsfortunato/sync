@@ -39,7 +39,7 @@ public class BeatmapView extends Widget {
         Timing timing = getRound().getTiming();
 
         //Get current time and beat
-        double time = getRound().getCurrentTime();
+        double time = getRound().getMusicPosition().getPosition();
         double beat = timing.getBeatAt(time);
 
         //Draw panels

@@ -16,6 +16,7 @@
 
 package net.touchmania.game.ui.screen.play;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
@@ -46,6 +47,10 @@ public class ControlsView extends Widget {
     @Override
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
+
+        if(Gdx.app.getType() == Application.ApplicationType.Desktop) {
+            return;
+        }
         batch.end();
 
         ShapeRenderer renderer = new ShapeRenderer();
@@ -76,7 +81,7 @@ public class ControlsView extends Widget {
                     panel = NotePanel.DOWN;
                     break;
             }
-            if(getControls().isPressedAt(panel, round.getCurrentTime())) {
+            if(getControls().isPressedAt(panel, round.getMusicPosition().getPosition())) {
                 rect.getCenter(center);
                 renderer.setColor(new Color(1, 0, 0, 0.3f));
                 renderer.set(ShapeRenderer.ShapeType.Filled);
@@ -130,10 +135,19 @@ public class ControlsView extends Widget {
         private IntArray upPointers = new IntArray();
         private IntArray rightPointers = new IntArray();
 
+        private long syncNanoTime = -1;
+        private long syncEventTime = -1;
+
         @Override
         public boolean keyDown(InputEvent event, int keycode) {
-            long eventTimeNanos = Gdx.input.getCurrentEventTime() - round.getNanoStartTime();
-            double eventTimeSeconds = (double) (eventTimeNanos / 1_000_000) / 1000D;
+            if(syncNanoTime == -1) {
+                float delta = Gdx.graphics.getRawDeltaTime();
+                syncNanoTime = System.nanoTime() - (long) ((delta / 2.0f) * 1000L) * 1_000_000;
+                syncEventTime = Gdx.input.getCurrentEventTime();
+            }
+            long eventTime = syncNanoTime + (Gdx.input.getCurrentEventTime() - syncEventTime);
+
+            double eventTimeSeconds = round.getMusicPosition().getPositionAt(eventTime);
             if(keycode == Input.Keys.Y) {
                 getControls().setPressed(NotePanel.UP, eventTimeSeconds);
             }
@@ -151,8 +165,14 @@ public class ControlsView extends Widget {
 
         @Override
         public boolean keyUp(InputEvent event, int keycode) {
-            long eventTimeNanos = Gdx.input.getCurrentEventTime() - round.getNanoStartTime();
-            double eventTimeSeconds = (double) (eventTimeNanos / 1_000_000) / 1000D;
+            if(syncNanoTime == -1) {
+                float delta = Gdx.graphics.getRawDeltaTime();
+                syncNanoTime = System.nanoTime() - (long) ((delta / 2.0f) * 1000L) * 1_000_000;
+                syncEventTime = Gdx.input.getCurrentEventTime();
+            }
+            long eventTime = syncNanoTime + (Gdx.input.getCurrentEventTime() - syncEventTime);
+
+            double eventTimeSeconds = round.getMusicPosition().getPositionAt(eventTime);
             if(keycode == Input.Keys.Y) {
                 getControls().setReleased(NotePanel.UP, eventTimeSeconds);
             }
@@ -171,8 +191,7 @@ public class ControlsView extends Widget {
         @Override
         public void touchDragged (InputEvent event, float x, float y, int pointer) {
             int noteColumn = getNearControl(x, y);
-            long eventTimeNanos = Gdx.input.getCurrentEventTime() - round.getNanoStartTime();
-            double eventTimeSeconds = (double) (eventTimeNanos / 1_000_000) / 1000D;
+            double eventTimeSeconds = round.getMusicPosition().getPositionAt(Gdx.input.getCurrentEventTime());
 
             switch(noteColumn) {
                 case NotePanel.LEFT:
@@ -210,8 +229,7 @@ public class ControlsView extends Widget {
         public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
             int noteColumn = getNearControl(x, y);
 
-            long eventTimeNanos = Gdx.input.getCurrentEventTime() - round.getNanoStartTime();
-            double eventTimeSeconds = (double) (eventTimeNanos / 1_000_000) / 1000D;
+            double eventTimeSeconds = round.getMusicPosition().getPositionAt(Gdx.input.getCurrentEventTime());
 
             getControls().setPressed(noteColumn, eventTimeSeconds);
             switch(noteColumn) {
@@ -267,10 +285,9 @@ public class ControlsView extends Widget {
         }
 
         private void removePointer(int pointer) {
-             PanelState panelState = getControls();
+            PanelState panelState = getControls();
 
-            long eventTimeNanos = Gdx.input.getCurrentEventTime() - round.getNanoStartTime();
-            double eventTimeSeconds = (double) (eventTimeNanos / 1_000_000) / 1000D;
+            double eventTimeSeconds = round.getMusicPosition().getPositionAt(Gdx.input.getCurrentEventTime());
 
             if(leftPointers.removeValue(pointer) && leftPointers.size == 0) {
                 panelState.setReleased(NotePanel.LEFT, eventTimeSeconds);

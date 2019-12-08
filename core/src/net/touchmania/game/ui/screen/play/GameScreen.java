@@ -74,12 +74,10 @@ public class GameScreen implements Screen {
     private void test() {
         FileHandle fh;
         if(Gdx.app.getType() == Application.ApplicationType.Desktop) {
-            fh = Gdx.files.absolute("E:/Program Files/StepMania 5.1/Songs/ITG Rodeo Tournament 8/011 - Pistolero");
+            fh = Gdx.files.absolute("E:/Program Files/StepMania 5.1/Songs/Helblinde/Grief & Malice - [Zaia]");
         } else {
             fh = Gdx.files.external("touchmania/Songs/ITG Rodeo Tournament 8/011 - Pistolero");
         }
-
-        System.out.println(fh.path());
 
         SongLoader sl = new SongLoader(fh);
 
@@ -87,31 +85,27 @@ public class GameScreen implements Screen {
             Song song = sl.call();
             Chart chart = null;
             for(Chart c : song.charts) {
-                if(c.type == ChartType.DANCE_SINGLE) {
+                if(c.type == ChartType.DANCE_SINGLE && c.difficultyMeter == 15) {
                     chart = c;
                 }
             }
-
-            round = new Round(chart);
             SimParser parser = song.simFormat.newParser();
             parser.init(Files.toString(song.simFile.file(), Charsets.UTF_8));
             chart.beatmap = parser.parseBeatmap(chart);
-            chart.beatmap.tempClear();
-
-            controlsView = new ControlsView(round);
-            beatmapView = new BeatmapView(round);
-            judgmentView = new JudgmentView(round);
-
-
             FileHandle musicFile;
             if(Gdx.app.getType() == Application.ApplicationType.Desktop) {
                 musicFile = Gdx.files.absolute(song.directory.path() + "/" + song.musicPath);
             } else {
                 musicFile = Gdx.files.external(song.directory.path() + "/" + song.musicPath);
             }
-
             music = Gdx.audio.newMusic(musicFile);
-            round.setMusic(music);
+
+            round = new Round(song, chart, music);
+
+            //Init actors
+            controlsView = new ControlsView(round);
+            beatmapView = new BeatmapView(round);
+            judgmentView = new JudgmentView(round);
         } catch (Exception e) {
             System.err.println("Cannot read song!");
             e.printStackTrace();
@@ -120,6 +114,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void show(Stage stage) {
+        boolean desktop = Gdx.app.getType() == Application.ApplicationType.Desktop;
         stage.getActors().clear();
         Stack stack = new Stack();
         stack.setFillParent(true);
@@ -130,8 +125,8 @@ public class GameScreen implements Screen {
         controlsTable.add(controlsView)
                 .padLeft(0)
                 .padTop(0)
-                .width(1920)
-                .height(1080);
+                .width(desktop ? 1920 : 1080)
+                .height(desktop ? 1080 : 1920);
         controlsTable.left().top();
 
         Table beatmapTable = new Table();
@@ -139,8 +134,8 @@ public class GameScreen implements Screen {
         beatmapTable.add(beatmapView)
                 .padLeft(0)
                 .padTop(0)
-                .width(1920)
-                .height(1080);
+                .width(desktop ? 1920 : 1080)
+                .height(desktop ? 1080 : 1920);
         beatmapTable.left().top();
 
         Table judgmentsTable = new Table();
@@ -148,8 +143,8 @@ public class GameScreen implements Screen {
         judgmentsTable.add(judgmentView)
                 .padLeft(0)
                 .padTop(0)
-                .width(1920)
-                .height(1080);
+                .width(desktop ? 1920 : 1080)
+                .height(desktop ? 1080 : 1920);
         judgmentsTable.left().top();
 
         stack.add(beatmapTable);

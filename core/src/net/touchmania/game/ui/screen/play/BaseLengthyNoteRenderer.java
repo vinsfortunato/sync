@@ -18,6 +18,7 @@ package net.touchmania.game.ui.screen.play;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import net.touchmania.game.round.modifier.SpeedModifier;
 import net.touchmania.game.song.note.LengthyNote;
 import net.touchmania.game.song.note.Note;
 
@@ -67,8 +68,8 @@ public abstract class BaseLengthyNoteRenderer extends BaseNoteRenderer implement
     public float getTailY(int panel, LengthyNote note, double beat, double time) {
         Drawable drawable = getNoteDrawable(panel, note, beat, time);
         float height = drawable.getMinHeight();
-        float speedMod = 2.5f;
-        return (float) -(height * speedMod * (note.getBeat() + note.getLength() - beat));
+        SpeedModifier speedMod = getRound().getModifiers().getSpeedModifier();
+        return (float) -(height * speedMod.getSpeedAt(beat) * (note.getBeat() + note.getLength() - beat));
     }
 
     @Override

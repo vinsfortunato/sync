@@ -21,6 +21,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TransformDrawable;
 import net.touchmania.game.round.Round;
+import net.touchmania.game.round.modifier.SpeedModifier;
 import net.touchmania.game.song.note.Note;
 import net.touchmania.game.song.note.NotePanel;
 
@@ -75,8 +76,8 @@ public abstract class BaseNoteRenderer implements NoteRenderer {
     public float getNoteY(int panel, Note note, double beat, double time) {
         Drawable drawable = getNoteDrawable(panel, note, beat, time);
         float height = drawable.getMinHeight();
-        float speedMod = 2.5f;
-        return (float) -(height * speedMod * (note.getBeat() - beat));
+        SpeedModifier speedMod = getRound().getModifiers().getSpeedModifier();
+        return (float) -(height * speedMod.getSpeedAt(beat) * (note.getBeat() - beat));
     }
 
     @Override
