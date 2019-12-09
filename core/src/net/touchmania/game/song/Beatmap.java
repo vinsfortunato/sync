@@ -17,6 +17,7 @@
 package net.touchmania.game.song;
 
 import com.badlogic.gdx.utils.IntMap;
+import net.touchmania.game.song.note.HoldNote;
 import net.touchmania.game.song.note.Note;
 import net.touchmania.game.song.note.TapNote;
 import net.touchmania.game.util.Criteria;
@@ -41,7 +42,7 @@ public class Beatmap {
             Iterator<Map.Entry<Double, Note>> it = map.entrySet().iterator();
             while(it.hasNext()) {
                 Map.Entry<Double, Note> entry = it.next();
-                if(!(entry.getValue() instanceof TapNote)) {
+                if(!(entry.getValue() instanceof TapNote || entry.getValue() instanceof HoldNote)) {
                     it.remove();
                 }
             }

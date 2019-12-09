@@ -16,14 +16,14 @@
 
 package net.touchmania.game.round.judge;
 
-public class TapJudgement extends Judgment {
+public class TapJudgment extends Judgment {
     private double timingError;
     private JudgmentClass judgmentClass;
 
     /**
      * @param genTime the judgment's generation time relative to the start of the music track.
      */
-    public TapJudgement(double genTime, double timingError, JudgmentClass judgmentClass) {
+    public TapJudgment(double genTime, double timingError, JudgmentClass judgmentClass) {
         super(genTime);
         this.timingError = timingError;
         this.judgmentClass = judgmentClass;

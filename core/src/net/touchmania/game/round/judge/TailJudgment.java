@@ -17,11 +17,17 @@
 package net.touchmania.game.round.judge;
 
 public class TailJudgment extends Judgment {
+    private JudgmentClass judgmentClass;
 
     /**
      * @param genTime the judgment's generation time relative to the start of the music track.
      */
-    public TailJudgment(double genTime) {
+    public TailJudgment(double genTime, JudgmentClass judgmentClass) {
         super(genTime);
+        this.judgmentClass = judgmentClass;
+    }
+
+    public JudgmentClass getJudgmentClass() {
+        return judgmentClass;
     }
 }

@@ -26,7 +26,8 @@ import net.touchmania.game.resource.lazy.Resource;
 import net.touchmania.game.round.Round;
 import net.touchmania.game.round.judge.Judgment;
 import net.touchmania.game.round.judge.JudgmentClass;
-import net.touchmania.game.round.judge.TapJudgement;
+import net.touchmania.game.round.judge.TailJudgment;
+import net.touchmania.game.round.judge.TapJudgment;
 
 public class JudgmentView extends Widget {
     private Round round;
@@ -62,10 +63,18 @@ public class JudgmentView extends Widget {
 
         //Draw judgment
         Judgment lastJudgment = round.getJudge().getJudgmentKeeper().getLastJudgment();
-        if(lastJudgment instanceof TapJudgement) {
-            TapJudgement judgment = (TapJudgement) lastJudgment;
 
-            Drawable drawable = getJudgmentDrawable( judgment.getJudgmentClass());
+        JudgmentClass c = null;
+        if(lastJudgment instanceof TapJudgment) {
+            TapJudgment judgment = (TapJudgment) lastJudgment;
+            c = judgment.getJudgmentClass();
+        } else if(lastJudgment instanceof TailJudgment) {
+            TailJudgment judgment = (TailJudgment) lastJudgment;
+            c = judgment.getJudgmentClass();
+        }
+
+        if(c != null) {
+            Drawable drawable = getJudgmentDrawable(c);
             if(drawable == null) return; //TODO
 
             //Set opacity

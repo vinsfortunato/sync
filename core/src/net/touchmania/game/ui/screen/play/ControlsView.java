@@ -33,15 +33,15 @@ import net.touchmania.game.round.Round;
 import net.touchmania.game.song.note.NotePanel;
 
 public class ControlsView extends Widget {
-    private float controlWidth = 240;
-    private float controlHeight = 240;
+    private float controlWidth = 40;
+    private float controlHeight = 40;
 
     private Round round;
 
     public ControlsView(Round round) {
         super();
         this.round = round;
-        addListener(new GameControlsInputListener());
+        addListener(Gdx.app.getType() == Application.ApplicationType.Desktop ? new DesktopControlListener() : new MobileControlListener());
     }
 
     @Override
@@ -99,25 +99,25 @@ public class ControlsView extends Widget {
 
     private Rectangle getLeftRect() {
         float baseX = getWidth() / 2 - controlWidth * 1.5f;
-        float baseY = 100;
+        float baseY = 350;
         return new Rectangle(baseX, baseY + controlHeight, controlWidth, controlHeight);
     }
 
     private Rectangle getRightRect() {
         float baseX = getWidth() / 2 - controlWidth * 1.5f;
-        float baseY = 100;
+        float baseY = 350;
         return new Rectangle(baseX + controlWidth * 2, baseY + controlHeight, controlWidth, controlHeight);
     }
 
     private Rectangle getUpRect() {
         float baseX = getWidth() / 2 - controlWidth * 1.5f;
-        float baseY = 100;
+        float baseY = 350;
         return new Rectangle(baseX + controlWidth, baseY + controlHeight * 2, controlWidth, controlHeight);
     }
 
     private Rectangle getDownRect() {
         float baseX = getWidth() / 2 - controlWidth * 1.5f;
-        float baseY = 100;
+        float baseY = 350;
         return new Rectangle(baseX + controlWidth, baseY, controlWidth, controlHeight);
     }
 
@@ -129,64 +129,11 @@ public class ControlsView extends Widget {
         return round.getPanelState();
     }
 
-    class GameControlsInputListener extends InputListener {
+    class MobileControlListener extends InputListener {
         private IntArray leftPointers = new IntArray();
         private IntArray downPointers = new IntArray();
         private IntArray upPointers = new IntArray();
         private IntArray rightPointers = new IntArray();
-
-        private long syncNanoTime = -1;
-        private long syncEventTime = -1;
-
-        @Override
-        public boolean keyDown(InputEvent event, int keycode) {
-            if(syncNanoTime == -1) {
-                float delta = Gdx.graphics.getRawDeltaTime();
-                syncNanoTime = System.nanoTime() - (long) ((delta / 2.0f) * 1000L) * 1_000_000;
-                syncEventTime = Gdx.input.getCurrentEventTime();
-            }
-            long eventTime = syncNanoTime + (Gdx.input.getCurrentEventTime() - syncEventTime);
-
-            double eventTimeSeconds = round.getMusicPosition().getPositionAt(eventTime);
-            if(keycode == Input.Keys.Y) {
-                getControls().setPressed(NotePanel.UP, eventTimeSeconds);
-            }
-            if(keycode == Input.Keys.G) {
-                getControls().setPressed(NotePanel.LEFT, eventTimeSeconds);
-            }
-            if(keycode == Input.Keys.H) {
-                getControls().setPressed(NotePanel.DOWN, eventTimeSeconds);
-            }
-            if(keycode == Input.Keys.J) {
-                getControls().setPressed(NotePanel.RIGHT, eventTimeSeconds);
-            }
-            return true;
-        }
-
-        @Override
-        public boolean keyUp(InputEvent event, int keycode) {
-            if(syncNanoTime == -1) {
-                float delta = Gdx.graphics.getRawDeltaTime();
-                syncNanoTime = System.nanoTime() - (long) ((delta / 2.0f) * 1000L) * 1_000_000;
-                syncEventTime = Gdx.input.getCurrentEventTime();
-            }
-            long eventTime = syncNanoTime + (Gdx.input.getCurrentEventTime() - syncEventTime);
-
-            double eventTimeSeconds = round.getMusicPosition().getPositionAt(eventTime);
-            if(keycode == Input.Keys.Y) {
-                getControls().setReleased(NotePanel.UP, eventTimeSeconds);
-            }
-            if(keycode == Input.Keys.G) {
-                getControls().setReleased(NotePanel.LEFT, eventTimeSeconds);
-            }
-            if(keycode == Input.Keys.H) {
-                getControls().setReleased(NotePanel.DOWN, eventTimeSeconds);
-            }
-            if(keycode == Input.Keys.J) {
-                getControls().setReleased(NotePanel.RIGHT, eventTimeSeconds);
-            }
-            return true;
-        }
 
         @Override
         public void touchDragged (InputEvent event, float x, float y, int pointer) {
@@ -295,12 +242,50 @@ public class ControlsView extends Widget {
             else if(rightPointers.removeValue(pointer) && rightPointers.size == 0) {
                 panelState.setReleased(NotePanel.RIGHT, eventTimeSeconds);
             }
-            else if(downPointers.removeValue(pointer) && downPointers.size == 0) {
+            else if(downPointers.removeValue(pointer) && downPointers.size == 0)  {
                 panelState.setReleased(NotePanel.DOWN, eventTimeSeconds);
             }
             else if(upPointers.removeValue(pointer) && upPointers.size == 0) {
                 panelState.setReleased(NotePanel.UP, eventTimeSeconds);
             }
+        }
+    }
+
+    class DesktopControlListener extends InputListener {
+        @Override
+        public boolean keyDown(InputEvent event, int keycode) {
+            double eventTimeSeconds = round.getMusicPosition().getPosition();
+            if(keycode == Input.Keys.Y) {
+                getControls().setPressed(NotePanel.UP, eventTimeSeconds);
+            }
+            if(keycode == Input.Keys.G) {
+                getControls().setPressed(NotePanel.LEFT, eventTimeSeconds);
+            }
+            if(keycode == Input.Keys.H) {
+                getControls().setPressed(NotePanel.DOWN, eventTimeSeconds);
+            }
+            if(keycode == Input.Keys.J) {
+                getControls().setPressed(NotePanel.RIGHT, eventTimeSeconds);
+            }
+            return true;
+        }
+
+        @Override
+        public boolean keyUp(InputEvent event, int keycode) {
+            double eventTimeSeconds = round.getMusicPosition().getPosition();
+            if(keycode == Input.Keys.Y) {
+                getControls().setReleased(NotePanel.UP, eventTimeSeconds);
+            }
+            if(keycode == Input.Keys.G) {
+                getControls().setReleased(NotePanel.LEFT, eventTimeSeconds);
+            }
+            if(keycode == Input.Keys.H) {
+                getControls().setReleased(NotePanel.DOWN, eventTimeSeconds);
+            }
+            if(keycode == Input.Keys.J) {
+                getControls().setReleased(NotePanel.RIGHT, eventTimeSeconds);
+            }
+            return true;
         }
     }
 }

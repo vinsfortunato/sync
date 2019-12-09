@@ -61,11 +61,6 @@ public class HoldNoteRenderer extends BaseLengthyNoteRenderer {
     }
 
     @Override
-    public boolean isNoteVisible(int panel, Note note, double beat, double time) {
-        return true;
-    }
-
-    @Override
     public Drawable getNoteDrawable(int panel, Note note, double beat, double time) {
         HoldNote holdNote = (HoldNote) note;
         switch (holdNote.getResolution()) {
@@ -89,7 +84,7 @@ public class HoldNoteRenderer extends BaseLengthyNoteRenderer {
 
     @Override
     public Drawable getNoteConnectorDrawable(int panel, LengthyNote note, double beat, double time) {
-        return null;
+        return null; //TODO
     }
 
     @Override

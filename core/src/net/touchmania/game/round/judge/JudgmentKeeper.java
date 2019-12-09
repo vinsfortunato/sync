@@ -21,7 +21,6 @@ import com.badlogic.gdx.utils.LongMap;
 import com.google.common.base.Preconditions;
 import net.touchmania.game.Game;
 import net.touchmania.game.song.Beatmap;
-import net.touchmania.game.song.note.Note;
 import net.touchmania.game.song.note.NotePanel;
 
 import static net.touchmania.game.util.TimingUtils.toBeatId;
@@ -59,26 +58,15 @@ public class JudgmentKeeper {
         }
     }
 
-    public boolean hasJudgment(int panel, Note note) {
-        return hasJudgment(panel, note.getBeat());
-    }
-
     public boolean hasJudgment(int panel, double beat) {
         LongMap<Judgment> panelJudgments = judgments.get(panel);
         return panelJudgments != null && panelJudgments.containsKey(toBeatId(beat));
     }
 
-    public Judgment getJudgment(int panel, Note note) {
-        return getJudgment(panel, note.getBeat());
-    }
 
     public Judgment getJudgment(int panel, double beat) {
         LongMap<Judgment> panelJudgments = judgments.get(panel);
         return panelJudgments != null ? panelJudgments.get(toBeatId(beat)) : null;
-    }
-
-    public Judgment putJudgment(int panel, Note note, Judgment judgment) {
-        return putJudgment(panel, note.getBeat(), judgment);
     }
 
     public Judgment putJudgment(int panel, double beat, Judgment judgment) {

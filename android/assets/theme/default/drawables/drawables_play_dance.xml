@@ -28,10 +28,10 @@
     <drawable id="play_dance_note_hold_head_48" >drawable:play_dance_note_tap_48</drawable>
     <drawable id="play_dance_note_hold_head_64" >drawable:play_dance_note_tap_64</drawable>
     <drawable id="play_dance_note_hold_head_192">drawable:play_dance_note_tap_192</drawable>
-    <region id="play_dance_note_hold_body_inactive" x="768" y="256" width="256" height="126">texture:play_dance_notes</region>
-    <region id="play_dance_note_hold_body_active"   x="768" y="768" width="256" height="126">texture:play_dance_notes</region>
-    <region id="play_dance_note_hold_tail_inactive" x="768" y="382" width="256" height="130">texture:play_dance_notes</region>
-    <region id="play_dance_note_hold_tail_active"   x="768" y="894" width="256" height="130">texture:play_dance_notes</region>
+    <region id="play_dance_note_hold_body_inactive" x="768" y="0"   width="256" height="126">texture:play_dance_notes</region>
+    <region id="play_dance_note_hold_body_active"   x="768" y="256" width="256" height="126">texture:play_dance_notes</region>
+    <region id="play_dance_note_hold_tail_inactive" x="768" y="126" width="256" height="130">texture:play_dance_notes</region>
+    <region id="play_dance_note_hold_tail_active"   x="768" y="382" width="256" height="130">texture:play_dance_notes</region>
 
     <!-- Roll note -->
     <drawable id="play_dance_note_roll_head_4" >drawable:play_dance_note_tap_4</drawable>
@@ -43,9 +43,9 @@
     <drawable id="play_dance_note_roll_head_48">drawable:play_dance_note_tap_48</drawable>
     <drawable id="play_dance_note_roll_head_64">drawable:play_dance_note_tap_64</drawable>
     <drawable id="play_dance_note_roll_head_192">drawable:play_dance_note_tap_192</drawable>
-    <region id="play_dance_note_roll_body_inactive" x="768" y="256" width="256" height="126">texture:play_dance_notes</region>
+    <region id="play_dance_note_roll_body_inactive" x="768" y="512" width="256" height="126">texture:play_dance_notes</region>
     <region id="play_dance_note_roll_body_active"   x="768" y="768" width="256" height="126">texture:play_dance_notes</region>
-    <region id="play_dance_note_roll_tail_inactive" x="768" y="382" width="256" height="130">texture:play_dance_notes</region>
+    <region id="play_dance_note_roll_tail_inactive" x="768" y="638" width="256" height="130">texture:play_dance_notes</region>
     <region id="play_dance_note_roll_tail_active"   x="768" y="894" width="256" height="130">texture:play_dance_notes</region>
 
     <!-- Mine note -->
@@ -58,6 +58,6 @@
     <region id="play_dance_judgment_good"      x="318" y="384" width="388" height="128">texture:play_dance_judgments</region>
     <region id="play_dance_judgment_miss"      x="346" y="512" width="332" height="128">texture:play_dance_judgments</region>
     <region id="play_dance_judgment_boo"       x="368" y="640" width="288" height="128">texture:play_dance_judgments</region>
-    <region id="play_dance_judgment_ok"        x="402" y="768" width="220" height="128">texture:play_dance_judgments</region>
-    <region id="play_dance_judgment_ng"        x="416" y="896" width="192" height="128">texture:play_dance_judgments</region>
+    <region id="play_dance_judgment_ok"        x="146" y="768" width="220" height="128">texture:play_dance_judgments</region>
+    <region id="play_dance_judgment_ng"        x="672" y="768" width="192" height="128">texture:play_dance_judgments</region>
 </drawables>

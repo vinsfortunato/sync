@@ -74,9 +74,9 @@ public class GameScreen implements Screen {
     private void test() {
         FileHandle fh;
         if(Gdx.app.getType() == Application.ApplicationType.Desktop) {
-            fh = Gdx.files.absolute("E:/Program Files/StepMania 5.1/Songs/Helblinde/Grief & Malice - [Zaia]");
+            fh = Gdx.files.absolute("E:/Program Files/StepMania 5.1/Songs/ITG Rodeo Tournament 8/012 - Your One");
         } else {
-            fh = Gdx.files.external("touchmania/Songs/ITG Rodeo Tournament 8/011 - Pistolero");
+            fh = Gdx.files.external("touchmania/Songs/ITG Rodeo Tournament 8/012 - Your One");
         }
 
         SongLoader sl = new SongLoader(fh);
@@ -85,13 +85,14 @@ public class GameScreen implements Screen {
             Song song = sl.call();
             Chart chart = null;
             for(Chart c : song.charts) {
-                if(c.type == ChartType.DANCE_SINGLE && c.difficultyMeter == 15) {
+                if(c.type == ChartType.DANCE_SINGLE) {
                     chart = c;
                 }
             }
             SimParser parser = song.simFormat.newParser();
             parser.init(Files.toString(song.simFile.file(), Charsets.UTF_8));
             chart.beatmap = parser.parseBeatmap(chart);
+            chart.beatmap.tempClear();
             FileHandle musicFile;
             if(Gdx.app.getType() == Application.ApplicationType.Desktop) {
                 musicFile = Gdx.files.absolute(song.directory.path() + "/" + song.musicPath);

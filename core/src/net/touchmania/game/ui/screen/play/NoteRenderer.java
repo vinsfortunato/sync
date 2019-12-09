@@ -25,6 +25,7 @@ import net.touchmania.game.song.note.Note;
 public interface NoteRenderer {
     /**
      * Draw a note to the batch. Batch is translated to the view position.
+     * Is called only if {@link #isNoteInsideView(int, Note, double, double, float, float, float, float)} returns true.
      * @param batch the batch.
      * @param panel the note panel.
      * @param note the note to draw.
@@ -56,7 +57,27 @@ public interface NoteRenderer {
     float getNoteY(int panel, Note note, double beat, double time);
 
     /**
-     * Gets note scale x. Scale is applied to the note texture.
+     * Gets unscaled note width.
+     * @param panel the note panel.
+     * @param note the note.
+     * @param beat the current beat.
+     * @param time the current time relative to the start of the music track.
+     * @return the note unscaled width.
+     */
+    float getNoteWidth(int panel, Note note, double beat, double time);
+
+    /**
+     * Gets unscaled note height.
+     * @param panel the note panel.
+     * @param note the note.
+     * @param beat the current beat.
+     * @param time the current time relative to the start of the music track.
+     * @return the note unscaled width.
+     */
+    float getNoteHeight(int panel, Note note, double beat, double time);
+
+    /**
+     * Gets note scale x.
      * @param panel the note panel.
      * @param note the note.
      * @param beat the current beat.
@@ -66,7 +87,7 @@ public interface NoteRenderer {
     float getNoteScaleX(int panel, Note note, double beat, double time);
 
     /**
-     * Gets note scale y. Scale is applied to the note texture.
+     * Gets note scale y.
      * @param panel the note panel.
      * @param note the note.
      * @param beat the current beat.

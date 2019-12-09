@@ -141,7 +141,7 @@ public class PanelState {
      * @return the last time in seconds when a released state occurred at the
      * given time, or {@link Double#MIN_VALUE} if the panel has never been pressed.
      */
-    public double getLastTimeReleased(int panel, double time) {
+    public double getLastTimeReleasedAt(int panel, double time) {
         TreeMap<Double, Boolean> states = panelStates.get(panel);
         if(states != null && !states.isEmpty()) {
             Map.Entry<Double, Boolean> state = states.floorEntry(time);

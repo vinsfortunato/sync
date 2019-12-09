@@ -22,8 +22,9 @@ public class MineJudgment extends Judgment {
     /**
      * @param genTime the judgment's generation time relative to the start of the music track.
      */
-    public MineJudgment(double genTime) {
+    public MineJudgment(double genTime, boolean exploded) {
         super(genTime);
+        this.exploded = exploded;
     }
 
     public boolean hasExploded() {

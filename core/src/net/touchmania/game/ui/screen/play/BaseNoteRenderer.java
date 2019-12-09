@@ -34,17 +34,17 @@ public abstract class BaseNoteRenderer implements NoteRenderer {
 
     @Override
     public void draw(Batch batch, int panel, Note note, double beat, double time, float receptorX, float receptorY) {
+        if(!isNoteVisible(panel, note, beat, time)) {
+            return;
+        }
+
         Drawable drawable = getNoteDrawable(panel, note, beat, time);
         if(drawable == null) { //TODO at this point drawable should not be null
             return;
         }
 
-        if(!isNoteVisible(panel, note, beat, time)) {
-            return;
-        }
-
-        float width = drawable.getMinWidth();
-        float height = drawable.getMinHeight();
+        float width = getNoteWidth(panel, note, beat, time);
+        float height = getNoteHeight(panel, note, beat, time);
         float x = receptorX + getNoteX(panel, note, beat, time);
         float y = receptorY + getNoteY(panel, note, beat, time);
         float originX = width / 2.0f;
@@ -78,6 +78,18 @@ public abstract class BaseNoteRenderer implements NoteRenderer {
         float height = drawable.getMinHeight();
         SpeedModifier speedMod = getRound().getModifiers().getSpeedModifier();
         return (float) -(height * speedMod.getSpeedAt(beat) * (note.getBeat() - beat));
+    }
+
+    @Override
+    public float getNoteWidth(int panel, Note note, double beat, double time) {
+        Drawable drawable = getNoteDrawable(panel, note, beat, time);
+        return drawable != null ? drawable.getMinWidth() : 0;
+    }
+
+    @Override
+    public float getNoteHeight(int panel, Note note, double beat, double time) {
+        Drawable drawable = getNoteDrawable(panel, note, beat, time);
+        return drawable != null ? drawable.getMinHeight() : 0;
     }
 
     @Override

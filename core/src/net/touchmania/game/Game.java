@@ -18,21 +18,17 @@ package net.touchmania.game;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import net.touchmania.game.player.PlayerManager;
-import net.touchmania.game.song.SongManager;
 import net.touchmania.game.resource.ResourceProvider;
+import net.touchmania.game.resource.ThemeManager;
+import net.touchmania.game.song.SongManager;
+import net.touchmania.game.ui.ScreenManager;
 import net.touchmania.game.ui.screen.play.GameScreen;
 import net.touchmania.game.util.Disposer;
 import net.touchmania.game.util.concurrent.ExecutorManager;
-import net.touchmania.game.ui.ScreenManager;
-import net.touchmania.game.resource.ThemeManager;
 
 public class Game implements ApplicationListener {
 	private static Game instance;
@@ -75,6 +71,8 @@ public class Game implements ApplicationListener {
 
 	@Override
 	public void render () {
+		//fps.log();
+
 		//Update assets
 		assets.update();
 

@@ -5,7 +5,7 @@ import net.touchmania.game.Game;
 import net.touchmania.game.resource.ResourceProvider;
 import net.touchmania.game.resource.lazy.Resource;
 import net.touchmania.game.round.judge.JudgmentKeeper;
-import net.touchmania.game.round.judge.TapJudgement;
+import net.touchmania.game.round.judge.TapJudgment;
 import net.touchmania.game.song.note.Note;
 import net.touchmania.game.song.note.TapNote;
 
@@ -42,7 +42,7 @@ public class TapNoteRenderer extends BaseNoteRenderer {
     @Override
     public boolean isNoteVisible(int panel, Note note, double beat, double time) {
         JudgmentKeeper judgments = getRound().getJudge().getJudgmentKeeper();
-        TapJudgement judgment = (TapJudgement) judgments.getJudgment(panel, note);
+        TapJudgment judgment = (TapJudgment) judgments.getJudgment(panel, note.getBeat());
 
         if(judgment != null) {
             switch (judgment.getJudgmentClass()) {
