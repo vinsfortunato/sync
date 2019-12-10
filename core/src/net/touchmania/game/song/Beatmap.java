@@ -19,6 +19,7 @@ package net.touchmania.game.song;
 import com.badlogic.gdx.utils.IntMap;
 import net.touchmania.game.song.note.HoldNote;
 import net.touchmania.game.song.note.Note;
+import net.touchmania.game.song.note.RollNote;
 import net.touchmania.game.song.note.TapNote;
 import net.touchmania.game.util.Criteria;
 
@@ -26,6 +27,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 
+//TODO implement comparator with tolerance
+//TODO Define tolerance in game settings?
 public class Beatmap {
     /*
      * The map key is the note panel and the value is a TreeMap containing notes.
@@ -42,13 +45,23 @@ public class Beatmap {
             Iterator<Map.Entry<Double, Note>> it = map.entrySet().iterator();
             while(it.hasNext()) {
                 Map.Entry<Double, Note> entry = it.next();
-                if(!(entry.getValue() instanceof TapNote || entry.getValue() instanceof HoldNote)) {
+                if(!(entry.getValue() instanceof TapNote || entry.getValue() instanceof HoldNote || entry.getValue() instanceof RollNote)) {
                     it.remove();
                 }
             }
         }
     }
 
+    /**
+     * Gets the note at the given beat on the given panel.
+     * @param panel the note panel
+     * @param beat the beat
+     * @return the note at the given beat, or null if there is no note at the given beat.
+     */
+    public Note getNote(int panel, double beat) {
+        TreeMap<Double, Note> notes = panels.get(panel);
+        return notes != null ? notes.get(beat) : null;
+    }
 
     /**
      * Returns the note associated with the greatest beat less than or equal
@@ -228,6 +241,23 @@ public class Beatmap {
      */
     public boolean hasNotes(int panel) {
         return countNotes(panel) > 0;
+    }
+
+    public boolean isChord(double beat) {
+        return getChordSize(beat) > 1;
+    }
+
+    public int getChordSize(double beat) {
+        int count = 0;
+        IntMap.Keys keys = panels.keys();
+        while(keys.hasNext) {
+            int panel = keys.next();
+            Note note = getNote(panel, beat);
+            if(note != null && note.canBeChord()) {
+                count++;
+            }
+        }
+        return count;
     }
 
     /**

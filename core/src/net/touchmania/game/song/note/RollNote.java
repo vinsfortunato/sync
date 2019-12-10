@@ -31,4 +31,14 @@ public class RollNote extends LengthyNote {
     public RollNote(double beat, double length) {
         super(beat, length);
     }
+
+    @Override
+    public boolean canBeJudged() {
+        return true;
+    }
+
+    @Override
+    public boolean canBeChord() {
+        return true;
+    }
 }

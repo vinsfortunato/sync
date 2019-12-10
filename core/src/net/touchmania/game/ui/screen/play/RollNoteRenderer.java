@@ -62,11 +62,6 @@ public class RollNoteRenderer extends BaseLengthyNoteRenderer {
     }
 
     @Override
-    public boolean isNoteVisible(int panel, Note note, double beat, double time) {
-        return true;
-    }
-
-    @Override
     public Drawable getNoteDrawable(int panel, Note note, double beat, double time) {
         RollNote rollNote = (RollNote) note;
         switch (rollNote.getResolution()) {

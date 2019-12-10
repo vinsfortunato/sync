@@ -28,4 +28,9 @@ public class MineNote extends Note {
     public boolean canBeJudged() {
         return true;
     }
+
+    @Override
+    public boolean canBeChord() {
+        return false;
+    }
 }

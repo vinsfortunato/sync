@@ -73,8 +73,10 @@ public class GameScreen implements Screen {
     //TODO
     private void test() {
         FileHandle fh;
+        String testSong = "E:/Program Files/StepMania 5.1/Songs/ITG Rodeo Tournament 8/012 - Grayed Out -Antifront-";
         if(Gdx.app.getType() == Application.ApplicationType.Desktop) {
-            fh = Gdx.files.absolute("E:/Program Files/StepMania 5.1/Songs/ITG Rodeo Tournament 8/012 - Your One");
+
+            fh = Gdx.files.absolute("E:/Program Files/StepMania 5.1/Songs/ITG Rodeo Tournament 8/012 - Grayed Out -Antifront-");
         } else {
             fh = Gdx.files.external("touchmania/Songs/ITG Rodeo Tournament 8/012 - Your One");
         }
@@ -85,7 +87,7 @@ public class GameScreen implements Screen {
             Song song = sl.call();
             Chart chart = null;
             for(Chart c : song.charts) {
-                if(c.type == ChartType.DANCE_SINGLE) {
+                if(c.type == ChartType.DANCE_SINGLE && c.difficultyMeter == 1) {
                     chart = c;
                 }
             }

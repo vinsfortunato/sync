@@ -23,8 +23,10 @@ public class JudgeCriteria {
     private double goodWindow = 0.135f;       //135ms
     private double booWindow = 0.180f;        //180ms
     private double mineWindow = 0.090f;       //90ms
-    private double holdRecover = 0.250f;      //250ms
+    private double holdRecover = 0.320f;      //320ms
+    private double rollRecover = 0.350f;      //350ms
     private boolean holdRecoverEnabled = true;
+    private boolean chordCohesionEnabled = true;
 
     public double getMarvelousWindow() {
         return marvelousWindow;
@@ -50,17 +52,26 @@ public class JudgeCriteria {
         return mineWindow;
     }
 
+    public double getWorstTapWindow() {
+        return getBooWindow();
+    }
+
     public double getHoldRecover() {
         return holdRecover;
+    }
+
+    public double getRollRecover() {
+        return rollRecover;
     }
 
     public boolean isHoldRecoverEnabled() {
         return holdRecoverEnabled;
     }
 
-    public double getWorstTapWindow() {
-        return getBooWindow();
+    public boolean isChordCohesionEnabled() {
+        return chordCohesionEnabled;
     }
+
 }
 
 

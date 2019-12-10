@@ -32,6 +32,11 @@ public class TapNote extends Note {
         return true;
     }
 
+    @Override
+    public boolean canBeChord() {
+        return true;
+    }
+
     /**
      * Gets the note resolution calculated from the note beat.
      * @return the note resolution.
@@ -39,4 +44,6 @@ public class TapNote extends Note {
     public NoteResolution getResolution() {
         return resolution;
     }
+
+
 }

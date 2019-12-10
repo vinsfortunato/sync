@@ -111,51 +111,101 @@ public class PanelState {
     }
 
     /**
-     * Gets the last time a pressed state occurred at the given time.
+     * Gets the time in seconds strictly less to the given time when the given state occurred.
      * @param panel the panel
      * @param time the time in seconds.
-     * @return the last time in seconds when a pressed state occurred at the
-     * given time, or {@link Double#MAX_VALUE} if a pressed state never occurred.
+     * @param pressed the state, true for pressed, false for released.
+     * @return <li> the time in seconds strictly less to the given time when the given state occurred </li>
+     * <li> {@link Double#MAX_VALUE} if checking for pressed state and a pressed state never occurred </li>
+     * <li> {@link Double#MIN_VALUE} if checking for released state and a pressed state never occurred </li>
      */
-    public double getLastTimePressedAt(int panel, double time) {
+    public double getLowerTimeState(int panel, double time, boolean pressed) {
         TreeMap<Double, Boolean> states = panelStates.get(panel);
-        if(states != null && !states.isEmpty()) {
-            Map.Entry<Double, Boolean> state = states.floorEntry(time);
-            if(state != null) {
-                boolean pressed = state.getValue();
-                if(pressed) {
-                    return state.getKey();
-                } else {
-                    state = states.lowerEntry(state.getKey());
-                    return state.getKey();
+            if(states != null && !states.isEmpty()) {
+                Map.Entry<Double, Boolean> state = states.lowerEntry(time);
+                if(state != null) {
+                    if(state.getValue() == pressed) {
+                        return state.getKey();
+                    } else {
+                        state = states.lowerEntry(state.getKey());
+                        if(state != null) {
+                            return state.getKey();
+                        }
+                    }
                 }
-            }
         }
-        return Double.MAX_VALUE;
+        return pressed ? Double.MAX_VALUE : Double.MIN_VALUE;
     }
 
     /**
-     * Gets the last time a released state occurred at the given time.
+     * Gets the time in seconds strictly less to the given time when a pressed state occurred.
      * @param panel the panel
      * @param time the time in seconds.
-     * @return the last time in seconds when a released state occurred at the
-     * given time, or {@link Double#MIN_VALUE} if the panel has never been pressed.
+     * @return the the time in seconds strictly less to the given time when a pressed state occurred,
+     * or {@link Double#MAX_VALUE} if a pressed state never occurred.
      */
-    public double getLastTimeReleasedAt(int panel, double time) {
+    public double getLowerTimePressed(int panel, double time) {
+        return getLowerTimeState(panel, time, true);
+    }
+
+    /**
+     * Gets the time in seconds strictly less to the given time when a released state occurred.
+     * @param panel the panel
+     * @param time the time in seconds.
+     * @return the the time in seconds strictly less to the given time when a released state occurred,
+     * or {@link Double#MIN_VALUE} if the panel has never been pressed.
+     */
+    public double getLowerTimeReleased(int panel, double time) {
+        return getLowerTimeState(panel, time, false);
+    }
+
+    /**
+     * Gets the time in seconds strictly less or equal to the given time when the given state occurred.
+     * @param panel the panel
+     * @param time the time in seconds.
+     * @param pressed the state, true for pressed, false for released.
+     * @return <li> the time in seconds strictly less or equal to the given time when the given state occurred </li>
+     * <li> {@link Double#MAX_VALUE} if checking for pressed state and a pressed state never occurred </li>
+     * <li> {@link Double#MIN_VALUE} if checking for released state and a pressed state never occurred </li>
+     */
+    public double getFloorTimeState(int panel, double time, boolean pressed) {
         TreeMap<Double, Boolean> states = panelStates.get(panel);
         if(states != null && !states.isEmpty()) {
             Map.Entry<Double, Boolean> state = states.floorEntry(time);
             if(state != null) {
-                boolean pressed = state.getValue();
-                if(!pressed) {
+                if(state.getValue() == pressed) {
                     return state.getKey();
                 } else {
                     state = states.lowerEntry(state.getKey());
-                    return state.getKey();
+                    if(state != null) {
+                        return state.getKey();
+                    }
                 }
             }
         }
-        return Double.MIN_VALUE;
+        return pressed ? Double.MAX_VALUE : Double.MIN_VALUE;
+    }
+
+    /**
+     * Gets the time in seconds strictly less or equal to the given time when a pressed state occurred.
+     * @param panel the panel
+     * @param time the time in seconds.
+     * @return the the time in seconds strictly less or equal to the given time when a pressed state occurred,
+     * or {@link Double#MAX_VALUE} if a pressed state never occurred.
+     */
+    public double getFloorTimePressed(int panel, double time) {
+        return getFloorTimeState(panel, time, true);
+    }
+
+    /**
+     * Gets the time in seconds strictly less or equal to the given time when a released state occurred.
+     * @param panel the panel
+     * @param time the time in seconds.
+     * @return the the time in seconds strictly less or equal to the given time when a released state occurred,
+     * or {@link Double#MIN_VALUE} if the panel has never been pressed.
+     */
+    public double getFloorTimeReleased(int panel, double time) {
+        return getFloorTimeState(panel, time, false);
     }
 
     /**

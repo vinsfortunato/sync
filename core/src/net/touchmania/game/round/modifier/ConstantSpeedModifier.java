@@ -24,7 +24,7 @@ import java.util.Map;
 /**
  * A speed modifier that keeps BPM at a constant given value.
  */
-public class ContinuosSpeedModifier extends SpeedModifier {
+public class ConstantSpeedModifier extends SpeedModifier {
     private StepFunction<Double, Double> speedFunction;
 
     /**
@@ -32,7 +32,7 @@ public class ContinuosSpeedModifier extends SpeedModifier {
      * @param data the timing data
      * @param bpm the constant bpm
      */
-    public ContinuosSpeedModifier(TimingData data, double bpm) {
+    public ConstantSpeedModifier(TimingData data, double bpm) {
         speedFunction = new StepFunction<>(1.0D);
 
         //Init speed function

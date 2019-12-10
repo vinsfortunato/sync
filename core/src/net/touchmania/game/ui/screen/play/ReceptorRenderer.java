@@ -219,7 +219,7 @@ public class ReceptorRenderer {
         PanelState state = getRound().getPanelState();
         if(!state.isPressedAt(panel, time)) {
             double fadeTime = 0.250D; //250ms
-            double lastTimeReleased = state.getLastTimeReleasedAt(panel, time);
+            double lastTimeReleased = state.getFloorTimeReleased(panel, time);
             double progress = MathUtils.clamp(0.0D, 1.0D, Math.abs((time - lastTimeReleased) / fadeTime));
             return scaleX + (float) (progress * scaleFactor * scaleX);
         }
@@ -232,7 +232,7 @@ public class ReceptorRenderer {
         PanelState state = getRound().getPanelState();
         if(!state.isPressedAt(panel, time)) {
             double fadeTime = 0.250D; //250ms
-            double lastTimeReleased = state.getLastTimeReleasedAt(panel, time);
+            double lastTimeReleased = state.getFloorTimeReleased(panel, time);
             double progress = MathUtils.clamp(0.0D, 1.0D, Math.abs((time - lastTimeReleased) / fadeTime));
             return scaleY + (float) (progress * scaleFactor* scaleY);
         }
@@ -247,7 +247,7 @@ public class ReceptorRenderer {
         PanelState state = getRound().getPanelState();
         if(!state.isPressedAt(panel, time)) {
             double fadeTime = 0.250D; //250ms
-            double lastTimeReleased = state.getLastTimeReleasedAt(panel, time);
+            double lastTimeReleased = state.getFloorTimeReleased(panel, time);
             double progress = MathUtils.clamp(0.0D, 1.0D, Math.abs((time - lastTimeReleased) / fadeTime));
             return (float) (1.0D - progress);
         }
@@ -258,7 +258,7 @@ public class ReceptorRenderer {
         PanelState state = getRound().getPanelState();
         if(!state.isPressedAt(panel, time)) {
             double fadeTime = 0.250D; //250ms
-            double lastTimeReleased = state.getLastTimeReleasedAt(panel, time);
+            double lastTimeReleased = state.getFloorTimeReleased(panel, time);
             return Math.abs(time - lastTimeReleased) < fadeTime;
         }
         return true;

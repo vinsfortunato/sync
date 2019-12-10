@@ -16,17 +16,12 @@
 
 package net.touchmania.game.song.note;
 
-public class LengthyNote extends Note {
+public abstract class LengthyNote extends Note {
     private double length;
     private NoteResolution resolution;
 
     public LengthyNote(double beat) {
         this(beat, 0);
-    }
-
-    @Override
-    public boolean canBeJudged() {
-        return true;
     }
 
     /**

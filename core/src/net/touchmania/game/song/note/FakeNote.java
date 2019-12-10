@@ -28,4 +28,9 @@ public class FakeNote extends Note {
     public boolean canBeJudged() {
         return false;
     }
+
+    @Override
+    public boolean canBeChord() {
+        return false;
+    }
 }

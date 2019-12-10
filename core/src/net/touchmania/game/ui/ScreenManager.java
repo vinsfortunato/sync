@@ -90,8 +90,10 @@ public class ScreenManager implements Disposable {
             nextScreen.update();
         }
 
-        //Update and render stage
+        //Update stage
         stage.act(Gdx.graphics.getDeltaTime());
+
+        //Render stage
         stage.draw();
     }
 

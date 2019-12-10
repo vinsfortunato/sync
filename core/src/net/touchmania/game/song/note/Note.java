@@ -17,12 +17,11 @@
 package net.touchmania.game.song.note;
 
 import com.google.common.collect.ComparisonChain;
-import net.touchmania.game.song.Beatmap;
 
 import javax.annotation.Nonnull;
 
 /**
- * Represents a {@link Beatmap} note.
+ * Represents a note.
  */
 public abstract class Note implements Comparable<Note> {
     private double beat;
@@ -39,7 +38,18 @@ public abstract class Note implements Comparable<Note> {
         return beat;
     }
 
+    /**
+     * Check if the given note can be judged. If not it will be
+     * ignored during judgment.
+     * @return true if the note can be judged.
+     */
     public abstract boolean canBeJudged();
+
+    /**
+     * Check if the note can be inside a chord.
+     * @return true if the note can be inside a chord.
+     */
+    public abstract boolean canBeChord();
 
     @Override
     public int compareTo(@Nonnull Note o) {
