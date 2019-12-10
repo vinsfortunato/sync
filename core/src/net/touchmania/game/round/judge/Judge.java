@@ -47,9 +47,9 @@ public class Judge implements PanelState.PanelStateListener {
         this.panels = NotePanel.getModePanels(Game.instance().getSettings().getGameMode());
         this.judgments = new JudgmentKeeper(panels);
 
-        //Init evaluated beats and time to 0.0
+        //Init evaluated beats and time
         this.evaluatedBeats = new IntMap<>();
-        this.evaluatedTime = 0.0D;
+        this.evaluatedTime = Double.MIN_VALUE;
         GameMode mode = Game.instance().getSettings().getGameMode();
         for(int panel : NotePanel.getModePanels(mode)) {
             this.evaluatedBeats.put(panel, 0.0D);

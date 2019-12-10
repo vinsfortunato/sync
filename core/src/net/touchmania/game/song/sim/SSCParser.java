@@ -24,7 +24,6 @@ import net.touchmania.game.song.ChartType;
 import net.touchmania.game.song.TimingData;
 
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Parse SSC SIMs - Stepmania format (.ssc file extension).
@@ -38,7 +37,7 @@ public class SSCParser extends SMParser {
 
     @Override
     public TimingData parseTimingData() throws SimParseException {
-        //Parse bpms, stops, delays and warps
+        //Parse offset, bpms, stops, delays and warps
         TimingData data = super.parseTimingData();
         parseDelays(data);
         parseWarps(data);

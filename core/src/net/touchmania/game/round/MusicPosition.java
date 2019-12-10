@@ -21,11 +21,9 @@ import com.badlogic.gdx.audio.Music;
 /**
  * Wraps a {@link Music} and provides a more accurate position by
  * syncing {@link System#nanoTime()} to {@link Music#getPosition()}.
- * <p> An offset value in seconds can be provided to offset the music track.</p>
  */
 public class MusicPosition {
     private Music music;
-    private double offset;
 
     /* Bind music position to system nano time */
     private double lastMusicPos;
@@ -34,11 +32,9 @@ public class MusicPosition {
     /**
      * Construct a position provider.
      * @param music the music.
-     * @param offset the music offset value in seconds.
      */
-    public MusicPosition(Music music, double offset) {
+    public MusicPosition(Music music) {
         this.music = music;
-        this.offset = offset;
     }
 
     /**
@@ -72,23 +68,16 @@ public class MusicPosition {
     }
 
     /**
-     * @return the music position offset by the specified value.
-     */
-    private double getMusicPosition() {
-        return music.getPosition() + offset;
-    }
-
-    /**
      * Must be called to sync nano time to music position.
      */
     public void update() {
         double position = getPosition();
-        double musicPos = getMusicPosition();
+        double musicPos = music.getPosition();
 
         //Check if difference is greater than 20ms
         if(Math.abs(musicPos - position) > 0.020) {
             //Sync nano time with music position
-            lastMusicPos = getMusicPosition();
+            lastMusicPos = music.getPosition();
             lastNanoTime = System.nanoTime();
         }
     }

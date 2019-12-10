@@ -80,7 +80,6 @@ public class SongLoader implements Callable<Song> {
         song.lyricsPath = parser.parseLyricsPath();
         song.cdTitle = parser.parseCdTitle();
         song.musicPath = parser.parseMusicPath();
-        song.offset = parser.parseOffset();
         song.sampleStart = parser.parseSampleStart();
         song.sampleLength = parser.parseSampleLength();
         song.displayBPM = parser.parseDisplayBPM();

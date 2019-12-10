@@ -18,12 +18,13 @@ package net.touchmania.game.round.modifier;
 
 import net.touchmania.game.song.TimingData;
 
+import java.util.Map;
+
 /**
- * Set a minimum speed for notes. If a song has a variable BPM
- * it will match the minimum BPM (e.g. if your MMod is m600 and the song goes
- * from 150 to 300 bpm, note speed will be from 600 to 750).
+ * Set a maximum speed for notes.
+ * If a song has a variable BPM it will match the maximum BPM.
  */
-public class MinSpeedModifier extends SpeedModifier {
+public class MaxSpeedModifier extends SpeedModifier {
     private double speed;
 
     /**
@@ -31,11 +32,18 @@ public class MinSpeedModifier extends SpeedModifier {
      * @param data the timing data
      * @param bpm the max allowed bpm
      */
-    public MinSpeedModifier(TimingData data, double bpm) {
-        double minBPM = data.bpms.firstEntry().getValue();
+    public MaxSpeedModifier(TimingData data, double bpm) {
+        double maxBPM = 1;
+
+        //Find maxBPM
+        for(Map.Entry<Double, Double> entry : data.bpms.entrySet()) {
+            if(entry.getValue() > maxBPM) {
+                maxBPM = entry.getValue();
+            }
+        }
 
         //Calculate speed
-        speed = bpm / minBPM;
+        speed = bpm / maxBPM;
     }
 
     @Override

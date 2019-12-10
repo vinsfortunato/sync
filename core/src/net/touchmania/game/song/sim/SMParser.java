@@ -94,15 +94,6 @@ public class SMParser extends TagSimParser {
     }
 
     @Override
-    public double parseOffset() {
-        try {
-            return SimParserUtils.parseDouble(dataSupplier.getHeaderTagValue("OFFSET"));
-        } catch (SimParseException e) {
-            return 0.0f;
-        }
-    }
-
-    @Override
     public float parseSampleStart() {
         try {
             return SimParserUtils.parseFloat(dataSupplier.getHeaderTagValue("SAMPLESTART"));
@@ -152,10 +143,20 @@ public class SMParser extends TagSimParser {
     @Override
     public TimingData parseTimingData() throws SimParseException {
         TimingData data = new TimingData();
+        parseOffset(data);
         parseBpms(data);
         parseStops(data);
         return data;
     }
+
+    private void parseOffset(TimingData data) {
+        try {
+            data.offset = SimParserUtils.parseDouble(dataSupplier.getHeaderTagValue("OFFSET"));
+        } catch (SimParseException e) {
+            //default offset to 0.0
+        }
+    }
+
 
     private void parseStops(TimingData data) {
         try {

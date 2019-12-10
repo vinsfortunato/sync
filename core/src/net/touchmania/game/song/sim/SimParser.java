@@ -93,13 +93,6 @@ public interface SimParser {
     String parseMusicPath();
 
     /**
-     * @return the offset between the beginning of the song and the
-     * start of the note data, 0.0 if the value is unavailable or
-     * cannot be parsed correctly.
-     */
-    double parseOffset();
-
-    /**
      * @return the start time of the song sample used as preview, -1.0 if the
      * value is unavailable or cannot be parsed correctly.
      */

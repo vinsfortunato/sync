@@ -17,7 +17,6 @@
 package net.touchmania.game.song;
 
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.utils.Array;
 import net.touchmania.game.song.sim.SimFormat;
 
 import java.util.List;
@@ -62,7 +61,6 @@ public class Song {
     public String lyricsPath;
     public String cdTitle;
     public String musicPath;
-    public double offset = 0.0f;
     public TimingData timingData = new TimingData();
     public float sampleStart = -1.0f;
     public float sampleLength = -1.0f;

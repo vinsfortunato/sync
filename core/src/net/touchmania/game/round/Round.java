@@ -25,11 +25,11 @@ public class Round {
         this.song = song;
         this.chart = chart;
         this.music = music;
-        this.musicPosition = new MusicPosition(music, song.offset);
+        this.musicPosition = new MusicPosition(music);
         this.timing = new Timing(chart.song.timingData);
         this.modifiers = new Modifiers();
         this.panelState = new PanelState();
-        this.judge = new Judge(this, new JudgeCriteria());
+        this.judge = new Judge( this, new JudgeCriteria());
         this.panelState.addListener(this.judge);
 
         setDefaultMods();

@@ -76,9 +76,9 @@ public class GameScreen implements Screen {
         String testSong = "E:/Program Files/StepMania 5.1/Songs/ITG Rodeo Tournament 8/012 - Grayed Out -Antifront-";
         if(Gdx.app.getType() == Application.ApplicationType.Desktop) {
 
-            fh = Gdx.files.absolute("E:/Program Files/StepMania 5.1/Songs/ITG Rodeo Tournament 8/012 - Grayed Out -Antifront-");
+            fh = Gdx.files.absolute("E:/Program Files/StepMania 5.1/Songs/Helblinde/Grief & Malice - [Zaia]");
         } else {
-            fh = Gdx.files.external("touchmania/Songs/ITG Rodeo Tournament 8/012 - Your One");
+            fh = Gdx.files.external("E:/Program Files/StepMania 5.1/Songs/Helblinde/Grief & Malice - [Zaia]");
         }
 
         SongLoader sl = new SongLoader(fh);
@@ -87,7 +87,7 @@ public class GameScreen implements Screen {
             Song song = sl.call();
             Chart chart = null;
             for(Chart c : song.charts) {
-                if(c.type == ChartType.DANCE_SINGLE && c.difficultyMeter == 1) {
+                if(c.type == ChartType.DANCE_SINGLE && c.difficultyMeter == 15) {
                     chart = c;
                 }
             }
