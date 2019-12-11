@@ -18,23 +18,25 @@ package net.touchmania.game.round.modifier;
 
 import net.touchmania.game.song.TimingData;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Set a maximum speed for notes.
- * If a song has a variable BPM it will match the maximum BPM.
+ * If a song has a variable BPM it will match the predominant BPM.
  */
 public class MaxSpeedModifier extends SpeedModifier {
     private double speed;
 
     /**
-     * Construct a modifier from timing data and minimum bpm.
+     * Construct a modifier from timing data and maximum bpm.
      * @param data the timing data
      * @param bpm the max allowed bpm
      */
     public MaxSpeedModifier(TimingData data, double bpm) {
         double maxBPM = 1;
 
+        //TODO predominantBPM instead of maxBPM but we need song length to calculate accurate BPM durations
         //Find maxBPM
         for(Map.Entry<Double, Double> entry : data.bpms.entrySet()) {
             if(entry.getValue() > maxBPM) {

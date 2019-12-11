@@ -17,7 +17,7 @@
 package net.touchmania.game;
 
 /**
- * @author flood2d
+ * @author Vincenzo Fortunato
  */
 public enum GameMode {
     /** 4 panels - Dance Dance Revolution, ITG **/

@@ -17,7 +17,7 @@
 package net.touchmania.game.song.sim;
 
 /**
- * @author flood2d
+ * @author Vincenzo Fortunato
  */
 public class SimParseException extends Exception {
 

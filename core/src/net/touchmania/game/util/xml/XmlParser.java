@@ -40,7 +40,7 @@ import java.util.List;
  * something go wrong parsing the document. It also has an improved documentation.
  *
  * @author Nathan Sweet
- * @author Flood2d
+ * @author Vincenzo Fortunato
  */
 public class XmlParser {
     private final List<Element> elements = new ArrayList<>(8);

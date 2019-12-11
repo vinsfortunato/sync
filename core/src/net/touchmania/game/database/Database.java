@@ -25,7 +25,7 @@ import java.io.Closeable;
  * <p>
  * Exposes methods to manage a database.
  * </p>
- * @author the Android team, adapted by flood2d
+ * @author the Android team, adapted by Vincenzo Fortunato
  */
 public interface Database extends Closeable {
     /**

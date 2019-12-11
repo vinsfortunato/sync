@@ -29,7 +29,6 @@ import static net.touchmania.game.round.judge.JudgmentClass.*;
 
 public class Judge implements PanelState.PanelStateListener {
     private Round round;
-    private JudgmentKeeper judgments;
     private JudgeCriteria criteria;
     private IntMap<Double> evaluatedBeats;
     private double evaluatedTime;
@@ -41,11 +40,17 @@ public class Judge implements PanelState.PanelStateListener {
     private LiftNoteJudge liftNoteJudge;
     private MineNoteJudge mineNoteJudge;
 
+    //TODO temp location
+    private Judgment lastJudgment;
+
+    public Judgment getLastJudgment() {
+        return lastJudgment;
+    }
+
     public Judge(Round round, JudgeCriteria criteria) {
         this.round = round;
         this.criteria = criteria;
         this.panels = NotePanel.getModePanels(Game.instance().getSettings().getGameMode());
-        this.judgments = new JudgmentKeeper(panels);
 
         //Init evaluated beats and time
         this.evaluatedBeats = new IntMap<>();
@@ -75,11 +80,12 @@ public class Judge implements PanelState.PanelStateListener {
 
             for(int panel : panels) {
                 //Update all notes from last evaluated beat to current beat
-                Note note = beatmap.higherNote(panel, getEvaluatedBeat(panel));
+                double evalBeat = getEvaluatedBeat(panel);
+                JudgeableNote note = (JudgeableNote) beatmap.higherNote(panel, evalBeat, n -> n instanceof JudgeableNote);
                 while (note != null && note.getBeat() < beat) {
                     NoteJudge judge = getNoteJudge(note);
                     judge.update(panel, time, beat, note);
-                    note = beatmap.higherNote(panel, note.getBeat());
+                    note = (JudgeableNote) beatmap.higherNote(panel, note.getBeat(), n -> n instanceof JudgeableNote);
                 }
             }
             evaluatedTime = time;
@@ -97,18 +103,18 @@ public class Judge implements PanelState.PanelStateListener {
         double evalBeat = getEvaluatedBeat(panel);
 
         //Find next note to judge
-        Note note;
+        JudgeableNote note;
         if(eventBeat < evalBeat) {
             //Judge note after eval beat
-            note = beatmap.higherNote(panel, evalBeat, Note::canBeJudged);
+            note = (JudgeableNote) beatmap.higherNote(panel, evalBeat, n -> n instanceof JudgeableNote);
         } else {
-            Note floorNote = beatmap.floorNote(panel, eventBeat, Note::canBeJudged);
+            JudgeableNote floorNote = (JudgeableNote) beatmap.floorNote(panel, eventBeat, n -> n instanceof JudgeableNote);
             if(floorNote != null && floorNote.getBeat() > evalBeat) {
                 //Judge floor note
                 note = floorNote;
             } else {
                 //Judge higher note
-                note = beatmap.higherNote(panel, eventBeat, Note::canBeJudged);
+                note = (JudgeableNote) beatmap.higherNote(panel, eventBeat, n -> n instanceof JudgeableNote);
             }
         }
 
@@ -149,14 +155,6 @@ public class Judge implements PanelState.PanelStateListener {
     }
 
     /**
-     * Get the judgment keeper that holds all generated judgments.
-     * @return the judgment keeper.
-     */
-    public JudgmentKeeper getJudgmentKeeper() {
-        return judgments;
-    }
-
-    /**
      * Get the judge criteria used to evaluate notes and generate judgements.
      * @return the judge criteria.
      */
@@ -184,7 +182,7 @@ public class Judge implements PanelState.PanelStateListener {
          * @param beat the beat.
          * @param note the unjudged note.
          */
-        public abstract void update(int panel, double time, double beat, Note note);
+        public abstract void update(int panel, double time, double beat, JudgeableNote note);
 
         /**
          * Called when a panel changes state and update unjudged note status.
@@ -192,7 +190,7 @@ public class Judge implements PanelState.PanelStateListener {
          * @param time the time in seconds relative to the start of the music track.
          * @param note the unjudged note.
          */
-        public abstract void onPanelStateChange(int panel, double time, boolean pressed, Note note);
+        public abstract void onPanelStateChange(int panel, double time, boolean pressed, JudgeableNote note);
 
         /**
          * Called when the judge emit a judgment.
@@ -200,23 +198,25 @@ public class Judge implements PanelState.PanelStateListener {
          * @param note the time in seconds relative to the start of the music track.
          * @param judgment the generated note judgment.
          */
-        public void emitJudgment(int panel, Note note, Judgment judgment) {
+        public void emitJudgment(int panel, JudgeableNote note, Judgment judgment) {
             //Store judgment
-            getJudgmentKeeper().putJudgment(panel, note.getBeat(), judgment);
+            note.setJudgment(judgment);
             //Move evaluated beat cursor
             setEvaluatedBeat(panel, note.getBeat());
+
+            lastJudgment = judgment;
         }
     }
 
     private class TapNoteJudge extends NoteJudge {
         @Override
-        public void update(int panel, double time, double beat, Note note) {
+        public void update(int panel, double time, double beat, JudgeableNote note) {
             Beatmap beatmap = getBeatmap();
             Timing timing = getTiming();
             double noteTime = timing.getTimeAt(note.getBeat());
             double timingError = noteTime - time;
             double worstWindow = criteria.getWorstTapWindow();
-            Note nextNote = beatmap.higherNote(panel, note.getBeat(), Note::canBeJudged);
+            Note nextNote = beatmap.higherNote(panel, note.getBeat(), n -> n instanceof JudgeableNote);
             Judgment judgment = null;
 
             if(nextNote != null && nextNote.getBeat() < beat) {
@@ -234,7 +234,7 @@ public class Judge implements PanelState.PanelStateListener {
         }
 
         @Override
-        public void onPanelStateChange(int panel, double time, boolean pressed, Note note) {
+        public void onPanelStateChange(int panel, double time, boolean pressed, JudgeableNote note) {
             if(pressed) {
                 Timing timing = getTiming();
                 double noteTime = timing.getTimeAt(note.getBeat());
@@ -267,38 +267,38 @@ public class Judge implements PanelState.PanelStateListener {
 
     private abstract class LengthyNoteJudge extends TapNoteJudge {
         @Override
-        public void update(int panel, double time, double beat, Note note) {
-            if (!isHeadJudged(panel, note)) {
+        public void update(int panel, double time, double beat, JudgeableNote note) {
+            if (!note.hasJudgment()) {
                 //Update head
                 super.update(panel, time, beat, note);
             } else {
                 //Update trail
-                updateTrail(panel, time, beat, (LengthyNote) note);
+                updateTrail(panel, time, beat, (JudgeableLengthyNote) note);
             }
         }
 
         @Override
-        public void onPanelStateChange(int panel, double time, boolean pressed, Note note) {
-            if(!isHeadJudged(panel, note)) {
+        public void onPanelStateChange(int panel, double time, boolean pressed, JudgeableNote note) {
+            if(!note.hasJudgment()) {
                 //Handle state change on head
                 super.onPanelStateChange(panel, time, pressed, note);
             } else {
                 //Handle state change on trail
-                onPanelStateChangeTrail(panel, time, pressed, (LengthyNote) note);
+                onPanelStateChangeTrail(panel, time, pressed, (JudgeableLengthyNote) note);
             }
         }
 
-        public void updateTrail(int panel, double time, double beat, LengthyNote note) {}
+        public void updateTrail(int panel, double time, double beat, JudgeableLengthyNote note) {}
 
-        public void onPanelStateChangeTrail(int panel, double time, boolean pressed, LengthyNote note) {}
+        public void onPanelStateChangeTrail(int panel, double time, boolean pressed, JudgeableLengthyNote note) {}
 
         @Override
-        public void emitJudgment(int panel, Note note, Judgment judgment) {
-            JudgmentKeeper judgments = getJudgmentKeeper();
-
+        public void emitJudgment(int panel, JudgeableNote note, Judgment judgment) {
             if(judgment instanceof TapJudgment) {
                 //Head judgment
-                judgments.putJudgment(panel, note.getBeat(), judgment);
+                note.setJudgment(judgment);
+
+                lastJudgment = judgment;
 
                 //Check if the head has been missed
                 TapJudgment tapJudgment = (TapJudgment) judgment;
@@ -306,24 +306,23 @@ public class Judge implements PanelState.PanelStateListener {
                     //Head has been missed, set negative tail judgment
                     emitJudgment(panel, note, new TailJudgment(judgment.getGenTime(), NG));
                 }
-            } else {
+
+            } else if(judgment instanceof TailJudgment){
                 //Tail judgment
-                LengthyNote lengthyNote = (LengthyNote) note;
-                judgments.putJudgment(panel, note.getBeat() + lengthyNote.getLength(), judgment);
+                JudgeableLengthyNote lengthyNote = (JudgeableLengthyNote) note;
+                lengthyNote.setTailJudgment((TailJudgment) judgment);
+
+                lastJudgment = judgment;
 
                 //Move evaluated beat cursor
                 setEvaluatedBeat(panel, note.getBeat());
             }
         }
-
-        protected boolean isHeadJudged(int panel, Note note) {
-            return getJudgmentKeeper().hasJudgment(panel, note.getBeat());
-        }
     }
 
     private class HoldNoteJudge extends LengthyNoteJudge {
         @Override
-        public void updateTrail(int panel, double time, double beat, LengthyNote note) {
+        public void updateTrail(int panel, double time, double beat, JudgeableLengthyNote note) {
             PanelState states = getPanelState();
             Timing timing = getTiming();
             double tailTime = timing.getTimeAt(note.getBeat() + note.getLength());
@@ -351,7 +350,7 @@ public class Judge implements PanelState.PanelStateListener {
 
     private class RollNoteJudge extends LengthyNoteJudge {
         @Override
-        public void updateTrail(int panel, double time, double beat, LengthyNote note) {
+        public void updateTrail(int panel, double time, double beat, JudgeableLengthyNote note) {
             PanelState states = getPanelState();
             Timing timing = getTiming();
             double tailTime = timing.getTimeAt(note.getBeat() + note.getLength());
@@ -370,24 +369,24 @@ public class Judge implements PanelState.PanelStateListener {
 
     private class LiftNoteJudge extends NoteJudge {
         @Override
-        public void update(int panel, double time, double beat, Note note) {
+        public void update(int panel, double time, double beat, JudgeableNote note) {
 
         }
 
         @Override
-        public void onPanelStateChange(int panel, double time, boolean pressed, Note note) {
+        public void onPanelStateChange(int panel, double time, boolean pressed, JudgeableNote note) {
 
         }
     }
 
     private class MineNoteJudge extends NoteJudge {
         @Override
-        public void update(int panel, double time, double beat, Note note) {
+        public void update(int panel, double time, double beat, JudgeableNote note) {
 
         }
 
         @Override
-        public void onPanelStateChange(int panel, double time, boolean pressed, Note note) {
+        public void onPanelStateChange(int panel, double time, boolean pressed, JudgeableNote note) {
 
         }
     }

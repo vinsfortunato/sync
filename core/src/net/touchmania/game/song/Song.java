@@ -22,7 +22,7 @@ import net.touchmania.game.song.sim.SimFormat;
 import java.util.List;
 
 /**
- * @author flood2d
+ * @author Vincenzo Fortunato
  */
 public class Song {
     /**

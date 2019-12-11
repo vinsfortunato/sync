@@ -22,7 +22,7 @@ import com.google.common.math.DoubleMath;
 import java.math.RoundingMode;
 
 /**
- * @author flood2d
+ * @author Vincenzo Fortunato
  */
 public enum NoteResolution {
     NOTE_4TH(4),

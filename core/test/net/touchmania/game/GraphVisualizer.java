@@ -30,7 +30,7 @@ import java.util.Iterator;
 import java.util.Locale;
 
 /**
- * @author flood2d
+ * @author Vincenzo Fortunato
  */
 public class GraphVisualizer extends JFrame {
     private Graph2D graph;

@@ -16,21 +16,38 @@
 
 package net.touchmania.game.song.note;
 
+import net.touchmania.game.round.judge.Judgment;
+import net.touchmania.game.round.judge.MineJudgment;
+
 /**
- * @author flood2d
+ * @author Vincenzo Fortunato
  */
-public class MineNote extends Note {
+public class MineNote implements JudgeableNote {
+    private double beat;
+    private MineJudgment judgment;
+
     public MineNote(double beat) {
-        super(beat);
+        this.beat = beat;
     }
 
     @Override
-    public boolean canBeJudged() {
-        return true;
+    public void setJudgment(Judgment judgment) {
+        if(judgment == null) {
+            this.judgment = null;
+        } else if(judgment instanceof MineJudgment) {
+            this.judgment = (MineJudgment) judgment;
+        } else {
+            throw new IllegalArgumentException("Judgment must be an instance of MineJudgment!");
+        }
     }
 
     @Override
-    public boolean canBeChord() {
-        return false;
+    public MineJudgment getJudgment() {
+        return judgment;
+    }
+
+    @Override
+    public double getBeat() {
+        return beat;
     }
 }

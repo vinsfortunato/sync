@@ -29,8 +29,12 @@ import java.util.*;
  * <li>The image of x located after the last point is undefined if the last point is a jump, otherwise
  * it is calculated by considering it belonging to the line that passes the last two points.</li>
  * </p>
- *
- * @author flood2d
+ * <p>Inverting the graph is possible if the graph is monotonic. Jumps will be turned into
+ * constant segments and constant segments into jumps. A jump left defined property will be stored
+ * into the end point of the constant segment. So inverting a constant segment with end point left defined
+ * will generate a jump left defined into the inverted graph. Setting left defined property on the constant
+ * segment end point has the only purpose of defining how the jump of the inverted graph should behave. </p>
+ * @author Vincenzo Fortunato
  */
 public class LineGraph2D implements Graph2D {
     private TreeMap<Double, Graph2DPoint> points = new TreeMap<>();
@@ -225,12 +229,20 @@ public class LineGraph2D implements Graph2D {
         Graph2DPoint prevPoint = null;
         for(Graph2DPoint point : getPoints()) {
             if(prevPoint != null && Double.compare(point.y, prevPoint.y) == 0) {
-                invertedGraph.putJump(point.y, point.x - prevPoint.x + invertedGraph.getJumpAmount(point.y), false);
+                //Constant segment turn into jump, left defined is the same of the constant segment end point
+                invertedGraph.putPoint(new Graph2DPoint(
+                        prevPoint.y,
+                        prevPoint.x,
+                        point.x - prevPoint.x + invertedGraph.getJumpAmount(point.y),
+                        point.leftDefined));
             } else {
+                //Just invert the point
                 invertedGraph.putPoint(point.y, point.x);
             }
             if(point.isJump()) {
-                invertedGraph.putPoint(point.y + point.jump, point.x);
+                //Turn jump into constant segment
+                //The left defined property of the jump is stored into the end point of the constant segment
+                invertedGraph.putPoint(new Graph2DPoint(point.y + point.jump, point.x, 0.0, point.leftDefined));
             }
             prevPoint = point;
         }

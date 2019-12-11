@@ -16,12 +16,22 @@
 
 package net.touchmania.game.song.note;
 
-public class HoldNote extends LengthyNote {
+import net.touchmania.game.round.judge.Judgment;
+import net.touchmania.game.round.judge.TailJudgment;
+import net.touchmania.game.round.judge.TapJudgment;
+
+public class HoldNote implements JudgeableLengthyNote, ChordNote {
+    private double beat;
+    private double length;
+    private TapJudgment headJudgment;
+    private TailJudgment tailJudgment;
+    private NoteResolution resolution;
+
     /**
      * @param beat the note head beat.
      */
     public HoldNote(double beat) {
-        super(beat);
+        this(beat, 0.0D);
     }
 
     /**
@@ -29,16 +39,57 @@ public class HoldNote extends LengthyNote {
      * @param length the note length measured in beats.
      */
     public HoldNote(double beat, double length) {
-        super(beat, length);
+        this.beat = beat;
+        this.length = length;
+        this.resolution = NoteResolution.valueFromBeat(beat);
     }
 
     @Override
-    public boolean canBeJudged() {
-        return true;
+    public Judgment getJudgment() {
+        return headJudgment;
     }
 
     @Override
-    public boolean canBeChord() {
-        return true;
+    public void setJudgment(Judgment judgment) {
+        if(judgment == null) {
+            this.headJudgment = null;
+        } else if(judgment instanceof TapJudgment) {
+            this.headJudgment = (TapJudgment) judgment;
+        } else {
+            throw new IllegalArgumentException("Judgment must be an instance of TapJudgment!");
+        }
+    }
+
+    @Override
+    public TailJudgment getTailJudgment() {
+        return tailJudgment;
+    }
+
+    @Override
+    public void setTailJudgment(TailJudgment judgment) {
+        this.tailJudgment = judgment;
+    }
+
+    @Override
+    public double getLength() {
+        return length;
+    }
+
+    @Override
+    public void setLength(double length) {
+        this.length = length;
+    }
+
+    @Override
+    public double getBeat() {
+        return beat;
+    }
+
+    /**
+     * Gets the note resolution calculated from the note head beat.
+     * @return the note resolution.
+     */
+    public NoteResolution getResolution() {
+        return resolution;
     }
 }

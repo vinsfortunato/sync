@@ -27,15 +27,12 @@ import com.google.common.base.Charsets;
 import com.google.common.io.Files;
 import net.touchmania.game.Game;
 import net.touchmania.game.round.Round;
-import net.touchmania.game.song.Chart;
-import net.touchmania.game.song.ChartType;
-import net.touchmania.game.song.Song;
-import net.touchmania.game.song.SongLoader;
+import net.touchmania.game.song.*;
 import net.touchmania.game.song.sim.SimParser;
 import net.touchmania.game.ui.Screen;
 
 /**
- * @author flood2d
+ * @author Vincenzo Fortunato
  */
 public class GameScreen implements Screen {
     private static GameScreen instance;
@@ -76,9 +73,9 @@ public class GameScreen implements Screen {
         String testSong = "E:/Program Files/StepMania 5.1/Songs/ITG Rodeo Tournament 8/012 - Grayed Out -Antifront-";
         if(Gdx.app.getType() == Application.ApplicationType.Desktop) {
 
-            fh = Gdx.files.absolute("E:/Program Files/StepMania 5.1/Songs/Helblinde/Grief & Malice - [Zaia]");
+            fh = Gdx.files.absolute("E:/Program Files/StepMania 5.1/Songs/ITG Rodeo Tournament 8/011 - Warm Ups (VIP)");
         } else {
-            fh = Gdx.files.external("E:/Program Files/StepMania 5.1/Songs/Helblinde/Grief & Malice - [Zaia]");
+            fh = Gdx.files.external("touchmania/Songs/ITG Rodeo Tournament 8/011 - Warm Ups (VIP)");
         }
 
         SongLoader sl = new SongLoader(fh);
@@ -87,9 +84,9 @@ public class GameScreen implements Screen {
             Song song = sl.call();
             Chart chart = null;
             for(Chart c : song.charts) {
-                if(c.type == ChartType.DANCE_SINGLE && c.difficultyMeter == 15) {
-                    chart = c;
-                }
+                if(c.type == ChartType.DANCE_SINGLE) {
+                        chart = c;
+                    }
             }
             SimParser parser = song.simFormat.newParser();
             parser.init(Files.toString(song.simFile.file(), Charsets.UTF_8));

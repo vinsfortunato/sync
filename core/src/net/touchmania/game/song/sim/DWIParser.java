@@ -27,7 +27,7 @@ import java.util.regex.Pattern;
 
 /**
  * Parse DWI SIMs - Dance With Intensity (.dwi file extension).
- * @author flood2d
+ * @author Vincenzo Fortunato
  */
 public class DWIParser extends TagSimParser {
     /** Pattern that matches the display bpm syntax **/

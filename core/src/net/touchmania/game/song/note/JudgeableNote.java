@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Vincenzo Fortunato
+ * Copyright 2019 Vincenzo Fortunato
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,28 +19,27 @@ package net.touchmania.game.song.note;
 import net.touchmania.game.round.judge.Judgment;
 
 /**
- * @author Vincenzo Fortunato
+ * A note that can be judged.
  */
-public class LiftNote implements JudgeableNote {
-    private double beat;
-    private Judgment judgment;
+public interface JudgeableNote extends Note {
+    /**
+     * Get the note judgment. Null will be returned if the note has not
+     * been judged yet.
+     * @return the note judgment, or null if the not has not been judged.
+     */
+    Judgment getJudgment();
 
-    public LiftNote(double beat) {
-        this.beat = beat;
-    }
+    /**
+     * Set the note judgment.
+     * @param judgment the note judgment.
+     */
+    void setJudgment(Judgment judgment);
 
-    @Override
-    public Judgment getJudgment() {
-        return judgment;
-    }
-
-    @Override
-    public void setJudgment(Judgment judgment) {
-        this.judgment = judgment;
-    }
-
-    @Override
-    public double getBeat() {
-        return beat;
+    /**
+     * Check if the note has been judged.
+     * @return true if the note has been judged.
+     */
+    default boolean hasJudgment() {
+        return getJudgment() != null;
     }
 }

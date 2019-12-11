@@ -1,13 +1,13 @@
 package net.touchmania.game.ui.screen.play;
 
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.utils.Array;
 import net.touchmania.game.Game;
 import net.touchmania.game.resource.ResourceProvider;
 import net.touchmania.game.resource.lazy.Resource;
-import net.touchmania.game.round.judge.JudgmentKeeper;
-import net.touchmania.game.round.judge.TapJudgment;
-import net.touchmania.game.song.note.Note;
-import net.touchmania.game.song.note.TapNote;
+import net.touchmania.game.round.judge.*;
+import net.touchmania.game.song.Beatmap;
+import net.touchmania.game.song.note.*;
 
 public class TapNoteRenderer extends BaseNoteRenderer {
     /* Resources */
@@ -41,11 +41,30 @@ public class TapNoteRenderer extends BaseNoteRenderer {
 
     @Override
     public boolean isNoteVisible(int panel, Note note, double beat, double time) {
-        JudgmentKeeper judgments = getRound().getJudge().getJudgmentKeeper();
-        TapJudgment judgment = (TapJudgment) judgments.getJudgment(panel, note.getBeat());
+        TapNote tapNote = (TapNote) note;
+        Beatmap beatmap = getRound().getChart().beatmap;
+        JudgeCriteria criteria = getRound().getJudge().getCriteria();
+        TapJudgment worstJudgment = null;
 
-        if(judgment != null) {
-            switch (judgment.getJudgmentClass()) {
+        if(criteria.isChordCohesionEnabled() && beatmap.isChord(note.getBeat())) {
+            Array<Note> chordNotes = beatmap.getNotes(note.getBeat(), n -> n instanceof JudgeableNote && n instanceof ChordNote);
+            for(Note chordNote : chordNotes) {
+                JudgeableNote judgeableNote = (JudgeableNote) chordNote;
+                TapJudgment tapJudgment = (TapJudgment) judgeableNote.getJudgment();
+                if(tapJudgment == null) {
+                    //A note inside the chord has not been judged yet
+                    return true;
+                }
+                if(worstJudgment == null || tapJudgment.getJudgmentClass().compareTo(worstJudgment.getJudgmentClass()) > 0) {
+                    worstJudgment = tapJudgment;
+                }
+            }
+        } else {
+            worstJudgment = tapNote.getJudgment();
+        }
+
+        if(worstJudgment != null) {
+            switch (worstJudgment.getJudgmentClass()) {
                 case MARVELOUS:
                 case PERFECT:
                 case GREAT:

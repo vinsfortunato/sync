@@ -27,7 +27,7 @@ import java.util.regex.Matcher;
 
 /**
  * Parse SSC SIMs - Stepmania format (.ssc file extension).
- * @author flood2d
+ * @author Vincenzo Fortunato
  */
 public class SSCParser extends SMParser {
     @Override

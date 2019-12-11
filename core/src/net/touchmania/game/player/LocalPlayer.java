@@ -17,7 +17,7 @@
 package net.touchmania.game.player;
 
 /**
- * @author flood2d
+ * @author Vincenzo Fortunato
  */
 public class LocalPlayer {
 }

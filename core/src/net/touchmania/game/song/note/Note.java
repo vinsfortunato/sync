@@ -20,39 +20,15 @@ import com.google.common.collect.ComparisonChain;
 
 import javax.annotation.Nonnull;
 
-/**
- * Represents a note.
- */
-public abstract class Note implements Comparable<Note> {
-    private double beat;
-
-    public Note(double beat) {
-        this.beat = beat;
-    }
-
+public interface Note extends Comparable<Note> {
     /**
      * Gets the note beat.
      * @return the note beat.
      */
-    public double getBeat() {
-        return beat;
-    }
-
-    /**
-     * Check if the given note can be judged. If not it will be
-     * ignored during judgment.
-     * @return true if the note can be judged.
-     */
-    public abstract boolean canBeJudged();
-
-    /**
-     * Check if the note can be inside a chord.
-     * @return true if the note can be inside a chord.
-     */
-    public abstract boolean canBeChord();
+    double getBeat();
 
     @Override
-    public int compareTo(@Nonnull Note o) {
+    default int compareTo(@Nonnull Note o) {
         return ComparisonChain
                 .start()
                 .compare(getBeat(), o.getBeat())

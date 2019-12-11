@@ -22,7 +22,7 @@ import net.touchmania.game.song.Timing;
 import net.touchmania.game.song.TimingData;
 
 /**
- * @author flood2d
+ * @author Vincenzo Fortunato
  */
 public class TimingTest {
 

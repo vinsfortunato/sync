@@ -20,12 +20,16 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import net.touchmania.game.Game;
 import net.touchmania.game.resource.ResourceProvider;
 import net.touchmania.game.resource.lazy.Resource;
+import net.touchmania.game.round.judge.JudgmentClass;
+import net.touchmania.game.round.judge.TailJudgment;
+import net.touchmania.game.round.judge.TapJudgment;
+import net.touchmania.game.song.note.JudgeableLengthyNote;
 import net.touchmania.game.song.note.LengthyNote;
 import net.touchmania.game.song.note.Note;
 import net.touchmania.game.song.note.RollNote;
 
 /**
- * @author flood2d
+ * @author Vincenzo Fortunato
  */
 public class RollNoteRenderer extends BaseLengthyNoteRenderer {
     /* Resources */

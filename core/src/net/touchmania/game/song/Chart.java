@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
 import java.util.Objects;
 
 /**
- * @author flood2d
+ * @author Vincenzo Fortunato
  */
 public class Chart implements Comparable<Chart> {
     /**

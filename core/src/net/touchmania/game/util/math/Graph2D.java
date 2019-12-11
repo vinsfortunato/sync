@@ -24,7 +24,7 @@ import java.util.Collection;
  * supports jump discontinuities. The graph f(x) method will return {@link Double#NaN} if the
  * function is undefined at the given x.
  *
- * @author flood2d
+ * @author Vincenzo Fortunato
  */
 public interface Graph2D extends Function<Double, Double> {
     /**

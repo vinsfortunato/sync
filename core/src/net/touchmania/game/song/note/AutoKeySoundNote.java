@@ -17,20 +17,17 @@
 package net.touchmania.game.song.note;
 
 /**
- * @author flood2d
+ * @author Vincenzo Fortunato
  */
-public class AutoKeySoundNote extends Note {
+public class AutoKeySoundNote implements Note {
+    private double beat;
+
     public AutoKeySoundNote(double beat) {
-        super(beat);
+        this.beat = beat;
     }
 
     @Override
-    public boolean canBeJudged() {
-        return false;
-    }
-
-    @Override
-    public boolean canBeChord() {
-        return false;
+    public double getBeat() {
+        return beat;
     }
 }

@@ -20,7 +20,7 @@ import net.touchmania.game.GameMode;
 
 /**
  * Chart type in the format "GameMode_Style". Enums the supported game styles.
- * @author flood2d
+ * @author Vincenzo Fortunato
  */
 public enum ChartType {
     DANCE_SINGLE(GameMode.DANCE, 4),

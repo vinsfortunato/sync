@@ -20,12 +20,16 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import net.touchmania.game.Game;
 import net.touchmania.game.resource.ResourceProvider;
 import net.touchmania.game.resource.lazy.Resource;
+import net.touchmania.game.round.judge.JudgmentClass;
+import net.touchmania.game.round.judge.TailJudgment;
+import net.touchmania.game.round.judge.TapJudgment;
 import net.touchmania.game.song.note.HoldNote;
+import net.touchmania.game.song.note.JudgeableLengthyNote;
 import net.touchmania.game.song.note.LengthyNote;
 import net.touchmania.game.song.note.Note;
 
 /**
- * @author flood2d
+ * @author Vincenzo Fortunato
  */
 public class HoldNoteRenderer extends BaseLengthyNoteRenderer {
     private Resource<Drawable> head4Drawable;
@@ -91,4 +95,16 @@ public class HoldNoteRenderer extends BaseLengthyNoteRenderer {
     public Drawable getNoteTailDrawable(int panel, LengthyNote note, double beat, double time) {
         return isActive(panel, note, beat, time) ? tailActiveDrawable.get() : tailInactiveDrawable.get();
     }
+
+    @Override
+    public boolean isNoteVisible(int panel, Note note, double beat, double time) {
+        JudgeableLengthyNote lengthyNote = (JudgeableLengthyNote) note;
+        TapJudgment headJudgment = (TapJudgment) lengthyNote.getJudgment();
+        TailJudgment tailJudgment = (TailJudgment) lengthyNote.getTailJudgment();
+        return headJudgment == null                                         //No head judgment
+                || headJudgment.getJudgmentClass() == JudgmentClass.MISS    //Head missed
+                || tailJudgment == null                                     //No tail judgment
+                || tailJudgment.getJudgmentClass() == JudgmentClass.NG;     //Trail missed
+    }
+
 }

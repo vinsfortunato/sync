@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * @author flood2d
+ * @author Vincenzo Fortunato
  */
 public class GameSettings {
     /** Contains supported sim formats ordered by their priority in ascending order (formats with

@@ -16,25 +16,38 @@
 
 package net.touchmania.game.song.note;
 
-/**
- * @author flood2d
- */
-public class TapNote extends Note {
+import net.touchmania.game.round.judge.Judgment;
+import net.touchmania.game.round.judge.TapJudgment;
+
+public class TapNote implements JudgeableNote, ChordNote {
+    private double beat;
+    private TapJudgment judgment;
     private NoteResolution resolution;
 
     public TapNote(double beat) {
-        super(beat);
+        this.beat = beat;
         this.resolution = NoteResolution.valueFromBeat(beat);
     }
 
     @Override
-    public boolean canBeJudged() {
-        return true;
+    public TapJudgment getJudgment() {
+        return judgment;
     }
 
     @Override
-    public boolean canBeChord() {
-        return true;
+    public void setJudgment(Judgment judgment) {
+        if(judgment == null) {
+            this.judgment = null;
+        } else if(judgment instanceof TapJudgment) {
+            this.judgment = (TapJudgment) judgment;
+        } else {
+            throw new IllegalArgumentException("Judgment must be an instance of TapJudgment!");
+        }
+    }
+
+    @Override
+    public double getBeat() {
+        return beat;
     }
 
     /**
@@ -44,6 +57,4 @@ public class TapNote extends Note {
     public NoteResolution getResolution() {
         return resolution;
     }
-
-
 }

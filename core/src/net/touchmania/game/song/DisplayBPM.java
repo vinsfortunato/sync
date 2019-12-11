@@ -29,7 +29,7 @@ import java.util.Random;
  *  </ul>
  * </p>
  *
- * @author flood2d
+ * @author Vincenzo Fortunato
  */
 public interface DisplayBPM {
     /**
@@ -44,7 +44,7 @@ public interface DisplayBPM {
     /**
      * This can be used to show a static BPM.
      *
-     * @author flood2d
+     * @author Vincenzo Fortunato
      */
     class StaticDisplayBPM implements DisplayBPM {
 
@@ -65,7 +65,7 @@ public interface DisplayBPM {
     /**
      * This can be used to show a BPM that randomly changes.
      *
-     * @author flood2d
+     * @author Vincenzo Fortunato
      */
     class RandomDisplayBPM extends TransitionDisplayBPM {
 
@@ -101,7 +101,7 @@ public interface DisplayBPM {
     /**
      * This can be used to show a BPM that changes between a defined range.
      *
-     * @author flood2d
+     * @author Vincenzo Fortunato
      */
     class RangeDisplayBPM extends TransitionDisplayBPM {
 
@@ -131,7 +131,7 @@ public interface DisplayBPM {
     }
 
     /**
-     * @author flood2d
+     * @author Vincenzo Fortunato
      */
     abstract class TransitionDisplayBPM implements DisplayBPM {
         /** Transition velocity, measured in bpm unit/second **/

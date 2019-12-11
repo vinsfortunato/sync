@@ -19,7 +19,7 @@ package net.touchmania.game.song.sim;
 /**
  * Supported sim formats ordered by preference.
  *
- * @author flood2d
+ * @author Vincenzo Fortunato
  */
 public enum SimFormat {
     SM("sm"),

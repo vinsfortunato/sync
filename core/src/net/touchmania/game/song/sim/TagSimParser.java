@@ -32,7 +32,7 @@ import java.util.regex.Pattern;
  *     This format supports comments. Every character after the following sequence // and before the end of the line
  *     will be ignored. This parser implementation removes every comment from the raw data before parsing it.
  * </p>
- * @author flood2d
+ * @author Vincenzo Fortunato
  */
 public abstract class TagSimParser implements SimParser {
     /**

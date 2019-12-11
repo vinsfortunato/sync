@@ -16,46 +16,16 @@
 
 package net.touchmania.game.song.note;
 
-public abstract class LengthyNote extends Note {
-    private double length;
-    private NoteResolution resolution;
-
-    public LengthyNote(double beat) {
-        this(beat, 0);
-    }
-
-    /**
-     *
-     * @param beat the note head beat.
-     * @param length the note length measured in beats.
-     */
-    public LengthyNote(double beat, double length) {
-        super(beat);
-        this.resolution = NoteResolution.valueFromBeat(beat);
-        this.setLength(length);
-    }
-
+public interface LengthyNote extends Note {
     /**
      * Gets the note length in beats.
      * @return note length in beats.
      */
-    public double getLength() {
-        return length;
-    }
+    double getLength();
 
     /**
      * Sets the note length in beats.
      * @param length the note length in beats.
      */
-    public void setLength(double length) {
-        this.length = length;
-    }
-
-    /**
-     * Gets the note head resolution calculated from the note head beat.
-     * @return the note head resolution.
-     */
-    public NoteResolution getResolution() {
-        return resolution;
-    }
+    void setLength(double length);
 }

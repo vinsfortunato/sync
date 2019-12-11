@@ -18,7 +18,7 @@ package net.touchmania.game.song;
 
 /**
  * Thrown to indicate that a method has been passed an invalid or inappropriate argument.
- * @author flood2d
+ * @author Vincenzo Fortunato
  */
 public class InvalidTimingDataException extends Exception {
     public InvalidTimingDataException() {

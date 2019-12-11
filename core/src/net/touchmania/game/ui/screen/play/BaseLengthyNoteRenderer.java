@@ -21,16 +21,17 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import net.touchmania.game.round.PanelState;
 import net.touchmania.game.round.judge.JudgmentClass;
-import net.touchmania.game.round.judge.JudgmentKeeper;
 import net.touchmania.game.round.judge.TailJudgment;
 import net.touchmania.game.round.judge.TapJudgment;
 import net.touchmania.game.round.modifier.SpeedModifier;
 import net.touchmania.game.song.Timing;
+import net.touchmania.game.song.note.JudgeableLengthyNote;
+import net.touchmania.game.song.note.JudgeableNote;
 import net.touchmania.game.song.note.LengthyNote;
 import net.touchmania.game.song.note.Note;
 
 /**
- * @author flood2d
+ * @author Vincenzo Fortunato
  */
 public abstract class BaseLengthyNoteRenderer extends BaseNoteRenderer implements LengthyNoteRenderer {
     public BaseLengthyNoteRenderer(BeatmapView view) {
@@ -76,39 +77,34 @@ public abstract class BaseLengthyNoteRenderer extends BaseNoteRenderer implement
     }
 
     @Override
-    public boolean isNoteVisible(int panel, Note note, double beat, double time) {
-        LengthyNote lengthyNote = (LengthyNote) note;
-        JudgmentKeeper judgments = getRound().getJudge().getJudgmentKeeper();
-        TapJudgment headJudgment = (TapJudgment) judgments.getJudgment(panel, note.getBeat());
-        TailJudgment tailJudgment = (TailJudgment) judgments.getJudgment(panel, note.getBeat() + lengthyNote.getLength());
-        return headJudgment == null                                         //No head judgment
-                || headJudgment.getJudgmentClass() == JudgmentClass.MISS    //Head missed
-                || tailJudgment == null                                     //No tail judgment
-                || tailJudgment.getJudgmentClass() == JudgmentClass.NG;     //Trail missed
-    }
-
-    @Override
     public float getNoteY(int panel, Note note, double beat, double time) {
-        LengthyNote lengthyNote = (LengthyNote) note;
-        JudgmentKeeper judgments = getRound().getJudge().getJudgmentKeeper();
-
-        TapJudgment headJudgment = (TapJudgment) judgments.getJudgment(panel, note.getBeat());
-        if(headJudgment == null || headJudgment.getJudgmentClass() == JudgmentClass.MISS) {
-            //Head not judged or missed
-            return super.getNoteY(panel, note, beat, time);
+        if(note instanceof JudgeableNote) {
+            JudgeableNote judgeableNote = (JudgeableNote) note;
+            //TODO here we assume getJudgment is a TapJudgment
+            TapJudgment judgment = (TapJudgment) judgeableNote.getJudgment();
+            if(judgment == null || judgment.getJudgmentClass() == JudgmentClass.MISS) {
+                //Head not judged or missed
+                return super.getNoteY(panel, note, beat, time);
+            }
         }
 
-        TailJudgment tailJudgment = (TailJudgment) judgments.getJudgment(panel, note.getBeat() + lengthyNote.getLength());
-        if(tailJudgment == null){
-            //Note head overlaps receptor
-            return 0.0f;
-        } else {
-            Timing timing = getRound().getTiming();
-            double genBeat = timing.getBeatAt(tailJudgment.getGenTime());
-            float height = getNoteHeight(panel, note, beat, time);
-            SpeedModifier speedMod = getRound().getModifiers().getSpeedModifier();
-            return (float) -(height * speedMod.getSpeedAt(beat) * (genBeat - beat));
+        if(note instanceof JudgeableLengthyNote) {
+            JudgeableLengthyNote lengthyNote = (JudgeableLengthyNote) note;
+            TailJudgment tailJudgment = lengthyNote.getTailJudgment();
+            if(tailJudgment == null){
+                //Note head overlaps receptor
+                return 0.0f;
+            } else {
+                Timing timing = getRound().getTiming();
+                double genBeat = timing.getBeatAt(tailJudgment.getGenTime());
+                float height = getNoteHeight(panel, note, beat, time);
+                SpeedModifier speedMod = getRound().getModifiers().getSpeedModifier();
+                return (float) -(height * speedMod.getSpeedAt(beat) * (genBeat - beat));
+            }
         }
+
+        //Base lengthy note
+        return super.getNoteY(panel, note, beat, time);
     }
 
     @Override
@@ -126,14 +122,31 @@ public abstract class BaseLengthyNoteRenderer extends BaseNoteRenderer implement
 
     @Override
     public boolean isActive(int panel, LengthyNote note, double beat, double time) {
-        JudgmentKeeper judgments = getRound().getJudge().getJudgmentKeeper();
-        PanelState states = getRound().getPanelState();
-        TapJudgment headJudgment = (TapJudgment) judgments.getJudgment(panel, note.getBeat());
-        TailJudgment tailJudgment = (TailJudgment) judgments.getJudgment(panel, note.getBeat() + note.getLength());
-        return headJudgment != null                                         //Has head judgment
-                && headJudgment.getJudgmentClass() != JudgmentClass.MISS    //Head judgment is not miss
-                && tailJudgment == null                                     //No tail judgment
-                && states.isPressedAt(panel, time);                         //Panel pressed
+        if(note instanceof JudgeableLengthyNote) {
+            PanelState states = getRound().getPanelState();
+            JudgeableLengthyNote lengthyNote = (JudgeableLengthyNote) note;
+            TapJudgment headJudgment = (TapJudgment) lengthyNote.getJudgment();
+            TailJudgment tailJudgment = (TailJudgment) lengthyNote.getTailJudgment();
+            return headJudgment != null                                         //Has head judgment
+                    && headJudgment.getJudgmentClass() != JudgmentClass.MISS    //Head judgment is not miss
+                    && tailJudgment == null                                     //No tail judgment
+                    && states.isPressedAt(panel, time);                         //Panel pressed
+        }
+        return false;
+    }
+
+    @Override
+    public boolean isNoteVisible(int panel, Note note, double beat, double time) {
+        if(note instanceof JudgeableLengthyNote) {
+            JudgeableLengthyNote lengthyNote = (JudgeableLengthyNote) note;
+            TapJudgment headJudgment = (TapJudgment) lengthyNote.getJudgment();
+            TailJudgment tailJudgment = (TailJudgment) lengthyNote.getTailJudgment();
+            return headJudgment == null                                         //No head judgment
+                    || headJudgment.getJudgmentClass() == JudgmentClass.MISS    //Head missed
+                    || tailJudgment == null                                     //No tail judgment
+                    || tailJudgment.getJudgmentClass() == JudgmentClass.NG;     //Trail missed
+        }
+        return true;
     }
 
     @Override

@@ -22,7 +22,7 @@ import net.touchmania.game.resource.lazy.Resource;
 import net.touchmania.game.song.note.Note;
 
 /**
- * @author flood2d
+ * @author Vincenzo Fortunato
  */
 public class MineNoteRenderer extends BaseNoteRenderer {
 

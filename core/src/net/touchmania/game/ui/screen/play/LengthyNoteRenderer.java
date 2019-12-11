@@ -20,7 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import net.touchmania.game.song.note.LengthyNote;
 
 /**
- * @author flood2d
+ * @author Vincenzo Fortunato
  */
 public interface LengthyNoteRenderer extends NoteRenderer {
     /**

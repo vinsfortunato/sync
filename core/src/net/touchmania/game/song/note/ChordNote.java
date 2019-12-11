@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Vincenzo Fortunato
+ * Copyright 2019 Vincenzo Fortunato
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,31 +16,8 @@
 
 package net.touchmania.game.song.note;
 
-import net.touchmania.game.round.judge.Judgment;
-
 /**
- * @author Vincenzo Fortunato
+ * Represents a note that can be in a chord.
  */
-public class LiftNote implements JudgeableNote {
-    private double beat;
-    private Judgment judgment;
-
-    public LiftNote(double beat) {
-        this.beat = beat;
-    }
-
-    @Override
-    public Judgment getJudgment() {
-        return judgment;
-    }
-
-    @Override
-    public void setJudgment(Judgment judgment) {
-        this.judgment = judgment;
-    }
-
-    @Override
-    public double getBeat() {
-        return beat;
-    }
+public interface ChordNote extends Note {
 }

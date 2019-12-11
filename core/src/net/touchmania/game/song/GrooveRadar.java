@@ -19,7 +19,7 @@ package net.touchmania.game.song;
 /**
  * Check http://dancedancerevolutionddr.wikia.com/wiki/Groove_Radar for formulas
  *
- * @author flood2d
+ * @author Vincenzo Fortunato
  */
 public class GrooveRadar {
     public float stream;

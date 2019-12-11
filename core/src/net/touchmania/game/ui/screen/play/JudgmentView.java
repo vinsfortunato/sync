@@ -62,7 +62,7 @@ public class JudgmentView extends Widget {
         super.draw(batch, parentAlpha);
 
         //Draw judgment
-        Judgment lastJudgment = round.getJudge().getJudgmentKeeper().getLastJudgment();
+        Judgment lastJudgment = round.getJudge().getLastJudgment();
 
         JudgmentClass c = null;
         if(lastJudgment instanceof TapJudgment) {

@@ -19,7 +19,7 @@ package net.touchmania.game.util.math;
 /**
  * Represents a relation between a set of inputs and a set of permissible
  * outputs with the property that each input is related to exactly one output.
- * @author flood2d
+ * @author Vincenzo Fortunato
  */
 public interface Function<X, Y> {
     /**

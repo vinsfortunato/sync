@@ -22,7 +22,7 @@ import net.touchmania.game.database.Cursor;
 import net.touchmania.game.util.ui.DPI;
 
 /**
- * @author flood2d
+ * @author Vincenzo Fortunato
  */
 public interface Backend {
     /**

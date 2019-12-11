@@ -17,7 +17,7 @@
 package net.touchmania.game.song;
 
 /**
- * @author flood2d
+ * @author Vincenzo Fortunato
  */
 public enum DifficultyClass {
     BEGINNER,

@@ -22,7 +22,7 @@ import com.google.common.base.Preconditions;
  * Represents a straight-line with function y = mx + q, where m is the slope or gradient of the line and q
  * is the y-intercept of the line.
  *
- * @author flood2d
+ * @author Vincenzo Fortunato
  */
 public class Line2D implements Function<Double, Double> {
     private final double m;

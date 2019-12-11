@@ -17,7 +17,9 @@
 package net.touchmania.game.song;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ComparisonChain;
 import net.touchmania.game.util.math.Graph2D;
+import net.touchmania.game.util.math.Graph2DPoint;
 import net.touchmania.game.util.math.LineGraph2D;
 
 import javax.annotation.Nonnull;
@@ -29,7 +31,7 @@ import java.util.TreeSet;
 /**
  * Maps beats to time. Can be used to retrieve a beat at a specific time (relative
  * to the start of the song).
- * @author flood2d
+ * @author Vincenzo Fortunato
  */
 public class Timing {
     private TimingData timingData;
@@ -352,10 +354,15 @@ public class Timing {
 
         void putPauseSegmentEnd() {
             if(currentStop > 0.0D || currentDelay > 0.0D) {
+                boolean isStop = currentStop > 0.0D;
                 currentTime += currentStop + currentDelay; //At the same beat, delay and stop lengths are summed up.
                 currentStop = 0.0D;
                 currentDelay = 0.0D;
-                beatGraph.putPoint(currentTime, currentBeat); //Add pause end point
+
+                //Add pause end point. By inverting the graph to get the beat->time graph the pause will be turned
+                //into a jump and the jump will be left defined if the pause was a stop or right defined if the pause
+                //was a delay. Stop has precedence on delay if these two segments are contiguous
+                beatGraph.putPoint(new Graph2DPoint(currentTime, currentBeat, 0.0D, isStop));
             }
         }
 
@@ -414,11 +421,11 @@ public class Timing {
 
         @Override
         public int compareTo(@Nonnull TimingKeyBeat o) {
-            int result = Double.compare(beat, o.beat);
-            if(result == 0) {
-                return type.compareTo(o.type);
-            }
-            return result;
+            return ComparisonChain
+                    .start()
+                    .compare(beat, o.beat)
+                    .compare(type, o.type)
+                    .result();
         }
 
         @Override
@@ -426,7 +433,7 @@ public class Timing {
             if(obj instanceof TimingKeyBeat) {
                 TimingKeyBeat keyBeat = (TimingKeyBeat) obj;
                 return type == keyBeat.type &&
-                        Double.compare(beat, keyBeat.beat) == 0;
+                        Double.compare(beat, keyBeat.beat) == 0; //TODO tolerance
             }
             return false;
         }

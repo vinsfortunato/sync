@@ -19,7 +19,7 @@ package net.touchmania.game.song;
 import java.util.TreeMap;
 
 /**
- * @author flood2d
+ * @author Vincenzo Fortunato
  */
 public class TimingData {
     public double offset = 0.0D;

@@ -30,7 +30,7 @@ import java.io.Closeable;
  * Cursor implementations are not required to be synchronized so code using a Cursor from multiple
  * threads should perform its own synchronization when using the Cursor.
  * </p>
- * @author the Android team, adapted by flood2d
+ * @author the Android team, adapted by Vincenzo Fortunato
  */
 public interface Cursor extends Closeable {
     /** Value returned by {@link #getType(int)} if the specified column is null */

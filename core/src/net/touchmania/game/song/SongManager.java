@@ -21,7 +21,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.google.common.util.concurrent.ListenableFuture;
 
 /**
- * @author flood2d
+ * @author Vincenzo Fortunato
  */
 public class SongManager {
     public ListenableFuture<Song> loadSong(FileHandle songDir) {

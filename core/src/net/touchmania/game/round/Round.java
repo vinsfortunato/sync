@@ -3,6 +3,7 @@ package net.touchmania.game.round;
 import com.badlogic.gdx.audio.Music;
 import net.touchmania.game.round.judge.Judge;
 import net.touchmania.game.round.judge.JudgeCriteria;
+import net.touchmania.game.round.modifier.MaxSpeedModifier;
 import net.touchmania.game.round.modifier.Modifiers;
 import net.touchmania.game.round.modifier.MultiplySpeedModifier;
 import net.touchmania.game.song.Chart;
@@ -36,7 +37,7 @@ public class Round {
     }
 
     private void setDefaultMods() {
-        modifiers.setSpeedModifier(new MultiplySpeedModifier(2.5D));
+        modifiers.setSpeedModifier(new MultiplySpeedModifier(3.5f));
     }
 
     public Song getSong() {

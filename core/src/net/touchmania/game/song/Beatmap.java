@@ -16,11 +16,9 @@
 
 package net.touchmania.game.song;
 
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntMap;
-import net.touchmania.game.song.note.HoldNote;
-import net.touchmania.game.song.note.Note;
-import net.touchmania.game.song.note.RollNote;
-import net.touchmania.game.song.note.TapNote;
+import net.touchmania.game.song.note.*;
 import net.touchmania.game.util.Criteria;
 
 import java.util.Iterator;
@@ -64,11 +62,39 @@ public class Beatmap {
     }
 
     /**
+     * Gets all notes at the given beat that are valid for the given criteria.
+     * @param beat the beat
+     * @param criteria a criteria that checks if the note is valid, or null to ignore criteria
+     * @return all notes at the given beat that are valid for the given criteria.
+     */
+    public Array<Note> getNotes(double beat, Criteria<Note> criteria) {
+        Array<Note> notes = new Array<>();
+        IntMap.Keys keys = panels.keys();
+        while(keys.hasNext) {
+            int panel = keys.next();
+            Note note = getNote(panel, beat);
+            if(note != null && (criteria == null || criteria.isValid(note))) {
+                notes.add(note);
+            }
+        }
+        return notes;
+    }
+
+    /**
+     * Gets all notes at the given beat.
+     * @param beat the beat
+     * @return all notes at the given beat.
+     */
+    public Array<Note> getNotes(double beat) {
+        return getNotes(beat, null);
+    }
+
+    /**
      * Returns the note associated with the greatest beat less than or equal
      * to the given beat, or null if there is no such note.
      * @param panel the note panel
      * @param beat the beat
-     * @param criteria a criteria that checks if the note is valid.
+     * @param criteria a criteria that checks if the note is valid, or null to ignore criteria.
      * @return a note with the greatest beat less than or equal to the given beat, or null if there is no such note
      */
     public Note floorNote(int panel, double beat, Criteria<Note> criteria) {
@@ -103,7 +129,7 @@ public class Beatmap {
      * to the given beat, or null if there is no such note.
      * @param panel the note panel
      * @param beat the beat
-     * @param criteria a criteria that checks if the note is valid.
+     * @param criteria a criteria that checks if the note is valid, or null to ignore criteria.
      * @return a note with the least beat greater than or equal to beat, or null if there is no such note.
      */
     public Note ceilingNote(int panel, double beat, Criteria<Note> criteria) {
@@ -138,7 +164,7 @@ public class Beatmap {
      * than the given beat, or null if there is no such note.
      * @param panel the note panel
      * @param beat the beat
-     * @param criteria a criteria that checks if the note is valid.
+     * @param criteria a criteria that checks if the note is valid, or null to ignore criteria.
      * @return a note with the least beat greater than beat, or null if there is no such note
      */
     public Note higherNote(int panel, double beat, Criteria<Note> criteria) {
@@ -173,7 +199,7 @@ public class Beatmap {
      * less than the given beat, or null if there is no such note.
      * @param panel the note panel
      * @param beat the beat
-     * @param criteria a criteria that checks if the note is valid.
+     * @param criteria a criteria that checks if the note is valid, or null to ignore criteria.
      * @return a note with the greatest beat less than given beat, or null if there is no such note
      */
     public Note lowerNote(int panel, double beat, Criteria<Note> criteria) {
@@ -253,7 +279,7 @@ public class Beatmap {
         while(keys.hasNext) {
             int panel = keys.next();
             Note note = getNote(panel, beat);
-            if(note != null && note.canBeChord()) {
+            if(note instanceof ChordNote) {
                 count++;
             }
         }

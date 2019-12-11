@@ -20,7 +20,7 @@ import net.touchmania.game.song.DifficultyClass;
 
 /**
  * Utility class used by every sim parser implementation.
- * @author flood2d
+ * @author Vincenzo Fortunato
  */
 public final class SimParserUtils {
     /**

@@ -19,23 +19,31 @@ package net.touchmania.game.util.math;
 /**
  * Represents a {@link Graph2D} point. Points are interpolated using a specific algorithm to
  * get a function that contains them.
- * @author flood2d
+ * @author Vincenzo Fortunato
  */
 public class Graph2DPoint {
-    /** The point x value **/
+    /**
+     * The point x value
+     */
     public final double x;
     /**
      * The point y value.
      */
     public double y;
     /**
-     * The value of this variable, if different from 0, is the jump discontinuity value of
-     * the function at {@link #x}. Can be negative and it is relative to {@link #y}.
+     * The value of this variable, if different from 0, it is the jump discontinuity value of
+     * the function at {@link #x}. Can be negative.
      */
     public double jump;
-    /** If true the image calculated at {@link #x} will be {@link #y}, otherwise
-     * the image will be {@link #y} + {@link #jump}**/
-    public boolean leftDefined = false;
+    /**
+     * It has different meaning based on the type of the point.
+     * <li>Point is a jump ({@link #jump} != 0): If true the image calculated at
+     * {@link #x} will be {@link #y}, otherwise the image will be {@link #y} + {@link #jump}.</li>
+     * <li>Point is a constant segment end point: It is used when inverting the {@link Graph2D}.
+     * When the end point of a constant segment is left defined the jump point generated
+     * by inverting this constant segment will also be left defined.
+     */
+    public boolean leftDefined;
 
     /**
      * Create a point left defined with y and jump that are equal to 0.
@@ -64,6 +72,6 @@ public class Graph2DPoint {
      * @return true if jump value is greater than 0.
      */
     public boolean isJump() {
-        return Double.compare(jump, 0.0D) > 0;
+        return jump > 0.0D;
     }
 }

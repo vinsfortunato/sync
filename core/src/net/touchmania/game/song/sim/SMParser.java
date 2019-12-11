@@ -26,7 +26,7 @@ import java.util.regex.Pattern;
 
 /**
  * Parse SM SIMs - Old Stepmania format (.sm file extension).
- * @author flood2d
+ * @author Vincenzo Fortunato
  */
 public class SMParser extends TagSimParser {
     /** Pattern that matches the display bpm syntax **/
