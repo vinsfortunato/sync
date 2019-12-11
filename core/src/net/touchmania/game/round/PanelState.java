@@ -111,6 +111,24 @@ public class PanelState {
     }
 
     /**
+     * Gets the time in seconds strictly less to the given time when a state change occurred.
+     * @param panel the panel
+     * @param time the time in seconds.
+     * @return <li> the time in seconds strictly less to the given time when a state change occurred </li>
+     * <li> {@link Double#MIN_VALUE} if a pressed state never occurred </li>
+     */
+    public double getLowerTimeState(int panel, double time) {
+        TreeMap<Double, Boolean> states = panelStates.get(panel);
+        if(states != null && !states.isEmpty()) {
+            Map.Entry<Double, Boolean> state = states.lowerEntry(time);
+            if(state != null) {
+                return state.getKey();
+            }
+        }
+        return Double.MIN_VALUE;
+    }
+
+    /**
      * Gets the time in seconds strictly less to the given time when the given state occurred.
      * @param panel the panel
      * @param time the time in seconds.
@@ -157,6 +175,24 @@ public class PanelState {
      */
     public double getLowerTimeReleased(int panel, double time) {
         return getLowerTimeState(panel, time, false);
+    }
+
+    /**
+     * Gets the time in seconds strictly less or equal to the given time when a state change occurred.
+     * @param panel the panel
+     * @param time the time in seconds.
+     * @return <li> the time in seconds strictly less or equal to the given time when a state change occurred </li>
+     * <li> {@link Double#MIN_VALUE} if a pressed state never occurred </li>
+     */
+    public double getFloorTimeState(int panel, double time) {
+        TreeMap<Double, Boolean> states = panelStates.get(panel);
+        if(states != null && !states.isEmpty()) {
+            Map.Entry<Double, Boolean> state = states.lowerEntry(time);
+            if(state != null) {
+                return state.getKey();
+            }
+        }
+        return Double.MIN_VALUE;
     }
 
     /**

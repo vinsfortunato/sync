@@ -18,10 +18,10 @@ package net.touchmania.game.song;
 
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntMap;
-import net.touchmania.game.song.note.*;
+import net.touchmania.game.song.note.ChordNote;
+import net.touchmania.game.song.note.Note;
 import net.touchmania.game.util.Criteria;
 
-import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -33,22 +33,6 @@ public class Beatmap {
      * TreeMap key is the note beat and value is the note.
      */
     private IntMap<TreeMap<Double, Note>> panels = new IntMap<>();
-
-    //TODO
-    public void tempClear() {
-        IntMap.Keys keys = panels.keys();
-        while(keys.hasNext) {
-            int key = keys.next();
-            TreeMap<Double, Note> map = panels.get(key);
-            Iterator<Map.Entry<Double, Note>> it = map.entrySet().iterator();
-            while(it.hasNext()) {
-                Map.Entry<Double, Note> entry = it.next();
-                if(!(entry.getValue() instanceof TapNote || entry.getValue() instanceof HoldNote || entry.getValue() instanceof RollNote)) {
-                    it.remove();
-                }
-            }
-        }
-    }
 
     /**
      * Gets the note at the given beat on the given panel.

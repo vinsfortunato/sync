@@ -27,7 +27,10 @@ import com.google.common.base.Charsets;
 import com.google.common.io.Files;
 import net.touchmania.game.Game;
 import net.touchmania.game.round.Round;
-import net.touchmania.game.song.*;
+import net.touchmania.game.song.Chart;
+import net.touchmania.game.song.ChartType;
+import net.touchmania.game.song.Song;
+import net.touchmania.game.song.SongLoader;
 import net.touchmania.game.song.sim.SimParser;
 import net.touchmania.game.ui.Screen;
 
@@ -73,7 +76,7 @@ public class GameScreen implements Screen {
         String testSong = "E:/Program Files/StepMania 5.1/Songs/ITG Rodeo Tournament 8/012 - Grayed Out -Antifront-";
         if(Gdx.app.getType() == Application.ApplicationType.Desktop) {
 
-            fh = Gdx.files.absolute("E:/Program Files/StepMania 5.1/Songs/ITG Rodeo Tournament 8/011 - Warm Ups (VIP)");
+            fh = Gdx.files.absolute("E:/Program Files/StepMania 5.1/Songs/SHARPNELSTREAMZ v2/Gate Openerz");
         } else {
             fh = Gdx.files.external("touchmania/Songs/ITG Rodeo Tournament 8/011 - Warm Ups (VIP)");
         }
@@ -84,14 +87,13 @@ public class GameScreen implements Screen {
             Song song = sl.call();
             Chart chart = null;
             for(Chart c : song.charts) {
-                if(c.type == ChartType.DANCE_SINGLE) {
+                if(c.type == ChartType.DANCE_SINGLE && c.difficultyMeter == 15) {
                         chart = c;
                     }
             }
             SimParser parser = song.simFormat.newParser();
             parser.init(Files.toString(song.simFile.file(), Charsets.UTF_8));
             chart.beatmap = parser.parseBeatmap(chart);
-            chart.beatmap.tempClear();
             FileHandle musicFile;
             if(Gdx.app.getType() == Application.ApplicationType.Desktop) {
                 musicFile = Gdx.files.absolute(song.directory.path() + "/" + song.musicPath);

@@ -27,13 +27,33 @@ import net.touchmania.game.song.note.*;
 
 import static net.touchmania.game.round.judge.JudgmentClass.*;
 
+/**
+ * <p>Generates judgments for a round following the given set of {@link JudgeCriteria criterias}.
+ * Can generate judgments in real time or all in a single moment making it usable both during
+ * gameplay and replay mode.</p>
+ * <p>There are two important methods that should be called:
+ *  <li> {@link #update(double)} should be called periodically to update unjudged notes. It must
+ *  be called during gameplay to update the note judgments in real time. During replay calling this
+ *  method is not needed because all panel state history is available and can be processed in batch.
+ *  <li> {@link #onPanelStateChange(int, double, boolean)} should be called when the panel state changes.
+ *  Before handling the panel state change, this method will call {@link #update(double)} passing the
+ *  time when the panel state changed. Panel state changes should be sent ordered by their time to
+ *  this method. </li>
+ * </p>
+ */
 public class Judge implements PanelState.PanelStateListener {
     private Round round;
     private JudgeCriteria criteria;
+
+    /* Map a beat to a given panel. All notes on a panel with a beat less
+     * or equal to this one will be considered judged and skipped. */
     private IntMap<Double> evaluatedBeats;
+    /* Represents the processed time. Unjudged notes will be updated only
+     * if the time passed to update(...) is greater than this value. */
     private double evaluatedTime;
     private int[] panels;
 
+    /* Note specific judges */
     private TapNoteJudge tapNoteJudge;
     private HoldNoteJudge holdNoteJudge;
     private RollNoteJudge rollNoteJudge;
@@ -42,11 +62,15 @@ public class Judge implements PanelState.PanelStateListener {
 
     //TODO temp location
     private Judgment lastJudgment;
-
     public Judgment getLastJudgment() {
         return lastJudgment;
     }
 
+    /**
+     * Construct a judge from the given round and set of criteria.
+     * @param round the round
+     * @param criteria the judge criteria, a set of criteria used by the judge system to generate judgments.
+     */
     public Judge(Round round, JudgeCriteria criteria) {
         this.round = round;
         this.criteria = criteria;
@@ -69,7 +93,9 @@ public class Judge implements PanelState.PanelStateListener {
     }
 
     /**
-     * Updates all note before the given time.
+     * Updates all unjudged notes before the given time. Should be called periodically to update unjudged notes.
+     * If the given time is {@link Double#MAX_VALUE} or a value greater than the time of the last note time
+     * it will update all unjudged notes till the end of the song and generate all remaining judgments.
      * @param time the time in seconds relative to the start of the music track.
      */
     public void update(double time) {
@@ -92,6 +118,14 @@ public class Judge implements PanelState.PanelStateListener {
         }
     }
 
+    /**
+     * Should be called when the panel state changes. Process the panel state change event.
+     * It will call {@link #update(double)} by passing the time when the panel state changed, updating
+     * all unjudged notes before processing the state change event.
+     * @param panel the panel
+     * @param time the time in seconds when the change occurs
+     * @param pressed the updated state, true if pressed, false if released
+     */
     @Override
     public void onPanelStateChange(int panel, double time, boolean pressed) {
         //Update all notes before event time
@@ -119,8 +153,7 @@ public class Judge implements PanelState.PanelStateListener {
         }
 
         if(note != null) {
-            NoteJudge judge = getNoteJudge(note);
-            judge.onPanelStateChange(panel, time, pressed, note);
+            getNoteJudge(note).onPanelStateChange(panel, time, pressed, note);
         }
     }
 
@@ -216,20 +249,16 @@ public class Judge implements PanelState.PanelStateListener {
             double noteTime = timing.getTimeAt(note.getBeat());
             double timingError = noteTime - time;
             double worstWindow = criteria.getWorstTapWindow();
-            Note nextNote = beatmap.higherNote(panel, note.getBeat(), n -> n instanceof JudgeableNote);
-            Judgment judgment = null;
+            Note higherNote = beatmap.higherNote(panel, note.getBeat(), n -> n instanceof JudgeableNote);
 
-            if(nextNote != null && nextNote.getBeat() < beat) {
-                //Next note has passed receptor
-                double nextNoteTime = timing.getTimeAt(nextNote.getBeat());
-                judgment = new TapJudgment(nextNoteTime, Math.max(noteTime - nextNoteTime, -worstWindow), MISS);
+            if(higherNote != null && higherNote.getBeat() < beat) {
+                //Next note surpassed current note
+                double higherNoteTime = timing.getTimeAt(higherNote.getBeat());
+                timingError = Math.max(noteTime - higherNoteTime, -worstWindow);
+                emitJudgment(panel, note, new TapJudgment(noteTime - timingError, timingError, MISS));
             } else if(timingError < -worstWindow) {
                 //Note outside worst window
-                judgment = new TapJudgment(noteTime + worstWindow, -worstWindow, MISS);
-            }
-
-            if(judgment != null) {
-                emitJudgment(panel, note, judgment);
+                emitJudgment(panel, note, new TapJudgment(noteTime + worstWindow, -worstWindow, MISS));
             }
         }
 
@@ -242,13 +271,13 @@ public class Judge implements PanelState.PanelStateListener {
                 JudgmentClass judgmentClass = getJudgmentClass(timingError);
                 if(judgmentClass != MISS) {
                     //Note judged. Emit judgment
-                    Judgment judgment = new TapJudgment(time, timingError, judgmentClass);
-                    emitJudgment(panel, note, judgment);
+                    emitJudgment(panel, note, new TapJudgment(time, timingError, judgmentClass));
                 }
             }
         }
 
         private JudgmentClass getJudgmentClass(double timingError) {
+            //TODO using compare?
             if(Double.compare(Math.abs(timingError), criteria.getWorstTapWindow()) <= 0) {
                 if(Double.compare(Math.abs(timingError), criteria.getMarvelousWindow()) <= 0)
                     return MARVELOUS;
@@ -295,8 +324,8 @@ public class Judge implements PanelState.PanelStateListener {
         @Override
         public void emitJudgment(int panel, JudgeableNote note, Judgment judgment) {
             if(judgment instanceof TapJudgment) {
-                //Head judgment
-                note.setJudgment(judgment);
+                    //Head judgment
+                    note.setJudgment(judgment);
 
                 lastJudgment = judgment;
 
@@ -367,6 +396,44 @@ public class Judge implements PanelState.PanelStateListener {
         }
     }
 
+    private class MineNoteJudge extends NoteJudge {
+        @Override
+        public void update(int panel, double time, double beat, JudgeableNote note) {
+            //Check if previous note has been judged
+            JudgeableNote prevNote = (JudgeableNote) getBeatmap().lowerNote(panel, note.getBeat(), n -> n instanceof JudgeableNote);
+            if(prevNote != null && prevNote.getBeat() < getEvaluatedBeat(panel)) {
+                //Prev note not judged yet
+                return;
+            }
+
+            PanelState states = getPanelState();
+            Timing timing = getTiming();
+            double mineWindowEnd = timing.getTimeAt(note.getBeat());
+            double mineWindowStart = mineWindowEnd - criteria.getMineWindow();
+
+            if(time > mineWindowStart) {
+                //Check if the mine has been triggered and generate judgment
+                Judgment judgment = null;
+                if(!states.isReleasedAt(panel, mineWindowStart)) {
+                    //Mine triggered at the beginning of the mine window. Wasn't released when window started
+                    judgment = new MineJudgment(mineWindowStart, true);
+                } else if(states.getFloorTimeState(panel, mineWindowEnd) > mineWindowStart) {
+                    //Mine triggered. A state change occurred inside the window
+                    judgment = new MineJudgment( states.getFloorTimePressed(panel, mineWindowEnd), true);
+                } else if(time > mineWindowEnd) {
+                    //Mine not triggered and we are after the window. Generate positive judgment
+                    judgment = new MineJudgment(mineWindowEnd, false);
+                }
+                if(judgment != null) {
+                    emitJudgment(panel, note, judgment);
+                }
+            }
+        }
+
+        @Override
+        public void onPanelStateChange(int panel, double time, boolean pressed, JudgeableNote note) {}
+    }
+
     private class LiftNoteJudge extends NoteJudge {
         @Override
         public void update(int panel, double time, double beat, JudgeableNote note) {
@@ -378,17 +445,4 @@ public class Judge implements PanelState.PanelStateListener {
 
         }
     }
-
-    private class MineNoteJudge extends NoteJudge {
-        @Override
-        public void update(int panel, double time, double beat, JudgeableNote note) {
-
-        }
-
-        @Override
-        public void onPanelStateChange(int panel, double time, boolean pressed, JudgeableNote note) {
-
-        }
-    }
-
 }

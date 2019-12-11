@@ -19,6 +19,7 @@ package net.touchmania.game.ui.screen.play;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import net.touchmania.game.Game;
 import net.touchmania.game.resource.lazy.Resource;
+import net.touchmania.game.song.note.MineNote;
 import net.touchmania.game.song.note.Note;
 
 /**
@@ -44,7 +45,8 @@ public class MineNoteRenderer extends BaseNoteRenderer {
 
     @Override
     public boolean isNoteVisible(int panel, Note note, double beat, double time) {
-        return true;
+        MineNote mineNote = (MineNote) note;
+        return mineNote.getJudgment() == null || !mineNote.getJudgment().hasExploded();
     }
 
     @Override
