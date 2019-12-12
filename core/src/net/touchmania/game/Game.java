@@ -16,6 +16,7 @@
 
 package net.touchmania.game;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
@@ -31,6 +32,8 @@ import net.touchmania.game.util.Disposer;
 import net.touchmania.game.util.concurrent.ExecutorManager;
 
 public class Game implements ApplicationListener {
+	public String tempFile;
+
 	private static Game instance;
 	private Backend backend;
 	private GameSettings settings;
@@ -60,8 +63,9 @@ public class Game implements ApplicationListener {
 		this.songs = new SongManager();
 		this.players = new PlayerManager();
 
-		//Show test screen TODO remove
-		this.screens.show(GameScreen.instance());
+		//Show test screen TODO
+		if(Gdx.app.getType() != Application.ApplicationType.Android)
+			this.screens.show(GameScreen.instance());
 	}
 
 	@Override
@@ -89,7 +93,8 @@ public class Game implements ApplicationListener {
 
 	@Override
 	public void resume () {
-
+		if(Gdx.app.getType() == Application.ApplicationType.Android) //TODO
+			this.screens.show(GameScreen.instance());
 	}
 
 	@Override

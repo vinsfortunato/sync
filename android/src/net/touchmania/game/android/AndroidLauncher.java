@@ -17,6 +17,7 @@
 package net.touchmania.game.android;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -28,6 +29,8 @@ import net.touchmania.game.database.DatabaseHelper;
 import net.touchmania.game.util.ui.DPI;
 
 public class AndroidLauncher extends AndroidApplication implements Backend {
+	private Game game;
+
 	@Override
 	protected void onCreate (Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -40,7 +43,21 @@ public class AndroidLauncher extends AndroidApplication implements Backend {
 
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 		config.useImmersiveMode = true;
-		initialize(new Game(this), config);
+		game = new Game(this);
+
+		initialize(game, config);
+
+		Intent i = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
+		i.addCategory(Intent.CATEGORY_DEFAULT);
+		startActivityForResult(Intent.createChooser(i, "Choose directory"), 9999);
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		switch(requestCode) {
+			case 9999:
+				game.tempFile = data.getData().getPath().split(":")[1];
+		}
 	}
 
 	@Override
