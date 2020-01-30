@@ -19,6 +19,7 @@ package net.touchmania.game.android;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import com.badlogic.gdx.backends.android.AndroidApplication;
@@ -27,6 +28,8 @@ import net.touchmania.game.Backend;
 import net.touchmania.game.Game;
 import net.touchmania.game.database.DatabaseHelper;
 import net.touchmania.game.util.ui.DPI;
+
+import java.io.File;
 
 public class AndroidLauncher extends AndroidApplication implements Backend {
 	private Game game;
@@ -47,16 +50,25 @@ public class AndroidLauncher extends AndroidApplication implements Backend {
 
 		initialize(game, config);
 
-		Intent i = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
-		i.addCategory(Intent.CATEGORY_DEFAULT);
-		startActivityForResult(Intent.createChooser(i, "Choose directory"), 9999);
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			Intent i = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
+			i.addCategory(Intent.CATEGORY_DEFAULT);
+			startActivityForResult(Intent.createChooser(i, "Choose directory"), 9999);
+		}
 	}
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch(requestCode) {
 			case 9999:
-				game.tempFile = data.getData().getPath().split(":")[1];
+				if(resultCode == RESULT_OK) {
+					Uri treeUri = data.getData();
+					File file = new File(treeUri.getPath());
+
+					System.out.println(file.getPath());
+					game.tempFile = file.getPath().split(":")[1];
+				}
+				break;
 		}
 	}
 

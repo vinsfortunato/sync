@@ -98,31 +98,37 @@ public class ControlsView extends Widget {
     }
 
     private Rectangle getLeftRect() {
+        float controlHeight = this.controlHeight * 2.0f;
         float baseX = getWidth() / 2 - controlWidth * 1.5f;
         float baseY = 350;
-        return new Rectangle(baseX, baseY + controlHeight, controlWidth, controlHeight);
+        return new Rectangle(baseX, baseY + this.controlHeight / 2, controlWidth, controlHeight);
     }
 
     private Rectangle getRightRect() {
+        float controlHeight = this.controlHeight * 2.0f;
         float baseX = getWidth() / 2 - controlWidth * 1.5f;
         float baseY = 350;
-        return new Rectangle(baseX + controlWidth * 2, baseY + controlHeight, controlWidth, controlHeight);
+        return new Rectangle(baseX + controlWidth * 2, baseY + this.controlHeight / 2, controlWidth, controlHeight);
     }
 
     private Rectangle getUpRect() {
-        float baseX = getWidth() / 2 - controlWidth * 1.5f;
+        float controlWidth = this.controlWidth * 2;
+        float baseX = getWidth() / 2 - this.controlWidth * 1.5f;
         float baseY = 350;
-        return new Rectangle(baseX + controlWidth, baseY + controlHeight * 2, controlWidth, controlHeight);
+        return new Rectangle(baseX + this.controlWidth / 2, baseY + controlHeight * 2.5f, controlWidth, controlHeight);
     }
 
     private Rectangle getDownRect() {
-        float baseX = getWidth() / 2 - controlWidth * 1.5f;
+        float controlWidth = this.controlWidth * 2;
+        float baseX = getWidth() / 2 - this.controlWidth * 1.5f;
         float baseY = 350;
-        return new Rectangle(baseX + controlWidth, baseY, controlWidth, controlHeight);
+        return new Rectangle(baseX + this.controlWidth / 2, baseY - controlHeight * 0.5f, controlWidth, controlHeight);
     }
 
-    private float getDistance(float x1, float y1, float x2, float y2) {
-        return (float) Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
+    private float getDistance(float x, float y, Rectangle rect) {
+        float rx = Math.max(Math.abs(rect.x + rect.width / 2.0f - x) - rect.width / 2.0f, 0.0f);
+        float ry = Math.max(Math.abs(rect.y + rect.height / 2.0f - y) - rect.height / 2.0f, 0.0f);
+        return (float) Math.sqrt(Math.pow(rx, 2.0f) + Math.pow(ry, 2.0f));
     }
 
     private PanelState getControls() {
@@ -198,28 +204,28 @@ public class ControlsView extends Widget {
 
         private int getNearControl(float x, float y) {
             int noteColumn = NotePanel.LEFT;
-            Vector2 center = new Vector2();
+            Rectangle rect;
 
-            getLeftRect().getCenter(center);
-            float distance = getDistance(x, y, center.x, center.y);
+            rect = getLeftRect();
+            float distance = getDistance(x, y, rect);
             float d;
 
-            getDownRect().getCenter(center);
-            d = getDistance(x, y, center.x, center.y);
+            rect = getDownRect();
+            d = getDistance(x, y, rect);
             if(d < distance) {
                 distance = d;
                 noteColumn = NotePanel.DOWN;
             }
 
-            getUpRect().getCenter(center);
-            d = getDistance(x, y, center.x, center.y);
+            rect = getUpRect();
+            d = getDistance(x, y, rect);
             if(d < distance) {
                 distance = d;
                 noteColumn = NotePanel.UP;
             }
 
-            getRightRect().getCenter(center);
-            d = getDistance(x, y, center.x, center.y);
+            rect = getRightRect();
+            d = getDistance(x, y, rect);
             if(d < distance) {
                 noteColumn = NotePanel.RIGHT;
             }
