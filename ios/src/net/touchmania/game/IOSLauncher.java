@@ -1,12 +1,12 @@
 package net.touchmania.game;
 
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.backends.iosrobovm.IOSApplication;
+import com.badlogic.gdx.backends.iosrobovm.IOSApplicationConfiguration;
 import net.touchmania.game.database.DatabaseHelper;
 import net.touchmania.game.util.ui.DPI;
 import org.robovm.apple.foundation.NSAutoreleasePool;
 import org.robovm.apple.uikit.UIApplication;
-
-import com.badlogic.gdx.backends.iosrobovm.IOSApplication;
-import com.badlogic.gdx.backends.iosrobovm.IOSApplicationConfiguration;
 
 public class IOSLauncher extends IOSApplication.Delegate implements Backend {
     @Override
@@ -29,5 +29,10 @@ public class IOSLauncher extends IOSApplication.Delegate implements Backend {
     @Override
     public DPI getDeviceDPI() {
         return null;
+    }
+
+    @Override
+    public double getDuration(Music music) {
+        return 0.0f;
     }
 }

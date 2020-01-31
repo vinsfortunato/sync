@@ -1,5 +1,6 @@
 package net.touchmania.game.desktop;
 
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import net.touchmania.game.Backend;
@@ -28,5 +29,10 @@ public class DesktopLauncher implements Backend {
 	@Override
 	public DPI getDeviceDPI() {
 		return DPI.LOW;
+	}
+
+	@Override
+	public double getDuration(Music music) {
+		return 0.0f;
 	}
 }

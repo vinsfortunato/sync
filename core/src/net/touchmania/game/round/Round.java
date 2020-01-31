@@ -1,8 +1,10 @@
 package net.touchmania.game.round;
 
 import com.badlogic.gdx.audio.Music;
+import net.touchmania.game.Game;
 import net.touchmania.game.round.judge.Judge;
 import net.touchmania.game.round.judge.JudgeCriteria;
+import net.touchmania.game.round.modifier.MaxSpeedModifier;
 import net.touchmania.game.round.modifier.Modifiers;
 import net.touchmania.game.round.modifier.MultiplySpeedModifier;
 import net.touchmania.game.song.Chart;
@@ -37,9 +39,13 @@ public class Round {
 
     private void setDefaultMods() {
         //Init speed modifier
-
-        //MaxSpeedModifier speedMod = new MaxSpeedModifier(timing.getDominantBpm(music.));
-        modifiers.setSpeedModifier(new MultiplySpeedModifier(2.5f));
+        //Duration can be calculated only on Android. So this is a temp solution
+        double duration = Game.instance().getBackend().getDuration(music);
+        if(duration > 0.0D) {
+            modifiers.setSpeedModifier(new MaxSpeedModifier(timing.getDominantBpm(duration), 450D));
+        } else {
+            modifiers.setSpeedModifier(new MultiplySpeedModifier(2.5f));
+        }
     }
 
     public Song getSong() {

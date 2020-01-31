@@ -240,8 +240,8 @@ public class Timing {
             }
 
             //Include only bpm segments into calculations, ignore pause segments.
-            if(!isPause(currTime)) {
-                prevBpm = getBpmAt(point.x);
+            if(!isPause(getBeatAt(currTime))) {
+                prevBpm = getBpmAt(getBeatAt(point.x));
             }
 
             prevTime = currTime;

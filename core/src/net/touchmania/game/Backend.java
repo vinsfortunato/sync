@@ -16,9 +16,10 @@
 
 package net.touchmania.game;
 
-import net.touchmania.game.database.DatabaseHelper;
-import net.touchmania.game.database.Database;
+import com.badlogic.gdx.audio.Music;
 import net.touchmania.game.database.Cursor;
+import net.touchmania.game.database.Database;
+import net.touchmania.game.database.DatabaseHelper;
 import net.touchmania.game.util.ui.DPI;
 
 /**
@@ -40,4 +41,12 @@ public interface Backend {
     DatabaseHelper getDatabaseHelper();
 
     DPI getDeviceDPI();
+
+    /**
+     * Gets the duration of the given music.
+     * @param music the music
+     * @return the duration in seconds.
+     */
+    @Deprecated
+    double getDuration(Music music);
 }

@@ -22,8 +22,10 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
+import com.badlogic.gdx.backends.android.AndroidMusic;
 import net.touchmania.game.Backend;
 import net.touchmania.game.Game;
 import net.touchmania.game.database.DatabaseHelper;
@@ -80,5 +82,10 @@ public class AndroidLauncher extends AndroidApplication implements Backend {
 	@Override
 	public DPI getDeviceDPI() {
 		return DPI.closest(getResources().getDisplayMetrics().densityDpi);
+	}
+
+	@Override
+	public double getDuration(Music music) {
+		return ((AndroidMusic) music).getDuration();
 	}
 }
