@@ -16,7 +16,7 @@
 
 package net.touchmania.game.round.modifier;
 
-import net.touchmania.game.song.TimingData;
+import net.touchmania.game.song.Timing;
 import net.touchmania.game.util.math.StepFunction;
 
 import java.util.Map;
@@ -29,14 +29,14 @@ public class ConstantSpeedModifier extends SpeedModifier {
 
     /**
      * Construct the modifier from timing data and the constant bpm.
-     * @param data the timing data
+     * @param timing the timing
      * @param bpm the constant bpm
      */
-    public ConstantSpeedModifier(TimingData data, double bpm) {
+    public ConstantSpeedModifier(Timing timing, double bpm) {
         speedFunction = new StepFunction<>(1.0D);
 
         //Init speed function
-        for(Map.Entry<Double, Double> entry : data.bpms.entrySet()) {
+        for(Map.Entry<Double, Double> entry : timing.getTimingData().bpms.entrySet()) {
             speedFunction.putStep(entry.getKey(), bpm / entry.getValue());
         }
     }

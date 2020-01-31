@@ -36,6 +36,9 @@ public class Round {
     }
 
     private void setDefaultMods() {
+        //Init speed modifier
+
+        //MaxSpeedModifier speedMod = new MaxSpeedModifier(timing.getDominantBpm(music.));
         modifiers.setSpeedModifier(new MultiplySpeedModifier(2.5f));
     }
 

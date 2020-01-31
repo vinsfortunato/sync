@@ -23,10 +23,7 @@ import net.touchmania.game.util.math.Graph2DPoint;
 import net.touchmania.game.util.math.LineGraph2D;
 
 import javax.annotation.Nonnull;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * Maps beats to time. Can be used to retrieve a beat at a specific time (relative
@@ -207,6 +204,63 @@ public class Timing {
             }
         }
         return false;
+    }
+
+    /**
+     * Gets the dominant BPM from the initial 0.0 beat to the given time in seconds.
+     * @param time the time in seconds from the initial 0.0 beat.
+     * @return the dominant bpm up to the given time.
+     */
+    public double getDominantBpm(double time) {
+        double prevBpm = -1;
+        double prevTime = -1;
+
+        //Stores the duration of each bpm
+        Map<Double, Double> durations = new HashMap<>();
+
+        Iterator<Graph2DPoint> it = beatGraph.getPoints().iterator();
+        while(it.hasNext()) {
+            Graph2DPoint point = it.next();
+            double currTime = point.x;
+
+            if(prevBpm >= 0) {
+                //Increment total duration of the previous bpm segment
+                double duration = 0.0D;
+                if(durations.containsKey(prevBpm)) {
+                    duration = durations.get(prevBpm);
+                }
+                duration += (!it.hasNext() || point.x > time ? time : currTime) - prevTime;
+                durations.put(prevBpm, duration);
+                prevBpm = -1;
+            }
+
+            //Check if it is the last point or the given time has been passed
+            if(!it.hasNext() || point.x > time) {
+                break;
+            }
+
+            //Include only bpm segments into calculations, ignore pause segments.
+            if(!isPause(currTime)) {
+                prevBpm = getBpmAt(point.x);
+            }
+
+            prevTime = currTime;
+        }
+
+        //Calculate dominant bpm
+        double bpm = -1;
+        double duration = -1;
+        for(Map.Entry<Double, Double> entry : durations.entrySet()) {
+            if(entry.getValue() > duration) {
+                bpm = entry.getKey();
+                duration = entry.getValue();
+            }
+        }
+        return bpm;
+    }
+
+    public TimingData getTimingData() {
+        return timingData;
     }
 
     /**
