@@ -16,6 +16,16 @@
 
 package net.touchmania.game.util;
 
+/**
+ * Represent a logic criteria. Used to check if a given object
+ * follows the criteria. It is equivalent to a logic predicate.
+ * @param <T> the type of the value the criteria expects.
+ */
 public interface Criteria<T> {
-    boolean isValid(T value);
+    /**
+     * Check the given value against the criteria.
+     * @param value the value to check.
+     * @return true if the given value follows the criteria, false otherwise.
+     */
+    boolean check(T value);
 }

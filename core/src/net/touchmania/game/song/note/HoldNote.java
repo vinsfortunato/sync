@@ -76,11 +76,6 @@ public class HoldNote implements JudgeableLengthyNote, ChordNote {
     }
 
     @Override
-    public void setLength(double length) {
-        this.length = length;
-    }
-
-    @Override
     public double getBeat() {
         return beat;
     }

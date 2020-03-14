@@ -25,7 +25,7 @@ public interface JudgeableNote extends Note {
     /**
      * Get the note judgment. Null will be returned if the note has not
      * been judged yet.
-     * @return the note judgment, or null if the not has not been judged.
+     * @return the note judgment, or null if the note has not been judged.
      */
     Judgment getJudgment();
 

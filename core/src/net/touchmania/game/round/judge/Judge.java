@@ -237,7 +237,7 @@ public class Judge implements PanelState.PanelStateListener {
             //Move evaluated beat cursor
             setEvaluatedBeat(panel, note.getBeat());
 
-            lastJudgment = judgment;
+            lastJudgment = judgment;    //TODO temp
         }
     }
 
@@ -327,7 +327,7 @@ public class Judge implements PanelState.PanelStateListener {
                     //Head judgment
                     note.setJudgment(judgment);
 
-                lastJudgment = judgment;
+                lastJudgment = judgment;    //TODO temp
 
                 //Check if the head has been missed
                 TapJudgment tapJudgment = (TapJudgment) judgment;
@@ -341,7 +341,7 @@ public class Judge implements PanelState.PanelStateListener {
                 JudgeableLengthyNote lengthyNote = (JudgeableLengthyNote) note;
                 lengthyNote.setTailJudgment((TailJudgment) judgment);
 
-                lastJudgment = judgment;
+                lastJudgment = judgment;    //TODO temp
 
                 //Move evaluated beat cursor
                 setEvaluatedBeat(panel, note.getBeat());
@@ -437,12 +437,12 @@ public class Judge implements PanelState.PanelStateListener {
     private class LiftNoteJudge extends NoteJudge {
         @Override
         public void update(int panel, double time, double beat, JudgeableNote note) {
-
+            //TODO
         }
 
         @Override
         public void onPanelStateChange(int panel, double time, boolean pressed, JudgeableNote note) {
-
+            //TODO
         }
     }
 }

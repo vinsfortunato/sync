@@ -85,10 +85,11 @@ public class GameScreen implements Screen {
         try {
             Song song = sl.call();
             Chart chart = null;
+
             for(Chart c : song.charts) {
                 if(c.type == ChartType.DANCE_SINGLE) {
-                        chart = c;
-                    }
+                    chart = c;
+                }
             }
             SimParser parser = song.simFormat.newParser();
             parser.init(Files.toString(song.simFile.file(), Charsets.UTF_8));

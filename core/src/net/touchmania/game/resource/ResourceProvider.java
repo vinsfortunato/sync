@@ -26,11 +26,11 @@ import net.touchmania.game.resource.lazy.Resource;
 
 /**
  * <p>Manages and provides resources.</p>
- * <p> Getting a resource by using one of the defined getter methods.
+ * <p>Get a resource by using one of the defined getter methods.
  * Some resources need to be loaded before being used. A {@link Resource}
  * object will be returned for those resource and can be used to manage the
  * required resource. The resource provider is intended to be used during rendering
- * so it must not block.</p>
+ * so calling its methods will not block the calling thread.</p>
  * <p> Some resources need to be disposed when they are no longer needed.
  * Methods {@link #startGroup()} and {@link #endGroup(int)} can be used to
  * keep track of loaded resources and dispose them when they are no longer needed. </p>
@@ -38,7 +38,7 @@ import net.touchmania.game.resource.lazy.Resource;
  * the group. Resources can be added to multiple groups thus it is possible to start
  * more than one group. Loaded resources will be bind to all active groups. </p>
  * <p> A resource will be disposed when all its bind groups are ended. </p>
- * <p> A resource loaded with {@link Resource} will automatically be bind
+ * <p> A resource loaded with {@link Resource#load()} will automatically be bind
  * to the active groups. {@link #isGroupLoading(int)} can be used to check if resources
  * bind to the given group are still loading. </p>
  */

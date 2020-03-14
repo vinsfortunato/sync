@@ -16,7 +16,6 @@
 
 package net.touchmania.game.resource;
 
-import com.badlogic.gdx.utils.Array;
 import net.touchmania.game.util.ui.TexturePath;
 
 import java.util.List;
@@ -31,32 +30,28 @@ public interface Theme extends ResourceProvider {
      * theme it will be searched into the fallback theme.
      * <p> Generally the fallback theme is the default game theme. The default theme
      * has no fallback theme. Every custom theme should have a fallback theme. </p>
-     *
      * @return the fallback theme, or null if the theme has no fallback.
      */
     Theme getFallbackTheme();
 
     /**
      * Checks if the theme has a fallback theme. Check {@link #getFallbackTheme()} for more info.
-     *
      * @return true if the theme has a fallback.
-     *
      */
     boolean hasFallbackTheme();
 
     /**
      * Gets the {@link ThemeManifest manifest} of the theme. It contains
      * theme information such as the name, the author etc...
-     *
      * @return a {@link ThemeManifest} instance.
      */
     ThemeManifest getManifest();
 
     /**
-     * Gets an {@link Array} containing the language locales supported by the theme.
+     * Gets a {@link List} containing the language locales supported by the theme.
      * The first locale in the array is the default language.
      * The array doesn't contain languages supported by the fallback theme.
-     * @return an {@link Array} containing supported languages, can be null if the theme
+     * @return a {@link List} containing supported languages, can be null if the theme
      * uses the languages defined into the fallback theme.
      */
     List<Locale> getLanguages();

@@ -28,10 +28,8 @@ import java.util.TreeMap;
 //TODO implement comparator with tolerance
 //TODO Define tolerance in game settings?
 public class Beatmap {
-    /*
-     * The map key is the note panel and the value is a TreeMap containing notes.
-     * TreeMap key is the note beat and value is the note.
-     */
+    /* The map key is the note panel and the value is a TreeMap containing notes.
+     * TreeMap key is the note beat and value is the note. */
     private IntMap<TreeMap<Double, Note>> panels = new IntMap<>();
 
     /**
@@ -57,7 +55,7 @@ public class Beatmap {
         while(keys.hasNext) {
             int panel = keys.next();
             Note note = getNote(panel, beat);
-            if(note != null && (criteria == null || criteria.isValid(note))) {
+            if(note != null && (criteria == null || criteria.check(note))) {
                 notes.add(note);
             }
         }
@@ -88,7 +86,7 @@ public class Beatmap {
             Map.Entry<Double, Note> entry = notes.floorEntry(beat);
             while(entry != null) {
                 note = entry.getValue();
-                if(criteria == null || criteria.isValid(note)) {
+                if(criteria == null || criteria.check(note)) {
                     return note;
                 }
                 entry = notes.lowerEntry(entry.getKey());
@@ -123,7 +121,7 @@ public class Beatmap {
             Map.Entry<Double, Note> entry = notes.ceilingEntry(beat);
             while(entry != null) {
                 note = entry.getValue();
-                if(criteria == null || criteria.isValid(note)) {
+                if(criteria == null || criteria.check(note)) {
                     return note;
                 }
                 entry = notes.higherEntry(entry.getKey());
@@ -158,7 +156,7 @@ public class Beatmap {
             Map.Entry<Double, Note> entry = notes.higherEntry(beat);
             while(entry != null) {
                 note = entry.getValue();
-                if(criteria == null || criteria.isValid(note)) {
+                if(criteria == null || criteria.check(note)) {
                     return note;
                 }
                 entry = notes.higherEntry(entry.getKey());
@@ -193,7 +191,7 @@ public class Beatmap {
             Map.Entry<Double, Note> entry = notes.lowerEntry(beat);
             while(entry != null) {
                 note = entry.getValue();
-                if(criteria == null || criteria.isValid(note)) {
+                if(criteria == null || criteria.check(note)) {
                     return note;
                 }
                 entry = notes.lowerEntry(entry.getKey());

@@ -22,10 +22,4 @@ public interface LengthyNote extends Note {
      * @return note length in beats.
      */
     double getLength();
-
-    /**
-     * Sets the note length in beats.
-     * @param length the note length in beats.
-     */
-    void setLength(double length);
 }

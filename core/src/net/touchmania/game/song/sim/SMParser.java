@@ -370,9 +370,13 @@ public class SMParser extends TagSimParser {
                     break;
                 case '3':
                     Note lastNote = beatmap.lastNote(panel);
-                    //Last note in the map must be a LengthyNote otherwise beatmap data is invalid.
-                    if(lastNote instanceof LengthyNote) {
-                        ((LengthyNote) lastNote).setLength(beat - lastNote.getBeat());
+                    //Last note in the map must be a HoldNote or RollNote otherwise beatmap data is invalid.
+                    if(lastNote instanceof HoldNote) {
+                        //Replace note with the properly sized one
+                        beatmap.putNote(panel, new HoldNote(lastNote.getBeat(), beat - lastNote.getBeat()));
+                    } else if(lastNote instanceof RollNote) {
+                        //Replace note with the properly sized one
+                        beatmap.putNote(panel, new RollNote(lastNote.getBeat(), beat - lastNote.getBeat()));
                     } else {
                         throw new SimParseException("Cannot parse LengthyNote length!");
                     }
