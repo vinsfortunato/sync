@@ -27,6 +27,11 @@ import net.touchmania.game.util.ui.DPI;
  */
 public interface Backend {
     /**
+     * Init the backend.
+     */
+    void init();
+
+    /**
      * Returns a helper interface to manage game's database creation/opening and version management.
      * <p>
      * Each backend must provide platform specific implementations of the following interfaces:

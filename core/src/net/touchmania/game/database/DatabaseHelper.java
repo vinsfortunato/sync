@@ -32,16 +32,12 @@ import java.io.Closeable;
  * <strong>Note:</strong> this class assumes
  * monotonically increasing version numbers for upgrades.</p>
  */
-public interface DatabaseHelper extends Closeable {
-    /**
-     * Close any open database object.
-     */
-    void close();
+public abstract class DatabaseHelper implements Closeable {
 
     /**
      * Return the name of the database being opened.
      */
-    String getDatabaseName();
+    public abstract String getDatabaseName();
 
     /**
      * Create and/or open a database.  This will be the same object returned by
@@ -56,7 +52,7 @@ public interface DatabaseHelper extends Closeable {
      * @return a database object valid until {@link #getWritableDatabase}
      *     or {@link #close} is called.
      */
-    Database getReadableDatabase() throws SQLException;
+    public abstract Database getReadableDatabase();
 
     /**
      * Create and/or open a database that will be used for reading and writing.
@@ -73,7 +69,7 @@ public interface DatabaseHelper extends Closeable {
      * @throws SQLException if the database cannot be opened for writing
      * @return a read/write database object valid until {@link #close} is called
      */
-    Database getWritableDatabase();
+    public abstract Database getWritableDatabase();
 
     /**
      * Called when the database has been opened.  The implementation
@@ -86,7 +82,7 @@ public interface DatabaseHelper extends Closeable {
      *
      * @param db The database.
      */
-    void onOpen(Database db);
+    public void onOpen(Database db) {}
 
     /**
      * Called when the database is created for the first time. This is where the
@@ -94,7 +90,7 @@ public interface DatabaseHelper extends Closeable {
      *
      * @param db The database.
      */
-    void onCreate(Database db);
+    public void onCreate(Database db) {}
 
     /**
      * Called when the database needs to be downgraded. This is strictly similar to
@@ -109,7 +105,7 @@ public interface DatabaseHelper extends Closeable {
      * @param oldVersion The old database version.
      * @param newVersion The new database version.
      */
-    void onDowngrade(Database db, int oldVersion, int newVersion);
+    public void onDowngrade(Database db, int oldVersion, int newVersion) {}
 
     /**
      * Called when the database needs to be upgraded. The implementation
@@ -124,5 +120,5 @@ public interface DatabaseHelper extends Closeable {
      * @param oldVersion The old database version.
      * @param newVersion The new database version.
      */
-    void onUpgrade(Database db, int oldVersion, int newVersion);
+    public void onUpgrade(Database db, int oldVersion, int newVersion) {}
 }

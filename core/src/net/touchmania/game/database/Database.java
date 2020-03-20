@@ -80,29 +80,17 @@ public interface Database extends Closeable {
      *
      * @param sql the SQL statement to be executed. Multiple statements separated by semicolons are
      * not supported.
-     * @throws SQLException if the SQL string is invalid
      */
-    void executeSQL(String sql) throws SQLException;
+    void executeSQL(String sql);
 
     /**
      * Runs the provided SQL and returns a {@link Cursor} over the result set.
      *
      * @param sql the SQL query. The SQL string must not be ; terminated
-     * @param selectionArgs You may include ?s in where clause in the query,
-     *     which will be replaced by the values from selectionArgs. The
-     *     values will be bound as Strings.
      * @return A {@link Cursor} object, which is positioned before the first entry. Note that
-     * {@link Cursor}s are not synchronized, see the documentation for more details.
+     * {@link Cursor}s are not synchronized.
      */
-    Cursor query(String sql, String[] selectionArgs);
-
-    /**
-     * Verifies that a SQL SELECT statement is valid by compiling it.
-     * If the SQL statement is not valid, this method will throw a SQLException.
-     * @param sql SQL to be validated. This value must never be null.
-     * @throws SQLException if sql is invalid
-     */
-    void validateSql(String sql) throws SQLException;
+    Cursor query(String sql);
 
     /**
      * Gets the database version.

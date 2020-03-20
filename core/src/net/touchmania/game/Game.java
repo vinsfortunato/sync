@@ -32,6 +32,8 @@ import net.touchmania.game.util.Disposer;
 import net.touchmania.game.util.concurrent.ExecutorManager;
 
 public class Game implements ApplicationListener {
+	public static String INPUT_PATH;
+
 	public String tempFile;
 
 	private static Game instance;
@@ -53,6 +55,8 @@ public class Game implements ApplicationListener {
 
 	@Override
 	public void create () {
+		this.backend.init();
+
 		this.fps = new FPSLogger();
 		this.disposer = new Disposer();
 		this.settings = new GameSettings();
@@ -62,6 +66,8 @@ public class Game implements ApplicationListener {
 		this.screens = new ScreenManager();
 		this.songs = new SongManager();
 		this.players = new PlayerManager();
+
+		getBackend().getDatabaseHelper().getReadableDatabase();
 
 		//Show test screen TODO
 		if(Gdx.app.getType() != Application.ApplicationType.Android)

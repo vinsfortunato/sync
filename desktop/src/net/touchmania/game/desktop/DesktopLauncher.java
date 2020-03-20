@@ -9,7 +9,13 @@ import net.touchmania.game.database.DatabaseHelper;
 import net.touchmania.game.util.ui.DPI;
 
 public class DesktopLauncher implements Backend {
+
+	private DesktopDatabaseHelper databaseHelper;
+
 	public static void main (String[] arg) {
+		if(arg.length > 0) {
+			Game.INPUT_PATH = arg[0];
+		}
 		new DesktopLauncher().startGame();
 	}
 
@@ -22,8 +28,13 @@ public class DesktopLauncher implements Backend {
 	}
 
 	@Override
+	public void init() {
+		databaseHelper = new DesktopDatabaseHelper();
+	}
+
+	@Override
 	public DatabaseHelper getDatabaseHelper() {
-		return null;
+		return databaseHelper;
 	}
 
 	@Override
@@ -31,7 +42,6 @@ public class DesktopLauncher implements Backend {
 		return DPI.LOW;
 	}
 
-	@Override
 	public double getDuration(Music music) {
 		return 0.0f;
 	}

@@ -75,7 +75,7 @@ public class GameScreen implements Screen {
         FileHandle fh;
         String testSong = "E:/Program Files/StepMania 5.1/Songs/ITG Rodeo Tournament 8/012 - Grayed Out -Antifront-";
         if(Gdx.app.getType() == Application.ApplicationType.Desktop) {
-            fh = Gdx.files.absolute("E:/Program Files/StepMania 5.1/Songs/ITG Rodeo Tournament 8/013 - Warp Drive");
+            fh = Gdx.files.absolute(Game.INPUT_PATH == null ? "E:/Program Files/StepMania 5.1/Songs/ITG Rodeo Tournament 8/009 - New Game" : Game.INPUT_PATH);
         } else {
             fh = Gdx.files.external(Game.instance().tempFile);
         }

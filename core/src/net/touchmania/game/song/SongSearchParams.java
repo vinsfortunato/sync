@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Vincenzo Fortunato
+ * Copyright 2020 Vincenzo Fortunato
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,26 +16,5 @@
 
 package net.touchmania.game.song;
 
-import com.badlogic.gdx.files.FileHandle;
-
-public class SongManager {
-    //Start indexing the given folder (the songs folder)
-    public void index(FileHandle handle) {
-
-    }
-
-    //Find a set of song matching the given params
-    public void find(SongSearchParams params) {
-
-    }
-
-    //From preview to view state
-    public void load(Song song) {
-
-    }
-
-    //From view to preview state
-    public void unload(Song song) {
-
-    }
+public class SongSearchParams {
 }

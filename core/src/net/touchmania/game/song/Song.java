@@ -38,6 +38,7 @@ public class Song {
      * The song's sim file format.
      */
     public SimFormat simFormat;
+
     /**
      * Gets the sha256 hash for this song. The sha256 is the hash of the
      * sim file that contains song data. It's unique and it's used to

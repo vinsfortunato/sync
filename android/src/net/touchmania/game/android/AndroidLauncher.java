@@ -35,6 +35,7 @@ import java.io.File;
 
 public class AndroidLauncher extends AndroidApplication implements Backend {
 	private Game game;
+	private AndroidDatabaseHelper databaseHelper;
 
 	@Override
 	protected void onCreate (Bundle savedInstanceState) {
@@ -75,8 +76,13 @@ public class AndroidLauncher extends AndroidApplication implements Backend {
 	}
 
 	@Override
+	public void init() {
+		databaseHelper = new AndroidDatabaseHelper(this);
+	}
+
+	@Override
 	public DatabaseHelper getDatabaseHelper() {
-		return null; //TODO
+		return databaseHelper;
 	}
 
 	@Override
