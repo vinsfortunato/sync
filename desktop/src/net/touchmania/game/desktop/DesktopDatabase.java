@@ -89,6 +89,7 @@ public class DesktopDatabase implements Database {
     @Override
     public Cursor query(String sql) {
         try {
+            //TODO sqlite supports only TYPE_FORWARD_ONLY mode
             Statement statement = conn.createStatement();
             return new DesktopCursor(statement.executeQuery(sql));
         } catch (java.sql.SQLException e) {

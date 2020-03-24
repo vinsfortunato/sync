@@ -67,11 +67,14 @@ public class Game implements ApplicationListener {
 		this.songs = new SongManager();
 		this.players = new PlayerManager();
 
-		getBackend().getDatabaseHelper().getReadableDatabase();
+		//TODO test
+		this.songs.index(Gdx.files.absolute("E:/Games/StepMania 5/Songs"));
 
+		/**
 		//Show test screen TODO
 		if(Gdx.app.getType() != Application.ApplicationType.Android)
 			this.screens.show(GameScreen.instance());
+		 ***/
 	}
 
 	@Override

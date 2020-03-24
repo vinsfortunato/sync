@@ -90,7 +90,13 @@ public abstract class DatabaseHelper implements Closeable {
      *
      * @param db The database.
      */
-    public void onCreate(Database db) {}
+    public void onCreate(Database db) {
+        db.executeSQL("CREATE TABLE IF NOT EXISTS songs (" +
+                            "pack TEXT NOT NULL," +
+                            "directory TEXT NOT NULL," +
+                            "hash TEXT NOT NULL," +
+                            "PRIMARY KEY (pack, directory));");
+    }
 
     /**
      * Called when the database needs to be downgraded. This is strictly similar to

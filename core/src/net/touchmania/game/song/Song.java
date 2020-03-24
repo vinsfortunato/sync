@@ -51,7 +51,7 @@ public class Song {
      * is reinserted into the database.
      */
     public String hash;
-    public String group;
+    public String pack;    //TODO
     public String title;
     public String subtitle;
     public String artist;

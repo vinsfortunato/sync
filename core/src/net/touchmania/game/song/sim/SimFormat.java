@@ -47,9 +47,8 @@ public enum SimFormat {
                 return new SSCParser();
             case DWI:
                 return new DWIParser();
-            default:
-                return null;
         }
+        throw new IllegalStateException("There is no parser for the given format");
     }
 
     /**

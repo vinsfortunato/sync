@@ -19,10 +19,7 @@ package net.touchmania.game.song;
 import com.badlogic.gdx.files.FileHandle;
 import com.google.common.base.Charsets;
 import com.google.common.base.Preconditions;
-import com.google.common.hash.Hasher;
-import com.google.common.hash.Hashing;
 import com.google.common.io.Files;
-import net.touchmania.game.Game;
 import net.touchmania.game.song.sim.SimFormat;
 import net.touchmania.game.song.sim.SimParseException;
 import net.touchmania.game.song.sim.SimParser;
@@ -49,21 +46,23 @@ public class SongLoader implements Callable<Song> {
 
     @Override
     public Song call() throws IOException, SimParseException {
-        //Find the sim file to parse
-        searchSimFile();
+        simFile = SongManager.searchSimFile(songDir);
+
+        if(simFile == null) {
+            //Sim file not found
+            throw new FileNotFoundException("There's no supported sim file in the given directory!");
+        }
 
         if(simFile.length() > MAX_FILE_LENGTH) {
+            //Sim file exceeds max file length
             throw new IOException("Sim file size exceeds the maximum allowed file size.");
         }
 
+        simFormat = SimFormat.valueFromExtension(simFile.extension());
         SimParser parser = simFormat.newParser();
-        Preconditions.checkNotNull(parser);
-
-        //Read the file content and store it into a string
-        String rawContent = Files.toString(simFile.file(), Charsets.UTF_8);
 
         //Initialize the parser
-        parser.init(rawContent);
+        parser.init(Files.asCharSource(simFile.file(), Charsets.UTF_8).read());
 
         //Parse song
         Song song = new Song();
@@ -89,53 +88,7 @@ public class SongLoader implements Callable<Song> {
         for(Chart chart : song.charts) {
             chart.song = song;
         }
-        song.hash = calculateSongHash(rawContent); //Calculate at the end if the parse is successful
+        //TODO song.hash = calculateSongHash(rawContent); //Calculate at the end if the parse is successful
         return song;
-    }
-
-    /**
-     * Calculate the song sha256 hash by encoding the sim file content.
-     *
-     * @param rawContent the content of the song's sim file.
-     * @return the song hash.
-     */
-    private String calculateSongHash(String rawContent) {
-        Hasher hasher = Hashing.sha256().newHasher();
-        hasher.putString(rawContent, Charsets.UTF_8);
-        return hasher.hash().toString();
-    }
-
-    /**
-     * Search the sim file to parse in the given song directory.
-     * If there are multiple sim files of different formats is picked
-     * the one that has the format with higher priority.
-     *
-     * @throws FileNotFoundException if there's no supported sim file
-     * in the given song directory.
-     */
-    private void searchSimFile() throws FileNotFoundException {
-        int resultPriority = -1;
-
-        //Search sim file and pick the one with higher priority
-        for(FileHandle child : songDir.list()) {
-            if(child.isDirectory()) {
-                continue; //Skip directory handles
-            }
-
-            SimFormat format = SimFormat.valueFromExtension(child.extension());
-            if(format != null) { //Supported format
-                int priority = Game.instance().getSettings().getSimFormatPriority(format);
-                if(priority > resultPriority) { //Prefer higher priority formats
-                    simFile = child;
-                    simFormat = format;
-                    resultPriority = priority;
-                }
-            }
-        }
-
-        //Throw an exception if the given directory doesn't contain a sim file
-        if(simFile == null) {
-            throw new FileNotFoundException("There's no supported sim file in the given directory!");
-        }
     }
 }
