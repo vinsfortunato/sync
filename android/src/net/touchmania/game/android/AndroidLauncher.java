@@ -28,14 +28,14 @@ import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.badlogic.gdx.backends.android.AndroidMusic;
 import net.touchmania.game.Backend;
 import net.touchmania.game.Game;
-import net.touchmania.game.database.DatabaseHelper;
 import net.touchmania.game.util.ui.DPI;
 
 import java.io.File;
+import java.sql.Driver;
+import java.sql.DriverManager;
 
 public class AndroidLauncher extends AndroidApplication implements Backend {
 	private Game game;
-	private AndroidDatabaseHelper databaseHelper;
 
 	@Override
 	protected void onCreate (Bundle savedInstanceState) {
@@ -76,13 +76,13 @@ public class AndroidLauncher extends AndroidApplication implements Backend {
 	}
 
 	@Override
-	public void init() {
-		databaseHelper = new AndroidDatabaseHelper(this);
-	}
-
-	@Override
-	public DatabaseHelper getDatabaseHelper() {
-		return databaseHelper;
+	public void initBackend() {
+		//Register JDBC sqlite driver
+		try {
+			DriverManager.registerDriver((Driver) Class.forName("org.sqldroid.SQLDroidDriver").newInstance());
+		} catch (Exception e) {
+			throw new RuntimeException("Failed to register SQLDroidDriver", e);
+		}
 	}
 
 	@Override
@@ -93,5 +93,10 @@ public class AndroidLauncher extends AndroidApplication implements Backend {
 	@Override
 	public double getDuration(Music music) {
 		return ((AndroidMusic) music).getDuration();
+	}
+
+	@Override
+	public String getDatabaseUrl() {
+		return "jdbc:sqldroid:/data/data/" + getPackageName() + "/touchmania.db";
 	}
 }

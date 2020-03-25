@@ -17,33 +17,13 @@
 package net.touchmania.game;
 
 import com.badlogic.gdx.audio.Music;
-import net.touchmania.game.database.Cursor;
-import net.touchmania.game.database.Database;
-import net.touchmania.game.database.DatabaseHelper;
 import net.touchmania.game.util.ui.DPI;
 
-/**
- * @author Vincenzo Fortunato
- */
 public interface Backend {
     /**
      * Init the backend.
      */
-    void init();
-
-    /**
-     * Returns a helper interface to manage game's database creation/opening and version management.
-     * <p>
-     * Each backend must provide platform specific implementations of the following interfaces:
-     * <ul>
-     *     <li>{@link DatabaseHelper}</li>
-     *     <li>{@link Database}</li>
-     *     <li>{@link Cursor}</li>
-     * </ul>
-     * </p>
-     * @return a database helper.
-     */
-    DatabaseHelper getDatabaseHelper();
+    void initBackend();
 
     DPI getDeviceDPI();
 
@@ -54,4 +34,10 @@ public interface Backend {
      */
     @Deprecated
     double getDuration(Music music);
+
+    /**
+     * Gets the database url.
+     * @return the database url.
+     */
+    String getDatabaseUrl();
 }

@@ -22,6 +22,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
+import net.touchmania.game.database.DatabaseManager;
 import net.touchmania.game.player.PlayerManager;
 import net.touchmania.game.resource.ResourceProvider;
 import net.touchmania.game.resource.ThemeManager;
@@ -45,6 +46,7 @@ public class Game implements ApplicationListener {
 	private SongManager songs;
 	private PlayerManager players;
 	private ExecutorManager executors;
+	private DatabaseManager database;
 	private Disposer disposer;
 	private FPSLogger fps;
 
@@ -55,12 +57,13 @@ public class Game implements ApplicationListener {
 
 	@Override
 	public void create () {
-		this.backend.init();
+		this.backend.initBackend();
 
 		this.fps = new FPSLogger();
 		this.disposer = new Disposer();
 		this.settings = new GameSettings();
 		this.executors = new ExecutorManager();
+		this.database = new DatabaseManager();
 		this.assets = new AssetManager();
 		this.themes = new ThemeManager();
 		this.screens = new ScreenManager();
@@ -146,6 +149,10 @@ public class Game implements ApplicationListener {
 
 	public ExecutorManager getExecutors() {
 		return executors;
+	}
+
+	public DatabaseManager getDatabase() {
+		return database;
 	}
 
 	public Disposer getDisposer() {

@@ -5,13 +5,9 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import net.touchmania.game.Backend;
 import net.touchmania.game.Game;
-import net.touchmania.game.database.DatabaseHelper;
 import net.touchmania.game.util.ui.DPI;
 
 public class DesktopLauncher implements Backend {
-
-	private DesktopDatabaseHelper databaseHelper;
-
 	public static void main (String[] arg) {
 		if(arg.length > 0) {
 			Game.INPUT_PATH = arg[0];
@@ -28,14 +24,7 @@ public class DesktopLauncher implements Backend {
 	}
 
 	@Override
-	public void init() {
-		databaseHelper = new DesktopDatabaseHelper();
-	}
-
-	@Override
-	public DatabaseHelper getDatabaseHelper() {
-		return databaseHelper;
-	}
+	public void initBackend() {}
 
 	@Override
 	public DPI getDeviceDPI() {
@@ -44,5 +33,10 @@ public class DesktopLauncher implements Backend {
 
 	public double getDuration(Music music) {
 		return 0.0f;
+	}
+
+	@Override
+	public String getDatabaseUrl() {
+		return "jdbc:sqlite:touchmania.sqlite";
 	}
 }

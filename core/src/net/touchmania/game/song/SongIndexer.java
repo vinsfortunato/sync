@@ -21,8 +21,9 @@ import com.badlogic.gdx.files.FileHandle;
 import com.google.common.hash.Hashing;
 import com.google.common.io.Files;
 import net.touchmania.game.Game;
-import net.touchmania.game.database.Cursor;
-import net.touchmania.game.database.Database;
+import org.jooq.DSLContext;
+import org.jooq.Record3;
+import org.jooq.Result;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,11 +31,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
+import static net.touchmania.game.database.schema.tables.Songs.SONGS;
+
 public class SongIndexer implements Callable<Integer> {
     /** The root directory where the all packs are located */
     private FileHandle rootDir;
     /** A map containing indexes. Key is the path of the song. The value is the hash of the sim file. */
     private Map<String, String> indexes;
+
+    /** A DSL database context */
+    private DSLContext context;
 
     public SongIndexer(FileHandle rootDir) {
         this.rootDir = rootDir;
@@ -42,26 +48,33 @@ public class SongIndexer implements Callable<Integer> {
 
     @Override
     public Integer call() throws Exception {
-        //Load the indexes map
-        indexes = queryIndexes();
+        try {
+            //Open the database
+            context = Game.instance().getDatabase().openDatabase();
 
-        if(!rootDir.isDirectory()) {
-            throw new IOException(String.format("%s is not a directory", rootDir.path()));
+            //Load the indexes map
+            indexes = queryIndexes();
+
+            if(!rootDir.isDirectory()) {
+                throw new IOException(String.format("%s is not a directory", rootDir.path()));
+            }
+
+            for(FileHandle file : rootDir.list(File::isDirectory)) {
+                indexPack(file);
+            }
+
+            //Remove all remaining indexed songs
+            for(String key : indexes.keySet()) {
+                String[] parts = key.split("/");
+                String pack = parts[0];
+                String directory = parts[1];
+                removeSong(pack, directory);
+            }
+
+            return 0; //TODO temp
+        } finally {
+            context.close();
         }
-
-        for(FileHandle file : rootDir.list(File::isDirectory)) {
-            indexPack(file);
-        }
-
-        //Remove all remaining indexed songs
-        for(String key : indexes.keySet()) {
-            String[] parts = key.split("/");
-            String pack = parts[0];
-            String directory = parts[1];
-            removeSong(pack, directory);
-        }
-
-        return 0; //TODO temp
     }
 
     private void indexPack(FileHandle packDir) throws Exception {
@@ -109,43 +122,38 @@ public class SongIndexer implements Callable<Integer> {
     }
 
     private void removeSong(String pack, String directory) {
-        Database db = Game.instance().getBackend().getDatabaseHelper().getWritableDatabase();
-        db.executeSQL(String.format(
-                "DELETE FROM songs WHERE pack = '%s' AND directory = '%s';",
-                sanitize(pack), sanitize(directory)));
-        db.close();
+        context.deleteFrom(SONGS)
+                .where(SONGS.PACK.eq(pack).and(SONGS.DIRECTORY.eq(directory)))
+                .execute();
 
         Gdx.app.log("Song Indexer", String.format("Remove song %s/%s", pack, directory));
     }
 
     private void addSong(String pack, String directory, String hash) {
-        Database db = Game.instance().getBackend().getDatabaseHelper().getWritableDatabase();
-        db.executeSQL(String.format(
-                "INSERT INTO songs (pack, directory, hash) VALUES ('%s', '%s', '%s');",
-                sanitize(pack), sanitize(directory), sanitize(hash)));
-        db.close();
+        context.insertInto(SONGS, SONGS.PACK, SONGS.DIRECTORY, SONGS.HASH)
+                .values(pack, directory, hash)
+                .execute();
 
         Gdx.app.log("Song Indexer", String.format("Add song %s/%s with hash %s", pack, directory, hash));
     }
 
     private Map<String, String> queryIndexes() {
-        Database db = Game.instance().getBackend().getDatabaseHelper().getReadableDatabase();
         Map<String, String> indexes = new HashMap<>();
-        Cursor cursor = db.query("SELECT pack, directory, hash FROM songs");
 
-        while(cursor.moveToNext()) {
-            String pack = cursor.getString(0);
-            String directory = cursor.getString(1);
-            String hash = cursor.getString(2);
+        Result<Record3<String, String, String>> result = context
+                .select(SONGS.PACK, SONGS.DIRECTORY, SONGS.HASH)
+                .from(SONGS)
+                .fetch();
+
+        for(Record3<String, String, String> record : result) {
+            String pack = record.get(SONGS.PACK);
+            String directory = record.get(SONGS.DIRECTORY);
+            String hash = record.get(SONGS.HASH);
             indexes.put(pack + "/" + directory, hash);
-
             Gdx.app.log("Song Indexer", String.format("Index %s/%s with hash %s", pack, directory, hash));
         }
-        db.close();
+
         return indexes;
     }
 
-    private String sanitize(String value) {
-        return value.contains("'") ? value.replaceAll("'", "''") : value;
-    }
 }
