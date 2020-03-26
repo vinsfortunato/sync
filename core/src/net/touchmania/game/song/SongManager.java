@@ -21,6 +21,8 @@ import com.google.common.base.Preconditions;
 import net.touchmania.game.Game;
 import net.touchmania.game.song.sim.SimFormat;
 
+import java.io.File;
+
 public class SongManager {
     //Start indexing the given folder (the songs folder)
     public void index(FileHandle dir) {
@@ -58,15 +60,13 @@ public class SongManager {
         FileHandle simFile = null;
 
         //Search sim file and pick the one with higher priority
-        for(FileHandle file : dir.list()) {
-            if(!file.isDirectory()) {
-                SimFormat format = SimFormat.valueFromExtension(file.extension());
-                if(format != null) { //Supported format
-                    int priority = Game.instance().getSettings().getSimFormatPriority(format);
-                    if(priority > resultPriority) { //Prefer higher priority formats
-                        simFile = file;
-                        resultPriority = priority;
-                    }
+        for(FileHandle file : dir.list(File::isFile)) {
+            SimFormat format = SimFormat.valueFromExtension(file.extension());
+            if(format != null) { //Supported format
+                int priority = Game.instance().getSettings().getSimFormatPriority(format);
+                if(priority > resultPriority) { //Prefer higher priority formats
+                    simFile = file;
+                    resultPriority = priority;
                 }
             }
         }
