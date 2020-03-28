@@ -27,7 +27,7 @@ import java.util.TreeMap;
  * @param <X> the function abscissa type
  * @param <Y> the function ordinate type
  */
-public class StepFunction<X extends Comparable<X>, Y> implements Function<X, Y> {
+public class StepFunction<X extends Comparable<X>, Y> implements MathFunction<X, Y> {
     private Y defaultStep;
     private TreeMap<X, Y> steps = new TreeMap<>();
 
@@ -105,7 +105,7 @@ public class StepFunction<X extends Comparable<X>, Y> implements Function<X, Y> 
     }
 
     @Override
-    public Function<Y, X> invert() {
+    public MathFunction<Y, X> invert() {
         throw new IllegalStateException("Step function has no inverse.");
     }
 }

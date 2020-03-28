@@ -17,10 +17,10 @@
 package net.touchmania.game.song.sim;
 
 import com.badlogic.gdx.files.FileHandle;
+import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
 import com.google.common.hash.Hashing;
 import com.google.common.io.Files;
-import net.touchmania.game.Game;
 
 import java.io.File;
 import java.io.IOException;
@@ -59,7 +59,7 @@ public class SimFile extends FileHandle {
      * @param directory the directory to search.
      * @return the resulting sim file or null if there was no sim file in the given directory.
      */
-    public static SimFile searchSimFile(FileHandle directory) {
+    public static SimFile searchSimFile(FileHandle directory, Function<SimFormat, Integer> priorityProvider) {
         Preconditions.checkArgument(directory.isDirectory(), String.format("%s is not a directory", directory));
         int resultPriority = -1;
         SimFile simFile = null;
@@ -68,8 +68,7 @@ public class SimFile extends FileHandle {
         for(FileHandle file : directory.list(File::isFile)) {
             SimFormat format = SimFormat.valueFromExtension(file.extension());
             if(format != null) { //Supported format
-                //TODO remove Game.instance().. from here, maybe use a given interface that converts format to priority
-                int priority = Game.instance().getSettings().getSimFormatPriority(format);
+                int priority = priorityProvider.apply(format);
                 if(priority > resultPriority) { //Prefer higher priority formats
                     simFile = new SimFile(file, format);
                     resultPriority = priority;

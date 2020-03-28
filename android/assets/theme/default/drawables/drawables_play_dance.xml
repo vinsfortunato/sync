@@ -10,8 +10,8 @@
     <!-- Tap notes -->
     <region id="play_dance_note_tap_4"   x="0"   y="0"   width="256" height="256">texture:play_dance_notes</region>
     <region id="play_dance_note_tap_8"   x="0"   y="256" width="256" height="256">texture:play_dance_notes</region>
-    <region id="play_dance_note_tap_12"  x="0"   y="768" width="256" height="256">texture:play_dance_notes</region>
-    <region id="play_dance_note_tap_16"  x="0"   y="512" width="256" height="256">texture:play_dance_notes</region>
+    <region id="play_dance_note_tap_12"  x="0"   y="512" width="256" height="256">texture:play_dance_notes</region>
+    <region id="play_dance_note_tap_16"  x="0"   y="768" width="256" height="256">texture:play_dance_notes</region>
     <region id="play_dance_note_tap_24"  x="256" y="0"   width="256" height="256">texture:play_dance_notes</region>
     <region id="play_dance_note_tap_32"  x="256" y="256" width="256" height="256">texture:play_dance_notes</region>
     <region id="play_dance_note_tap_48"  x="256" y="512" width="256" height="256">texture:play_dance_notes</region>

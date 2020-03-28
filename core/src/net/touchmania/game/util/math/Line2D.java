@@ -24,7 +24,7 @@ import com.google.common.base.Preconditions;
  *
  * @author Vincenzo Fortunato
  */
-public class Line2D implements Function<Double, Double> {
+public class Line2D implements MathFunction<Double, Double> {
     private final double m;
     private final double q;
 

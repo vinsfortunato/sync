@@ -21,7 +21,7 @@ package net.touchmania.game.util.math;
  * outputs with the property that each input is related to exactly one output.
  * @author Vincenzo Fortunato
  */
-public interface Function<X, Y> {
+public interface MathFunction<X, Y> {
     /**
      * Calculates the image of the given x.
      * @param x the x variable of the function.
@@ -48,5 +48,5 @@ public interface Function<X, Y> {
      * @return the inverse function.
      * @throws IllegalStateException if the function cannot be inverted.
      */
-    Function<Y, X> invert();
+    MathFunction<Y, X> invert();
 }

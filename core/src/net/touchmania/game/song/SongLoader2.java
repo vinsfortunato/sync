@@ -19,6 +19,7 @@ package net.touchmania.game.song;
 import com.badlogic.gdx.files.FileHandle;
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
+import net.touchmania.game.Game;
 import net.touchmania.game.song.sim.SimFile;
 import net.touchmania.game.song.sim.SimParseException;
 import net.touchmania.game.song.sim.SimParser;
@@ -47,7 +48,7 @@ public class SongLoader2 implements Callable<Song> {
 
     @Override
     public Song call() throws IOException, SimParseException {
-        simFile = SimFile.searchSimFile(directory);
+        simFile = SimFile.searchSimFile(directory, format -> Game.instance().getSettings().getSimFormatPriority(format));
 
         if(simFile == null) {
             //Sim file not found

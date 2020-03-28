@@ -26,7 +26,7 @@ import java.util.Collection;
  *
  * @author Vincenzo Fortunato
  */
-public interface Graph2D extends Function<Double, Double> {
+public interface Graph2D extends MathFunction<Double, Double> {
     /**
      * Add a marker point at the given x. Marker points are interpolated to create
      * a function by the interpolation algorithm of the graph specific implementation.
