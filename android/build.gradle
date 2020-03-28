@@ -14,6 +14,8 @@ android {
     }
     packagingOptions {
         exclude 'META-INF/robovm/ios/robovm.xml'
+        exclude 'META-INF/sun-jaxb.episode'
+        exclude 'META-INF/README.txt'
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -33,7 +35,6 @@ android {
         }
     }
 }
-
 
 // called every time gradle gets executed, takes the native dependencies of
 // the natives configuration, and extracts them to the proper libs/ folders

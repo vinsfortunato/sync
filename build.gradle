@@ -8,7 +8,7 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.3'
+        classpath 'com.android.tools.build:gradle:3.6.1'
         classpath 'com.mobidevelop.robovm:robovm-gradle-plugin:2.3.7'
     }
 }
@@ -90,7 +90,6 @@ project(":ios") {
         api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-ios"
         api "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-ios"
         api "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-ios"
-
     }
 }
 
@@ -102,9 +101,9 @@ project(":core") {
         api "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
         implementation "com.google.guava:guava:28.1-android"
-        implementation 'org.jooq:jooq:3.13.1'
-        implementation 'org.jooq:jooq-meta:3.13.1'
-        implementation 'org.jooq:jooq-codegen:3.13.1'
+        implementation 'org.jooq:jooq:3.9.6'
+        implementation 'org.jooq:jooq-meta:3.9.6'
+        implementation 'org.jooq:jooq-codegen:3.9.6'
         testImplementation 'org.junit.jupiter:junit-jupiter-api:5.5.2'
         testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.5.2'
     }

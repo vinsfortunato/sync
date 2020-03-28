@@ -42,7 +42,7 @@ public class Round {
         //Duration can be calculated only on Android. So this is a temp solution
         double duration = Game.instance().getBackend().getDuration(music);
         if(duration > 0.0D) {
-            modifiers.setSpeedModifier(new MaxSpeedModifier(timing.getDominantBpm(duration), 750D));
+            modifiers.setSpeedModifier(new MaxSpeedModifier(timing.getDominantBpm(duration), 500D));
         } else {
             modifiers.setSpeedModifier(new MultiplySpeedModifier(2.5f));
         }

@@ -36,6 +36,9 @@ public class SimFile extends FileHandle {
     }
 
     private SimFile(FileHandle file, SimFormat format) {
+        //For file handles with type equal to FileType.External the file() will return
+        //a file with path prefixed by Gdx.files.getExternalStoragePath(). An override
+        //to the file() method is necessary in this case
         super(file.file(), file.type());
         this.format = format;
     }
@@ -44,8 +47,15 @@ public class SimFile extends FileHandle {
         return format;
     }
 
+    @Override
+    public File file() {
+        //Necessary override to correctly extend FileHandle with FileType.External type
+        return file;
+    }
+
     /**
      * Compute the sim file hash.
+     *
      * @return the sim file hash.
      * @throws IOException if an IO exception occurs while calculating the hash.
      */
@@ -56,6 +66,7 @@ public class SimFile extends FileHandle {
     /**
      * Searches a sim file in the given song directory.
      * If there are multiple sim files picks the one that has the format with higher priority.
+     *
      * @param directory the directory to search.
      * @return the resulting sim file or null if there was no sim file in the given directory.
      */
@@ -65,11 +76,11 @@ public class SimFile extends FileHandle {
         SimFile simFile = null;
 
         //Search sim file and pick the one with higher priority
-        for(FileHandle file : directory.list(File::isFile)) {
+        for (FileHandle file : directory.list(File::isFile)) {
             SimFormat format = SimFormat.valueFromExtension(file.extension());
-            if(format != null) { //Supported format
+            if (format != null) { //Supported format
                 int priority = priorityProvider.apply(format);
-                if(priority > resultPriority) { //Prefer higher priority formats
+                if (priority > resultPriority) { //Prefer higher priority formats
                     simFile = new SimFile(file, format);
                     resultPriority = priority;
                 }
