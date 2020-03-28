@@ -19,6 +19,8 @@ package net.touchmania.game;
 import com.badlogic.gdx.audio.Music;
 import net.touchmania.game.util.ui.DPI;
 
+import javax.sql.DataSource;
+
 public interface Backend {
     /**
      * Init the backend.
@@ -36,8 +38,8 @@ public interface Backend {
     double getDuration(Music music);
 
     /**
-     * Gets the database url.
-     * @return the database url.
+     * Gets the data source of the database.
+     * @return the database data source.
      */
-    String getDatabaseUrl();
+    DataSource getDataSource();
 }

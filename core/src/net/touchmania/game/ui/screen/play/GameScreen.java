@@ -29,7 +29,7 @@ import net.touchmania.game.round.Round;
 import net.touchmania.game.song.Chart;
 import net.touchmania.game.song.ChartType;
 import net.touchmania.game.song.Song;
-import net.touchmania.game.song.SongLoader2;
+import net.touchmania.game.song.SongLoader;
 import net.touchmania.game.song.sim.SimParser;
 import net.touchmania.game.ui.Screen;
 
@@ -79,10 +79,11 @@ public class GameScreen implements Screen {
             fh = Gdx.files.external(Game.instance().tempFile);
         }
 
-        SongLoader2 sl = new SongLoader2(fh);
+        SongLoader sl = new SongLoader(fh);
 
         try {
-            Song song = sl.call();
+            sl.run();
+            Song song = sl.get();
             Chart chart = null;
 
             for(Chart c : song.charts) {

@@ -20,7 +20,6 @@ import net.touchmania.game.Game;
 import org.jooq.DSLContext;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 
 import static org.jooq.impl.DSL.using;
@@ -32,10 +31,18 @@ public class DatabaseManager {
      * @return a DSL executor with a configured connection.
      * @throws RuntimeException if the database cannot be opened
      */
-    public DSLContext openDatabase() {
+    public DSLContext getDSL() {
+        return using(getConnection());
+    }
+
+    /**
+     * Gets a JDBC Connection open and configured connection.
+     * @return the database connection.
+     * @throws RuntimeException if the database cannot be opened.
+     */
+    public Connection getConnection() {
         try {
-            Connection connection = DriverManager.getConnection(Game.instance().getBackend().getDatabaseUrl());
-            return using(connection);
+            return Game.instance().getBackend().getDataSource().getConnection();
         } catch (SQLException e) {
             throw new RuntimeException("Cannot open the database", e);
         }

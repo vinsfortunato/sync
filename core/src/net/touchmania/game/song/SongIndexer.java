@@ -55,7 +55,7 @@ public class SongIndexer extends Task<Boolean> {
     protected Boolean call() throws Exception {
         //Check if there is a song inside the given folder and delete, update or add it.
         //Will return true if a song exists in the given directory, false otherwise.
-        try (DSLContext database = Game.instance().getDatabase().openDatabase()) {
+        try (DSLContext database = Game.instance().getDatabase().getDSL()) {
             SimFile simFile = SimFile.searchSimFile(directory, format -> Game.instance().getSettings().getSimFormatPriority(format));
 
             if(simFile != null) {

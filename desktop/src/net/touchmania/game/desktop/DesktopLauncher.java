@@ -6,8 +6,13 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import net.touchmania.game.Backend;
 import net.touchmania.game.Game;
 import net.touchmania.game.util.ui.DPI;
+import org.sqlite.SQLiteDataSource;
+
+import javax.sql.DataSource;
 
 public class DesktopLauncher implements Backend {
+	private SQLiteDataSource dataSource;
+
 	public static void main (String[] arg) {
 		if(arg.length > 0) {
 			Game.INPUT_PATH = arg[0];
@@ -36,7 +41,11 @@ public class DesktopLauncher implements Backend {
 	}
 
 	@Override
-	public String getDatabaseUrl() {
-		return "jdbc:sqlite:touchmania.sqlite";
+	public DataSource getDataSource() {
+		if(dataSource == null) {
+			dataSource = new SQLiteDataSource();
+			dataSource.setUrl("jdbc:sqlite:touchmania.sqlite");
+		}
+		return dataSource;
 	}
 }

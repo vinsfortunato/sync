@@ -24,6 +24,8 @@ import com.google.common.hash.Hashing;
 
 import java.io.File;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 /**
  * A file handle that represents a sim file and provides utility methods.
  */
@@ -39,6 +41,7 @@ public class SimFile extends FileHandle {
         //a file with path prefixed by Gdx.files.getExternalStoragePath(). An override
         //to the file() method is necessary in this case
         super(file.file(), file.type());
+        checkArgument(!file.isDirectory(), "Sim file cannot be a directory");
         this.format = format;
     }
 

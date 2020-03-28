@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Vincenzo Fortunato
+ * Copyright 2020 Vincenzo Fortunato
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,35 +20,35 @@ import com.badlogic.gdx.files.FileHandle;
 import com.google.common.base.Charsets;
 import net.touchmania.game.Game;
 import net.touchmania.game.song.sim.SimFile;
-import net.touchmania.game.song.sim.SimParseException;
 import net.touchmania.game.song.sim.SimParser;
+import net.touchmania.game.util.concurrent.Task;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.concurrent.Callable;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
-/**
- * A task that load a song from a sim file by searching for
- * it in a given directory.
- */
-@Deprecated
-public class SongLoader2 implements Callable<Song> {
+public class SongLoader extends Task<Song> {
     /** The sim file max allowed file length in bytes **/
     private static final long MAX_FILE_LENGTH = 10 * 1024 * 1024; //10 megabytes
-    private final FileHandle directory;
     private SimFile simFile;
 
-    public SongLoader2(FileHandle directory) {
-        checkArgument(directory.isDirectory(), "directory parameter must be a directory!");
-        this.directory = directory;
+    /**
+     * Creates a song loader from a given directory.
+     * @param directory the song directory.
+     */
+    public SongLoader(FileHandle directory) {
+        this(SimFile.searchSimFile(directory, format -> Game.instance().getSettings().getSimFormatPriority(format)));
+    }
+
+    /**
+     * Creates a song loader from a given sim file.
+     * @param simFile the song sim file.
+     */
+    public SongLoader(SimFile simFile) {
+        this.simFile = simFile;
     }
 
     @Override
-    public Song call() throws IOException, SimParseException {
-        simFile = SimFile.searchSimFile(directory, format -> Game.instance().getSettings().getSimFormatPriority(format));
-
+    protected Song call() throws Exception {
         if(simFile == null) {
             //Sim file not found
             throw new FileNotFoundException("There's no supported sim file in the given directory!");
@@ -66,7 +66,7 @@ public class SongLoader2 implements Callable<Song> {
 
         //Parse song
         Song song = new Song();
-        song.directory = directory;
+        song.directory = simFile.parent();
         song.simFile = simFile;
         song.title = parser.parseTitle();
         song.subtitle = parser.parseSubtitle();

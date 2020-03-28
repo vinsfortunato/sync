@@ -29,13 +29,14 @@ import com.badlogic.gdx.backends.android.AndroidMusic;
 import net.touchmania.game.Backend;
 import net.touchmania.game.Game;
 import net.touchmania.game.util.ui.DPI;
+import org.sqldroid.DroidDataSource;
 
+import javax.sql.DataSource;
 import java.io.File;
-import java.sql.Driver;
-import java.sql.DriverManager;
 
 public class AndroidLauncher extends AndroidApplication implements Backend {
 	private Game game;
+	private DataSource dataSource;
 
 	@Override
 	protected void onCreate (Bundle savedInstanceState) {
@@ -76,14 +77,7 @@ public class AndroidLauncher extends AndroidApplication implements Backend {
 	}
 
 	@Override
-	public void initBackend() {
-		//Register JDBC sqlite driver
-		try {
-			DriverManager.registerDriver((Driver) Class.forName("org.sqldroid.SQLDroidDriver").newInstance());
-		} catch (Exception e) {
-			throw new RuntimeException("Failed to register SQLDroidDriver", e);
-		}
-	}
+	public void initBackend() {}
 
 	@Override
 	public DPI getDeviceDPI() {
@@ -96,7 +90,7 @@ public class AndroidLauncher extends AndroidApplication implements Backend {
 	}
 
 	@Override
-	public String getDatabaseUrl() {
-		return "jdbc:sqldroid:/data/data/" + getPackageName() + "/touchmania.db";
+	public DataSource getDataSource() {
+		return dataSource == null ? (dataSource = new DroidDataSource(getPackageName(), "touchmania")) : dataSource;
 	}
 }
