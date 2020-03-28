@@ -18,7 +18,6 @@ package net.touchmania.game.song;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.google.common.base.Charsets;
-import com.google.common.io.Files;
 import net.touchmania.game.Game;
 import net.touchmania.game.song.sim.SimFile;
 import net.touchmania.game.song.sim.SimParseException;
@@ -63,7 +62,7 @@ public class SongLoader2 implements Callable<Song> {
         SimParser parser = simFile.getFormat().newParser();
 
         //Initialize the parser
-        parser.init(Files.asCharSource(simFile.file(), Charsets.UTF_8).read());
+        parser.init(simFile.readString(Charsets.UTF_8.name()));
 
         //Parse song
         Song song = new Song();

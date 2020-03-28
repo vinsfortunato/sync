@@ -24,7 +24,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.google.common.base.Charsets;
-import com.google.common.io.Files;
 import net.touchmania.game.Game;
 import net.touchmania.game.round.Round;
 import net.touchmania.game.song.Chart;
@@ -92,7 +91,7 @@ public class GameScreen implements Screen {
                 }
             }
             SimParser parser = song.simFile.getFormat().newParser();
-            parser.init(Files.toString(song.simFile.file(), Charsets.UTF_8));
+            parser.init(song.simFile.readString(Charsets.UTF_8.name()));
             chart.beatmap = parser.parseBeatmap(chart);
             FileHandle musicFile;
             if(Gdx.app.getType() == Application.ApplicationType.Desktop) {

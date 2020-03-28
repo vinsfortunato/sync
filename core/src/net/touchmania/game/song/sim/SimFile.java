@@ -19,11 +19,10 @@ package net.touchmania.game.song.sim;
 import com.badlogic.gdx.files.FileHandle;
 import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
+import com.google.common.hash.Hasher;
 import com.google.common.hash.Hashing;
-import com.google.common.io.Files;
 
 import java.io.File;
-import java.io.IOException;
 
 /**
  * A file handle that represents a sim file and provides utility methods.
@@ -55,18 +54,17 @@ public class SimFile extends FileHandle {
 
     /**
      * Compute the sim file hash.
-     *
      * @return the sim file hash.
-     * @throws IOException if an IO exception occurs while calculating the hash.
      */
-    public String computeHash() throws IOException {
-        return Files.asByteSource(file()).hash(Hashing.sha256()).toString();
+    public String computeHash() {
+        Hasher hasher = Hashing.sha256().newHasher();
+        hasher.putBytes(readBytes());
+        return hasher.hash().toString();
     }
 
     /**
      * Searches a sim file in the given song directory.
      * If there are multiple sim files picks the one that has the format with higher priority.
-     *
      * @param directory the directory to search.
      * @return the resulting sim file or null if there was no sim file in the given directory.
      */
