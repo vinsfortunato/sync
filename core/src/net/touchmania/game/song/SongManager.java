@@ -17,20 +17,11 @@
 package net.touchmania.game.song;
 
 import com.badlogic.gdx.files.FileHandle;
-import com.google.common.base.Preconditions;
-import net.touchmania.game.Game;
-import net.touchmania.game.song.sim.SimFormat;
-
-import java.io.File;
 
 public class SongManager {
     //Start indexing the given folder (the songs folder)
     public void index(FileHandle dir) {
-        try {
-            new SongIndexer(dir).call();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
     }
 
     //Find a set of song matching the given params
@@ -48,28 +39,5 @@ public class SongManager {
 
     }
 
-    /**
-     * Searches a sim file in the given song directory.
-     * If there are multiple sim files picks the one that has the format with higher priority.
-     * @param dir the directory to search.
-     * @return the resulting sim file or null if there was no sim file in the given directory.
-     */
-    public static FileHandle searchSimFile(FileHandle dir) {
-        Preconditions.checkArgument(dir.isDirectory(), String.format("%s is not a directory", dir));
-        int resultPriority = -1;
-        FileHandle simFile = null;
 
-        //Search sim file and pick the one with higher priority
-        for(FileHandle file : dir.list(File::isFile)) {
-            SimFormat format = SimFormat.valueFromExtension(file.extension());
-            if(format != null) { //Supported format
-                int priority = Game.instance().getSettings().getSimFormatPriority(format);
-                if(priority > resultPriority) { //Prefer higher priority formats
-                    simFile = file;
-                    resultPriority = priority;
-                }
-            }
-        }
-        return simFile;
-    }
 }

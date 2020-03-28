@@ -18,9 +18,10 @@ package net.touchmania.game.song;
 
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntMap;
+import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
 import net.touchmania.game.song.note.ChordNote;
 import net.touchmania.game.song.note.Note;
-import net.touchmania.game.util.Criteria;
 
 import java.util.Map;
 import java.util.TreeMap;
@@ -44,18 +45,18 @@ public class Beatmap {
     }
 
     /**
-     * Gets all notes at the given beat that are valid for the given criteria.
+     * Gets all notes at the given beat that are valid for the given predicate.
      * @param beat the beat
-     * @param criteria a criteria that checks if the note is valid, or null to ignore criteria
+     * @param predicate a predicate that checks if the note is valid, never null.
      * @return all notes at the given beat that are valid for the given criteria.
      */
-    public Array<Note> getNotes(double beat, Criteria<Note> criteria) {
+    public Array<Note> getNotes(double beat, Predicate<Note> predicate) {
         Array<Note> notes = new Array<>();
         IntMap.Keys keys = panels.keys();
         while(keys.hasNext) {
             int panel = keys.next();
             Note note = getNote(panel, beat);
-            if(note != null && (criteria == null || criteria.check(note))) {
+            if(note != null && predicate.apply(note)) {
                 notes.add(note);
             }
         }
@@ -68,7 +69,7 @@ public class Beatmap {
      * @return all notes at the given beat.
      */
     public Array<Note> getNotes(double beat) {
-        return getNotes(beat, null);
+        return getNotes(beat, Predicates.alwaysTrue());
     }
 
     /**
@@ -76,17 +77,17 @@ public class Beatmap {
      * to the given beat, or null if there is no such note.
      * @param panel the note panel
      * @param beat the beat
-     * @param criteria a criteria that checks if the note is valid, or null to ignore criteria.
+     * @param predicate a predicate that checks if the note is valid, never null.
      * @return a note with the greatest beat less than or equal to the given beat, or null if there is no such note
      */
-    public Note floorNote(int panel, double beat, Criteria<Note> criteria) {
+    public Note floorNote(int panel, double beat, Predicate<Note> predicate) {
         Note note;
         TreeMap<Double, Note> notes = panels.get(panel);
         if(notes != null) {
             Map.Entry<Double, Note> entry = notes.floorEntry(beat);
             while(entry != null) {
                 note = entry.getValue();
-                if(criteria == null || criteria.check(note)) {
+                if(predicate.apply(note)) {
                     return note;
                 }
                 entry = notes.lowerEntry(entry.getKey());
@@ -103,7 +104,7 @@ public class Beatmap {
      * @return a note with the greatest beat less than or equal to the given beat, or null if there is no such note
      */
     public Note floorNote(int panel, double beat) {
-        return floorNote(panel, beat, null);
+        return floorNote(panel, beat, Predicates.alwaysTrue());
     }
 
     /**
@@ -111,17 +112,17 @@ public class Beatmap {
      * to the given beat, or null if there is no such note.
      * @param panel the note panel
      * @param beat the beat
-     * @param criteria a criteria that checks if the note is valid, or null to ignore criteria.
+     * @param predicate a predicate that checks if the note is valid, never null.
      * @return a note with the least beat greater than or equal to beat, or null if there is no such note.
      */
-    public Note ceilingNote(int panel, double beat, Criteria<Note> criteria) {
+    public Note ceilingNote(int panel, double beat, Predicate<Note> predicate) {
         Note note;
         TreeMap<Double, Note> notes = panels.get(panel);
         if(notes != null) {
             Map.Entry<Double, Note> entry = notes.ceilingEntry(beat);
             while(entry != null) {
                 note = entry.getValue();
-                if(criteria == null || criteria.check(note)) {
+                if(predicate.apply(note)) {
                     return note;
                 }
                 entry = notes.higherEntry(entry.getKey());
@@ -138,7 +139,7 @@ public class Beatmap {
      * @return a note with the least beat greater than or equal to beat, or null if there is no such note.
      */
     public Note ceilingNote(int panel, double beat) {
-        return ceilingNote(panel, beat, null);
+        return ceilingNote(panel, beat, Predicates.alwaysTrue());
     }
 
     /**
@@ -146,17 +147,17 @@ public class Beatmap {
      * than the given beat, or null if there is no such note.
      * @param panel the note panel
      * @param beat the beat
-     * @param criteria a criteria that checks if the note is valid, or null to ignore criteria.
+     * @param predicate a predicate that checks if the note is valid, never null.
      * @return a note with the least beat greater than beat, or null if there is no such note
      */
-    public Note higherNote(int panel, double beat, Criteria<Note> criteria) {
+    public Note higherNote(int panel, double beat, Predicate<Note> predicate) {
         Note note;
         TreeMap<Double, Note> notes = panels.get(panel);
         if(notes != null) {
             Map.Entry<Double, Note> entry = notes.higherEntry(beat);
             while(entry != null) {
                 note = entry.getValue();
-                if(criteria == null || criteria.check(note)) {
+                if(predicate.apply(note)) {
                     return note;
                 }
                 entry = notes.higherEntry(entry.getKey());
@@ -173,7 +174,7 @@ public class Beatmap {
      * @return a note with the least beat greater than beat, or null if there is no such note
      */
     public Note higherNote(int panel, double beat) {
-        return higherNote(panel, beat, null);
+        return higherNote(panel, beat, Predicates.alwaysTrue());
     }
 
     /**
@@ -181,17 +182,17 @@ public class Beatmap {
      * less than the given beat, or null if there is no such note.
      * @param panel the note panel
      * @param beat the beat
-     * @param criteria a criteria that checks if the note is valid, or null to ignore criteria.
+     * @param predicate a predicate that checks if the note is valid, never null.
      * @return a note with the greatest beat less than given beat, or null if there is no such note
      */
-    public Note lowerNote(int panel, double beat, Criteria<Note> criteria) {
+    public Note lowerNote(int panel, double beat, Predicate<Note> predicate) {
         Note note = null;
         TreeMap<Double, Note> notes = panels.get(panel);
         if(notes != null) {
             Map.Entry<Double, Note> entry = notes.lowerEntry(beat);
             while(entry != null) {
                 note = entry.getValue();
-                if(criteria == null || criteria.check(note)) {
+                if(predicate.apply(note)) {
                     return note;
                 }
                 entry = notes.lowerEntry(entry.getKey());
@@ -209,7 +210,7 @@ public class Beatmap {
      * @return a note with the greatest beat less than given beat, or null if there is no such note
      */
     public Note lowerNote(int panel, double beat) {
-        return lowerNote(panel, beat, null);
+        return lowerNote(panel, beat, Predicates.alwaysTrue());
     }
 
     /**

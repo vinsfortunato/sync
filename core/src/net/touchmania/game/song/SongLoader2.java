@@ -18,9 +18,8 @@ package net.touchmania.game.song;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.google.common.base.Charsets;
-import com.google.common.base.Preconditions;
 import com.google.common.io.Files;
-import net.touchmania.game.song.sim.SimFormat;
+import net.touchmania.game.song.sim.SimFile;
 import net.touchmania.game.song.sim.SimParseException;
 import net.touchmania.game.song.sim.SimParser;
 
@@ -28,25 +27,27 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.concurrent.Callable;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 /**
  * A task that load a song from a sim file by searching for
  * it in a given directory.
  */
-public class SongLoader implements Callable<Song> {
+@Deprecated
+public class SongLoader2 implements Callable<Song> {
     /** The sim file max allowed file length in bytes **/
     private static final long MAX_FILE_LENGTH = 10 * 1024 * 1024; //10 megabytes
-    private final FileHandle songDir;
-    private FileHandle simFile;
-    private SimFormat simFormat;
+    private final FileHandle directory;
+    private SimFile simFile;
 
-    public SongLoader(FileHandle songDir) {
-        Preconditions.checkArgument(songDir.isDirectory(), "The given file handle is not a directory!");
-        this.songDir = songDir;
+    public SongLoader2(FileHandle directory) {
+        checkArgument(directory.isDirectory(), "directory parameter must be a directory!");
+        this.directory = directory;
     }
 
     @Override
     public Song call() throws IOException, SimParseException {
-        simFile = SongManager.searchSimFile(songDir);
+        simFile = SimFile.searchSimFile(directory);
 
         if(simFile == null) {
             //Sim file not found
@@ -58,17 +59,15 @@ public class SongLoader implements Callable<Song> {
             throw new IOException("Sim file size exceeds the maximum allowed file size.");
         }
 
-        simFormat = SimFormat.valueFromExtension(simFile.extension());
-        SimParser parser = simFormat.newParser();
+        SimParser parser = simFile.getFormat().newParser();
 
         //Initialize the parser
         parser.init(Files.asCharSource(simFile.file(), Charsets.UTF_8).read());
 
         //Parse song
         Song song = new Song();
-        song.directory = songDir;
+        song.directory = directory;
         song.simFile = simFile;
-        song.simFormat = simFormat;
         song.title = parser.parseTitle();
         song.subtitle = parser.parseSubtitle();
         song.artist = parser.parseArtist();
@@ -88,7 +87,6 @@ public class SongLoader implements Callable<Song> {
         for(Chart chart : song.charts) {
             chart.song = song;
         }
-        //TODO song.hash = calculateSongHash(rawContent); //Calculate at the end if the parse is successful
         return song;
     }
 }

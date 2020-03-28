@@ -17,7 +17,7 @@
 package net.touchmania.game.song;
 
 import com.badlogic.gdx.files.FileHandle;
-import net.touchmania.game.song.sim.SimFormat;
+import net.touchmania.game.song.sim.SimFile;
 
 import java.util.List;
 
@@ -33,24 +33,8 @@ public class Song {
     /**
      * The song's sim file.
      */
-    public FileHandle simFile;
-    /**
-     * The song's sim file format.
-     */
-    public SimFormat simFormat;
+    public SimFile simFile;
 
-    /**
-     * Gets the sha256 hash for this song. The sha256 is the hash of the
-     * sim file that contains song data. It's unique and it's used to
-     * save a cached version of the song into the game database. If
-     * the sim file changes the cached song will be removed from the
-     * database and a new version of the song will be inserted into the
-     * database. Scores related to the old version of the song will
-     * not be related to the new version. Scores related to the old
-     * version will not be deleted and can be restored if the old version
-     * is reinserted into the database.
-     */
-    public String hash;
     public String pack;    //TODO
     public String title;
     public String subtitle;

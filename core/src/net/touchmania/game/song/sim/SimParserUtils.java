@@ -43,7 +43,7 @@ public final class SimParserUtils {
      * @return the parsed value
      * @throws SimParseException if the value cannot be parsed correctly.
      */
-    public static  double parseDouble(String value) throws SimParseException {
+    public static double parseDouble(String value) throws SimParseException {
         try {
             return Double.parseDouble(value);
         } catch(NumberFormatException e) {
