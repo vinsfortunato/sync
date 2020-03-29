@@ -4,8 +4,11 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.backends.iosrobovm.IOSApplication;
 import com.badlogic.gdx.backends.iosrobovm.IOSApplicationConfiguration;
 import net.touchmania.game.util.ui.DPI;
+import org.jooq.SQLDialect;
 import org.robovm.apple.foundation.NSAutoreleasePool;
 import org.robovm.apple.uikit.UIApplication;
+
+import javax.sql.DataSource;
 
 public class IOSLauncher extends IOSApplication.Delegate implements Backend {
     @Override
@@ -36,7 +39,12 @@ public class IOSLauncher extends IOSApplication.Delegate implements Backend {
     }
 
     @Override
-    public String getDatabaseUrl() {
+    public DataSource getDatabaseDataSource() {
+        return null;
+    }
+
+    @Override
+    public SQLDialect getDatabaseSQLDialect() {
         return null;
     }
 }

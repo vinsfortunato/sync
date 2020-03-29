@@ -17,10 +17,10 @@ dependencies {
 jooq {
     version = '3.9.6'
     edition = 'OSS'
-    sample(sourceSets.main) {
+    template(sourceSets.main) {
         jdbc {
             driver = 'org.sqlite.JDBC'
-            url = 'jdbc:sqlite:touchmania.sqlite'
+            url = 'jdbc:sqlite:template.sqlite'
         }
         generator {
             name = 'org.jooq.util.DefaultGenerator'
@@ -36,3 +36,5 @@ jooq {
         }
     }
 }
+
+project.tasks.getByName('compileJava').dependsOn -= 'generateTemplateJooqSchemaSource'

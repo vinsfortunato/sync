@@ -6,6 +6,7 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import net.touchmania.game.Backend;
 import net.touchmania.game.Game;
 import net.touchmania.game.util.ui.DPI;
+import org.jooq.SQLDialect;
 import org.sqlite.SQLiteDataSource;
 
 import javax.sql.DataSource;
@@ -41,11 +42,16 @@ public class DesktopLauncher implements Backend {
 	}
 
 	@Override
-	public DataSource getDataSource() {
+	public DataSource getDatabaseDataSource() {
 		if(dataSource == null) {
 			dataSource = new SQLiteDataSource();
-			dataSource.setUrl("jdbc:sqlite:touchmania.sqlite");
+			dataSource.setUrl("jdbc:sqlite:template.sqlite");
 		}
 		return dataSource;
+	}
+
+	@Override
+	public SQLDialect getDatabaseSQLDialect() {
+		return SQLDialect.SQLITE;
 	}
 }

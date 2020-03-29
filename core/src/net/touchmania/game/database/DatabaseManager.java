@@ -18,13 +18,29 @@ package net.touchmania.game.database;
 
 import net.touchmania.game.Game;
 import org.jooq.DSLContext;
+import org.jooq.Query;
+import org.jooq.SQLDialect;
+import org.jooq.impl.DSL;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-
+import static net.touchmania.game.database.schema.DefaultSchema.DEFAULT_SCHEMA;
 import static org.jooq.impl.DSL.using;
 
 public class DatabaseManager {
+    static {
+        System.setProperty("org.jooq.no-logo", "true");
+    }
+
+    /**
+     * Creates and initializes the database manager. Database will be created/updated if necessary
+     */
+    public DatabaseManager() {
+        //Create the database if there are no tables
+        //Note: there must be a smarter way to do this, but for now it is ok
+        if(getDSL().meta().getTables().isEmpty()) {
+            createDatabase();
+        }
+    }
+
     /**
      * Creates a DSL executor with a configured connection that can be used
      * directly to create and execute statements.
@@ -32,19 +48,24 @@ public class DatabaseManager {
      * @throws RuntimeException if the database cannot be opened
      */
     public DSLContext getDSL() {
-        return using(getConnection());
+        return using(
+                Game.instance().getBackend().getDatabaseDataSource(),
+                Game.instance().getBackend().getDatabaseSQLDialect());
     }
 
     /**
-     * Gets a JDBC Connection open and configured connection.
-     * @return the database connection.
-     * @throws RuntimeException if the database cannot be opened.
+     * Execute the database generation script generated from the schema.
      */
-    public Connection getConnection() {
-        try {
-            return Game.instance().getBackend().getDataSource().getConnection();
-        } catch (SQLException e) {
-            throw new RuntimeException("Cannot open the database", e);
+    private void createDatabase() {
+        SQLDialect dialect = Game.instance().getBackend().getDatabaseSQLDialect();
+
+        //Generate the creation script from the schema and execute each query
+        for(Query query : DSL.using(dialect).ddl(DEFAULT_SCHEMA).queries()) {
+            getDSL().execute(query);
         }
+    }
+
+    private void updateDatabase() {
+        //TODO
     }
 }
