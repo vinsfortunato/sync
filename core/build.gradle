@@ -1,5 +1,5 @@
 plugins {
-    id 'nu.studer.jooq' version '4.1'
+    id 'nu.studer.jooq' version '2.0.11'
 }
 
 apply plugin: "java"
@@ -15,7 +15,7 @@ dependencies {
 }
 
 jooq {
-    version = '3.13.1'
+    version = '3.9.6'
     edition = 'OSS'
     sample(sourceSets.main) {
         jdbc {
@@ -23,14 +23,15 @@ jooq {
             url = 'jdbc:sqlite:touchmania.sqlite'
         }
         generator {
-            name = 'org.jooq.codegen.DefaultGenerator'
+            name = 'org.jooq.util.DefaultGenerator'
             database {
-                name = 'org.jooq.meta.sqlite.SQLiteDatabase'
+                name = 'org.jooq.util.sqlite.SQLiteDatabase'
                 includes = '.*'
                 excludes = ''
             }
             target {
                 packageName = 'net.touchmania.game.database.schema'
+                directory = 'src'
             }
         }
     }
