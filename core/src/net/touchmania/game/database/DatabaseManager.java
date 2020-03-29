@@ -16,16 +16,23 @@
 
 package net.touchmania.game.database;
 
+import com.google.common.base.Charsets;
+import com.google.common.base.Splitter;
+import com.google.common.io.Resources;
 import net.touchmania.game.Game;
 import org.jooq.DSLContext;
-import org.jooq.Query;
+import org.jooq.Record;
+import org.jooq.Result;
 import org.jooq.SQLDialect;
-import org.jooq.impl.DSL;
 
-import static net.touchmania.game.database.schema.DefaultSchema.DEFAULT_SCHEMA;
+import javax.sql.DataSource;
+import java.io.IOException;
+
 import static org.jooq.impl.DSL.using;
 
 public class DatabaseManager {
+    private static int DATABASE_VERSION = 1;
+
     static {
         System.setProperty("org.jooq.no-logo", "true");
     }
@@ -34,10 +41,11 @@ public class DatabaseManager {
      * Creates and initializes the database manager. Database will be created/updated if necessary
      */
     public DatabaseManager() {
-        //Create the database if there are no tables
-        //Note: there must be a smarter way to do this, but for now it is ok
-        if(getDSL().meta().getTables().isEmpty()) {
+        int version = getDatabaseVersion();
+        if(version == 0) {
             createDatabase();
+        } else if(version != DATABASE_VERSION) {
+            convertDatabase();
         }
     }
 
@@ -48,24 +56,50 @@ public class DatabaseManager {
      * @throws RuntimeException if the database cannot be opened
      */
     public DSLContext getDSL() {
-        return using(
-                Game.instance().getBackend().getDatabaseDataSource(),
-                Game.instance().getBackend().getDatabaseSQLDialect());
+        return using(getDataSource(), getSQLDialect());
     }
 
     /**
-     * Execute the database generation script generated from the schema.
+     * Gets the database version, a value greater or equal to 0.
+     * 0 is returned if the database schema must be created.
+     * @return the database version.
      */
-    private void createDatabase() {
-        SQLDialect dialect = Game.instance().getBackend().getDatabaseSQLDialect();
+    private int getDatabaseVersion() {
+        Result<Record> result = getDSL().fetch("PRAGMA user_version");
+        return result.isEmpty() ? 0 : result.get(0).get(0, Integer.class);
+    }
 
-        //Generate the creation script from the schema and execute each query
-        for(Query query : DSL.using(dialect).ddl(DEFAULT_SCHEMA).queries()) {
-            getDSL().execute(query);
+    private void createDatabase() {
+        try {
+            //Get the database generation script
+            String script = Resources.asCharSource(Resources.getResource("template.sql"), Charsets.UTF_8).read();
+
+            //Sanitize for execution:
+            //Remove comments
+            script = script.replaceAll("--.*", "");
+
+            //Execute the database generation script
+            for(String sql : Splitter.on(";").trimResults().omitEmptyStrings().split(script)) {
+                getDSL().execute(sql);
+            }
+
+            //Set database version
+            getDSL().execute("PRAGMA user_version = ?", DATABASE_VERSION);
+        } catch (IOException e) {
+            throw new RuntimeException("Cannot run the database generation script", e);
         }
     }
 
-    private void updateDatabase() {
+    private void convertDatabase() {
+        //Convert legacy version of the database
         //TODO
+    }
+
+    private DataSource getDataSource() {
+        return Game.instance().getBackend().getDatabaseDataSource();
+    }
+
+    private SQLDialect getSQLDialect() {
+        return SQLDialect.SQLITE;
     }
 }

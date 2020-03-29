@@ -4,8 +4,11 @@
 package net.touchmania.game.database.schema;
 
 
+import net.touchmania.game.database.schema.tables.Charts;
 import net.touchmania.game.database.schema.tables.Songs;
+import net.touchmania.game.database.schema.tables.records.ChartsRecord;
 import net.touchmania.game.database.schema.tables.records.SongsRecord;
+import org.jooq.ForeignKey;
 import org.jooq.UniqueKey;
 import org.jooq.impl.AbstractKeys;
 
@@ -35,18 +38,25 @@ public class Keys {
     // UNIQUE and PRIMARY KEY definitions
     // -------------------------------------------------------------------------
 
+    public static final UniqueKey<ChartsRecord> PK_CHARTS = UniqueKeys0.PK_CHARTS;
     public static final UniqueKey<SongsRecord> PK_SONGS = UniqueKeys0.PK_SONGS;
 
     // -------------------------------------------------------------------------
     // FOREIGN KEY definitions
     // -------------------------------------------------------------------------
 
+    public static final ForeignKey<ChartsRecord, SongsRecord> FK_CHARTS_SONGS_1 = ForeignKeys0.FK_CHARTS_SONGS_1;
 
     // -------------------------------------------------------------------------
     // [#1459] distribute members to avoid static initialisers > 64kb
     // -------------------------------------------------------------------------
 
     private static class UniqueKeys0 extends AbstractKeys {
-        public static final UniqueKey<SongsRecord> PK_SONGS = createUniqueKey(Songs.SONGS, "pk_songs", Songs.SONGS.PACK, Songs.SONGS.DIRECTORY);
+        public static final UniqueKey<ChartsRecord> PK_CHARTS = createUniqueKey(Charts.CHARTS, "pk_charts", Charts.CHARTS.ID);
+        public static final UniqueKey<SongsRecord> PK_SONGS = createUniqueKey(Songs.SONGS, "pk_songs", Songs.SONGS.ID);
+    }
+
+    private static class ForeignKeys0 extends AbstractKeys {
+        public static final ForeignKey<ChartsRecord, SongsRecord> FK_CHARTS_SONGS_1 = createForeignKey(net.touchmania.game.database.schema.Keys.PK_SONGS, Charts.CHARTS, "fk_charts_songs_1", Charts.CHARTS.SONG_ID);
     }
 }

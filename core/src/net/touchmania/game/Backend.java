@@ -18,7 +18,6 @@ package net.touchmania.game;
 
 import com.badlogic.gdx.audio.Music;
 import net.touchmania.game.util.ui.DPI;
-import org.jooq.SQLDialect;
 
 import javax.sql.DataSource;
 
@@ -43,10 +42,4 @@ public interface Backend {
      * @return the database data source.
      */
     DataSource getDatabaseDataSource();
-
-    /**
-     * Gets the SQL dialect of the database.
-     * @return the database sql dialect.
-     */
-    SQLDialect getDatabaseSQLDialect();
 }

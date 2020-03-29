@@ -28,7 +28,7 @@ import java.util.List;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Songs extends TableImpl<SongsRecord> {
 
-    private static final long serialVersionUID = -949360512;
+    private static final long serialVersionUID = 320888219;
 
     /**
      * The reference instance of <code>songs</code>
@@ -44,6 +44,11 @@ public class Songs extends TableImpl<SongsRecord> {
     }
 
     /**
+     * The column <code>songs.id</code>.
+     */
+    public final TableField<SongsRecord, Integer> ID = createField("id", org.jooq.impl.SQLDataType.INTEGER, this, "");
+
+    /**
      * The column <code>songs.pack</code>.
      */
     public final TableField<SongsRecord, String> PACK = createField("pack", org.jooq.impl.SQLDataType.CLOB.nullable(false), this, "");
@@ -57,6 +62,66 @@ public class Songs extends TableImpl<SongsRecord> {
      * The column <code>songs.hash</code>.
      */
     public final TableField<SongsRecord, String> HASH = createField("hash", org.jooq.impl.SQLDataType.CLOB.nullable(false), this, "");
+
+    /**
+     * The column <code>songs.sim_path</code>.
+     */
+    public final TableField<SongsRecord, String> SIM_PATH = createField("sim_path", org.jooq.impl.SQLDataType.CLOB.nullable(false), this, "");
+
+    /**
+     * The column <code>songs.format</code>.
+     */
+    public final TableField<SongsRecord, String> FORMAT = createField("format", org.jooq.impl.SQLDataType.CLOB.nullable(false), this, "");
+
+    /**
+     * The column <code>songs.title</code>.
+     */
+    public final TableField<SongsRecord, String> TITLE = createField("title", org.jooq.impl.SQLDataType.CLOB.nullable(false), this, "");
+
+    /**
+     * The column <code>songs.subtitle</code>.
+     */
+    public final TableField<SongsRecord, String> SUBTITLE = createField("subtitle", org.jooq.impl.SQLDataType.CLOB, this, "");
+
+    /**
+     * The column <code>songs.artist</code>.
+     */
+    public final TableField<SongsRecord, String> ARTIST = createField("artist", org.jooq.impl.SQLDataType.CLOB, this, "");
+
+    /**
+     * The column <code>songs.genre</code>.
+     */
+    public final TableField<SongsRecord, String> GENRE = createField("genre", org.jooq.impl.SQLDataType.CLOB, this, "");
+
+    /**
+     * The column <code>songs.banner_path</code>.
+     */
+    public final TableField<SongsRecord, String> BANNER_PATH = createField("banner_path", org.jooq.impl.SQLDataType.CLOB, this, "");
+
+    /**
+     * The column <code>songs.background_path</code>.
+     */
+    public final TableField<SongsRecord, String> BACKGROUND_PATH = createField("background_path", org.jooq.impl.SQLDataType.CLOB, this, "");
+
+    /**
+     * The column <code>songs.cd_title</code>.
+     */
+    public final TableField<SongsRecord, String> CD_TITLE = createField("cd_title", org.jooq.impl.SQLDataType.CLOB, this, "");
+
+    /**
+     * The column <code>songs.music_path</code>.
+     */
+    public final TableField<SongsRecord, String> MUSIC_PATH = createField("music_path", org.jooq.impl.SQLDataType.CLOB.nullable(false), this, "");
+
+    /**
+     * The column <code>songs.sample_start</code>.
+     */
+    public final TableField<SongsRecord, Float> SAMPLE_START = createField("sample_start", org.jooq.impl.SQLDataType.REAL.defaultValue(org.jooq.impl.DSL.field("0", org.jooq.impl.SQLDataType.REAL)), this, "");
+
+    /**
+     * The column <code>songs.sample_length</code>.
+     */
+    public final TableField<SongsRecord, Float> SAMPLE_LENGTH = createField("sample_length", org.jooq.impl.SQLDataType.REAL, this, "");
 
     /**
      * Create a <code>songs</code> table reference

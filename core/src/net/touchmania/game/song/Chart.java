@@ -63,10 +63,6 @@ public class Chart implements Comparable<Chart> {
      * Other info about the chart.
      */
     public String notes;
-    /**
-     * Groove radar chart statistics.
-     */
-    public GrooveRadar grooveRadar;
 
     /**
      * For a given song there must be only one chart for a given

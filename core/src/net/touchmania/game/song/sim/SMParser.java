@@ -209,11 +209,6 @@ public class SMParser extends TagSimParser {
             chart.description = chartData[1];
             chart.difficultyClass = SimParserUtils.parseDifficultyClass(chartData[2]);
             chart.difficultyMeter = SimParserUtils.parseInt(chartData[3]);
-            try {
-                chart.grooveRadar = parseGrooveRadar(chartData[4]);
-            } catch(SimParseException e) {
-                chart.grooveRadar = null; //Ignore invalid groove radar.
-            }
             return chart;
         }
         return null; //Unsupported game style.

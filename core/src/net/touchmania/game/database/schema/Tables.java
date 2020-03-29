@@ -4,6 +4,7 @@
 package net.touchmania.game.database.schema;
 
 
+import net.touchmania.game.database.schema.tables.Charts;
 import net.touchmania.game.database.schema.tables.Songs;
 
 import javax.annotation.Generated;
@@ -21,6 +22,11 @@ import javax.annotation.Generated;
 )
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Tables {
+
+    /**
+     * The table <code>charts</code>.
+     */
+    public static final Charts CHARTS = net.touchmania.game.database.schema.tables.Charts.CHARTS;
 
     /**
      * The table <code>songs</code>.

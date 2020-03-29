@@ -4,6 +4,7 @@
 package net.touchmania.game.database.schema;
 
 
+import net.touchmania.game.database.schema.tables.Charts;
 import net.touchmania.game.database.schema.tables.Songs;
 import org.jooq.Catalog;
 import org.jooq.Table;
@@ -28,12 +29,17 @@ import java.util.List;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class DefaultSchema extends SchemaImpl {
 
-    private static final long serialVersionUID = 436070001;
+    private static final long serialVersionUID = 154964776;
 
     /**
      * The reference instance of <code></code>
      */
     public static final DefaultSchema DEFAULT_SCHEMA = new DefaultSchema();
+
+    /**
+     * The table <code>charts</code>.
+     */
+    public final Charts CHARTS = net.touchmania.game.database.schema.tables.Charts.CHARTS;
 
     /**
      * The table <code>songs</code>.
@@ -65,6 +71,7 @@ public class DefaultSchema extends SchemaImpl {
 
     private final List<Table<?>> getTables0() {
         return Arrays.<Table<?>>asList(
+            Charts.CHARTS,
             Songs.SONGS);
     }
 }

@@ -27,7 +27,7 @@ jooq {
             database {
                 name = 'org.jooq.util.sqlite.SQLiteDatabase'
                 includes = '.*'
-                excludes = ''
+                excludes = 'sqlite_.*'
             }
             target {
                 packageName = 'net.touchmania.game.database.schema'
