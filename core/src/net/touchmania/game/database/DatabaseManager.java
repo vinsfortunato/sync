@@ -84,7 +84,7 @@ public class DatabaseManager {
             }
 
             //Set database version
-            getDSL().execute("PRAGMA user_version = ?", DATABASE_VERSION);
+            getDSL().execute("PRAGMA user_version = " + DATABASE_VERSION);
         } catch (IOException e) {
             throw new RuntimeException("Cannot run the database generation script", e);
         }

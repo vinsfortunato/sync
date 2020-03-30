@@ -29,29 +29,21 @@ import static com.google.common.base.Preconditions.checkArgument;
 /**
  * A file handle that represents a sim file and provides utility methods.
  */
-public class SimFile extends FileHandle {
+public class SimFile {
+    private FileHandle file;
     private SimFormat format;
 
     public SimFile(FileHandle file) {
-        this(file, SimFormat.valueFromExtension(file.extension()));
-    }
-
-    private SimFile(FileHandle file, SimFormat format) {
-        //For file handles with type equal to FileType.External the file() will return
-        //a file with path prefixed by Gdx.files.getExternalStoragePath(). An override
-        //to the file() method is necessary in this case
-        super(file.file(), file.type());
         checkArgument(!file.isDirectory(), "Sim file cannot be a directory");
-        this.format = format;
+        this.file = file;
+        this.format = SimFormat.valueFromExtension(file.extension());
     }
 
     public SimFormat getFormat() {
         return format;
     }
 
-    @Override
-    public File file() {
-        //Necessary override to correctly extend FileHandle with FileType.External type
+    public FileHandle getFile() {
         return file;
     }
 
@@ -61,7 +53,7 @@ public class SimFile extends FileHandle {
      */
     public String computeHash() {
         Hasher hasher = Hashing.sha256().newHasher();
-        hasher.putBytes(readBytes());
+        hasher.putBytes(file.readBytes());
         return hasher.hash().toString();
     }
 
@@ -82,7 +74,7 @@ public class SimFile extends FileHandle {
             if (format != null) { //Supported format
                 int priority = priorityProvider.apply(format);
                 if (priority > resultPriority) { //Prefer higher priority formats
-                    simFile = new SimFile(file, format);
+                    simFile = new SimFile(file);
                     resultPriority = priority;
                 }
             }

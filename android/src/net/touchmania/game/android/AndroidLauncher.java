@@ -29,7 +29,6 @@ import com.badlogic.gdx.backends.android.AndroidMusic;
 import net.touchmania.game.Backend;
 import net.touchmania.game.Game;
 import net.touchmania.game.util.ui.DPI;
-import org.jooq.SQLDialect;
 import org.sqldroid.DroidDataSource;
 
 import javax.sql.DataSource;
@@ -93,10 +92,5 @@ public class AndroidLauncher extends AndroidApplication implements Backend {
 	@Override
 	public DataSource getDatabaseDataSource() {
 		return dataSource == null ? (dataSource = new DroidDataSource(getPackageName(), "touchmania")) : dataSource;
-	}
-
-	@Override
-	public SQLDialect getDatabaseSQLDialect() {
-		return SQLDialect.SQLITE;
 	}
 }

@@ -92,7 +92,7 @@ public class GameScreen implements Screen {
                 }
             }
             SimParser parser = song.simFile.getFormat().newParser();
-            parser.init(song.simFile.readString(Charsets.UTF_8.name()));
+            parser.init(song.simFile.getFile().readString(Charsets.UTF_8.name()));
             chart.beatmap = parser.parseBeatmap(chart);
             FileHandle musicFile;
             if(Gdx.app.getType() == Application.ApplicationType.Desktop) {

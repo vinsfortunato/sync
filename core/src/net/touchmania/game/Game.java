@@ -63,7 +63,9 @@ public class Game implements ApplicationListener {
 		this.disposer = new Disposer();
 		this.settings = new GameSettings();
 		this.executors = new ExecutorManager();
-		this.database = new DatabaseManager();
+		if(Gdx.app.getType() != Application.ApplicationType.Android) {
+			this.database = new DatabaseManager(); //TODO
+		}
 		this.assets = new AssetManager();
 		this.themes = new ThemeManager();
 		this.screens = new ScreenManager();

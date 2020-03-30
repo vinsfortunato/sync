@@ -54,7 +54,7 @@ public class SongLoader extends Task<Song> {
             throw new FileNotFoundException("There's no supported sim file in the given directory!");
         }
 
-        if(simFile.length() > MAX_FILE_LENGTH) {
+        if(simFile.getFile().length() > MAX_FILE_LENGTH) {
             //Sim file exceeds max file length
             throw new IOException("Sim file size exceeds the maximum allowed file size.");
         }
@@ -62,11 +62,11 @@ public class SongLoader extends Task<Song> {
         SimParser parser = simFile.getFormat().newParser();
 
         //Initialize the parser
-        parser.init(simFile.readString(Charsets.UTF_8.name()));
+        parser.init(simFile.getFile().readString(Charsets.UTF_8.name()));
 
         //Parse song
         Song song = new Song();
-        song.directory = simFile.parent();
+        song.directory = simFile.getFile().parent();
         song.simFile = simFile;
         song.title = parser.parseTitle();
         song.subtitle = parser.parseSubtitle();
