@@ -29,14 +29,17 @@ import com.badlogic.gdx.backends.android.AndroidMusic;
 import net.touchmania.game.Backend;
 import net.touchmania.game.Game;
 import net.touchmania.game.util.ui.DPI;
-import org.sqldroid.DroidDataSource;
+import org.sqlite.SQLiteDataSource;
+import org.sqlite.SQLiteJDBCLoader;
 
 import javax.sql.DataSource;
 import java.io.File;
 
 public class AndroidLauncher extends AndroidApplication implements Backend {
 	private Game game;
-	private DataSource dataSource;
+	private SQLiteDataSource dataSource;
+
+
 
 	@Override
 	protected void onCreate (Bundle savedInstanceState) {
@@ -91,6 +94,12 @@ public class AndroidLauncher extends AndroidApplication implements Backend {
 
 	@Override
 	public DataSource getDatabaseDataSource() {
-		return dataSource == null ? (dataSource = new DroidDataSource(getPackageName(), "touchmania")) : dataSource;
+		SQLiteJDBCLoader loader;
+
+		if(dataSource == null) {
+			dataSource = new SQLiteDataSource();
+			dataSource.setUrl("jdbc:sqlite:" + "/data/data/" + getPackageName() + "/touchmania.db");
+		}
+		return dataSource;
 	}
 }

@@ -16,9 +16,9 @@
 
 package net.touchmania.game.database;
 
+import com.badlogic.gdx.Gdx;
 import com.google.common.base.Charsets;
 import com.google.common.base.Splitter;
-import com.google.common.io.Resources;
 import net.touchmania.game.Game;
 import org.jooq.DSLContext;
 import org.jooq.Record;
@@ -26,7 +26,6 @@ import org.jooq.Result;
 import org.jooq.SQLDialect;
 
 import javax.sql.DataSource;
-import java.io.IOException;
 
 import static org.jooq.impl.DSL.using;
 
@@ -70,24 +69,20 @@ public class DatabaseManager {
     }
 
     private void createDatabase() {
-        try {
-            //Get the database generation script
-            String script = Resources.asCharSource(Resources.getResource("template.sql"), Charsets.UTF_8).read();
+        //Get the database generation script
+        String script = Gdx.files.internal("template.sql").readString(Charsets.UTF_8.name());
 
-            //Sanitize for execution:
-            //Remove comments
-            script = script.replaceAll("--.*", "");
+        //Sanitize for execution:
+        //Remove comments
+        script = script.replaceAll("--.*", "");
 
-            //Execute the database generation script
-            for(String sql : Splitter.on(";").trimResults().omitEmptyStrings().split(script)) {
-                getDSL().execute(sql);
-            }
-
-            //Set database version
-            getDSL().execute("PRAGMA user_version = " + DATABASE_VERSION);
-        } catch (IOException e) {
-            throw new RuntimeException("Cannot run the database generation script", e);
+        //Execute the database generation script
+        for(String sql : Splitter.on(";").trimResults().omitEmptyStrings().split(script)) {
+            getDSL().execute(sql);
         }
+
+        //Set database version
+        getDSL().execute("PRAGMA user_version = " + DATABASE_VERSION);
     }
 
     private void convertDatabase() {
