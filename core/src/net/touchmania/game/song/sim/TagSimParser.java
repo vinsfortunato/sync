@@ -16,10 +16,10 @@
 
 package net.touchmania.game.song.sim;
 
-import com.badlogic.gdx.utils.Array;
+import com.google.common.base.Charsets;
 import com.google.common.base.Preconditions;
-import net.touchmania.game.song.Beatmap;
 import net.touchmania.game.song.Chart;
+import net.touchmania.game.song.DifficultyClass;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,79 +56,107 @@ public abstract class TagSimParser implements SimParser {
         String getHeaderTagValue(String tagName);
 
         /**
-         * @return an {@link Array<String>} of string where each string contains
+         * @return a list of strings where each string contains
          * data of a single chart. Each format must parse it according to its
          * syntax.
          */
-        Array<String> getChartsRawDataArray();
+        List<String> getChartTagValues();
     }
 
     /** Pattern that matches the #TAG:VALUE; syntax **/
     public static Pattern TAG_PATTERN = Pattern.compile("#\\s*([^:]+?)\\s*:\\s*([^;]*?)\\s*;");
 
-    public DataSupplier dataSupplier = null;
+    protected DataSupplier dataSupplier = null;
+
+    @Override
+    public void init(SimFile simFile) throws SimParseException {
+        Preconditions.checkNotNull(simFile);
+        Preconditions.checkState(dataSupplier == null, "Sim parser already initialized!");
+
+        //Get sim file content
+        String content = simFile.getFile().readString(Charsets.UTF_8.name());
+        //Remove comments from the content and prepare the data supplier
+        dataSupplier = createDataSupplier(content.replaceAll("//.*", ""));
+    }
 
     /**
-     * Prepare a data supplier that will be used by the parser.
+     * Creates a data supplier that will be used by the parser.
      * @param rawContent the sim file raw content without comments.
      * @return a data supplier.
-     * @throws SimParseException if the data supplier cannot be prepared correctly.
+     * @throws SimParseException if the data supplier cannot be created correctly.
      */
-    protected abstract DataSupplier prepareDataSupplier(String rawContent) throws SimParseException;
+    protected abstract DataSupplier createDataSupplier(String rawContent) throws SimParseException;
 
     /**
-     * Parse a chart without the beatmap from raw data.
-     * @param chartRawData the chart raw data.
-     * @return a supported chart, null otherwise.
-     * @throws SimParseException if the chart cannot be parsed correctly
+     * Creates a sim chart parser from the given raw chart raw content.
+     * @param chartRawContent the chart raw content.
+     * @return a sim chart parser.
      */
-    protected abstract Chart parseChart(String chartRawData) throws SimParseException;
-
-    /**
-     * Parse a beatmap from raw chart data.
-     * @param chartRawData the chart raw data.
-     * @return a beatmap object, never null.
-     * @throws SimParseException if the beatmap cannot be parsed correctly.
-     */
-    protected abstract Beatmap parseBeatmap(String chartRawData) throws SimParseException;
+    protected abstract SimChartParser createChartParser(String chartRawContent);
 
     @Override
-    public void init(String rawContent) throws SimParseException {
-        Preconditions.checkNotNull(rawContent);
-
-        //Remove comments from the content and prepare the data supplier
-        dataSupplier = prepareDataSupplier(rawContent.replaceAll( "//.*", ""));
-    }
-
-    @Override
-    public List<Chart> parseCharts() {
-        List<Chart> charts = new ArrayList<>();
-        for(String chartRawData : dataSupplier.getChartsRawDataArray()) {
-            try {
-                charts.add(parseChart(chartRawData));
-            } catch (SimParseException e) {
-                //Ignore invalid charts
-            }
+    public List<SimChartParser> getChartParsers() {
+        List<String> chartTagValues = dataSupplier.getChartTagValues();
+        List<SimChartParser> parsers = new ArrayList<>(chartTagValues.size());
+        for(String chartTagValue : chartTagValues) {
+            parsers.add(createChartParser(chartTagValue));
         }
-        return charts;
+        return parsers;
     }
 
     @Override
-    public Beatmap parseBeatmap(Chart chart) throws SimParseException {
-        Preconditions.checkArgument(chart.type != null, "Unsupported chart type!");
-
-        //Find the chart
-        for(String chartRawData : dataSupplier.getChartsRawDataArray()) {
-            Chart c;
+    public SimChartParser getChartParser(Chart chart) {
+        //TODO Temp solution
+        for(SimChartParser chartParser : getChartParsers()) {
             try {
-                c = parseChart(chartRawData);
+                if(chart.type != chartParser.parseChartType()) continue;
+                if(chart.difficultyClass != chartParser.parseDifficultyClass()) continue;
+                if(chart.difficultyMeter != chartParser.parseDifficultyMeter()) continue;
+                return chartParser;
             } catch(SimParseException e) {
-                continue; //Ignore invalid charts and go check the next one
-            }
-            if(c != null && c.equals(chart)) { //Chart found
-                return parseBeatmap(chartRawData);
+                //Skip
             }
         }
-        return null; //No matching chart found
+        return null;
+    }
+
+    /**
+     * Parse difficulty class.
+     * @param value the value to parse
+     * @return the difficulty class.
+     * @throws SimParseException if the difficulty class cannot be recognised.
+     */
+    protected static DifficultyClass parseDifficultyClass(String value) throws SimParseException {
+        if(value != null) {
+            switch(value.toUpperCase()) {
+                case "BEGINNER":
+                    return DifficultyClass.BEGINNER;
+                case "EASY":
+                case "BASIC":
+                case "LIGHT":
+                    return DifficultyClass.EASY;
+                case "MEDIUM":
+                case "ANOTHER":
+                case "TRICK":
+                case "STANDARD":
+                case "DIFFICULT":
+                    return DifficultyClass.MEDIUM;
+                case "HARD":
+                case "SSR":
+                case "MANIAC":
+                case "HEAVY":
+                    return DifficultyClass.HARD;
+                case "SMANIAC":
+                case "CHALLENGE":
+                case "EXPERT":
+                case "ONI":
+                    return DifficultyClass.CHALLENGE;
+                case "EDIT":
+                    return DifficultyClass.EDIT;
+                default:
+                    throw new SimParseException("Unrecognised difficulty class!");
+            }
+        }
+        return null;
     }
 }

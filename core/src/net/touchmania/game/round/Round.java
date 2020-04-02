@@ -28,7 +28,7 @@ public class Round {
         this.chart = chart;
         this.music = music;
         this.musicPosition = new MusicPosition(music);
-        this.timing = new Timing(chart.song.timingData);
+        this.timing = new Timing(chart.timingData);
         this.modifiers = new Modifiers();
         this.panelState = new PanelState();
         this.judge = new Judge( this, new JudgeCriteria());

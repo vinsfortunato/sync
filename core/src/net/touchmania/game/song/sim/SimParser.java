@@ -16,29 +16,27 @@
 
 package net.touchmania.game.song.sim;
 
-import com.badlogic.gdx.utils.Array;
-import net.touchmania.game.song.Beatmap;
 import net.touchmania.game.song.Chart;
-import net.touchmania.game.song.DisplayBPM;
-import net.touchmania.game.song.TimingData;
 
 import java.util.List;
+import java.util.concurrent.Callable;
 
 /**
  * Parse a sim file content. Each sim format parser must implement this interface.
- * Methods that refer to unavailable values, if specified, must return null.
+ * <p> Before calling any of the parsing methods the parser must be initialized by
+ * calling {@link #init(SimFile)}. </p>
+ * <p> Methods that refer to unavailable values, if specified, must return null. </p>
  * <p> The parser implementation can hold the entire sim file content. Therefore any
  * reference to this interface must be garbage collected when it is no longer needed. </p>
  */
 public interface SimParser {
     /**
      * Init the parser. Each implementation can do its own initialization
-     * tasks here. The single string argument given to the method is
-     * the content of the sim file.
-     * @param rawContent the sim file content.
-     * @throws SimParseException if the raw content cannot be parsed correctly.
+     * tasks here.
+     * @param file the sim file.
+     * @throws SimParseException if the sim file cannot be parsed correctly.
      */
-    void init(String rawContent) throws SimParseException;
+    void init(SimFile file) throws SimParseException;
 
     /**
      * It is an essential song data.
@@ -50,100 +48,91 @@ public interface SimParser {
     /**
      * @return the subtitle of the song (secondary title). Null if not specified.
      */
-    String parseSubtitle();
+    String parseSubtitle() throws SimParseException;
 
     /**
      * @return the artist of the song. Null if not specified.
      */
-    String parseArtist();
+    String parseArtist() throws SimParseException;
 
     /**
      * @return the genre of the song. Null if not specified.
      */
-    String parseGenre();
+    String parseGenre() throws SimParseException;
 
     /**
      * @return the simfile's origin (author or pack/mix). Null if not specified.
      */
-    String parseCredit();
+    String parseCredit() throws SimParseException;
     /**
      * @return the path to the banner image for the song. Null if not specified.
      */
-    String parseBannerPath();
+    String parseBannerPath() throws SimParseException;
 
     /**
      * @return the path to the background image for the song. Null if not specified.
      */
-    String parseBackgroundPath();
+    String parseBackgroundPath() throws SimParseException;
 
     /**
      * @return the path to the lyrics file (.lrc) to use. Null if not specified.
      */
-    String parseLyricsPath();
+    String parseLyricsPath() throws SimParseException;
 
     /**
      * @return the path to the CD title, a small image meant to show
      * the origin of the song. Null if not specified.
      */
-    String parseCdTitle();
+    String parseAlbum() throws SimParseException;
 
     /**
      * @return the path to the music file for this song. Null if not specified.
      */
-    String parseMusicPath();
+    String parseMusicPath() throws SimParseException;
 
     /**
      * @return the start time of the song sample used as preview, -1.0 if the
      * value is unavailable or cannot be parsed correctly.
      */
-    float parseSampleStart();
+    float parseSampleStart() throws SimParseException;
 
     /**
      * @return the length of the song sample used as preview, -1.0 if the
      * value is unavailable or cannot be parsed correctly.
      */
-    float parseSampleLength();
-
-    /**
-     * This can be used to override the BPM shown on song selection screen.
-     * <p> Check {@link DisplayBPM DisplayBPM} class for more details. </p>
-     * @return an instance of {@link DisplayBPM} or null if there's no need
-     * to override the default behavior or the value cannot be parsed correctly.
-     */
-    DisplayBPM parseDisplayBPM();
+    float parseSampleLength() throws SimParseException;
 
     /**
      * @return true if the song is selectable under normal conditions or the
      * tag value cannot be parsed correctly.
      */
-    boolean parseSelectable();
+    boolean parseSelectable() throws SimParseException;
 
     /**
-     * Parse song global timing data (BPMs, stops, delays, warps). This timing data
-     * will be applied to each song's chart if not overridden. It is an essential song data.
-     * @return the timing data.
-     * @throws SimParseException if the timing data cannot be parsed or there isn't
-     * essential timing data like BPMs.
+     * Gets all the available chart parsers.
+     * @return the available chart parsers
      */
-    TimingData parseTimingData() throws SimParseException;
+    List<SimChartParser> getChartParsers();
 
     /**
-     * Parse the available and supported charts of the song. Beatmaps will
-     * not be parsed and must be parsed when needed by using {@link #parseBeatmap(Chart)}.
-     * Invalid and unsupported charts will be ignored.
-     * @return an {@link Array} containing all the available charts of the song, can be empty if
-     * there is no supported chart or supported charts are invalid.
+     * Gets a parser for the given chart.
+     * @param chart the chart.
+     * @return the parser for the given chart, or null if the chart is not present.
      */
-    List<Chart> parseCharts();
+    SimChartParser getChartParser(Chart chart);
 
     /**
-     * Parse a beatmap. This method will search the given chart into the sim file. If the
-     * given chart is found the parsed beatmap related to the chart will be returned, otherwise
-     * returns null. Beatmaps must be parsed only when needed because they take up
-     * a lot of space.
-     * @param chart the beatmap's chart.
-     * @return a beatmap related to the given chart, null if the chart han not been found.
-     * @throws SimParseException if the chart has been found but the beatmap cannot be parsed correctly.
+     * Calls the given Callable and returns default value if a {@link SimParseException} is
+     * thrown by the Callable {@link Callable#call()} method.
+     * @param callable the callable.
+     * @return the parsed value or default value if a {@link SimParseException} is thrown
+     * @throws Exception if an exception that is not  {@link SimParseException} is thrown
      */
-    Beatmap parseBeatmap(Chart chart) throws SimParseException;
+    static <T> T parseOrDefault(Callable<T> callable, T defaultValue) throws Exception {
+        try {
+            return callable.call();
+        } catch(SimParseException e) {
+            return defaultValue;
+        }
+    }
 }

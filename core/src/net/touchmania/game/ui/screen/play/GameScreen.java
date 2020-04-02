@@ -23,7 +23,6 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.google.common.base.Charsets;
 import net.touchmania.game.Game;
 import net.touchmania.game.round.Round;
 import net.touchmania.game.song.Chart;
@@ -79,7 +78,7 @@ public class GameScreen implements Screen {
             fh = Gdx.files.external(Game.instance().tempFile);
         }
 
-        SongLoader sl = new SongLoader(fh);
+        SongLoader sl = new SongLoader("Test", fh);
 
         try {
             sl.run();
@@ -92,8 +91,8 @@ public class GameScreen implements Screen {
                 }
             }
             SimParser parser = song.simFile.getFormat().newParser();
-            parser.init(song.simFile.getFile().readString(Charsets.UTF_8.name()));
-            chart.beatmap = parser.parseBeatmap(chart);
+            parser.init(song.simFile);
+            chart.beatmap = parser.getChartParser(chart).parseBeatmap();
             FileHandle musicFile;
             if(Gdx.app.getType() == Application.ApplicationType.Desktop) {
                 musicFile = Gdx.files.absolute(song.directory.path() + "/" + song.musicPath);

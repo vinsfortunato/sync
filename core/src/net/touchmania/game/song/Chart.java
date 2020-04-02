@@ -25,61 +25,41 @@ import java.util.Objects;
  * @author Vincenzo Fortunato
  */
 public class Chart implements Comparable<Chart> {
-    /**
-     * The song associated to the chart.
-     */
+    /** Uniquely identified this chart */
+    public String id;
+    /** The song associated to the chart */
     public Song song;
-    /**
-     * The chart type.
-     */
+    /** The chart type */
     public ChartType type;
-    /**
-     * The chart's difficulty class.
-     */
+    /**  The chart's difficulty class */
     public DifficultyClass difficultyClass;
-    /**
-     * Chart's beatmap. Can be null. Beatmap is loaded
-     * only when it's necessary directly from the SIM file.
-     */
-    public Beatmap beatmap;
-    /**
-     * The chart's difficulty as numeric value.
-     * Higher values are associated to higher difficulties.
-     */
+    /** The chart's difficulty as numeric value. */
     public int difficultyMeter;
-    /**
-     * This chart's Name. ("Style - Difficulty" is the default/standard.)
-     */
+    /** The name of the chart  */
     public String name;
-    /**
-     * Describes this chart's Type/Style/Difficulty.
-     */
+    /** A chart description. */
     public String description;
-    /**
-     * Chart's Creators/Credits.
-     */
+    /** Chart's credits such as chart artist and contributors */
     public String credit;
-    /**
-     * Other info about the chart.
-     */
-    public String notes;
+    /** Chart's display BPM */
+    public DisplayBPM displayBPM;
+    /** Chart's timing data */
+    public TimingData timingData = new TimingData();
+    /** Chart's beatmap. Can be null. Beatmap is loaded
+     *  only when it's necessary directly from the SIM file. */
+    public Beatmap beatmap;
 
-    /**
-     * For a given song there must be only one chart for a given
-     * couple of type and difficulty class. The check is done by
-     * comparing these two. Other stuff like name
-     * or description is not considered.
-     * @param obj another chart.
-     * @return true if they represents the same chart.
-     */
     @Override
-    public boolean equals(Object obj) {
-        if(obj == this) return true;
-        if(obj instanceof Chart) {
-            Chart o = (Chart) obj;
-            return Objects.equals(type, o.type) && Objects.equals(difficultyClass, o.difficultyClass);
-        }
-        return false;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Chart chart = (Chart) o;
+        return Objects.equals(id, chart.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 
     /**

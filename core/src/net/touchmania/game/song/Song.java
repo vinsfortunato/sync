@@ -22,34 +22,41 @@ import net.touchmania.game.song.sim.SimFile;
 import java.util.List;
 
 /**
- * @author Vincenzo Fortunato
+ * Represents a song parsed from a SIM file.
  */
 public class Song {
-    /**
-     * The directory that contains the song's sim file.
-     */
+    /** The directory that contains the song's sim file */
     public FileHandle directory;
-
-    /**
-     * The song's sim file.
-     */
+    /** The song's sim file */
     public SimFile simFile;
-
-    public String pack;    //TODO
+    /** The song's pack */
+    public String pack;
+    /** The song's title */
     public String title;
+    /** The song's subtitle */
     public String subtitle;
+    /** The song's artist */
     public String artist;
+    /** The song's genre */
     public String genre;
+    /** The song's credit and acknowledgement */
     public String credit;
+    /** The path to the banner relative to the sim file */
     public String bannerPath;
+    /** The path to the background relative to the sim file */
     public String backgroundPath;
+    /** The path to the lyrics relative to the sim file */
     public String lyricsPath;
-    public String cdTitle;
+    /** The title of the album the song belongs to */
+    public String album;
+    /** The path to the music track relative to the sim file */
     public String musicPath;
-    public TimingData timingData = new TimingData();
+    /** The music sample start offset, negative if not set */
     public float sampleStart = -1.0f;
+    /** The music sample length, negative if not set */
     public float sampleLength = -1.0f;
-    public DisplayBPM displayBPM;
+    /** True if the song is selectable during song selection, false otherwise */
     public boolean selectable = true;
+    /** The list of charts */
     public List<Chart> charts;
 }

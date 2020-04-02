@@ -28,4 +28,8 @@ public class SimParseException extends Exception {
     public SimParseException(String message) {
         super(message);
     }
+
+    public SimParseException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

@@ -16,13 +16,12 @@
 
 package net.touchmania.game.song.sim;
 
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.ObjectMap;
-import net.touchmania.game.song.Beatmap;
-import net.touchmania.game.song.Chart;
-import net.touchmania.game.song.ChartType;
-import net.touchmania.game.song.TimingData;
+import net.touchmania.game.song.*;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 
 /**
@@ -31,142 +30,53 @@ import java.util.regex.Matcher;
  */
 public class SSCParser extends SMParser {
     @Override
-    protected TagSimParser.DataSupplier prepareDataSupplier(String rawContent) throws SimParseException {
+    protected TagSimParser.DataSupplier createDataSupplier(String rawContent) throws SimParseException {
         return new SSCDataSupplier(rawContent);
     }
 
     @Override
-    public TimingData parseTimingData() throws SimParseException {
+    protected SimChartParser createChartParser(String chartRawContent) {
+        return new SSCChartParser(chartRawContent);
+    }
+
+    @Override
+    protected TimingData parseGlobalTimingData() throws SimParseException {
         //Parse offset, bpms, stops, delays and warps
-        TimingData data = super.parseTimingData();
-        parseDelays(data);
-        parseWarps(data);
+        TimingData data = super.parseGlobalTimingData();
+        parseDelays(data, dataSupplier.getHeaderTagValue("DELAYS"));
+        parseWarps(data, dataSupplier.getHeaderTagValue("WARPS"));
         return data;
     }
 
-    private void parseDelays(TimingData data) {
-        try {
-            String value = dataSupplier.getHeaderTagValue("DELAYS");
-            if(value != null) {
-                Matcher matcher = TIMING_DATA_PATTERN.matcher(value);
-                while(matcher.find()) {
-                    double beat = SimParserUtils.parseDouble(matcher.group(1));
-                    double length = SimParserUtils.parseDouble(matcher.group(3)); //length in seconds
-                    data.putDelay(beat, length);
-                }
+    private void parseDelays(TimingData data, String value) throws SimParseException {
+        if(value != null) {
+            data.delays = null; //Reset
+            Matcher matcher = TIMING_DATA_PATTERN.matcher(value);
+            while(matcher.find()) {
+                double beat = Double.parseDouble(matcher.group(1));
+                double length = Double.parseDouble(matcher.group(3)); //length in seconds
+                data.putDelay(beat, length);
             }
-        } catch(SimParseException e) {
-            data.delays = null; //Reset stop map
         }
     }
 
-    private void parseWarps(TimingData data) {
-        try {
-            String value = dataSupplier.getHeaderTagValue("WARPS");
-            if(value != null) {
-                Matcher matcher = TIMING_DATA_PATTERN.matcher(value);
-                while(matcher.find()) {
-                    double beat = SimParserUtils.parseDouble(matcher.group(1));
-                    double length = SimParserUtils.parseDouble(matcher.group(3)); //length in beats
-                    data.putWarp(beat, length);
-                }
+    private void parseWarps(TimingData data, String value) {
+        if(value != null) {
+            data.warps = null; //Reset
+            Matcher matcher = TIMING_DATA_PATTERN.matcher(value);
+            while(matcher.find()) {
+                double beat = Double.parseDouble(matcher.group(1));
+                double length = Double.parseDouble(matcher.group(3)); //length in beats
+                data.putWarp(beat, length);
             }
-        } catch(SimParseException e) {
-            data.warps = null; //Reset stop map
-        }
-    }
-
-    @Override
-    protected Chart parseChart(String chartRawData) throws SimParseException {
-        Chart chart = new Chart();
-        Matcher matcher = TagSimParser.TAG_PATTERN.matcher(chartRawData);
-        while(matcher.find()) {
-            String chartTagName = matcher.group(1);
-            String chartTagValue = matcher.group(2);
-            switch (chartTagName.toUpperCase()) {
-                case "CHARTNAME":
-                    chart.name = chartTagValue;
-                    break;
-                case "STEPSTYPE":
-                    chart.type = parseChartType(chartTagValue);
-                    if (chart.type == null) { //Unsupported/Unrecognised chart type
-                        return null;
-                    }
-                    break;
-                case "DESCRIPTION":
-                    chart.description = chartTagValue;
-                    break;
-                case "CHARTSTYLE":
-                    //TODO handle this tag
-                    break;
-                case "DIFFICULTY":
-                    chart.difficultyClass = SimParserUtils.parseDifficultyClass(chartTagValue);
-                    break;
-                case "METER":
-                    chart.difficultyMeter = SimParserUtils.parseInt(chartTagValue);
-                    break;
-                case "RADARVALUES":
-                    //TODO handle this tag
-                    break;
-                case "CREDIT":
-                    chart.credit = chartTagValue;
-                    break;
-
-                //TODO add timing tags http://ec2.stepmania.com/wiki/The_.SSC_file_format
-            }
-        }
-
-        return chart.type == null ? null : chart; //Returns only supported charts
-    }
-
-    @Override
-    protected Beatmap parseBeatmap(String chartRawData) throws SimParseException {
-        Matcher matcher = TagSimParser.TAG_PATTERN.matcher(chartRawData);
-        ChartType chartType = null;
-        String beatmapData = null;
-        while(matcher.find()) {
-            String chartTagName = matcher.group(1);
-            String chartTagValue = matcher.group(2);
-            if(chartTagName.equalsIgnoreCase("NOTES")) {
-                beatmapData = chartTagValue;
-            } else if(chartTagName.equalsIgnoreCase("STEPSTYPE")) {
-                chartType = parseChartType(chartTagValue);
-            }
-            if(chartType != null && beatmapData != null) {
-                break; //Skip other tags
-            }
-        }
-        if(chartType != null) {
-            switch(chartType) {
-                case DANCE_SINGLE:
-                    return new DanceSingleBeatmapParser(beatmapData).parse();
-                case PUMP_SINGLE:
-                    return new PumpSingleBeatmapParser(beatmapData).parse();
-            }
-        }
-        throw new SimParseException("Chart type unsupported!");
-    }
-
-    /**
-     * @param value the raw chart type value.
-     * @return the chart type or null if unsupported/unrecognised
-     */
-    private ChartType parseChartType(String value) {
-        switch(value.toLowerCase()) {
-            case "dance-single":
-                return ChartType.DANCE_SINGLE;
-            case "pump-single":
-                return ChartType.PUMP_SINGLE;
-            default:
-                return null; //Unsupported game style.
         }
     }
 
     private static class SSCDataSupplier implements TagSimParser.DataSupplier {
         /** Contains header tags where key is the tag name and value is the tag value **/
-        ObjectMap<String, String> headerTagsMap = new ObjectMap<>();
+        Map<String, String> headerTagsMap = new HashMap<>();
         /** Contains charts data as strings **/
-        Array<String> chartRawDataArray = new Array<>();
+        List<String> chartTagsList = new ArrayList<>();
 
         SSCDataSupplier(String rawContent) throws SimParseException {
             boolean parsingHeader = true; //Go false when the chart data begins
@@ -177,23 +87,27 @@ public class SSCParser extends SMParser {
                 String tagValue = matcher.group(2);
 
                 if(tagName.equalsIgnoreCase("NOTEDATA")) {
-                    if(!parsingHeader) { //Go to the next chart
-                        chartRawDataArray.add(strBuilder.toString());
+                    if(!parsingHeader) {
+                        //Go to the next chart
+                        chartTagsList.add(strBuilder.toString());
                         strBuilder = new StringBuilder(); //Reset to hold next chart data
                     } else {
                         parsingHeader = false; //Stop parsing header
-                        if(headerTagsMap.size == 0) { //Header tags map cannot be empty at this point
+                        if(headerTagsMap.size() == 0) {
+                            //Header tags map cannot be empty at this point
                             throw new SimParseException("Cannot parse sim file!");
                         }
                     }
-                } else if(parsingHeader) { //Header tag
+                } else if(parsingHeader) {
+                    //Header tag
                     headerTagsMap.put(tagName.toUpperCase(), tagValue);
-                } else { //Chart data tag
+                } else {
+                    //Chart data tag
                     strBuilder.append(matcher.group());
                 }
             }
             if(!parsingHeader && strBuilder.length() > 0) { //Save last parsed chart
-                chartRawDataArray.add(strBuilder.toString());
+                chartTagsList.add(strBuilder.toString());
             }
         }
 
@@ -203,8 +117,117 @@ public class SSCParser extends SMParser {
         }
 
         @Override
-        public Array<String> getChartsRawDataArray() {
-            return chartRawDataArray;
+        public List<String> getChartTagValues() {
+            return chartTagsList;
+        }
+    }
+
+    protected class SSCChartParser implements SimChartParser {
+        private Map<String, String> tagsMap = new HashMap<>();
+
+        public SSCChartParser(String chartRawData) {
+            Matcher matcher = TagSimParser.TAG_PATTERN.matcher(chartRawData);
+            while(matcher.find()) {
+                String chartTagName = matcher.group(1);
+                String chartTagValue = matcher.group(2);
+                tagsMap.put(chartTagName.toUpperCase(), chartTagValue);
+            }
+        }
+
+        @Override
+        public void init() throws SimParseException {
+            if(!tagsMap.containsKey("STEPSTYPE"))
+                throw new SimParseException("Required STEPSTYPE tag not found.");
+            if(!tagsMap.containsKey("NOTES") && !tagsMap.containsKey("NOTES2"))
+                throw new SimParseException("Required NOTES tag not found.");
+        }
+
+        @Override
+        public ChartType parseChartType() throws SimParseException {
+            String value = tagsMap.get("STEPSTYPE");
+            if(value != null) {
+                switch(value.toLowerCase()) {
+                    case "dance-single":
+                        return ChartType.DANCE_SINGLE;
+                    case "pump-single":
+                        return ChartType.PUMP_SINGLE;
+                    default:
+                        throw new SimParseException("Unrecognised/Unsupported chart type: " + value);
+                }
+            }
+            return null;
+        }
+
+        @Override
+        public DifficultyClass parseDifficultyClass() throws SimParseException {
+            return SSCParser.parseDifficultyClass(tagsMap.get("DIFFICULTY"));
+        }
+
+        @Override
+        public TimingData parseTimingData() throws SimParseException {
+            TimingData data = parseGlobalTimingData();
+            //Override global timing data with chart timing data when necessary
+            parseOffset(data, tagsMap.get("OFFSET"));
+            parseBpms(data, tagsMap.get("BPMS"));
+            parseStops(data, tagsMap.get("STOPS"));
+            parseDelays(data, tagsMap.get("DELAYS"));
+            parseWarps(data, tagsMap.get("WARPS"));
+            return data;
+        }
+
+        @Override
+        public Beatmap parseBeatmap() throws SimParseException {
+            String beatmapData = tagsMap.get("NOTES");
+            if(beatmapData == null) {
+                //Sometimes beatmap data is stored as NOTES2
+                beatmapData = tagsMap.get("NOTES2");
+            }
+            if(beatmapData != null) {
+                //Parse beatmap data
+                ChartType type = parseChartType();
+                if(type != null) {
+                    switch(type) {
+                        case DANCE_SINGLE:
+                            return new DanceSingleBeatmapParser(beatmapData).parse();
+                        case PUMP_SINGLE:
+                            return new PumpSingleBeatmapParser(beatmapData).parse();
+                    }
+                }
+            }
+            return null;
+        }
+
+        @Override
+        public DisplayBPM parseDisplayBPM() throws SimParseException {
+            return parseGlobalDisplayBPM();
+        }
+
+        @Override
+        public int parseDifficultyMeter() throws SimParseException {
+            String value = tagsMap.get("METER");
+            if(value != null) {
+                try {
+                    return Integer.parseInt(value);
+                } catch(NumberFormatException e) {
+                    throw new SimParseException("Cannot parse difficulty meter value: " + value, e);
+                }
+            }
+            return -1;
+        }
+
+        @Override
+        public String parseName() throws SimParseException {
+            return tagsMap.get("CHARTNAME");
+        }
+
+        @Override
+        public String parseDescription() throws SimParseException {
+            return tagsMap.get("DESCRIPTION");
+        }
+
+        @Override
+        public String parseCredit() throws SimParseException {
+            return tagsMap.get("CREDIT");
         }
     }
 }
