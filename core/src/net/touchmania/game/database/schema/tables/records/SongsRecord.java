@@ -27,7 +27,7 @@ import javax.annotation.Generated;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class SongsRecord extends UpdatableRecordImpl<SongsRecord> implements Record16<Integer, String, String, String, String, String, String, String, String, String, String, String, String, String, Float, Float> {
 
-    private static final long serialVersionUID = 1636515942;
+    private static final long serialVersionUID = 5108615;
 
     /**
      * Setter for <code>songs.id</code>.
@@ -198,16 +198,16 @@ public class SongsRecord extends UpdatableRecordImpl<SongsRecord> implements Rec
     }
 
     /**
-     * Setter for <code>songs.cd_title</code>.
+     * Setter for <code>songs.album</code>.
      */
-    public void setCdTitle(String value) {
+    public void setAlbum(String value) {
         set(12, value);
     }
 
     /**
-     * Getter for <code>songs.cd_title</code>.
+     * Getter for <code>songs.album</code>.
      */
-    public String getCdTitle() {
+    public String getAlbum() {
         return (String) get(12);
     }
 
@@ -386,7 +386,7 @@ public class SongsRecord extends UpdatableRecordImpl<SongsRecord> implements Rec
      */
     @Override
     public Field<String> field13() {
-        return Songs.SONGS.CD_TITLE;
+        return Songs.SONGS.ALBUM;
     }
 
     /**
@@ -514,7 +514,7 @@ public class SongsRecord extends UpdatableRecordImpl<SongsRecord> implements Rec
      */
     @Override
     public String value13() {
-        return getCdTitle();
+        return getAlbum();
     }
 
     /**
@@ -654,7 +654,7 @@ public class SongsRecord extends UpdatableRecordImpl<SongsRecord> implements Rec
      */
     @Override
     public SongsRecord value13(String value) {
-        setCdTitle(value);
+        setAlbum(value);
         return this;
     }
 
@@ -723,7 +723,7 @@ public class SongsRecord extends UpdatableRecordImpl<SongsRecord> implements Rec
     /**
      * Create a detached, initialised SongsRecord
      */
-    public SongsRecord(Integer id, String pack, String directory, String hash, String simPath, String format, String title, String subtitle, String artist, String genre, String bannerPath, String backgroundPath, String cdTitle, String musicPath, Float sampleStart, Float sampleLength) {
+    public SongsRecord(Integer id, String pack, String directory, String hash, String simPath, String format, String title, String subtitle, String artist, String genre, String bannerPath, String backgroundPath, String album, String musicPath, Float sampleStart, Float sampleLength) {
         super(Songs.SONGS);
 
         set(0, id);
@@ -738,7 +738,7 @@ public class SongsRecord extends UpdatableRecordImpl<SongsRecord> implements Rec
         set(9, genre);
         set(10, bannerPath);
         set(11, backgroundPath);
-        set(12, cdTitle);
+        set(12, album);
         set(13, musicPath);
         set(14, sampleStart);
         set(15, sampleLength);

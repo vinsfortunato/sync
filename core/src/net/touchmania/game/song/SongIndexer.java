@@ -25,7 +25,10 @@ import org.jooq.DSLContext;
 import org.jooq.Record1;
 import org.jooq.Result;
 
+import java.util.UUID;
+
 import static com.google.common.base.Preconditions.checkArgument;
+import static net.touchmania.game.database.schema.tables.Charts.CHARTS;
 import static net.touchmania.game.database.schema.tables.Songs.SONGS;
 
 /**
@@ -65,7 +68,7 @@ public class SongIndexer extends Task<Boolean> {
 
                 if(cachedHash == null) {
                     //Song is not in the index. Add the song to the index
-                    addSong(database, hash);
+                    addSong(database, simFile, hash);
                 } else if(!cachedHash.equals(hash)) {
                     //Song is already in the index but the sim file has changed. Update if possible
                     updateSong(database, cachedHash);
@@ -85,12 +88,57 @@ public class SongIndexer extends Task<Boolean> {
      * @param database the database context.
      * @param hash the sim file hash.
      */
-    private void addSong(DSLContext database, String hash) {
-        database.insertInto(SONGS, SONGS.PACK, SONGS.DIRECTORY, SONGS.HASH)
-                .values(pack, directory.name(), hash)
-                .execute();
+    private void addSong(DSLContext database, SimFile simFile, String hash) throws Exception {
+        //Load the song
+        Song song = new SongLoader(pack, simFile).call();
 
-        Gdx.app.log("Song Indexer", String.format("Add song %s/%s with hash %s", pack, directory, hash));
+        database.transaction( configuration -> {
+            long insertSong = System.currentTimeMillis();
+            //Insert the song into the database
+            database.insertInto(SONGS)
+                    .set(SONGS.PACK, song.pack)
+                    .set(SONGS.DIRECTORY, song.directory.name())
+                    .set(SONGS.HASH, hash)
+                    .set(SONGS.SIM_PATH, simFile.getFile().name())
+                    .set(SONGS.FORMAT, simFile.getFormat().name())
+                    .set(SONGS.TITLE, song.title)
+                    .set(SONGS.SUBTITLE, song.subtitle)
+                    .set(SONGS.ARTIST, song.artist)
+                    .set(SONGS.GENRE, song.genre)
+                    .set(SONGS.BANNER_PATH, song.bannerPath)
+                    .set(SONGS.BACKGROUND_PATH, song.backgroundPath)
+                    .set(SONGS.ALBUM, song.album)
+                    .set(SONGS.MUSIC_PATH, song.musicPath)
+                    .set(SONGS.SAMPLE_START, song.sampleStart)
+                    .set(SONGS.SAMPLE_LENGTH, song.sampleLength)
+                    .execute();
+
+            insertSong = System.currentTimeMillis() - insertSong;
+
+            long insertCharts = System.currentTimeMillis();
+            int songId = database.select(SONGS.ID)
+                    .from(SONGS)
+                    .where(SONGS.PACK.eq(song.pack).and(SONGS.DIRECTORY.eq(song.directory.name())))
+                    .fetchOne(SONGS.ID);
+
+            for(Chart chart : song.charts) {
+                database.insertInto(CHARTS)
+                        .set(CHARTS.ID, UUID.randomUUID().toString()) //TODO compute unique
+                        .set(CHARTS.SONG_ID, songId)
+                        .set(CHARTS.HASH, chart.hash)
+                        .set(CHARTS.DIFFICULTY_CLASS, chart.difficultyClass.name())
+                        .set(CHARTS.DIFFICULTY_METER, chart.difficultyMeter)
+                        //TODO.set(CHARTS.DISPLAY_BPM, chart.displayBPM)
+                        .set(CHARTS.NAME, chart.name)
+                        .set(CHARTS.DESCRIPTION, chart.description)
+                        .set(CHARTS.CREDIT, chart.credit)
+                        .execute();
+            }
+
+            insertCharts = System.currentTimeMillis() - insertCharts;
+
+            Gdx.app.log("Song Indexer", String.format("Add song %s/%s with hash %s and time %s %s", pack, directory.name(), hash, insertSong, insertCharts));
+        });
     }
 
     /**
@@ -102,7 +150,7 @@ public class SongIndexer extends Task<Boolean> {
                 .where(SONGS.PACK.eq(pack).and(SONGS.DIRECTORY.eq(directory.name())))
                 .execute();
 
-        Gdx.app.log("Song Indexer", String.format("Remove song %s/%s", pack, directory));
+        Gdx.app.log("Song Indexer", String.format("Remove song %s/%s", pack, directory.name()));
     }
 
     /**

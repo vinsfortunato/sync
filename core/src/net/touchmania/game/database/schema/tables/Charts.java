@@ -28,7 +28,7 @@ import java.util.List;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Charts extends TableImpl<ChartsRecord> {
 
-    private static final long serialVersionUID = -1575959290;
+    private static final long serialVersionUID = 1629770488;
 
     /**
      * The reference instance of <code>charts</code>
@@ -87,11 +87,6 @@ public class Charts extends TableImpl<ChartsRecord> {
      * The column <code>charts.credit</code>.
      */
     public final TableField<ChartsRecord, String> CREDIT = createField("credit", org.jooq.impl.SQLDataType.CLOB, this, "");
-
-    /**
-     * The column <code>charts.notes</code>.
-     */
-    public final TableField<ChartsRecord, String> NOTES = createField("notes", org.jooq.impl.SQLDataType.CLOB, this, "");
 
     /**
      * Create a <code>charts</code> table reference

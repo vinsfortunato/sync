@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS songs (
     genre           TEXT,
     banner_path     TEXT,
     background_path TEXT,
-    cd_title        TEXT,
+    album           TEXT,
     music_path      TEXT NOT NULL,
     sample_start    REAL DEFAULT 0,
     sample_length   REAL,
@@ -25,14 +25,13 @@ CREATE TABLE IF NOT EXISTS songs (
 CREATE TABLE IF NOT EXISTS charts (
     id                  TEXT PRIMARY KEY,
     song_id             INTEGER NOT NULL,
-    hash TEXT           NOT NULL,
-    difficulty_class    TEXT NOT NULL,
-    difficulty_meter    INTEGER NOT NULL,
-    display_bpm         TEXT NOT NULL,
+    hash                TEXT NOT NULL,
+    difficulty_class    TEXT,
+    difficulty_meter    INTEGER,
+    display_bpm         TEXT,
     name                TEXT,
     description         TEXT,
     credit              TEXT,
-    notes               TEXT,
     FOREIGN KEY (song_id)
         REFERENCES songs (id)
             ON UPDATE CASCADE

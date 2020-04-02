@@ -53,4 +53,10 @@ public interface SimChartParser {
     String parseDescription() throws SimParseException;
 
     String parseCredit() throws SimParseException;
+
+    /**
+     * Get the chart raw data hash.
+     * @return the computed hash of the chart raw content.
+     */
+    String getHash();
 }

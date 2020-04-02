@@ -104,7 +104,7 @@ public class SongLoader extends Task<Song> {
                 Chart chart = new Chart();
                 chart.song = song;
                 chart.type = chartParser.parseChartType();
-
+                chart.hash = chartParser.getHash();
                 chart.difficultyClass = parseOrDefault(chartParser::parseDifficultyClass, null);
                 chart.difficultyMeter = parseOrDefault(chartParser::parseDifficultyMeter, -1);
                 chart.name = parseOrDefault(chartParser::parseName, null);

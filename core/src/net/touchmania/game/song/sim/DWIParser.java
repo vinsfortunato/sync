@@ -17,6 +17,8 @@
 package net.touchmania.game.song.sim;
 
 import com.badlogic.gdx.utils.IntSet;
+import com.google.common.hash.Hasher;
+import com.google.common.hash.Hashing;
 import net.touchmania.game.song.*;
 import net.touchmania.game.song.note.*;
 
@@ -238,8 +240,14 @@ public class DWIParser extends TagSimParser {
 
     protected class DWIChartParser implements SimChartParser {
         private String[] chartData;
+        private String hash;
 
         public DWIChartParser(String chartRawData) {
+            //Compute the chart raw data hash
+            Hasher hasher = Hashing.sha256().newHasher();
+            hasher.putBytes(chartRawData.getBytes());
+            hash = hasher.hash().toString();
+
             chartData = chartRawData.split("\\s*:\\s*");
         }
 
@@ -326,6 +334,11 @@ public class DWIParser extends TagSimParser {
         @Override
         public String parseCredit() throws SimParseException {
             throw new SimParseException("This format doesn't support this property.");
+        }
+
+        @Override
+        public String getHash() {
+            return hash;
         }
     }
 

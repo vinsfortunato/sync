@@ -18,7 +18,6 @@ package net.touchmania.game.song.sim;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Preconditions;
-import net.touchmania.game.song.Chart;
 import net.touchmania.game.song.DifficultyClass;
 
 import java.util.ArrayList;
@@ -105,16 +104,10 @@ public abstract class TagSimParser implements SimParser {
     }
 
     @Override
-    public SimChartParser getChartParser(Chart chart) {
-        //TODO Temp solution
+    public SimChartParser getChartParser(String hash) {
         for(SimChartParser chartParser : getChartParsers()) {
-            try {
-                if(chart.type != chartParser.parseChartType()) continue;
-                if(chart.difficultyClass != chartParser.parseDifficultyClass()) continue;
-                if(chart.difficultyMeter != chartParser.parseDifficultyMeter()) continue;
+            if(hash.equals(chartParser.getHash())) {
                 return chartParser;
-            } catch(SimParseException e) {
-                //Skip
             }
         }
         return null;

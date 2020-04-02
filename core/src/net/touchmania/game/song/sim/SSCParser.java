@@ -16,6 +16,8 @@
 
 package net.touchmania.game.song.sim;
 
+import com.google.common.hash.Hasher;
+import com.google.common.hash.Hashing;
 import net.touchmania.game.song.*;
 
 import java.util.ArrayList;
@@ -124,8 +126,14 @@ public class SSCParser extends SMParser {
 
     protected class SSCChartParser implements SimChartParser {
         private Map<String, String> tagsMap = new HashMap<>();
+        private String hash;
 
         public SSCChartParser(String chartRawData) {
+            //Compute the chart raw data hash
+            Hasher hasher = Hashing.sha256().newHasher();
+            hasher.putBytes(chartRawData.getBytes());
+            hash = hasher.hash().toString();
+
             Matcher matcher = TagSimParser.TAG_PATTERN.matcher(chartRawData);
             while(matcher.find()) {
                 String chartTagName = matcher.group(1);
@@ -228,6 +236,11 @@ public class SSCParser extends SMParser {
         @Override
         public String parseCredit() throws SimParseException {
             return tagsMap.get("CREDIT");
+        }
+
+        @Override
+        public String getHash() {
+            return hash;
         }
     }
 }

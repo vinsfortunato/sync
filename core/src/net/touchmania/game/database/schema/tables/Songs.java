@@ -28,7 +28,7 @@ import java.util.List;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Songs extends TableImpl<SongsRecord> {
 
-    private static final long serialVersionUID = 320888219;
+    private static final long serialVersionUID = 438780546;
 
     /**
      * The reference instance of <code>songs</code>
@@ -104,9 +104,9 @@ public class Songs extends TableImpl<SongsRecord> {
     public final TableField<SongsRecord, String> BACKGROUND_PATH = createField("background_path", org.jooq.impl.SQLDataType.CLOB, this, "");
 
     /**
-     * The column <code>songs.cd_title</code>.
+     * The column <code>songs.album</code>.
      */
-    public final TableField<SongsRecord, String> CD_TITLE = createField("cd_title", org.jooq.impl.SQLDataType.CLOB, this, "");
+    public final TableField<SongsRecord, String> ALBUM = createField("album", org.jooq.impl.SQLDataType.CLOB, this, "");
 
     /**
      * The column <code>songs.music_path</code>.

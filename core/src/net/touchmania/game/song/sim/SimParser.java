@@ -16,8 +16,6 @@
 
 package net.touchmania.game.song.sim;
 
-import net.touchmania.game.song.Chart;
-
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -115,11 +113,11 @@ public interface SimParser {
     List<SimChartParser> getChartParsers();
 
     /**
-     * Gets a parser for the given chart.
-     * @param chart the chart.
-     * @return the parser for the given chart, or null if the chart is not present.
+     * Gets a parser for the given chart data hash.
+     * @param hash the hash of the chart data.
+     * @return the parser for the given chart, or null if there is no matching parser.
      */
-    SimChartParser getChartParser(Chart chart);
+    SimChartParser getChartParser(String hash);
 
     /**
      * Calls the given Callable and returns default value if a {@link SimParseException} is

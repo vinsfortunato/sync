@@ -17,16 +17,19 @@
 package net.touchmania.game.song;
 
 import com.google.common.collect.ComparisonChain;
+import net.touchmania.game.song.sim.SimChartParser;
+import net.touchmania.game.song.sim.SimParser;
 
 import javax.annotation.Nonnull;
 import java.util.Objects;
 
-/**
- * @author Vincenzo Fortunato
- */
 public class Chart implements Comparable<Chart> {
-    /** Uniquely identified this chart */
+    /** Uniquely identified this chart. */
     public String id;
+    /** The hash of the sim file chart data that generated this chart.
+     * It is used to get the appropriate {@link SimChartParser} when
+     * calling {@link SimParser#getChartParser(String)}. */
+    public String hash;
     /** The song associated to the chart */
     public Song song;
     /** The chart type */

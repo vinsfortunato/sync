@@ -18,10 +18,25 @@ package net.touchmania.game.song;
 
 import com.badlogic.gdx.files.FileHandle;
 
+import java.io.File;
+
 public class SongManager {
     //Start indexing the given folder (the songs folder)
     public void index(FileHandle dir) {
-
+        //TODO Temp test
+        long millis = System.currentTimeMillis();
+        for(FileHandle f : dir.list(File::isDirectory)) {
+            String pack = f.name();
+            for(FileHandle songDir : f.list(File::isDirectory)) {
+                SongIndexer indexer = new SongIndexer(pack, songDir);
+                try {
+                    indexer.call();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        System.out.println(System.currentTimeMillis() - millis);
     }
 
     //Find a set of song matching the given params
