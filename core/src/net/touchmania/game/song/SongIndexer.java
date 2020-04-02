@@ -23,8 +23,6 @@ import net.touchmania.game.song.sim.SimFile;
 import net.touchmania.game.util.concurrent.Task;
 import org.jooq.Configuration;
 import org.jooq.DSLContext;
-import org.jooq.Record1;
-import org.jooq.Result;
 import org.jooq.impl.DSL;
 
 import java.util.UUID;
@@ -95,53 +93,42 @@ public class SongIndexer extends Task<Boolean> {
         //Load the song
         Song song = new SongLoader(pack, simFile).call();
 
-        database.transaction( configuration -> {
-            long insertSong = System.currentTimeMillis();
-            //Insert the song into the database
-            database.insertInto(SONGS)
-                    .set(SONGS.PACK, song.pack)
-                    .set(SONGS.DIRECTORY, song.directory.name())
-                    .set(SONGS.HASH, hash)
-                    .set(SONGS.SIM_PATH, simFile.getFile().name())
-                    .set(SONGS.FORMAT, simFile.getFormat().name())
-                    .set(SONGS.TITLE, song.title)
-                    .set(SONGS.SUBTITLE, song.subtitle)
-                    .set(SONGS.ARTIST, song.artist)
-                    .set(SONGS.GENRE, song.genre)
-                    .set(SONGS.BANNER_PATH, song.bannerPath)
-                    .set(SONGS.BACKGROUND_PATH, song.backgroundPath)
-                    .set(SONGS.ALBUM, song.album)
-                    .set(SONGS.MUSIC_PATH, song.musicPath)
-                    .set(SONGS.SAMPLE_START, song.sampleStart)
-                    .set(SONGS.SAMPLE_LENGTH, song.sampleLength)
+        //Insert the song into the database and get the song id
+        int songId = database.insertInto(SONGS)
+                .set(SONGS.PACK, song.pack)
+                .set(SONGS.DIRECTORY, song.directory.name())
+                .set(SONGS.HASH, hash)
+                .set(SONGS.SIM_PATH, simFile.getFile().name())
+                .set(SONGS.FORMAT, simFile.getFormat().name())
+                .set(SONGS.TITLE, song.title)
+                .set(SONGS.SUBTITLE, song.subtitle)
+                .set(SONGS.ARTIST, song.artist)
+                .set(SONGS.GENRE, song.genre)
+                .set(SONGS.BANNER_PATH, song.bannerPath)
+                .set(SONGS.BACKGROUND_PATH, song.backgroundPath)
+                .set(SONGS.ALBUM, song.album)
+                .set(SONGS.MUSIC_PATH, song.musicPath)
+                .set(SONGS.SAMPLE_START, song.sampleStart)
+                .set(SONGS.SAMPLE_LENGTH, song.sampleLength)
+                .returning(SONGS.ID)
+                .fetchOne()
+                .getValue(SONGS.ID);
+
+        //Insert each chart into the database
+        for(Chart chart : song.charts)
+            database.insertInto(CHARTS)
+                    .set(CHARTS.ID, UUID.randomUUID().toString()) //TODO compute unique
+                    .set(CHARTS.SONG_ID, songId)
+                    .set(CHARTS.HASH, chart.hash)
+                    .set(CHARTS.DIFFICULTY_CLASS, chart.difficultyClass.name())
+                    .set(CHARTS.DIFFICULTY_METER, chart.difficultyMeter)
+                    //TODO.set(CHARTS.DISPLAY_BPM, chart.displayBPM)
+                    .set(CHARTS.NAME, chart.name)
+                    .set(CHARTS.DESCRIPTION, chart.description)
+                    .set(CHARTS.CREDIT, chart.credit)
                     .execute();
 
-            insertSong = System.currentTimeMillis() - insertSong;
-
-            long insertCharts = System.currentTimeMillis();
-            int songId = database.select(SONGS.ID)
-                    .from(SONGS)
-                    .where(SONGS.PACK.eq(song.pack).and(SONGS.DIRECTORY.eq(song.directory.name())))
-                    .fetchOne(SONGS.ID);
-
-            for(Chart chart : song.charts) {
-                database.insertInto(CHARTS)
-                        .set(CHARTS.ID, UUID.randomUUID().toString()) //TODO compute unique
-                        .set(CHARTS.SONG_ID, songId)
-                        .set(CHARTS.HASH, chart.hash)
-                        .set(CHARTS.DIFFICULTY_CLASS, chart.difficultyClass.name())
-                        .set(CHARTS.DIFFICULTY_METER, chart.difficultyMeter)
-                        //TODO.set(CHARTS.DISPLAY_BPM, chart.displayBPM)
-                        .set(CHARTS.NAME, chart.name)
-                        .set(CHARTS.DESCRIPTION, chart.description)
-                        .set(CHARTS.CREDIT, chart.credit)
-                        .execute();
-            }
-
-            insertCharts = System.currentTimeMillis() - insertCharts;
-
-            Gdx.app.log("Song Indexer", String.format("Add song %s/%s with hash %s and time %s %s", pack, directory.name(), hash, insertSong, insertCharts));
-        });
+        Gdx.app.log("Song Indexer", String.format("Add song %s/%s with hash %s", pack, directory.name(), hash));
     }
 
     /**
@@ -174,12 +161,10 @@ public class SongIndexer extends Task<Boolean> {
      * @return the hash of the cached song's sim file, or null if the song is not cached
      */
     private String getCachedHash(DSLContext database) {
-        Result<Record1<String>> result = database
+        return database
                 .select(SONGS.HASH)
                 .from(SONGS)
                 .where(SONGS.PACK.eq(pack).and(SONGS.DIRECTORY.eq(directory.name())))
-                .fetch();
-
-        return result.isNotEmpty() ? result.get(0).get(SONGS.HASH) : null;
+                .fetchOne(SONGS.HASH);
     }
 }
