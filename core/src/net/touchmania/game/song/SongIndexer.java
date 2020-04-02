@@ -21,9 +21,11 @@ import com.badlogic.gdx.files.FileHandle;
 import net.touchmania.game.Game;
 import net.touchmania.game.song.sim.SimFile;
 import net.touchmania.game.util.concurrent.Task;
+import org.jooq.Configuration;
 import org.jooq.DSLContext;
 import org.jooq.Record1;
 import org.jooq.Result;
+import org.jooq.impl.DSL;
 
 import java.util.UUID;
 
@@ -47,39 +49,40 @@ import static net.touchmania.game.database.schema.tables.Songs.SONGS;
 public class SongIndexer extends Task<Boolean> {
     private String pack;
     private FileHandle directory;
+    private Configuration config;
 
-    public SongIndexer(String pack, FileHandle directory) {
+    public SongIndexer(String pack, FileHandle directory, Configuration config) {
         checkArgument(directory.isDirectory(), "directory parameter must be a directory!");
         this.pack = pack;
         this.directory = directory;
+        this.config = config;
     }
 
     @Override
     protected Boolean call() throws Exception {
         //Check if there is a song inside the given folder and delete, update or add it.
         //Will return true if a song exists in the given directory, false otherwise.
-        try (DSLContext database = Game.instance().getDatabase().getDSL()) {
-            SimFile simFile = SimFile.searchSimFile(directory, format -> Game.instance().getSettings().getSimFormatPriority(format));
+        DSLContext database = DSL.using(config);
+        SimFile simFile = SimFile.searchSimFile(directory, format -> Game.instance().getSettings().getSimFormatPriority(format));
 
-            if(simFile != null) {
-                //The song directory contains a sim file
-                String cachedHash = getCachedHash(database);
-                String hash = simFile.computeHash();
+        if(simFile != null) {
+            //The song directory contains a sim file
+            String cachedHash = getCachedHash(database);
+            String hash = simFile.computeHash();
 
-                if(cachedHash == null) {
-                    //Song is not in the index. Add the song to the index
-                    addSong(database, simFile, hash);
-                } else if(!cachedHash.equals(hash)) {
-                    //Song is already in the index but the sim file has changed. Update if possible
-                    updateSong(database, cachedHash);
-                }
-                return true;
-            } else {
-                //The song directory doesn't contain a sim file. If there is a song in the index at this directory
-                //it should be removed from the index because the sim file isn't available anymore.
-                removeSong(database);
-                return false;
+            if(cachedHash == null) {
+                //Song is not in the index. Add the song to the index
+                addSong(database, simFile, hash);
+            } else if(!cachedHash.equals(hash)) {
+                //Song is already in the index but the sim file has changed. Update if possible
+                updateSong(database, cachedHash);
             }
+            return true;
+        } else {
+            //The song directory doesn't contain a sim file. If there is a song in the index at this directory
+            //it should be removed from the index because the sim file isn't available anymore.
+            removeSong(database);
+            return false;
         }
     }
 

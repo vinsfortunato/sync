@@ -17,6 +17,8 @@
 package net.touchmania.game.song;
 
 import com.badlogic.gdx.files.FileHandle;
+import net.touchmania.game.Game;
+import org.jooq.DSLContext;
 
 import java.io.File;
 
@@ -27,13 +29,17 @@ public class SongManager {
         long millis = System.currentTimeMillis();
         for(FileHandle f : dir.list(File::isDirectory)) {
             String pack = f.name();
-            for(FileHandle songDir : f.list(File::isDirectory)) {
-                SongIndexer indexer = new SongIndexer(pack, songDir);
-                try {
-                    indexer.call();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+            try(DSLContext database = Game.instance().getDatabase().getDSL()) {
+                database.transaction(configuration -> {
+                    for(FileHandle songDir : f.list(File::isDirectory)) {
+                        SongIndexer indexer = new SongIndexer(pack, songDir, configuration);
+                        try {
+                            indexer.call();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
             }
         }
         System.out.println(System.currentTimeMillis() - millis);
