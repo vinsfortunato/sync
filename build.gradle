@@ -17,7 +17,7 @@ allprojects {
 
     version = '1.0'
     ext {
-        appName = "touchmania"
+        appName = "sync"
         gdxVersion = '1.9.10'
         roboVMVersion = '2.3.7'
         box2DLightsVersion = '1.4'

@@ -1,2 +1,2 @@
-# touchmania
-Touchmania game repository
+# Sync
+Sync game repository

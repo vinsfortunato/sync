@@ -22,7 +22,7 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
     defaultConfig {
-        applicationId "net.touchmania.game"
+        applicationId "net.sync.game"
         minSdkVersion 19
         targetSdkVersion 29
         versionCode 1
@@ -92,5 +92,5 @@ task run(type: Exec) {
     }
 
     def adb = path + "/platform-tools/adb"
-    commandLine "$adb", 'shell', 'am', 'start', '-n', 'net.touchmania.game/net.touchmania.game.android.AndroidLauncher'
+    commandLine "$adb", 'shell', 'am', 'start', '-n', 'net.sync.game/net.sync.game.android.AndroidLauncher'
 }

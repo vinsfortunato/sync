@@ -30,11 +30,14 @@ jooq {
                 excludes = 'sqlite_.*'
             }
             target {
-                packageName = 'net.touchmania.game.database.schema'
+                packageName = 'net.sync.game.database.schema'
                 directory = 'src'
             }
         }
     }
 }
 
+//Enforces generation of the schema sources when task is called
+generateTemplateJooqSchemaSource.outputs.upToDateWhen { false }
+//Disable generation of the schema on compilation
 project.tasks.getByName('compileJava').dependsOn -= 'generateTemplateJooqSchemaSource'
