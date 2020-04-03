@@ -71,7 +71,7 @@ Running on Android:
 gradlew :android:run
 ```
 
-## Licence
-The project is licensed under the [MIT licence](https://opensource.org/licenses/MIT). You can do anything you
+## License
+The project is licensed under the [MIT license](https://opensource.org/licenses/MIT). You can do anything you
 want with the project's code as long as you include the original copyright and license notice in all copies 
 or substantial portions of this software.
