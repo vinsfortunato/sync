@@ -1,6 +1,7 @@
 [![Logo](assets/logo.png)](http://fvcproductions.com)
 
 # Sync
+[![License](https://img.shields.io/badge/license-MIT-green)](https://opensource.org/licenses/MIT)
 
 A rhytm game clone of Stepmania designed for mobile use.
 
