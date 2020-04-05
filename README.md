@@ -1,4 +1,4 @@
-[![Logo](assets/logo.png)](http://fvcproductions.com)
+[![Logo](assets/logo.png)](https://github.com/vinsfortunato/sync/)
 
 # Sync
 [![License](https://img.shields.io/badge/license-MIT-green)](https://opensource.org/licenses/MIT)
