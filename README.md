@@ -3,7 +3,7 @@
 # Sync
 [![License](https://img.shields.io/badge/license-MIT-green)](https://opensource.org/licenses/MIT)
 
-A rhytm game clone of Stepmania designed for mobile use.
+A rhythm game clone of Stepmania designed for mobile use.
 
 ## Status
 
