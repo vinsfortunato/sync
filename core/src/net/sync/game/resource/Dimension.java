@@ -22,7 +22,7 @@
 
 package net.sync.game.resource;
 
-import net.sync.game.Game;
+import static net.sync.game.Game.backend;
 
 public class Dimension {
     private final float baseValue;
@@ -44,7 +44,7 @@ public class Dimension {
      * @return the dimension value.
      */
     public float getValue() {
-        return baseValue * Game.instance().getBackend().getDeviceDPI().scale;
+        return baseValue * backend().getDeviceDPI().scale;
     }
 
     /**

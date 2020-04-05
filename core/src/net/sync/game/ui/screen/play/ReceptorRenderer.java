@@ -28,13 +28,13 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TransformDrawable;
-import net.sync.game.Game;
-import net.sync.game.resource.ResourceProvider;
 import net.sync.game.resource.lazy.Resource;
 import net.sync.game.round.PanelState;
 import net.sync.game.round.Round;
 import net.sync.game.song.note.NotePanel;
 import net.sync.game.util.math.MathUtils;
+
+import static net.sync.game.Game.resources;
 
 public class ReceptorRenderer {
     private BeatmapView view;
@@ -47,9 +47,8 @@ public class ReceptorRenderer {
         this.view = view;
 
         //Prepare resources
-        ResourceProvider resources = Game.instance().getResources();
-        (receptorDrawable = resources.getDrawable("play_dance_receptor"        )).load();
-        (outlineDrawable  = resources.getDrawable("play_dance_receptor_outline")).load();
+        (receptorDrawable = resources().getDrawable("play_dance_receptor")).load();
+        (outlineDrawable = resources().getDrawable("play_dance_receptor_outline")).load();
     }
 
     /**

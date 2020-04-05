@@ -27,7 +27,9 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.google.common.base.Preconditions;
-import net.sync.game.Game;
+
+import static net.sync.game.Game.disposer;
+import static net.sync.game.Game.settings;
 
 public class ScreenManager implements Disposable {
     private Stage stage;
@@ -35,7 +37,7 @@ public class ScreenManager implements Disposable {
     private Screen nextScreen;
 
     public ScreenManager() {
-        Game.instance().getDisposer().manage(this);
+        disposer().manage(this);
 
         //Init stage
         stage = new Stage(new ScreenViewport());
@@ -104,6 +106,6 @@ public class ScreenManager implements Disposable {
     }
 
     private ScreenCachePolicy getScreenCachePolicy() {
-        return Game.instance().getSettings().getScreenCachePolicy();
+        return settings().getScreenCachePolicy();
     }
 }

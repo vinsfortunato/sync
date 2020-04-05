@@ -23,7 +23,6 @@
 package net.sync.game.round;
 
 import com.badlogic.gdx.audio.Music;
-import net.sync.game.Game;
 import net.sync.game.round.judge.Judge;
 import net.sync.game.round.judge.JudgeCriteria;
 import net.sync.game.round.modifier.MaxSpeedModifier;
@@ -32,6 +31,8 @@ import net.sync.game.round.modifier.MultiplySpeedModifier;
 import net.sync.game.song.Chart;
 import net.sync.game.song.Song;
 import net.sync.game.song.Timing;
+
+import static net.sync.game.Game.backend;
 
 public class Round {
     private Song song;
@@ -62,7 +63,7 @@ public class Round {
     private void setDefaultMods() {
         //Init speed modifier
         //Duration can be calculated only on Android. So this is a temp solution
-        double duration = Game.instance().getBackend().getDuration(music);
+        double duration = backend().getDuration(music);
         if(duration > 0.0D) {
             modifiers.setSpeedModifier(new MaxSpeedModifier(timing.getDominantBpm(duration), 500D));
         } else {

@@ -24,7 +24,6 @@ package net.sync.game.song;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-import net.sync.game.Game;
 import net.sync.game.song.sim.SimFile;
 import net.sync.game.util.concurrent.Task;
 import org.jooq.Configuration;
@@ -34,6 +33,7 @@ import org.jooq.impl.DSL;
 import java.util.UUID;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static net.sync.game.Game.settings;
 import static net.sync.game.database.schema.tables.Charts.CHARTS;
 import static net.sync.game.database.schema.tables.Songs.SONGS;
 
@@ -67,7 +67,7 @@ public class SongIndexer extends Task<Boolean> {
         //Check if there is a song inside the given folder and delete, update or add it.
         //Will return true if a song exists in the given directory, false otherwise.
         DSLContext database = DSL.using(config);
-        SimFile simFile = SimFile.searchSimFile(directory, format -> Game.instance().getSettings().getSimFormatPriority(format));
+        SimFile simFile = SimFile.searchSimFile(directory, format -> settings().getSimFormatPriority(format));
 
         if(simFile != null) {
             //The song directory contains a sim file

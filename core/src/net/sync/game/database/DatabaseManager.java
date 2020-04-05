@@ -25,7 +25,6 @@ package net.sync.game.database;
 import com.badlogic.gdx.Gdx;
 import com.google.common.base.Charsets;
 import com.google.common.base.Splitter;
-import net.sync.game.Game;
 import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.jooq.Result;
@@ -33,6 +32,7 @@ import org.jooq.SQLDialect;
 
 import javax.sql.DataSource;
 
+import static net.sync.game.Game.backend;
 import static org.jooq.impl.DSL.using;
 
 public class DatabaseManager {
@@ -97,7 +97,7 @@ public class DatabaseManager {
     }
 
     private DataSource getDataSource() {
-        return Game.instance().getBackend().getDatabaseDataSource();
+        return backend().getDatabaseDataSource();
     }
 
     private SQLDialect getSQLDialect() {

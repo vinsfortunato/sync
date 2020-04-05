@@ -23,8 +23,6 @@
 package net.sync.game.ui.screen.play;
 
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import net.sync.game.Game;
-import net.sync.game.resource.ResourceProvider;
 import net.sync.game.resource.lazy.Resource;
 import net.sync.game.round.judge.JudgmentClass;
 import net.sync.game.round.judge.TailJudgment;
@@ -33,6 +31,8 @@ import net.sync.game.song.note.HoldNote;
 import net.sync.game.song.note.JudgeableLengthyNote;
 import net.sync.game.song.note.LengthyNote;
 import net.sync.game.song.note.Note;
+
+import static net.sync.game.Game.resources;
 
 /**
  * @author Vincenzo Fortunato
@@ -54,20 +54,19 @@ public class HoldNoteRenderer extends BaseLengthyNoteRenderer {
 
     public HoldNoteRenderer(BeatmapView view) {
         super(view);
-        ResourceProvider resources = Game.instance().getResources();
-        (head4Drawable        = resources.getDrawable("play_dance_note_hold_head_4"        )).load();
-        (head8Drawable        = resources.getDrawable("play_dance_note_hold_head_8"        )).load();
-        (head12Drawable       = resources.getDrawable("play_dance_note_hold_head_12"       )).load();
-        (head16Drawable       = resources.getDrawable("play_dance_note_hold_head_16"       )).load();
-        (head32Drawable       = resources.getDrawable("play_dance_note_hold_head_32"       )).load();
-        (head24Drawable       = resources.getDrawable("play_dance_note_hold_head_24"       )).load();
-        (head48Drawable       = resources.getDrawable("play_dance_note_hold_head_48"       )).load();
-        (head64Drawable       = resources.getDrawable("play_dance_note_hold_head_64"       )).load();
-        (head192Drawable      = resources.getDrawable("play_dance_note_hold_head_192"      )).load();
-        (bodyInactiveDrawable = resources.getDrawable("play_dance_note_hold_body_inactive" )).load();
-        (bodyActiveDrawable   = resources.getDrawable("play_dance_note_hold_body_active"   )).load();
-        (tailInactiveDrawable = resources.getDrawable("play_dance_note_hold_tail_inactive" )).load();
-        (tailActiveDrawable   = resources.getDrawable("play_dance_note_hold_tail_active"   )).load();
+        (head4Drawable = resources().getDrawable("play_dance_note_hold_head_4")).load();
+        (head8Drawable = resources().getDrawable("play_dance_note_hold_head_8")).load();
+        (head12Drawable = resources().getDrawable("play_dance_note_hold_head_12")).load();
+        (head16Drawable = resources().getDrawable("play_dance_note_hold_head_16")).load();
+        (head32Drawable = resources().getDrawable("play_dance_note_hold_head_32")).load();
+        (head24Drawable = resources().getDrawable("play_dance_note_hold_head_24")).load();
+        (head48Drawable = resources().getDrawable("play_dance_note_hold_head_48")).load();
+        (head64Drawable = resources().getDrawable("play_dance_note_hold_head_64")).load();
+        (head192Drawable = resources().getDrawable("play_dance_note_hold_head_192")).load();
+        (bodyInactiveDrawable = resources().getDrawable("play_dance_note_hold_body_inactive" )).load();
+        (bodyActiveDrawable = resources().getDrawable("play_dance_note_hold_body_active")).load();
+        (tailInactiveDrawable = resources().getDrawable("play_dance_note_hold_tail_inactive")).load();
+        (tailActiveDrawable = resources().getDrawable("play_dance_note_hold_tail_active")).load();
     }
 
     @Override

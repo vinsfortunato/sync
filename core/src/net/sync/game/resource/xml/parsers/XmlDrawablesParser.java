@@ -28,23 +28,11 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import net.sync.game.resource.Dimension;
-import net.sync.game.resource.lazy.DrawableResource;
-import net.sync.game.resource.lazy.NinepatchResource;
-import net.sync.game.resource.lazy.RegionResource;
-import net.sync.game.resource.lazy.Resource;
-import net.sync.game.resource.lazy.SpriteResource;
-import net.sync.game.resource.lazy.TextureResource;
+import net.sync.game.resource.lazy.*;
 import net.sync.game.resource.xml.XmlReferenceNotCompatibleException;
 import net.sync.game.resource.xml.XmlReferenceNotFoundException;
 import net.sync.game.resource.xml.XmlTheme;
-import net.sync.game.resource.xml.resolvers.XmlBooleanResolver;
-import net.sync.game.resource.xml.resolvers.XmlColorResolver;
-import net.sync.game.resource.xml.resolvers.XmlDimensionResolver;
-import net.sync.game.resource.xml.resolvers.XmlDrawableResolver;
-import net.sync.game.resource.xml.resolvers.XmlFloatResolver;
-import net.sync.game.resource.xml.resolvers.XmlIntegerResolver;
-import net.sync.game.resource.xml.resolvers.XmlReferenceResolver;
-import net.sync.game.resource.xml.resolvers.XmlStringResolver;
+import net.sync.game.resource.xml.resolvers.*;
 import net.sync.game.util.xml.XmlParseException;
 import net.sync.game.util.xml.XmlParser;
 import net.sync.game.util.xml.XmlValueResolver;
@@ -144,11 +132,11 @@ public class XmlDrawablesParser extends XmlMapResourceParser<Resource<Drawable>>
 
             //Parse attribute
             boolean parsed = false;
-            if(value instanceof DrawableResource && parseAttribute((DrawableResource)  value, key, val)) parsed = true;
-            if(value instanceof TextureResource && parseAttribute((TextureResource)   value, key, val)) parsed = true;
-            if(value instanceof RegionResource && parseAttribute((RegionResource)    value, key, val)) parsed = true;
-            if(value instanceof SpriteResource && parseAttribute((SpriteResource)    value, key, val)) parsed = true;
-            if(value instanceof NinepatchResource && parseAttribute((NinepatchResource) value, key, val)) parsed = true;
+            if(value instanceof DrawableResource && parseAttribute((DrawableResource) value, key, val))     parsed = true;
+            if(value instanceof TextureResource && parseAttribute((TextureResource) value, key, val))       parsed = true;
+            if(value instanceof RegionResource && parseAttribute((RegionResource) value, key, val))         parsed = true;
+            if(value instanceof SpriteResource && parseAttribute((SpriteResource) value, key, val))         parsed = true;
+            if(value instanceof NinepatchResource && parseAttribute((NinepatchResource) value, key, val))   parsed = true;
 
             if(!parsed)
                 throw new XmlParseException(String.format(

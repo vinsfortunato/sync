@@ -24,11 +24,12 @@ package net.sync.game.util.concurrent;
 
 import com.badlogic.gdx.utils.Disposable;
 import com.google.common.base.Preconditions;
-import net.sync.game.Game;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
+
+import static net.sync.game.Game.disposer;
 
 /**
  * Manages executor services by binding them to int keys and
@@ -39,7 +40,7 @@ public class ExecutorManager implements Disposable {
     private int idCounter = 0;
 
     public ExecutorManager() {
-        Game.instance().getDisposer().manage(this);
+        disposer().manage(this);
     }
 
     /**

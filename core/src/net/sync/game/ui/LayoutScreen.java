@@ -24,10 +24,10 @@ package net.sync.game.ui;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.google.common.base.Preconditions;
-import net.sync.game.Game;
 import net.sync.game.resource.Layout;
-import net.sync.game.resource.ResourceProvider;
 import net.sync.game.resource.lazy.Resource;
+
+import static net.sync.game.Game.resources;
 
 public class LayoutScreen implements Screen {
     private String layoutId;
@@ -40,8 +40,7 @@ public class LayoutScreen implements Screen {
 
     @Override
     public void prepare(Runnable doneCallback) {
-        ResourceProvider resources = Game.instance().getResources();
-        layout = resources.getLayout(layoutId);
+        layout = resources().getLayout(layoutId);
         Preconditions.checkNotNull(layout, String.format("Layout with id '%s' not found!", layoutId));
         doneCallback.run();
     }

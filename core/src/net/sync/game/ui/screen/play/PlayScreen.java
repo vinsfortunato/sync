@@ -38,11 +38,14 @@ import net.sync.game.song.SongLoader;
 import net.sync.game.song.sim.SimParser;
 import net.sync.game.ui.Screen;
 
+import static net.sync.game.Game.disposer;
+import static net.sync.game.Game.resources;
+
 /**
  * @author Vincenzo Fortunato
  */
-public class GameScreen implements Screen {
-    private static GameScreen instance;
+public class PlayScreen implements Screen {
+    private static PlayScreen instance;
 
     /* True if the screen is still preparing */
     private boolean preparing = false;
@@ -61,15 +64,15 @@ public class GameScreen implements Screen {
     private Music music;
     private Round round;
 
-    private GameScreen() {
-        Game.instance().getDisposer().manage(this);
+    private PlayScreen() {
+        disposer().manage(this);
     }
 
     @Override
     public void prepare(Runnable doneCallback) {
         preparing = true;
         prepareDoneCallback = doneCallback;
-        resGroup = Game.instance().getResources().startGroup();
+        resGroup = resources().startGroup();
 
         test();
     }
@@ -170,7 +173,7 @@ public class GameScreen implements Screen {
     public void update() {
         if(preparing) {
             //Check and update preparation status
-            if(!Game.instance().getResources().isGroupLoading(resGroup)) {
+            if(!resources().isGroupLoading(resGroup)) {
                 preparing = false;
                 prepared = true;
                 prepareDoneCallback.run();
@@ -186,7 +189,7 @@ public class GameScreen implements Screen {
             music.dispose();
         }
 
-        Game.instance().getResources().endGroup(resGroup);
+        resources().endGroup(resGroup);
         prepared = false;
     }
 
@@ -195,7 +198,7 @@ public class GameScreen implements Screen {
         return prepared;
     }
 
-    public static GameScreen instance() {
-        return instance == null ? instance = new GameScreen() : instance;
+    public static PlayScreen instance() {
+        return instance == null ? instance = new PlayScreen() : instance;
     }
 }

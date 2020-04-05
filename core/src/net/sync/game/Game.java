@@ -34,7 +34,7 @@ import net.sync.game.resource.ResourceProvider;
 import net.sync.game.resource.ThemeManager;
 import net.sync.game.song.SongManager;
 import net.sync.game.ui.ScreenManager;
-import net.sync.game.ui.screen.play.GameScreen;
+import net.sync.game.ui.screen.play.PlayScreen;
 import net.sync.game.util.Disposer;
 import net.sync.game.util.concurrent.ExecutorManager;
 
@@ -83,7 +83,7 @@ public class Game implements ApplicationListener {
 
 		//Show test screen TODO
 		if(Gdx.app.getType() != Application.ApplicationType.Android)
-			this.screens.show(GameScreen.instance());
+			this.screens.show(PlayScreen.instance());
 	}
 
 	@Override
@@ -112,12 +112,20 @@ public class Game implements ApplicationListener {
 	@Override
 	public void resume () {
 		if(Gdx.app.getType() == Application.ApplicationType.Android) //TODO
-			this.screens.show(GameScreen.instance());
+			this.screens.show(PlayScreen.instance());
 	}
 
 	@Override
 	public void dispose () {
 		disposer.dispose();
+	}
+
+	public ExecutorManager getExecutors() {
+		return executors;
+	}
+
+	public Disposer getDisposer() {
+		return disposer;
 	}
 
 	public AssetManager getAssets() {
@@ -148,24 +156,99 @@ public class Game implements ApplicationListener {
 		return players;
 	}
 
+	public DatabaseManager getDatabase() {
+		return database;
+	}
+
 	public ResourceProvider getResources() {
 		//The theme is also the global resource provider
 		return getThemes().getActiveTheme();
 	}
 
-	public ExecutorManager getExecutors() {
-		return executors;
-	}
-
-	public DatabaseManager getDatabase() {
-		return database;
-	}
-
-	public Disposer getDisposer() {
-		return disposer;
-	}
-
+	/**
+	 * The singleton {@link Game} instance.
+	 * @return the game instance.
+	 */
 	public static Game instance() {
 		return instance;
+	}
+
+	/* Singleton instance access shortcuts */
+
+	/**
+	 * Shortcut for instance {@link #getDatabase()}
+	 */
+	public static DatabaseManager database() {
+		return instance().getDatabase();
+	}
+
+	/**
+	 * Shortcut for instance {@link #getDisposer()} ()}
+	 */
+	public static Disposer disposer() {
+		return instance().getDisposer();
+	}
+
+	/**
+	 * Shortcut for instance {@link #getAssets()} ()}
+	 */
+	public static AssetManager assets() {
+		return instance().getAssets();
+	}
+
+	/**
+	 * Shortcut for instance {@link #getSettings()} ()}
+	 */
+	public static GameSettings settings() {
+		return instance().getSettings();
+	}
+
+	/**
+	 * Shortcut for instance {@link #getBackend()} ()}
+	 */
+	public static Backend backend() {
+		return instance().getBackend();
+	}
+
+	/**
+	 * Shortcut for instance {@link #getScreens()} ()}
+	 */
+	public static ScreenManager screens() {
+		return instance().getScreens();
+	}
+
+	/**
+	 * Shortcut for instance {@link #getThemes()} ()}
+	 */
+	public static ThemeManager themes() {
+		return instance().getThemes();
+	}
+
+	/**
+	 * Shortcut for instance {@link #getSongs()} ()}
+	 */
+	public static SongManager songs() {
+		return instance().getSongs();
+	}
+
+	/**
+	 * Shortcut for instance {@link #getPlayers()} ()}
+	 */
+	public static PlayerManager players() {
+		return instance().getPlayers();
+	}
+
+	/**
+	 * Shortcut for instance {@link #getResources()} ()}
+	 */
+	public static ResourceProvider resources() {
+		return instance().getResources();
+	}
+
+	/**
+	 * Shortcut for instance {@link #getExecutors()} ()}
+	 */
+	public static ExecutorManager executors() {
+		return instance().getExecutors();
 	}
 }

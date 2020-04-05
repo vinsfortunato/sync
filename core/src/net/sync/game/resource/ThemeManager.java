@@ -31,6 +31,7 @@ public class ThemeManager {
     private Theme activeTheme;
 
     public ThemeManager() {
+        //TODO
         FileHandle manifestFile = Gdx.files.internal("theme/default/theme.xml");
         XmlThemeParser parser = new XmlThemeParser(manifestFile);
         try {

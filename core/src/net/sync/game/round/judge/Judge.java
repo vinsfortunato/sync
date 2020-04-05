@@ -23,22 +23,14 @@
 package net.sync.game.round.judge;
 
 import com.badlogic.gdx.utils.IntMap;
-import net.sync.game.Game;
 import net.sync.game.GameMode;
 import net.sync.game.round.PanelState;
 import net.sync.game.round.Round;
 import net.sync.game.song.Beatmap;
 import net.sync.game.song.Timing;
-import net.sync.game.song.note.HoldNote;
-import net.sync.game.song.note.JudgeableLengthyNote;
-import net.sync.game.song.note.JudgeableNote;
-import net.sync.game.song.note.LiftNote;
-import net.sync.game.song.note.MineNote;
-import net.sync.game.song.note.Note;
-import net.sync.game.song.note.NotePanel;
-import net.sync.game.song.note.RollNote;
-import net.sync.game.song.note.TapNote;
+import net.sync.game.song.note.*;
 
+import static net.sync.game.Game.settings;
 import static net.sync.game.round.judge.JudgmentClass.*;
 
 /**
@@ -46,13 +38,13 @@ import static net.sync.game.round.judge.JudgmentClass.*;
  * Can generate judgments in real time or all in a single moment making it usable both during
  * gameplay and replay mode.</p>
  * <p>There are two important methods that should be called:
- *  <li> {@link #update(double)} should be called periodically to update unjudged notes. It must
- *  be called during gameplay to update the note judgments in real time. During replay calling this
- *  method is not needed because all panel state history is available and can be processed in batch.
- *  <li> {@link #onPanelStateChange(int, double, boolean)} should be called when the panel state changes.
- *  Before handling the panel state change, this method will call {@link #update(double)} passing the
- *  time when the panel state changed. Panel state changes should be sent ordered by their time to
- *  this method. </li>
+ * <li> {@link #update(double)} should be called periodically to update unjudged notes. It must
+ * be called during gameplay to update the note judgments in real time. During replay calling this
+ * method is not needed because all panel state history is available and can be processed in batch.
+ * <li> {@link #onPanelStateChange(int, double, boolean)} should be called when the panel state changes.
+ * Before handling the panel state change, this method will call {@link #update(double)} passing the
+ * time when the panel state changed. Panel state changes should be sent ordered by their time to
+ * this method. </li>
  * </p>
  */
 public class Judge implements PanelState.PanelStateListener {
@@ -88,12 +80,12 @@ public class Judge implements PanelState.PanelStateListener {
     public Judge(Round round, JudgeCriteria criteria) {
         this.round = round;
         this.criteria = criteria;
-        this.panels = NotePanel.getModePanels(Game.instance().getSettings().getGameMode());
+        this.panels = NotePanel.getModePanels(settings().getGameMode());
 
         //Init evaluated beats and time
         this.evaluatedBeats = new IntMap<>();
         this.evaluatedTime = Double.MIN_VALUE;
-        GameMode mode = Game.instance().getSettings().getGameMode();
+        GameMode mode = settings().getGameMode();
         for(int panel : NotePanel.getModePanels(mode)) {
             this.evaluatedBeats.put(panel, 0.0D);
         }

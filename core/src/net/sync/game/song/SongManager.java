@@ -23,10 +23,11 @@
 package net.sync.game.song;
 
 import com.badlogic.gdx.files.FileHandle;
-import net.sync.game.Game;
 import org.jooq.DSLContext;
 
 import java.io.File;
+
+import static net.sync.game.Game.database;
 
 public class SongManager {
     //Start indexing the given folder (the songs folder)
@@ -35,7 +36,7 @@ public class SongManager {
         long millis = System.currentTimeMillis();
         for(FileHandle f : dir.list(File::isDirectory)) {
             String pack = f.name();
-            try(DSLContext database = Game.instance().getDatabase().getDSL()) {
+            try(DSLContext database = database().getDSL()) {
                 database.transaction(configuration -> {
                     for(FileHandle songDir : f.list(File::isDirectory)) {
                         SongIndexer indexer = new SongIndexer(pack, songDir, configuration);

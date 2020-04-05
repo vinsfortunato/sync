@@ -23,7 +23,6 @@
 package net.sync.game.song;
 
 import com.badlogic.gdx.files.FileHandle;
-import net.sync.game.Game;
 import net.sync.game.song.sim.SimChartParser;
 import net.sync.game.song.sim.SimFile;
 import net.sync.game.song.sim.SimParseException;
@@ -34,6 +33,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import static net.sync.game.Game.settings;
 import static net.sync.game.song.sim.SimParser.parseOrDefault;
 
 public class SongLoader extends Task<Song> {
@@ -48,7 +48,7 @@ public class SongLoader extends Task<Song> {
      * @param directory the song directory.
      */
     public SongLoader(String pack, FileHandle directory) {
-        this(pack, SimFile.searchSimFile(directory, format -> Game.instance().getSettings().getSimFormatPriority(format)));
+        this(pack, SimFile.searchSimFile(directory, format -> settings().getSimFormatPriority(format)));
     }
 
     /**

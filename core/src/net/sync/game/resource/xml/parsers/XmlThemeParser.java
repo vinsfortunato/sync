@@ -23,7 +23,6 @@
 package net.sync.game.resource.xml.parsers;
 
 import com.badlogic.gdx.files.FileHandle;
-import net.sync.game.Game;
 import net.sync.game.resource.xml.XmlTheme;
 import net.sync.game.resource.xml.XmlThemeManifest;
 import net.sync.game.resource.xml.resolvers.XmlIntegerResolver;
@@ -34,6 +33,8 @@ import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
+import static net.sync.game.Game.settings;
 
 public class XmlThemeParser extends XmlResourceParser<XmlTheme> {
     /**
@@ -116,7 +117,7 @@ public class XmlThemeParser extends XmlResourceParser<XmlTheme> {
         //from the theme is parsed and fallback theme will then be used to resolve string references.
         if(langs != null) {
             //Get current game language
-            Locale active = Game.instance().getSettings().getLanguage();
+            Locale active = settings().getLanguage();
             int index = langs.indexOf(active);
 
             //Check if the theme supports the currently active game language

@@ -24,8 +24,6 @@ package net.sync.game.ui.screen.play;
 
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
-import net.sync.game.Game;
-import net.sync.game.resource.ResourceProvider;
 import net.sync.game.resource.lazy.Resource;
 import net.sync.game.round.judge.JudgeCriteria;
 import net.sync.game.round.judge.TapJudgment;
@@ -34,6 +32,8 @@ import net.sync.game.song.note.ChordNote;
 import net.sync.game.song.note.JudgeableNote;
 import net.sync.game.song.note.Note;
 import net.sync.game.song.note.TapNote;
+
+import static net.sync.game.Game.resources;
 
 public class TapNoteRenderer extends BaseNoteRenderer {
     /* Resources */
@@ -53,16 +53,15 @@ public class TapNoteRenderer extends BaseNoteRenderer {
     }
 
     private void loadResources() {
-        ResourceProvider resources = Game.instance().getResources();
-        (note4Drawable   = resources.getDrawable("play_dance_note_tap_4"  )).load();
-        (note8Drawable   = resources.getDrawable("play_dance_note_tap_8"  )).load();
-        (note12Drawable  = resources.getDrawable("play_dance_note_tap_12" )).load();
-        (note16Drawable  = resources.getDrawable("play_dance_note_tap_16" )).load();
-        (note24Drawable  = resources.getDrawable("play_dance_note_tap_24" )).load();
-        (note32Drawable  = resources.getDrawable("play_dance_note_tap_32" )).load();
-        (note48Drawable  = resources.getDrawable("play_dance_note_tap_48" )).load();
-        (note64Drawable  = resources.getDrawable("play_dance_note_tap_64" )).load();
-        (note192Drawable = resources.getDrawable("play_dance_note_tap_192")).load();
+        (note4Drawable   = resources().getDrawable("play_dance_note_tap_4"  )).load();
+        (note8Drawable   = resources().getDrawable("play_dance_note_tap_8"  )).load();
+        (note12Drawable  = resources().getDrawable("play_dance_note_tap_12" )).load();
+        (note16Drawable  = resources().getDrawable("play_dance_note_tap_16" )).load();
+        (note24Drawable  = resources().getDrawable("play_dance_note_tap_24" )).load();
+        (note32Drawable  = resources().getDrawable("play_dance_note_tap_32" )).load();
+        (note48Drawable  = resources().getDrawable("play_dance_note_tap_48" )).load();
+        (note64Drawable  = resources().getDrawable("play_dance_note_tap_64" )).load();
+        (note192Drawable = resources().getDrawable("play_dance_note_tap_192")).load();
     }
 
     @Override

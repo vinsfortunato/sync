@@ -26,14 +26,14 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import net.sync.game.Game;
-import net.sync.game.resource.ResourceProvider;
 import net.sync.game.resource.lazy.Resource;
 import net.sync.game.round.Round;
 import net.sync.game.round.judge.Judgment;
 import net.sync.game.round.judge.JudgmentClass;
 import net.sync.game.round.judge.TailJudgment;
 import net.sync.game.round.judge.TapJudgment;
+
+import static net.sync.game.Game.resources;
 
 public class JudgmentView extends Widget {
     private Round round;
@@ -52,15 +52,14 @@ public class JudgmentView extends Widget {
         this.round = round;
 
         //Init resources
-        ResourceProvider resources = Game.instance().getResources();
-        (marvelousDrawable = resources.getDrawable("play_dance_judgment_marvelous")).load();
-        (perfectDrawable = resources.getDrawable("play_dance_judgment_perfect")).load();
-        (greatDrawable = resources.getDrawable("play_dance_judgment_great")).load();
-        (goodDrawable = resources.getDrawable("play_dance_judgment_good")).load();
-        (booDrawable = resources.getDrawable("play_dance_judgment_boo")).load();
-        (missDrawable = resources.getDrawable("play_dance_judgment_miss")).load();
-        (okDrawable = resources.getDrawable("play_dance_judgment_ok")).load();
-        (ngDrawable = resources.getDrawable("play_dance_judgment_ng")).load();
+        (marvelousDrawable = resources().getDrawable("play_dance_judgment_marvelous")).load();
+        (perfectDrawable = resources().getDrawable("play_dance_judgment_perfect")).load();
+        (greatDrawable = resources().getDrawable("play_dance_judgment_great")).load();
+        (goodDrawable = resources().getDrawable("play_dance_judgment_good")).load();
+        (booDrawable = resources().getDrawable("play_dance_judgment_boo")).load();
+        (missDrawable = resources().getDrawable("play_dance_judgment_miss")).load();
+        (okDrawable = resources().getDrawable("play_dance_judgment_ok")).load();
+        (ngDrawable = resources().getDrawable("play_dance_judgment_ng")).load();
     }
 
     @Override

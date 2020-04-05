@@ -29,7 +29,6 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import net.sync.game.Game;
 import net.sync.game.resource.Dimension;
 import net.sync.game.resource.Layout;
 import net.sync.game.resource.Style;
@@ -38,9 +37,12 @@ import net.sync.game.resource.lazy.Resource;
 import net.sync.game.util.ui.DPI;
 import net.sync.game.util.ui.TexturePath;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
+import static net.sync.game.Game.backend;
 
 public class XmlTheme implements Theme {
     private Theme fallback;
@@ -48,14 +50,14 @@ public class XmlTheme implements Theme {
     private XmlThemeManifest manifest;
 
     /* Resource maps */
-    private Map<String, Resource<Drawable>> drawables;
-    private Map<String, Color> colors;
-    private Map<String, Dimension> dimens;
-    private Map<String, Resource<BitmapFont>> fonts;
-    private Map<String, Resource<Sound>> sounds;
-    private Map<String, Resource<Music>> musics;
-    private Map<String, String> strings;
-    private Map<String, Object> values;
+    private Map<String, Resource<Drawable>> drawables = Collections.emptyMap();
+    private Map<String, Color> colors = Collections.emptyMap();
+    private Map<String, Dimension> dimens = Collections.emptyMap();
+    private Map<String, Resource<BitmapFont>> fonts = Collections.emptyMap();
+    private Map<String, Resource<Sound>> sounds = Collections.emptyMap();
+    private Map<String, Resource<Music>> musics = Collections.emptyMap();
+    private Map<String, String> strings = Collections.emptyMap();
+    private Map<String, Object> values = Collections.emptyMap();
 
     /* Supported languages */
     private List<Locale> langs;
@@ -95,11 +97,9 @@ public class XmlTheme implements Theme {
 
     @Override
     public Resource<Drawable> getDrawable(String id) {
-        if(drawables != null) {
-            Resource<Drawable> resource = drawables.get(id);
-            if(resource != null) {
-                return resource;
-            }
+        Resource<Drawable> resource = drawables.get(id);
+        if(resource != null) {
+            return resource;
         }
         return hasFallbackTheme() ? getFallbackTheme().getDrawable(id) : null;
     }
@@ -110,11 +110,9 @@ public class XmlTheme implements Theme {
 
     @Override
     public Color getColor(String id) {
-        if(colors != null) {
-            Color resource = colors.get(id);
-            if(resource != null) {
-                return resource;
-            }
+        Color resource = colors.get(id);
+        if(resource != null) {
+            return resource;
         }
         return hasFallbackTheme() ? getFallbackTheme().getColor(id) : null;
     }
@@ -124,11 +122,9 @@ public class XmlTheme implements Theme {
     }
     @Override
     public Dimension getDimension(String id) {
-        if(dimens != null) {
-            Dimension resource = dimens.get(id);
-            if(resource != null) {
-                return resource;
-            }
+        Dimension resource = dimens.get(id);
+        if(resource != null) {
+            return resource;
         }
         return hasFallbackTheme() ? getFallbackTheme().getDimension(id) : null;
     }
@@ -139,11 +135,9 @@ public class XmlTheme implements Theme {
 
     @Override
     public Resource<BitmapFont> getFont(String id) {
-        if(fonts != null) {
-            Resource<BitmapFont> resource = fonts.get(id);
-            if(resource != null) {
-                return resource;
-            }
+        Resource<BitmapFont> resource = fonts.get(id);
+        if(resource != null) {
+            return resource;
         }
         return hasFallbackTheme() ? getFallbackTheme().getFont(id) : null;
     }
@@ -154,11 +148,9 @@ public class XmlTheme implements Theme {
 
     @Override
     public Resource<Sound> getSound(String id) {
-        if(sounds != null) {
-            Resource<Sound> resource = sounds.get(id);
-            if(resource != null) {
-                return resource;
-            }
+        Resource<Sound> resource = sounds.get(id);
+        if(resource != null) {
+            return resource;
         }
         return hasFallbackTheme() ? getFallbackTheme().getSound(id) : null;
     }
@@ -169,13 +161,10 @@ public class XmlTheme implements Theme {
 
     @Override
     public Resource<Music> getMusic(String id) {
-        if(musics != null) {
-            Resource<Music> resource = musics.get(id);
-            if(resource != null) {
-                return resource;
-            }
+        Resource<Music> resource = musics.get(id);
+        if(resource != null) {
+            return resource;
         }
-
         return hasFallbackTheme() ? getFallbackTheme().getMusic(id) : null;
     }
 
@@ -185,11 +174,9 @@ public class XmlTheme implements Theme {
 
     @Override
     public String getString(String id) {
-        if(strings != null) {
-            String string = strings.get(id);
-            if(string != null) {
-                return string;
-            }
+        String string = strings.get(id);
+        if(string != null) {
+            return string;
         }
         return hasFallbackTheme() ? getFallbackTheme().getString(id) : null;
     }
@@ -200,55 +187,45 @@ public class XmlTheme implements Theme {
 
     @Override
     public Integer getInt(String id) {
-        if(values != null) {
-            Object value = values.get(id);
-            if(value instanceof Integer) {
-                return (Integer) value;
-            }
+        Object value = values.get(id);
+        if(value instanceof Integer) {
+            return (Integer) value;
         }
         return hasFallbackTheme() ? getFallbackTheme().getInt(id) : null;
     }
 
     @Override
     public Float getFloat(String id) {
-        if(values != null) {
-            Object value = values.get(id);
-            if(value instanceof Float) {
-                return (Float) value;
-            }
+        Object value = values.get(id);
+        if(value instanceof Float) {
+            return (Float) value;
         }
         return hasFallbackTheme() ? getFallbackTheme().getFloat(id) : null;
     }
 
     @Override
     public Boolean getBoolean(String id) {
-        if(values != null) {
-            Object value = values.get(id);
-            if(value instanceof Boolean) {
-                return (Boolean) value;
-            }
+        Object value = values.get(id);
+        if(value instanceof Boolean) {
+            return (Boolean) value;
         }
         return hasFallbackTheme() ? getFallbackTheme().getBoolean(id) : null;
     }
 
     @Override
     public Long getDuration(String id) {
-        if(values != null) {
-            Object value = values.get(id);
-            if(value instanceof Long) {
-                return (Long) value;
-            }
+        Object value = values.get(id);
+        if(value instanceof Long) {
+            return (Long) value;
         }
         return hasFallbackTheme() ? getFallbackTheme().getDuration(id) : null;
     }
 
     @Override
     public Float getPercent(String id) {
-        if(values != null) {
-            Object value = values.get(id);
-            if(value instanceof Float) {
-                return (Float) value;
-            }
+        Object value = values.get(id);
+        if(value instanceof Float) {
+            return (Float) value;
         }
         return hasFallbackTheme() ? getFallbackTheme().getPercent(id) : null;
     }
@@ -276,7 +253,7 @@ public class XmlTheme implements Theme {
         FileHandle drawablesDir = manifestFile.sibling("drawables");
         FileHandle textureFile;
 
-        DPI dpi = Game.instance().getBackend().getDeviceDPI();
+        DPI dpi = backend().getDeviceDPI();
         String dpiDirName = null;
         switch(dpi) {
             case LOW:       dpiDirName = "low";         break;

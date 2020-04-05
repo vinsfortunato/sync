@@ -23,10 +23,11 @@
 package net.sync.game.ui.screen.play;
 
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import net.sync.game.Game;
 import net.sync.game.resource.lazy.Resource;
 import net.sync.game.song.note.MineNote;
 import net.sync.game.song.note.Note;
+
+import static net.sync.game.Game.resources;
 
 /**
  * @author Vincenzo Fortunato
@@ -38,7 +39,7 @@ public class MineNoteRenderer extends BaseNoteRenderer {
     public MineNoteRenderer(BeatmapView view) {
         super(view);
 
-        mineDrawable = Game.instance().getResources().getDrawable("play_dance_note_mine");
+        mineDrawable = resources().getDrawable("play_dance_note_mine");
         mineDrawable.load();
     }
 

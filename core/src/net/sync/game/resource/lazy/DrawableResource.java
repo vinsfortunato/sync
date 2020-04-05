@@ -30,9 +30,11 @@ public abstract class DrawableResource implements Resource<Drawable> {
     public float topHeight;
     public float bottomHeight;
 
+    public DrawableResource() {}
+
     /**
-     * Copy constructor
-     * @param resource
+     * Copy constructor.
+     * @param resource the drawable resource to copy.
      */
     public DrawableResource(DrawableResource resource) {
         leftWidth = resource.leftWidth;
@@ -41,7 +43,9 @@ public abstract class DrawableResource implements Resource<Drawable> {
         bottomHeight = resource.bottomHeight;
     }
 
-    public DrawableResource() {}
-
+    /**
+     * Creates and returns a copy of this instance.
+     * @return a copy of this instance.
+     */
     public abstract DrawableResource copy();
 }

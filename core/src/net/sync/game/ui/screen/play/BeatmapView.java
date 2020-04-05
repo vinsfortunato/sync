@@ -24,18 +24,12 @@ package net.sync.game.ui.screen.play;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
-import net.sync.game.Game;
 import net.sync.game.round.Round;
 import net.sync.game.song.Beatmap;
 import net.sync.game.song.Timing;
-import net.sync.game.song.note.FakeNote;
-import net.sync.game.song.note.HoldNote;
-import net.sync.game.song.note.LiftNote;
-import net.sync.game.song.note.MineNote;
-import net.sync.game.song.note.Note;
-import net.sync.game.song.note.NotePanel;
-import net.sync.game.song.note.RollNote;
-import net.sync.game.song.note.TapNote;
+import net.sync.game.song.note.*;
+
+import static net.sync.game.Game.settings;
 
 /**
  * Renders beatmap notes and receptors.
@@ -54,7 +48,7 @@ public class BeatmapView extends Widget {
     private LiftNoteRenderer liftNoteRenderer = new LiftNoteRenderer(this);
     private FakeNoteRenderer fakeNoteRenderer = new FakeNoteRenderer(this);
 
-    private int[] panels = NotePanel.getModePanels(Game.instance().getSettings().getGameMode());
+    private int[] panels = NotePanel.getModePanels(settings().getGameMode());
 
     public BeatmapView(Round round) {
         super();

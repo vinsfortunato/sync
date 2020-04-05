@@ -23,13 +23,13 @@
 package net.sync.game.resource.lazy;
 
 import com.badlogic.gdx.assets.AssetDescriptor;
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.TextureLoader;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import net.sync.game.Game;
 import net.sync.game.util.ui.TexturePath;
+
+import static net.sync.game.Game.assets;
 
 public class TextureResource extends DrawableResource {
     public final TexturePath path;
@@ -56,11 +56,9 @@ public class TextureResource extends DrawableResource {
 
     @Override
     public TextureRegionDrawable get() {
-        AssetManager assets = Game.instance().getAssets();
         AssetDescriptor<Texture> descriptor = getAssetDescriptor();
-
-        if(assets.isLoaded(descriptor)) {
-            Texture texture = assets.get(descriptor);
+        if(assets().isLoaded(descriptor)) {
+            Texture texture = assets().get(descriptor);
             TextureRegionDrawable drawable = new TextureRegionDrawable(texture);
             drawable.setLeftWidth(leftWidth);
             drawable.setRightWidth(rightWidth);
@@ -74,24 +72,21 @@ public class TextureResource extends DrawableResource {
 
     @Override
     public boolean isAvailable() {
-        AssetManager assets = Game.instance().getAssets();
         AssetDescriptor<Texture> descriptor = getAssetDescriptor();
-
-        return assets.isLoaded(descriptor);
+        return assets().isLoaded(descriptor);
     }
 
     @Override
     public boolean isLoading() {
-        return false; //TODO
+        AssetDescriptor<Texture> descriptor = getAssetDescriptor();
+        return assets().contains(descriptor.fileName, descriptor.type) && !assets().isLoaded(descriptor);
     }
 
     @Override
     public void load() {
-        AssetManager assets = Game.instance().getAssets();
         AssetDescriptor<Texture> descriptor = getAssetDescriptor();
-
-        if(!assets.isLoaded(descriptor)) {
-            assets.load(getAssetDescriptor());
+        if(!assets().isLoaded(descriptor)) {
+            assets().load(getAssetDescriptor());
         }
     }
 
