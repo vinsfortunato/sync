@@ -36,15 +36,15 @@ import net.sync.game.round.judge.TailJudgment;
 import net.sync.game.round.judge.TapJudgment;
 
 public class JudgmentView extends Widget {
-    private net.sync.game.round.Round round;
+    private Round round;
 
-    private net.sync.game.resource.lazy.Resource<Drawable> marvelousDrawable;
-    private net.sync.game.resource.lazy.Resource<Drawable> perfectDrawable;
-    private net.sync.game.resource.lazy.Resource<Drawable> greatDrawable;
-    private net.sync.game.resource.lazy.Resource<Drawable> goodDrawable;
-    private net.sync.game.resource.lazy.Resource<Drawable> booDrawable;
-    private net.sync.game.resource.lazy.Resource<Drawable> missDrawable;
-    private net.sync.game.resource.lazy.Resource<Drawable> okDrawable;
+    private Resource<Drawable> marvelousDrawable;
+    private Resource<Drawable> perfectDrawable;
+    private Resource<Drawable> greatDrawable;
+    private Resource<Drawable> goodDrawable;
+    private Resource<Drawable> booDrawable;
+    private Resource<Drawable> missDrawable;
+    private Resource<Drawable> okDrawable;
     private Resource<Drawable> ngDrawable;
 
     public JudgmentView(Round round) {
@@ -70,12 +70,12 @@ public class JudgmentView extends Widget {
         //Draw judgment
         Judgment lastJudgment = round.getJudge().getLastJudgment();
 
-        net.sync.game.round.judge.JudgmentClass c = null;
-        if(lastJudgment instanceof net.sync.game.round.judge.TapJudgment) {
-            net.sync.game.round.judge.TapJudgment judgment = (TapJudgment) lastJudgment;
+        JudgmentClass c = null;
+        if(lastJudgment instanceof TapJudgment) {
+            TapJudgment judgment = (TapJudgment) lastJudgment;
             c = judgment.getJudgmentClass();
-        } else if(lastJudgment instanceof net.sync.game.round.judge.TailJudgment) {
-            net.sync.game.round.judge.TailJudgment judgment = (TailJudgment) lastJudgment;
+        } else if(lastJudgment instanceof TailJudgment) {
+            TailJudgment judgment = (TailJudgment) lastJudgment;
             c = judgment.getJudgmentClass();
         }
 

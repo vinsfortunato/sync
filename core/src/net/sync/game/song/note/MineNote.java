@@ -30,7 +30,7 @@ import net.sync.game.round.judge.MineJudgment;
  */
 public class MineNote implements JudgeableNote {
     private double beat;
-    private net.sync.game.round.judge.MineJudgment judgment;
+    private MineJudgment judgment;
 
     public MineNote(double beat) {
         this.beat = beat;
@@ -40,8 +40,8 @@ public class MineNote implements JudgeableNote {
     public void setJudgment(Judgment judgment) {
         if(judgment == null) {
             this.judgment = null;
-        } else if(judgment instanceof net.sync.game.round.judge.MineJudgment) {
-            this.judgment = (net.sync.game.round.judge.MineJudgment) judgment;
+        } else if(judgment instanceof MineJudgment) {
+            this.judgment = (MineJudgment) judgment;
         } else {
             throw new IllegalArgumentException("Judgment must be an instance of MineJudgment!");
         }

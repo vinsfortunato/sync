@@ -29,12 +29,20 @@ import net.sync.game.round.PanelState;
 import net.sync.game.round.Round;
 import net.sync.game.song.Beatmap;
 import net.sync.game.song.Timing;
+import net.sync.game.song.note.HoldNote;
+import net.sync.game.song.note.JudgeableLengthyNote;
+import net.sync.game.song.note.JudgeableNote;
+import net.sync.game.song.note.LiftNote;
+import net.sync.game.song.note.MineNote;
+import net.sync.game.song.note.Note;
+import net.sync.game.song.note.NotePanel;
 import net.sync.game.song.note.RollNote;
+import net.sync.game.song.note.TapNote;
 
 import static net.sync.game.round.judge.JudgmentClass.*;
 
 /**
- * <p>Generates judgments for a round following the given set of {@link net.sync.game.round.judge.JudgeCriteria criterias}.
+ * <p>Generates judgments for a round following the given set of {@link JudgeCriteria criterias}.
  * Can generate judgments in real time or all in a single moment making it usable both during
  * gameplay and replay mode.</p>
  * <p>There are two important methods that should be called:
@@ -47,9 +55,9 @@ import static net.sync.game.round.judge.JudgmentClass.*;
  *  this method. </li>
  * </p>
  */
-public class Judge implements net.sync.game.round.PanelState.PanelStateListener {
-    private net.sync.game.round.Round round;
-    private net.sync.game.round.judge.JudgeCriteria criteria;
+public class Judge implements PanelState.PanelStateListener {
+    private Round round;
+    private JudgeCriteria criteria;
 
     /* Map a beat to a given panel. All notes on a panel with a beat less
      * or equal to this one will be considered judged and skipped. */
@@ -67,8 +75,8 @@ public class Judge implements net.sync.game.round.PanelState.PanelStateListener 
     private MineNoteJudge mineNoteJudge;
 
     //TODO temp location
-    private net.sync.game.round.judge.Judgment lastJudgment;
-    public net.sync.game.round.judge.Judgment getLastJudgment() {
+    private Judgment lastJudgment;
+    public Judgment getLastJudgment() {
         return lastJudgment;
     }
 
@@ -77,16 +85,16 @@ public class Judge implements net.sync.game.round.PanelState.PanelStateListener 
      * @param round the round
      * @param criteria the judge criteria, a set of criteria used by the judge system to generate judgments.
      */
-    public Judge(net.sync.game.round.Round round, net.sync.game.round.judge.JudgeCriteria criteria) {
+    public Judge(Round round, JudgeCriteria criteria) {
         this.round = round;
         this.criteria = criteria;
-        this.panels = net.sync.game.song.note.NotePanel.getModePanels(net.sync.game.Game.instance().getSettings().getGameMode());
+        this.panels = NotePanel.getModePanels(Game.instance().getSettings().getGameMode());
 
         //Init evaluated beats and time
         this.evaluatedBeats = new IntMap<>();
         this.evaluatedTime = Double.MIN_VALUE;
         GameMode mode = Game.instance().getSettings().getGameMode();
-        for(int panel : net.sync.game.song.note.NotePanel.getModePanels(mode)) {
+        for(int panel : NotePanel.getModePanels(mode)) {
             this.evaluatedBeats.put(panel, 0.0D);
         }
 
@@ -113,11 +121,11 @@ public class Judge implements net.sync.game.round.PanelState.PanelStateListener 
             for(int panel : panels) {
                 //Update all notes from last evaluated beat to current beat
                 double evalBeat = getEvaluatedBeat(panel);
-                net.sync.game.song.note.JudgeableNote note = (net.sync.game.song.note.JudgeableNote) beatmap.higherNote(panel, evalBeat, n -> n instanceof net.sync.game.song.note.JudgeableNote);
+                JudgeableNote note = (JudgeableNote) beatmap.higherNote(panel, evalBeat, n -> n instanceof JudgeableNote);
                 while (note != null && note.getBeat() < beat) {
                     NoteJudge judge = getNoteJudge(note);
                     judge.update(panel, time, beat, note);
-                    note = (net.sync.game.song.note.JudgeableNote) beatmap.higherNote(panel, note.getBeat(), n -> n instanceof net.sync.game.song.note.JudgeableNote);
+                    note = (JudgeableNote) beatmap.higherNote(panel, note.getBeat(), n -> n instanceof JudgeableNote);
                 }
             }
             evaluatedTime = time;
@@ -143,18 +151,18 @@ public class Judge implements net.sync.game.round.PanelState.PanelStateListener 
         double evalBeat = getEvaluatedBeat(panel);
 
         //Find next note to judge
-        net.sync.game.song.note.JudgeableNote note;
+        JudgeableNote note;
         if(eventBeat < evalBeat) {
             //Judge note after eval beat
-            note = (net.sync.game.song.note.JudgeableNote) beatmap.higherNote(panel, evalBeat, n -> n instanceof net.sync.game.song.note.JudgeableNote);
+            note = (JudgeableNote) beatmap.higherNote(panel, evalBeat, n -> n instanceof JudgeableNote);
         } else {
-            net.sync.game.song.note.JudgeableNote floorNote = (net.sync.game.song.note.JudgeableNote) beatmap.floorNote(panel, eventBeat, n -> n instanceof net.sync.game.song.note.JudgeableNote);
+            JudgeableNote floorNote = (JudgeableNote) beatmap.floorNote(panel, eventBeat, n -> n instanceof JudgeableNote);
             if(floorNote != null && floorNote.getBeat() > evalBeat) {
                 //Judge floor note
                 note = floorNote;
             } else {
                 //Judge higher note
-                note = (net.sync.game.song.note.JudgeableNote) beatmap.higherNote(panel, eventBeat, n -> n instanceof net.sync.game.song.note.JudgeableNote);
+                note = (JudgeableNote) beatmap.higherNote(panel, eventBeat, n -> n instanceof JudgeableNote);
             }
         }
 
@@ -163,16 +171,16 @@ public class Judge implements net.sync.game.round.PanelState.PanelStateListener 
         }
     }
 
-    private NoteJudge getNoteJudge(net.sync.game.song.note.Note note) {
-        if(note instanceof net.sync.game.song.note.TapNote)
+    private NoteJudge getNoteJudge(Note note) {
+        if(note instanceof TapNote)
             return tapNoteJudge;
-        if(note instanceof net.sync.game.song.note.HoldNote)
+        if(note instanceof HoldNote)
             return holdNoteJudge;
         if(note instanceof RollNote)
             return rollNoteJudge;
-        if(note instanceof net.sync.game.song.note.LiftNote)
+        if(note instanceof LiftNote)
             return liftNoteJudge;
-        if(note instanceof net.sync.game.song.note.MineNote)
+        if(note instanceof MineNote)
             return mineNoteJudge;
         return null;
     }
@@ -209,7 +217,7 @@ public class Judge implements net.sync.game.round.PanelState.PanelStateListener 
         return getRound().getChart().beatmap;
     }
 
-    private net.sync.game.round.PanelState getPanelState() {
+    private PanelState getPanelState() {
         return getRound().getPanelState();
     }
 
@@ -221,7 +229,7 @@ public class Judge implements net.sync.game.round.PanelState.PanelStateListener 
          * @param beat the beat.
          * @param note the unjudged note.
          */
-        public abstract void update(int panel, double time, double beat, net.sync.game.song.note.JudgeableNote note);
+        public abstract void update(int panel, double time, double beat, JudgeableNote note);
 
         /**
          * Called when a panel changes state and update unjudged note status.
@@ -229,7 +237,7 @@ public class Judge implements net.sync.game.round.PanelState.PanelStateListener 
          * @param time the time in seconds relative to the start of the music track.
          * @param note the unjudged note.
          */
-        public abstract void onPanelStateChange(int panel, double time, boolean pressed, net.sync.game.song.note.JudgeableNote note);
+        public abstract void onPanelStateChange(int panel, double time, boolean pressed, JudgeableNote note);
 
         /**
          * Called when the judge emit a judgment.
@@ -237,7 +245,7 @@ public class Judge implements net.sync.game.round.PanelState.PanelStateListener 
          * @param note the time in seconds relative to the start of the music track.
          * @param judgment the generated note judgment.
          */
-        public void emitJudgment(int panel, net.sync.game.song.note.JudgeableNote note, net.sync.game.round.judge.Judgment judgment) {
+        public void emitJudgment(int panel, JudgeableNote note, Judgment judgment) {
             //Store judgment
             note.setJudgment(judgment);
             //Move evaluated beat cursor
@@ -249,35 +257,35 @@ public class Judge implements net.sync.game.round.PanelState.PanelStateListener 
 
     private class TapNoteJudge extends NoteJudge {
         @Override
-        public void update(int panel, double time, double beat, net.sync.game.song.note.JudgeableNote note) {
+        public void update(int panel, double time, double beat, JudgeableNote note) {
             Beatmap beatmap = getBeatmap();
             Timing timing = getTiming();
             double noteTime = timing.getTimeAt(note.getBeat());
             double timingError = noteTime - time;
             double worstWindow = criteria.getWorstTapWindow();
-            net.sync.game.song.note.Note higherNote = beatmap.higherNote(panel, note.getBeat(), n -> n instanceof net.sync.game.song.note.JudgeableNote);
+            Note higherNote = beatmap.higherNote(panel, note.getBeat(), n -> n instanceof JudgeableNote);
 
             if(higherNote != null && higherNote.getBeat() < beat) {
                 //Next note surpassed current note
                 double higherNoteTime = timing.getTimeAt(higherNote.getBeat());
                 timingError = Math.max(noteTime - higherNoteTime, -worstWindow);
-                emitJudgment(panel, note, new net.sync.game.round.judge.TapJudgment(noteTime - timingError, timingError, MISS));
+                emitJudgment(panel, note, new TapJudgment(noteTime - timingError, timingError, MISS));
             } else if(timingError < -worstWindow) {
                 //Note outside worst window
-                emitJudgment(panel, note, new net.sync.game.round.judge.TapJudgment(noteTime + worstWindow, -worstWindow, MISS));
+                emitJudgment(panel, note, new TapJudgment(noteTime + worstWindow, -worstWindow, MISS));
             }
         }
 
         @Override
-        public void onPanelStateChange(int panel, double time, boolean pressed, net.sync.game.song.note.JudgeableNote note) {
+        public void onPanelStateChange(int panel, double time, boolean pressed, JudgeableNote note) {
             if(pressed) {
                 Timing timing = getTiming();
                 double noteTime = timing.getTimeAt(note.getBeat());
                 double timingError = noteTime - time;
-                net.sync.game.round.judge.JudgmentClass judgmentClass = getJudgmentClass(timingError);
+                JudgmentClass judgmentClass = getJudgmentClass(timingError);
                 if(judgmentClass != MISS) {
                     //Note judged. Emit judgment
-                    emitJudgment(panel, note, new net.sync.game.round.judge.TapJudgment(time, timingError, judgmentClass));
+                    emitJudgment(panel, note, new TapJudgment(time, timingError, judgmentClass));
                 }
             }
         }
@@ -302,50 +310,50 @@ public class Judge implements net.sync.game.round.PanelState.PanelStateListener 
 
     private abstract class LengthyNoteJudge extends TapNoteJudge {
         @Override
-        public void update(int panel, double time, double beat, net.sync.game.song.note.JudgeableNote note) {
+        public void update(int panel, double time, double beat, JudgeableNote note) {
             if (!note.hasJudgment()) {
                 //Update head
                 super.update(panel, time, beat, note);
             } else {
                 //Update trail
-                updateTrail(panel, time, beat, (net.sync.game.song.note.JudgeableLengthyNote) note);
+                updateTrail(panel, time, beat, (JudgeableLengthyNote) note);
             }
         }
 
         @Override
-        public void onPanelStateChange(int panel, double time, boolean pressed, net.sync.game.song.note.JudgeableNote note) {
+        public void onPanelStateChange(int panel, double time, boolean pressed, JudgeableNote note) {
             if(!note.hasJudgment()) {
                 //Handle state change on head
                 super.onPanelStateChange(panel, time, pressed, note);
             } else {
                 //Handle state change on trail
-                onPanelStateChangeTrail(panel, time, pressed, (net.sync.game.song.note.JudgeableLengthyNote) note);
+                onPanelStateChangeTrail(panel, time, pressed, (JudgeableLengthyNote) note);
             }
         }
 
-        public void updateTrail(int panel, double time, double beat, net.sync.game.song.note.JudgeableLengthyNote note) {}
+        public void updateTrail(int panel, double time, double beat, JudgeableLengthyNote note) {}
 
-        public void onPanelStateChangeTrail(int panel, double time, boolean pressed, net.sync.game.song.note.JudgeableLengthyNote note) {}
+        public void onPanelStateChangeTrail(int panel, double time, boolean pressed, JudgeableLengthyNote note) {}
 
         @Override
-        public void emitJudgment(int panel, net.sync.game.song.note.JudgeableNote note, net.sync.game.round.judge.Judgment judgment) {
-            if(judgment instanceof net.sync.game.round.judge.TapJudgment) {
+        public void emitJudgment(int panel, JudgeableNote note, Judgment judgment) {
+            if(judgment instanceof TapJudgment) {
                     //Head judgment
                     note.setJudgment(judgment);
 
                 lastJudgment = judgment;    //TODO temp
 
                 //Check if the head has been missed
-                net.sync.game.round.judge.TapJudgment tapJudgment = (TapJudgment) judgment;
+                TapJudgment tapJudgment = (TapJudgment) judgment;
                 if(tapJudgment.getJudgmentClass() == MISS) {
                     //Head has been missed, set negative tail judgment
-                    emitJudgment(panel, note, new net.sync.game.round.judge.TailJudgment(judgment.getGenTime(), NG));
+                    emitJudgment(panel, note, new TailJudgment(judgment.getGenTime(), NG));
                 }
 
-            } else if(judgment instanceof net.sync.game.round.judge.TailJudgment){
+            } else if(judgment instanceof TailJudgment){
                 //Tail judgment
-                net.sync.game.song.note.JudgeableLengthyNote lengthyNote = (net.sync.game.song.note.JudgeableLengthyNote) note;
-                lengthyNote.setTailJudgment((net.sync.game.round.judge.TailJudgment) judgment);
+                JudgeableLengthyNote lengthyNote = (JudgeableLengthyNote) note;
+                lengthyNote.setTailJudgment((TailJudgment) judgment);
 
                 lastJudgment = judgment;    //TODO temp
 
@@ -357,8 +365,8 @@ public class Judge implements net.sync.game.round.PanelState.PanelStateListener 
 
     private class HoldNoteJudge extends LengthyNoteJudge {
         @Override
-        public void updateTrail(int panel, double time, double beat, net.sync.game.song.note.JudgeableLengthyNote note) {
-            net.sync.game.round.PanelState states = getPanelState();
+        public void updateTrail(int panel, double time, double beat, JudgeableLengthyNote note) {
+            PanelState states = getPanelState();
             Timing timing = getTiming();
             double tailTime = timing.getTimeAt(note.getBeat() + note.getLength());
             boolean insideTrail = time < tailTime;
@@ -368,25 +376,25 @@ public class Judge implements net.sync.game.round.PanelState.PanelStateListener 
                 double floorTimeReleased = states.getFloorTimeReleased(panel, time);
                 if(!criteria.isHoldRecoverEnabled()) {
                     //Hold recover is disabled
-                    emitJudgment(panel, note, new net.sync.game.round.judge.TailJudgment(floorTimeReleased, NG));
+                    emitJudgment(panel, note, new TailJudgment(floorTimeReleased, NG));
                 } else if(Math.abs(refTime - floorTimeReleased) > criteria.getHoldRecover()) {
                     //Hold recover is enabled but cannot recover in time
-                    emitJudgment(panel, note, new net.sync.game.round.judge.TailJudgment(floorTimeReleased + criteria.getHoldRecover(), NG));
+                    emitJudgment(panel, note, new TailJudgment(floorTimeReleased + criteria.getHoldRecover(), NG));
                 } else if(!insideTrail) {
                     //Hold note completed
-                    emitJudgment(panel, note, new net.sync.game.round.judge.TailJudgment(tailTime, OK));
+                    emitJudgment(panel, note, new TailJudgment(tailTime, OK));
                 }
             } else if(!insideTrail) {
                 //Hold note completed
-                emitJudgment(panel, note, new net.sync.game.round.judge.TailJudgment(tailTime, OK));
+                emitJudgment(panel, note, new TailJudgment(tailTime, OK));
             }
         }
     }
 
     private class RollNoteJudge extends LengthyNoteJudge {
         @Override
-        public void updateTrail(int panel, double time, double beat, net.sync.game.song.note.JudgeableLengthyNote note) {
-            net.sync.game.round.PanelState states = getPanelState();
+        public void updateTrail(int panel, double time, double beat, JudgeableLengthyNote note) {
+            PanelState states = getPanelState();
             Timing timing = getTiming();
             double tailTime = timing.getTimeAt(note.getBeat() + note.getLength());
             double lowerTimePressed = states.getLowerTimePressed(panel, time);
@@ -394,7 +402,7 @@ public class Judge implements net.sync.game.round.PanelState.PanelStateListener 
 
             if(Math.abs(refTime - lowerTimePressed) > criteria.getRollRecover()) {
                 //Cannot recover in time
-                emitJudgment(panel, note, new net.sync.game.round.judge.TailJudgment(lowerTimePressed + criteria.getRollRecover(), NG));
+                emitJudgment(panel, note, new TailJudgment(lowerTimePressed + criteria.getRollRecover(), NG));
             } else if(time >= tailTime) {
                 //Roll note completed
                 emitJudgment(panel, note, new TailJudgment(tailTime, OK));
@@ -404,9 +412,9 @@ public class Judge implements net.sync.game.round.PanelState.PanelStateListener 
 
     private class MineNoteJudge extends NoteJudge {
         @Override
-        public void update(int panel, double time, double beat, net.sync.game.song.note.JudgeableNote note) {
+        public void update(int panel, double time, double beat, JudgeableNote note) {
             //Check if previous note has been judged
-            net.sync.game.song.note.JudgeableNote prevNote = (net.sync.game.song.note.JudgeableNote) getBeatmap().lowerNote(panel, note.getBeat(), n -> n instanceof net.sync.game.song.note.JudgeableNote);
+            JudgeableNote prevNote = (JudgeableNote) getBeatmap().lowerNote(panel, note.getBeat(), n -> n instanceof JudgeableNote);
             if(prevNote != null && prevNote.getBeat() < getEvaluatedBeat(panel)) {
                 //Prev note not judged yet
                 return;
@@ -422,10 +430,10 @@ public class Judge implements net.sync.game.round.PanelState.PanelStateListener 
                 Judgment judgment = null;
                 if(!states.isReleasedAt(panel, mineWindowStart)) {
                     //Mine triggered at the beginning of the mine window. Wasn't released when window started
-                    judgment = new net.sync.game.round.judge.MineJudgment(mineWindowStart, true);
+                    judgment = new MineJudgment(mineWindowStart, true);
                 } else if(states.getFloorTimeState(panel, mineWindowEnd) > mineWindowStart) {
                     //Mine triggered. A state change occurred inside the window
-                    judgment = new net.sync.game.round.judge.MineJudgment( states.getFloorTimePressed(panel, mineWindowEnd), true);
+                    judgment = new MineJudgment( states.getFloorTimePressed(panel, mineWindowEnd), true);
                 } else if(time > mineWindowEnd) {
                     //Mine not triggered and we are after the window. Generate positive judgment
                     judgment = new MineJudgment(mineWindowEnd, false);
@@ -437,17 +445,17 @@ public class Judge implements net.sync.game.round.PanelState.PanelStateListener 
         }
 
         @Override
-        public void onPanelStateChange(int panel, double time, boolean pressed, net.sync.game.song.note.JudgeableNote note) {}
+        public void onPanelStateChange(int panel, double time, boolean pressed, JudgeableNote note) {}
     }
 
     private class LiftNoteJudge extends NoteJudge {
         @Override
-        public void update(int panel, double time, double beat, net.sync.game.song.note.JudgeableNote note) {
+        public void update(int panel, double time, double beat, JudgeableNote note) {
             //TODO
         }
 
         @Override
-        public void onPanelStateChange(int panel, double time, boolean pressed, net.sync.game.song.note.JudgeableNote note) {
+        public void onPanelStateChange(int panel, double time, boolean pressed, JudgeableNote note) {
             //TODO
         }
     }

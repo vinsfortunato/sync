@@ -42,7 +42,7 @@ public class XmlStyleParser extends XmlResourceParser<XmlStyle> {
     }
 
     @Override
-    public net.sync.game.resource.xml.XmlStyle parse(XmlParser.Element root) throws XmlParseException {
+    public XmlStyle parse(XmlParser.Element root) throws XmlParseException {
         //Initialize map with an appropriate size
         Map<String, String> attributes = new HashMap<>(root.getChildCount());
 
@@ -76,7 +76,7 @@ public class XmlStyleParser extends XmlResourceParser<XmlStyle> {
             attributes.put(name, element.hasText() ? element.getText() : "");
         }
 
-        net.sync.game.resource.xml.XmlStyle style = new XmlStyle();
+        XmlStyle style = new XmlStyle();
         style.setAttributes(attributes);
         return style;
     }

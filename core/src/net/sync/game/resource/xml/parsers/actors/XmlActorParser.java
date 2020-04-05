@@ -46,9 +46,9 @@ import static net.sync.game.resource.xml.resolvers.XmlTouchableResolver.GLOBAL_T
  * @param <T> the type of the actor being parsed.
  */
 public abstract class XmlActorParser<T extends Actor> implements XmlElementParser<T> {
-    private net.sync.game.resource.xml.parsers.XmlLayoutParser layoutParser;
+    private XmlLayoutParser layoutParser;
 
-    public XmlActorParser(net.sync.game.resource.xml.parsers.XmlLayoutParser layoutParser) {
+    public XmlActorParser(XmlLayoutParser layoutParser) {
         this.layoutParser = layoutParser;
     }
 

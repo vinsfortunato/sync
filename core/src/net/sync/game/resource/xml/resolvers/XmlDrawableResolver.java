@@ -42,7 +42,7 @@ public abstract class XmlDrawableResolver extends XmlReferenceResolver<Resource<
     public static XmlDrawableResolver from(final ResourceProvider provider) {
         return new XmlDrawableResolver() {
             @Override
-            public Resource<Drawable> resolveReference(String resourceId) throws net.sync.game.resource.xml.XmlReferenceNotFoundException {
+            public Resource<Drawable> resolveReference(String resourceId) throws XmlReferenceNotFoundException {
                 Resource<Drawable> resource = provider.getDrawable(resourceId);
 
                 if(resource == null)

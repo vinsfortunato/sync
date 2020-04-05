@@ -89,7 +89,7 @@ public abstract class XmlDurationResolver extends XmlReferenceResolver<Long> {
     public static XmlDurationResolver from(final ResourceProvider provider) {
         return new XmlDurationResolver() {
             @Override
-            public Long resolveReference(String resourceId) throws net.sync.game.resource.xml.XmlReferenceNotFoundException {
+            public Long resolveReference(String resourceId) throws XmlReferenceNotFoundException {
                 Long duration = provider.getDuration(resourceId);
 
                 if(duration == null)

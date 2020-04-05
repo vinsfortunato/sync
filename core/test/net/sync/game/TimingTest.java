@@ -32,7 +32,7 @@ import net.sync.game.song.TimingData;
 public class TimingTest {
 
     public static void main(String[]args) {
-        net.sync.game.song.TimingData data = new TimingData();
+        TimingData data = new TimingData();
 
         data.offset = -0.353;
 

@@ -148,12 +148,12 @@ public class GraphVisualizer extends JFrame {
             g2.drawString(String.format(Locale.ENGLISH, "[%.3f | %.3f]", graphMouseX, graphMouseY), mousePosX, mousePosY);
             g2.drawString("Zoom with key +/-. Change zoom mode with key M. Current zoom mode = " + (zoomModeX ? "x" : "y"), 0, 20);
 
-            Collection<net.sync.game.util.math.Graph2DPoint> points = graph.getPoints();
+            Collection<Graph2DPoint> points = graph.getPoints();
 
             g2.translate(originX, originY);
 
             //Draw graph
-            Iterator<net.sync.game.util.math.Graph2DPoint> it = points.iterator();
+            Iterator<Graph2DPoint> it = points.iterator();
             Graph2DPoint leftPoint = null, rightPoint = null;
             while(it.hasNext()) {
                 rightPoint = it.next();

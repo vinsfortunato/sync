@@ -29,8 +29,8 @@ import net.sync.game.round.judge.TapJudgment;
 public class HoldNote implements JudgeableLengthyNote, ChordNote {
     private double beat;
     private double length;
-    private net.sync.game.round.judge.TapJudgment headJudgment;
-    private net.sync.game.round.judge.TailJudgment tailJudgment;
+    private TapJudgment headJudgment;
+    private TailJudgment tailJudgment;
     private NoteResolution resolution;
 
     /**
@@ -51,7 +51,7 @@ public class HoldNote implements JudgeableLengthyNote, ChordNote {
     }
 
     @Override
-    public net.sync.game.round.judge.Judgment getJudgment() {
+    public Judgment getJudgment() {
         return headJudgment;
     }
 
@@ -59,7 +59,7 @@ public class HoldNote implements JudgeableLengthyNote, ChordNote {
     public void setJudgment(Judgment judgment) {
         if(judgment == null) {
             this.headJudgment = null;
-        } else if(judgment instanceof net.sync.game.round.judge.TapJudgment) {
+        } else if(judgment instanceof TapJudgment) {
             this.headJudgment = (TapJudgment) judgment;
         } else {
             throw new IllegalArgumentException("Judgment must be an instance of TapJudgment!");
@@ -67,7 +67,7 @@ public class HoldNote implements JudgeableLengthyNote, ChordNote {
     }
 
     @Override
-    public net.sync.game.round.judge.TailJudgment getTailJudgment() {
+    public TailJudgment getTailJudgment() {
         return tailJudgment;
     }
 

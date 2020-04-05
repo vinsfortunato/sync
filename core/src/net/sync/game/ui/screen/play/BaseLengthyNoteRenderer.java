@@ -87,8 +87,8 @@ public abstract class BaseLengthyNoteRenderer extends BaseNoteRenderer implement
         if(note instanceof JudgeableNote) {
             JudgeableNote judgeableNote = (JudgeableNote) note;
             //TODO here we assume getJudgment is a TapJudgment
-            net.sync.game.round.judge.TapJudgment judgment = (net.sync.game.round.judge.TapJudgment) judgeableNote.getJudgment();
-            if(judgment == null || judgment.getJudgmentClass() == net.sync.game.round.judge.JudgmentClass.MISS) {
+            TapJudgment judgment = (TapJudgment) judgeableNote.getJudgment();
+            if(judgment == null || judgment.getJudgmentClass() == JudgmentClass.MISS) {
                 //Head not judged or missed
                 return super.getNoteY(panel, note, beat, time);
             }
@@ -96,7 +96,7 @@ public abstract class BaseLengthyNoteRenderer extends BaseNoteRenderer implement
 
         if(note instanceof JudgeableLengthyNote) {
             JudgeableLengthyNote lengthyNote = (JudgeableLengthyNote) note;
-            net.sync.game.round.judge.TailJudgment tailJudgment = lengthyNote.getTailJudgment();
+            TailJudgment tailJudgment = lengthyNote.getTailJudgment();
             if(tailJudgment == null){
                 //Note head overlaps receptor
                 return 0.0f;
@@ -104,7 +104,7 @@ public abstract class BaseLengthyNoteRenderer extends BaseNoteRenderer implement
                 Timing timing = getRound().getTiming();
                 double genBeat = timing.getBeatAt(tailJudgment.getGenTime());
                 float height = getNoteHeight(panel, note, beat, time);
-                net.sync.game.round.modifier.SpeedModifier speedMod = getRound().getModifiers().getSpeedModifier();
+                SpeedModifier speedMod = getRound().getModifiers().getSpeedModifier();
                 return (float) -(height * speedMod.getSpeedAt(beat) * (genBeat - beat));
             }
         }
@@ -131,10 +131,10 @@ public abstract class BaseLengthyNoteRenderer extends BaseNoteRenderer implement
         if(note instanceof JudgeableLengthyNote) {
             PanelState states = getRound().getPanelState();
             JudgeableLengthyNote lengthyNote = (JudgeableLengthyNote) note;
-            net.sync.game.round.judge.TapJudgment headJudgment = (net.sync.game.round.judge.TapJudgment) lengthyNote.getJudgment();
-            net.sync.game.round.judge.TailJudgment tailJudgment = (net.sync.game.round.judge.TailJudgment) lengthyNote.getTailJudgment();
+            TapJudgment headJudgment = (TapJudgment) lengthyNote.getJudgment();
+            TailJudgment tailJudgment = (TailJudgment) lengthyNote.getTailJudgment();
             return headJudgment != null                                         //Has head judgment
-                    && headJudgment.getJudgmentClass() != net.sync.game.round.judge.JudgmentClass.MISS    //Head judgment is not miss
+                    && headJudgment.getJudgmentClass() != JudgmentClass.MISS    //Head judgment is not miss
                     && tailJudgment == null                                     //No tail judgment
                     && states.isPressedAt(panel, time);                         //Panel pressed
         }
@@ -145,10 +145,10 @@ public abstract class BaseLengthyNoteRenderer extends BaseNoteRenderer implement
     public boolean isNoteVisible(int panel, Note note, double beat, double time) {
         if(note instanceof JudgeableLengthyNote) {
             JudgeableLengthyNote lengthyNote = (JudgeableLengthyNote) note;
-            net.sync.game.round.judge.TapJudgment headJudgment = (TapJudgment) lengthyNote.getJudgment();
-            net.sync.game.round.judge.TailJudgment tailJudgment = (TailJudgment) lengthyNote.getTailJudgment();
+            TapJudgment headJudgment = (TapJudgment) lengthyNote.getJudgment();
+            TailJudgment tailJudgment = (TailJudgment) lengthyNote.getTailJudgment();
             return headJudgment == null                                         //No head judgment
-                    || headJudgment.getJudgmentClass() == net.sync.game.round.judge.JudgmentClass.MISS    //Head missed
+                    || headJudgment.getJudgmentClass() == JudgmentClass.MISS    //Head missed
                     || tailJudgment == null                                     //No tail judgment
                     || tailJudgment.getJudgmentClass() == JudgmentClass.NG;     //Trail missed
         }

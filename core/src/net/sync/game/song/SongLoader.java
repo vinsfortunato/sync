@@ -36,11 +36,11 @@ import java.util.ArrayList;
 
 import static net.sync.game.song.sim.SimParser.parseOrDefault;
 
-public class SongLoader extends Task<net.sync.game.song.Song> {
+public class SongLoader extends Task<Song> {
     /** The sim file max allowed file length in bytes **/
     private static final long MAX_FILE_LENGTH = 10 * 1024 * 1024; //10 megabytes
     private String pack;
-    private net.sync.game.song.sim.SimFile simFile;
+    private SimFile simFile;
 
     /**
      * Creates a song loader from a given directory.
@@ -48,7 +48,7 @@ public class SongLoader extends Task<net.sync.game.song.Song> {
      * @param directory the song directory.
      */
     public SongLoader(String pack, FileHandle directory) {
-        this(pack, net.sync.game.song.sim.SimFile.searchSimFile(directory, format -> Game.instance().getSettings().getSimFormatPriority(format)));
+        this(pack, SimFile.searchSimFile(directory, format -> Game.instance().getSettings().getSimFormatPriority(format)));
     }
 
     /**
@@ -62,7 +62,7 @@ public class SongLoader extends Task<net.sync.game.song.Song> {
     }
 
     @Override
-    protected net.sync.game.song.Song call() throws Exception {
+    protected Song call() throws Exception {
         if (simFile == null) {
             //Sim file not found
             throw new FileNotFoundException("There's no supported sim file in the given directory!");
@@ -78,7 +78,7 @@ public class SongLoader extends Task<net.sync.game.song.Song> {
         parser.init(simFile);
 
         //Parse song
-        net.sync.game.song.Song song = new Song();
+        Song song = new Song();
         song.directory = simFile.getFile().parent();
         song.pack = pack;
         song.simFile = simFile;
@@ -99,7 +99,7 @@ public class SongLoader extends Task<net.sync.game.song.Song> {
 
         //Validate song
         if(song.musicPath == null)
-            throw new net.sync.game.song.sim.SimParseException("Required music path not specified");
+            throw new SimParseException("Required music path not specified");
 
         //Parse charts
         song.charts = new ArrayList<>();
@@ -121,12 +121,12 @@ public class SongLoader extends Task<net.sync.game.song.Song> {
 
                 //Validate chart
                 if(chart.type == null)
-                    throw new net.sync.game.song.sim.SimParseException("Required chart type not specified");
+                    throw new SimParseException("Required chart type not specified");
                 if(chart.timingData.bpms.isEmpty())
-                    throw new net.sync.game.song.sim.SimParseException("Timing data incomplete. Required BPMS not specified");
+                    throw new SimParseException("Timing data incomplete. Required BPMS not specified");
 
                 song.charts.add(chart);
-            } catch(net.sync.game.song.sim.SimParseException e) {
+            } catch(SimParseException e) {
                 //Skip invalid chart
             }
         }

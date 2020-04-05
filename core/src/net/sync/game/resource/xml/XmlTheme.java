@@ -30,6 +30,9 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import net.sync.game.Game;
+import net.sync.game.resource.Dimension;
+import net.sync.game.resource.Layout;
+import net.sync.game.resource.Style;
 import net.sync.game.resource.Theme;
 import net.sync.game.resource.lazy.Resource;
 import net.sync.game.util.ui.DPI;
@@ -39,15 +42,15 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-public class XmlTheme implements net.sync.game.resource.Theme {
-    private net.sync.game.resource.Theme fallback;
+public class XmlTheme implements Theme {
+    private Theme fallback;
     private FileHandle manifestFile;
     private XmlThemeManifest manifest;
 
     /* Resource maps */
     private Map<String, Resource<Drawable>> drawables;
     private Map<String, Color> colors;
-    private Map<String, net.sync.game.resource.Dimension> dimens;
+    private Map<String, Dimension> dimens;
     private Map<String, Resource<BitmapFont>> fonts;
     private Map<String, Resource<Sound>> sounds;
     private Map<String, Resource<Music>> musics;
@@ -65,13 +68,13 @@ public class XmlTheme implements net.sync.game.resource.Theme {
     }
 
     @Override
-    public Resource<net.sync.game.resource.Layout> getLayout(String id) {
+    public Resource<Layout> getLayout(String id) {
         //TODO getLayout
         return hasFallbackTheme() ? getFallbackTheme().getLayout(id) : null;
     }
 
     @Override
-    public Resource<net.sync.game.resource.Style> getStyle(String id) {
+    public Resource<Style> getStyle(String id) {
         /** TODO
         FileHandle stylesDir = manifestFile.sibling("styles");
         if(stylesDir.exists()) {
@@ -116,13 +119,13 @@ public class XmlTheme implements net.sync.game.resource.Theme {
         return hasFallbackTheme() ? getFallbackTheme().getColor(id) : null;
     }
 
-    public void setDimensions(Map<String, net.sync.game.resource.Dimension> dimens) {
+    public void setDimensions(Map<String, Dimension> dimens) {
         this.dimens = dimens;
     }
     @Override
-    public net.sync.game.resource.Dimension getDimension(String id) {
+    public Dimension getDimension(String id) {
         if(dimens != null) {
-            net.sync.game.resource.Dimension resource = dimens.get(id);
+            Dimension resource = dimens.get(id);
             if(resource != null) {
                 return resource;
             }
@@ -308,7 +311,7 @@ public class XmlTheme implements net.sync.game.resource.Theme {
     }
 
     @Override
-    public net.sync.game.resource.Theme getFallbackTheme() {
+    public Theme getFallbackTheme() {
         return fallback;
     }
 

@@ -45,8 +45,8 @@ public class XmlThemeParser extends XmlResourceParser<XmlTheme> {
     }
 
     @Override
-    public net.sync.game.resource.xml.XmlTheme parse() throws Exception {
-        net.sync.game.resource.xml.XmlTheme theme = super.parse(); //Parse theme.xml (theme manifest)
+    public XmlTheme parse() throws Exception {
+        XmlTheme theme = super.parse(); //Parse theme.xml (theme manifest)
         parseLangs(theme);              //Parse langs.xml (language resources)
         parseValues(theme);             //Parse values.xml (value resources)
         parseColors(theme);             //Parse colors.xml (color resources)
@@ -60,9 +60,9 @@ public class XmlThemeParser extends XmlResourceParser<XmlTheme> {
     }
 
     @Override
-    public net.sync.game.resource.xml.XmlTheme parse(XmlParser.Element root) throws XmlParseException {
+    public XmlTheme parse(XmlParser.Element root) throws XmlParseException {
         //Parse manifest
-        net.sync.game.resource.xml.XmlThemeManifest manifest = new XmlThemeManifest();
+        XmlThemeManifest manifest = new XmlThemeManifest();
         manifest.setVersion(XmlIntegerResolver.GLOBAL_INT_RESOLVER.resolve(root.getAttribute("version")));
         manifest.setName(root.getAttribute("name"));
         manifest.setAuthor(root.getAttribute("author"));
@@ -70,7 +70,7 @@ public class XmlThemeParser extends XmlResourceParser<XmlTheme> {
         manifest.setDescription(root.getAttribute("description"));
 
         //Create theme object
-        net.sync.game.resource.xml.XmlTheme theme = new net.sync.game.resource.xml.XmlTheme(getResourceFile());
+        XmlTheme theme = new XmlTheme(getResourceFile());
         theme.setManifest(manifest);
         return theme;
     }
@@ -82,35 +82,35 @@ public class XmlThemeParser extends XmlResourceParser<XmlTheme> {
         }
     }
 
-    private void parseLangs(net.sync.game.resource.xml.XmlTheme theme) throws Exception {
+    private void parseLangs(XmlTheme theme) throws Exception {
         FileHandle langFile = getResourceFile().sibling("langs.xml");
         if(langFile.exists()) {
             theme.setLanguages(new XmlLangsParser(langFile, theme).parse());
         }
     }
 
-    private void parseValues(net.sync.game.resource.xml.XmlTheme theme) throws Exception {
+    private void parseValues(XmlTheme theme) throws Exception {
         FileHandle valuesFile = getResourceFile().sibling("values.xml");
         if(valuesFile.exists()) {
             theme.setValues(new XmlValuesParser(valuesFile, theme).parse());
         }
     }
 
-    private void parseColors(net.sync.game.resource.xml.XmlTheme theme) throws Exception {
+    private void parseColors(XmlTheme theme) throws Exception {
         FileHandle colorsFile = getResourceFile().sibling("colors.xml");
         if(colorsFile.exists()) {
             theme.setColors(new XmlColorsParser(colorsFile, theme).parse());
         }
     }
 
-    private void parseDimens(net.sync.game.resource.xml.XmlTheme theme) throws Exception {
+    private void parseDimens(XmlTheme theme) throws Exception {
         FileHandle dimensFile = getResourceFile().sibling("dimens.xml");
         if(dimensFile.exists()) {
             theme.setDimensions(new XmlDimensParser(dimensFile, theme).parse());
         }
     }
 
-    private void parseStrings(net.sync.game.resource.xml.XmlTheme theme) throws Exception {
+    private void parseStrings(XmlTheme theme) throws Exception {
         List<Locale> langs = theme.getLanguages();
         //Check theme supported languages. If the array containing theme languages is null no string resource
         //from the theme is parsed and fallback theme will then be used to resolve string references.
@@ -125,14 +125,14 @@ public class XmlThemeParser extends XmlResourceParser<XmlTheme> {
                 //Parse active lang strings
                 FileHandle stringsFile = getStringsFile(active);
                 existsOrThrow(stringsFile);
-                net.sync.game.resource.xml.parsers.XmlStringsParser parser = new net.sync.game.resource.xml.parsers.XmlStringsParser(stringsFile, theme);
+                XmlStringsParser parser = new XmlStringsParser(stringsFile, theme);
                 Map<String, String> strings = parser.parse();
 
                 //Parse default language if active isn't already default
                 if(index != 0) {
                     stringsFile = getStringsFile(langs.get(0)); //Get default theme lang
                     existsOrThrow(stringsFile);
-                    parser = new net.sync.game.resource.xml.parsers.XmlStringsParser(stringsFile, theme);
+                    parser = new XmlStringsParser(stringsFile, theme);
                     Map<String, String> defStrings = parser.parse();
 
                     //Merge maps by overriding default lang strings with active lang strings
@@ -146,27 +146,27 @@ public class XmlThemeParser extends XmlResourceParser<XmlTheme> {
                 //Parse default theme lang strings
                 FileHandle stringsFile = getStringsFile(langs.get(0));
                 existsOrThrow(stringsFile);
-                net.sync.game.resource.xml.parsers.XmlStringsParser parser = new XmlStringsParser(stringsFile, theme);
+                XmlStringsParser parser = new XmlStringsParser(stringsFile, theme);
                 theme.setStrings(parser.parse());
             }
         }
     }
 
-    private void parseFonts(net.sync.game.resource.xml.XmlTheme theme) throws Exception {
+    private void parseFonts(XmlTheme theme) throws Exception {
         FileHandle fontsFile = getResourceFile().sibling("fonts.xml");
         if(fontsFile.exists()) {
             theme.setFonts(new XmlFontsParser(fontsFile, theme).parse());
         }
     }
 
-    private void parseSounds(net.sync.game.resource.xml.XmlTheme theme) throws Exception {
+    private void parseSounds(XmlTheme theme) throws Exception {
         FileHandle soundsFile = getResourceFile().sibling("sounds.xml");
         if(soundsFile.exists()) {
             theme.setSounds(new XmlSoundsParser(soundsFile, theme).parse());
         }
     }
 
-    private void parseMusics(net.sync.game.resource.xml.XmlTheme theme) throws Exception {
+    private void parseMusics(XmlTheme theme) throws Exception {
         FileHandle musicsFile = getResourceFile().sibling("musics.xml");
         if(musicsFile.exists()) {
             theme.setMusics(new XmlMusicsParser(musicsFile, theme).parse());

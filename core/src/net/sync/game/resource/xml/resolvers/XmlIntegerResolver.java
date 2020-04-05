@@ -58,7 +58,7 @@ public abstract class XmlIntegerResolver extends XmlReferenceResolver<Integer> {
     public static XmlIntegerResolver from(final ResourceProvider provider) {
         return new XmlIntegerResolver() {
             @Override
-            public Integer resolveReference(String resourceId) throws net.sync.game.resource.xml.XmlReferenceNotFoundException {
+            public Integer resolveReference(String resourceId) throws XmlReferenceNotFoundException {
                 Integer integer = provider.getInt(resourceId);
 
                 if(integer == null)

@@ -35,10 +35,10 @@ import net.sync.game.util.xml.XmlParseException;
 import net.sync.game.util.xml.XmlParser;
 
 public class XmlSoundsParser extends XmlMapResourceParser<Resource<Sound>> {
-    private final net.sync.game.resource.xml.XmlTheme theme;
+    private final XmlTheme theme;
     private XmlSoundResolver soundResolver = new XmlSoundResolver() {
         @Override
-        public Resource<Sound> resolveReference(String resourceId) throws XmlReferenceNotFoundException, net.sync.game.resource.xml.XmlReferenceNotCompatibleException {
+        public Resource<Sound> resolveReference(String resourceId) throws XmlReferenceNotFoundException, XmlReferenceNotCompatibleException {
             Resource<Sound> resource = getResolvedValueOrThrow(resourceId);
 
             if(resource instanceof SoundResource)

@@ -34,7 +34,7 @@ import net.sync.game.util.xml.XmlParser;
 public class XmlDimensParser extends XmlMapResourceParser<Dimension> {
     private XmlDimensionResolver dimenResolver = new XmlDimensionResolver() {
         @Override
-        public net.sync.game.resource.Dimension resolveReference(String resourceId) throws XmlReferenceNotFoundException {
+        public Dimension resolveReference(String resourceId) throws XmlReferenceNotFoundException {
             return getResolvedValueOrThrow(resourceId);
         }
     };

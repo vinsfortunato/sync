@@ -42,7 +42,7 @@ public class ControlsView extends Widget {
     private float controlWidth = 40;
     private float controlHeight = 40;
 
-    private net.sync.game.round.Round round;
+    private Round round;
 
     public ControlsView(Round round) {
         super();
@@ -137,7 +137,7 @@ public class ControlsView extends Widget {
         return (float) Math.sqrt(Math.pow(rx, 2.0f) + Math.pow(ry, 2.0f));
     }
 
-    private net.sync.game.round.PanelState getControls() {
+    private PanelState getControls() {
         return round.getPanelState();
     }
 

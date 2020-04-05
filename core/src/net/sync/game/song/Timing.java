@@ -224,9 +224,9 @@ public class Timing {
         //Stores the duration of each bpm
         Map<Double, Double> durations = new HashMap<>();
 
-        Iterator<net.sync.game.util.math.Graph2DPoint> it = beatGraph.getPoints().iterator();
+        Iterator<Graph2DPoint> it = beatGraph.getPoints().iterator();
         while(it.hasNext()) {
-            net.sync.game.util.math.Graph2DPoint point = it.next();
+            Graph2DPoint point = it.next();
             double currTime = point.x;
 
             if(prevBpm >= 0) {
@@ -274,7 +274,7 @@ public class Timing {
      */
     private static class TimingBeatGraphBuilder {
         private Set<TimingKeyBeat> keyBeats;
-        private net.sync.game.util.math.LineGraph2D beatGraph = new net.sync.game.util.math.LineGraph2D();
+        private LineGraph2D beatGraph = new LineGraph2D();
         private double offset;
         private double currentTime = 0.0D;
         private double currentBeat = 0.0D;
@@ -288,7 +288,7 @@ public class Timing {
             this.keyBeats = keyBeats;
         }
 
-        net.sync.game.util.math.LineGraph2D build() {
+        LineGraph2D build() {
             //Set offset
             currentTime = -offset;
             beatGraph.putPoint(currentTime, currentBeat);

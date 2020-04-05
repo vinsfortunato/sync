@@ -42,7 +42,7 @@ public abstract class XmlMusicResolver extends XmlReferenceResolver<Resource<Mus
     public static XmlMusicResolver from(final ResourceProvider provider) {
         return new XmlMusicResolver() {
             @Override
-            public Resource<Music> resolveReference(String resourceId) throws net.sync.game.resource.xml.XmlReferenceNotFoundException {
+            public Resource<Music> resolveReference(String resourceId) throws XmlReferenceNotFoundException {
                 Resource<Music> resource = provider.getMusic(resourceId);
 
                 if(resource == null)

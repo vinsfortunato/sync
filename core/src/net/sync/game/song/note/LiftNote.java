@@ -29,14 +29,14 @@ import net.sync.game.round.judge.Judgment;
  */
 public class LiftNote implements JudgeableNote {
     private double beat;
-    private net.sync.game.round.judge.Judgment judgment;
+    private Judgment judgment;
 
     public LiftNote(double beat) {
         this.beat = beat;
     }
 
     @Override
-    public net.sync.game.round.judge.Judgment getJudgment() {
+    public Judgment getJudgment() {
         return judgment;
     }
 

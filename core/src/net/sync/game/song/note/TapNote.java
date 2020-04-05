@@ -27,7 +27,7 @@ import net.sync.game.round.judge.TapJudgment;
 
 public class TapNote implements JudgeableNote, ChordNote {
     private double beat;
-    private net.sync.game.round.judge.TapJudgment judgment;
+    private TapJudgment judgment;
     private NoteResolution resolution;
 
     public TapNote(double beat) {
@@ -36,7 +36,7 @@ public class TapNote implements JudgeableNote, ChordNote {
     }
 
     @Override
-    public net.sync.game.round.judge.TapJudgment getJudgment() {
+    public TapJudgment getJudgment() {
         return judgment;
     }
 
@@ -44,7 +44,7 @@ public class TapNote implements JudgeableNote, ChordNote {
     public void setJudgment(Judgment judgment) {
         if(judgment == null) {
             this.judgment = null;
-        } else if(judgment instanceof net.sync.game.round.judge.TapJudgment) {
+        } else if(judgment instanceof TapJudgment) {
             this.judgment = (TapJudgment) judgment;
         } else {
             throw new IllegalArgumentException("Judgment must be an instance of TapJudgment!");

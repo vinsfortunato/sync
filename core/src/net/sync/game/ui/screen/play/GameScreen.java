@@ -54,12 +54,12 @@ public class GameScreen implements Screen {
     private int resGroup;
 
     /* Widgets */
-    private net.sync.game.ui.screen.play.BeatmapView beatmapView;
-    private net.sync.game.ui.screen.play.ControlsView controlsView;
-    private net.sync.game.ui.screen.play.JudgmentView judgmentView;
+    private BeatmapView beatmapView;
+    private ControlsView controlsView;
+    private JudgmentView judgmentView;
 
     private Music music;
-    private net.sync.game.round.Round round;
+    private Round round;
 
     private GameScreen() {
         Game.instance().getDisposer().manage(this);

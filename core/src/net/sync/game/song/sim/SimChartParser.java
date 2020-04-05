@@ -23,6 +23,10 @@
 package net.sync.game.song.sim;
 
 import net.sync.game.song.Beatmap;
+import net.sync.game.song.ChartType;
+import net.sync.game.song.DifficultyClass;
+import net.sync.game.song.DisplayBPM;
+import net.sync.game.song.TimingData;
 
 /**
  * Parse a sim chart content.
@@ -36,21 +40,21 @@ public interface SimChartParser {
 
     void init() throws SimParseException;
 
-    net.sync.game.song.ChartType parseChartType() throws SimParseException;
+    ChartType parseChartType() throws SimParseException;
 
-    net.sync.game.song.DifficultyClass parseDifficultyClass() throws SimParseException;
+    DifficultyClass parseDifficultyClass() throws SimParseException;
 
-    net.sync.game.song.TimingData parseTimingData() throws SimParseException;
+    TimingData parseTimingData() throws SimParseException;
 
     Beatmap parseBeatmap() throws SimParseException;
 
     /**
      * This can be used to override the BPM shown on song selection screen.
-     * <p> Check {@link net.sync.game.song.DisplayBPM DisplayBPM} class for more details. </p>
-     * @return an instance of {@link net.sync.game.song.DisplayBPM} or null if there's no need
+     * <p> Check {@link DisplayBPM DisplayBPM} class for more details. </p>
+     * @return an instance of {@link DisplayBPM} or null if there's no need
      * to override the default behavior or the value cannot be parsed correctly.
      */
-    net.sync.game.song.DisplayBPM parseDisplayBPM() throws SimParseException;
+    DisplayBPM parseDisplayBPM() throws SimParseException;
 
     int parseDifficultyMeter() throws SimParseException;
 

@@ -40,7 +40,7 @@ public abstract class XmlStringResolver extends XmlReferenceResolver<String> {
     public static XmlStringResolver from(final ResourceProvider provider) {
         return new XmlStringResolver() {
             @Override
-            public String resolveReference(String resourceId) throws net.sync.game.resource.xml.XmlReferenceNotFoundException {
+            public String resolveReference(String resourceId) throws XmlReferenceNotFoundException {
                 String string = provider.getString(resourceId);
 
                 if(string == null)

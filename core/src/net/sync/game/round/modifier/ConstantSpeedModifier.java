@@ -31,7 +31,7 @@ import java.util.Map;
  * A speed modifier that keeps BPM at a constant given value.
  */
 public class ConstantSpeedModifier extends SpeedModifier {
-    private net.sync.game.util.math.StepFunction<Double, Double> speedFunction;
+    private StepFunction<Double, Double> speedFunction;
 
     /**
      * Construct the modifier from timing data and the constant bpm.

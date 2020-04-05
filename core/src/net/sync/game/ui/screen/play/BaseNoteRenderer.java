@@ -32,7 +32,7 @@ import net.sync.game.song.note.Note;
 import net.sync.game.song.note.NotePanel;
 
 public abstract class BaseNoteRenderer implements NoteRenderer {
-    private final net.sync.game.ui.screen.play.BeatmapView view;
+    private final BeatmapView view;
 
     public BaseNoteRenderer(BeatmapView view) {
         this.view = view;

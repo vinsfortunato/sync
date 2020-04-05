@@ -27,7 +27,7 @@ import net.sync.game.resource.xml.parsers.XmlLayoutParser;
 import net.sync.game.util.xml.XmlParseException;
 import net.sync.game.util.xml.XmlParser;
 
-public abstract class XmlGroupParser<T extends Group> extends net.sync.game.resource.xml.parsers.actors.XmlActorParser<T> {
+public abstract class XmlGroupParser<T extends Group> extends XmlActorParser<T> {
     public XmlGroupParser(XmlLayoutParser layoutParser) {
         super(layoutParser);
     }

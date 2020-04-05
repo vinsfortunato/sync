@@ -68,12 +68,12 @@ public abstract class XmlReferenceResolver<T> implements XmlValueResolver<T> {
      * Checks if the given reference type is compatible.
      * <p>Base implementation will check if the reference type is the same of {@link #getResourceTypeName()}. </p>
      * @param type the reference type, not null.
-     * @throws net.sync.game.resource.xml.XmlReferenceNotCompatibleException if the given reference type is not compatible.
+     * @throws XmlReferenceNotCompatibleException if the given reference type is not compatible.
      */
-    public void checkReferenceType(String type) throws net.sync.game.resource.xml.XmlReferenceNotCompatibleException {
+    public void checkReferenceType(String type) throws XmlReferenceNotCompatibleException {
         String resType = getResourceTypeName();
          if(!type.equals(resType)) {
-             throw new net.sync.game.resource.xml.XmlReferenceNotCompatibleException(
+             throw new XmlReferenceNotCompatibleException(
                      String.format("Uncompatible reference type. Expected to be %s", resType));
          }
     }
@@ -87,13 +87,13 @@ public abstract class XmlReferenceResolver<T> implements XmlValueResolver<T> {
     /**
      * Resolve reference by finding a resource with the given id. If the
      * resource cannot be found an {@link XmlParseException} must be
-     * thrown. It must throw {@link net.sync.game.resource.xml.XmlReferenceNotFoundException} if the referenced resource
-     * has not been declared before and {@link net.sync.game.resource.xml.XmlReferenceNotCompatibleException} if the
+     * thrown. It must throw {@link XmlReferenceNotFoundException} if the referenced resource
+     * has not been declared before and {@link XmlReferenceNotCompatibleException} if the
      * referenced resource is present but not compatible (e.g. int resource referencing string resource).
      * @param resourceId the resource identifier.
      * @return the referenced resource value, never null.
-     * @throws net.sync.game.resource.xml.XmlReferenceNotFoundException if there's no declared resource with the given id.
-     * @throws net.sync.game.resource.xml.XmlReferenceNotCompatibleException if the referenced resource is incompatible
+     * @throws XmlReferenceNotFoundException if there's no declared resource with the given id.
+     * @throws XmlReferenceNotCompatibleException if the referenced resource is incompatible
      */
     public abstract T resolveReference(String resourceId)
             throws XmlReferenceNotFoundException, XmlReferenceNotCompatibleException;

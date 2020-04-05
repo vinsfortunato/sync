@@ -26,7 +26,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import net.sync.game.util.ui.TexturePath;
 
-public class RegionResource extends net.sync.game.resource.lazy.TextureResource {
+public class RegionResource extends TextureResource {
     public int x;
     public int y;
     public int width;

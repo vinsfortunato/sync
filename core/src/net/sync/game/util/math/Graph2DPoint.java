@@ -23,7 +23,7 @@
 package net.sync.game.util.math;
 
 /**
- * Represents a {@link net.sync.game.util.math.Graph2D} point. Points are interpolated using a specific algorithm to
+ * Represents a {@link Graph2D} point. Points are interpolated using a specific algorithm to
  * get a function that contains them.
  * @author Vincenzo Fortunato
  */

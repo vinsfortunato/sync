@@ -56,7 +56,7 @@ public class TextureResource extends DrawableResource {
 
     @Override
     public TextureRegionDrawable get() {
-        AssetManager assets = net.sync.game.Game.instance().getAssets();
+        AssetManager assets = Game.instance().getAssets();
         AssetDescriptor<Texture> descriptor = getAssetDescriptor();
 
         if(assets.isLoaded(descriptor)) {
@@ -74,7 +74,7 @@ public class TextureResource extends DrawableResource {
 
     @Override
     public boolean isAvailable() {
-        AssetManager assets = net.sync.game.Game.instance().getAssets();
+        AssetManager assets = Game.instance().getAssets();
         AssetDescriptor<Texture> descriptor = getAssetDescriptor();
 
         return assets.isLoaded(descriptor);

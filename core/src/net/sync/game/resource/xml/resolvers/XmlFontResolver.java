@@ -42,7 +42,7 @@ public abstract class XmlFontResolver extends XmlReferenceResolver<Resource<Bitm
     public static XmlFontResolver from(final ResourceProvider provider) {
         return new XmlFontResolver() {
             @Override
-            public Resource<BitmapFont> resolveReference(String resourceId) throws net.sync.game.resource.xml.XmlReferenceNotFoundException {
+            public Resource<BitmapFont> resolveReference(String resourceId) throws XmlReferenceNotFoundException {
                 Resource<BitmapFont> resource =  provider.getFont(resourceId);
 
                 if(resource == null)

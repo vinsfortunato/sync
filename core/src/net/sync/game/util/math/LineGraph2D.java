@@ -29,7 +29,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * <p>A {@link net.sync.game.util.math.Graph2D} where marker point are interpolated using a linear algorithm (consecutive
+ * <p>A {@link Graph2D} where marker point are interpolated using a linear algorithm (consecutive
  * points joined by straight lines). </p>
  * <p> The image of x located before the first point, or after the last point is calculated as follows:
  * <li>The image of x before the first point is undefined if the first point is a jump, otherwise
@@ -45,18 +45,18 @@ import java.util.TreeMap;
  * @author Vincenzo Fortunato
  */
 public class LineGraph2D implements Graph2D {
-    private TreeMap<Double, net.sync.game.util.math.Graph2DPoint> points = new TreeMap<>();
+    private TreeMap<Double, Graph2DPoint> points = new TreeMap<>();
     private int jumpCount = 0;
 
     @Override
-    public net.sync.game.util.math.Graph2DPoint putPoint(Double x, Double y) {
-        return putPoint(new net.sync.game.util.math.Graph2DPoint(x, y, 0.0D, false));
+    public Graph2DPoint putPoint(Double x, Double y) {
+        return putPoint(new Graph2DPoint(x, y, 0.0D, false));
     }
 
     @Override
-    public net.sync.game.util.math.Graph2DPoint putPoint(net.sync.game.util.math.Graph2DPoint point) {
+    public Graph2DPoint putPoint(Graph2DPoint point) {
         Preconditions.checkNotNull(point, "Cannot add a null point.");
-        net.sync.game.util.math.Graph2DPoint oldPoint = points.get(point.x);
+        Graph2DPoint oldPoint = points.get(point.x);
         if(oldPoint != null && oldPoint.isJump()) {
             jumpCount--;
         }
@@ -68,8 +68,8 @@ public class LineGraph2D implements Graph2D {
     }
 
     @Override
-    public net.sync.game.util.math.Graph2DPoint removePoint(Double x) {
-        net.sync.game.util.math.Graph2DPoint point = points.remove(x);
+    public Graph2DPoint removePoint(Double x) {
+        Graph2DPoint point = points.remove(x);
         if(point != null) {
             if(point.isJump()) {
                 jumpCount--;
@@ -80,12 +80,12 @@ public class LineGraph2D implements Graph2D {
     }
 
     @Override
-    public net.sync.game.util.math.Graph2DPoint removePoint(net.sync.game.util.math.Graph2DPoint point) {
+    public Graph2DPoint removePoint(Graph2DPoint point) {
         return point != null ? removePoint(point.x) : null;
     }
 
     @Override
-    public Collection<net.sync.game.util.math.Graph2DPoint> getPoints() {
+    public Collection<Graph2DPoint> getPoints() {
         return points.values();
     }
 
@@ -96,7 +96,7 @@ public class LineGraph2D implements Graph2D {
 
     @Override
     public Double putJump(Double x, Double amount, boolean leftDefined) {
-        net.sync.game.util.math.Graph2DPoint point = points.get(x);
+        Graph2DPoint point = points.get(x);
         if(point != null) {
             if(point.isJump() && amount.equals(0.0D)) {
                 jumpCount--;
@@ -108,7 +108,7 @@ public class LineGraph2D implements Graph2D {
             point.leftDefined = leftDefined;
             return oldJump;
         } else if(!amount.equals(0.0D)){
-            points.put(x, new net.sync.game.util.math.Graph2DPoint(x, f(x), amount, leftDefined));
+            points.put(x, new Graph2DPoint(x, f(x), amount, leftDefined));
             jumpCount++;
         }
         return 0.0D;
@@ -116,7 +116,7 @@ public class LineGraph2D implements Graph2D {
 
     @Override
     public Double removeJump(Double x) {
-        net.sync.game.util.math.Graph2DPoint point = points.get(x);
+        Graph2DPoint point = points.get(x);
         if(point != null && point.isJump()) {
             Double oldJump = point.jump;
             point.jump = 0.0D;
@@ -128,13 +128,13 @@ public class LineGraph2D implements Graph2D {
 
     @Override
     public boolean isJump(Double x) {
-        net.sync.game.util.math.Graph2DPoint point = points.get(x);
+        Graph2DPoint point = points.get(x);
         return point != null && point.isJump();
     }
 
     @Override
     public Double getJumpAmount(Double x) {
-        net.sync.game.util.math.Graph2DPoint point = points.get(x);
+        Graph2DPoint point = points.get(x);
         if(point != null) {
             return point.jump;
         }
@@ -149,12 +149,12 @@ public class LineGraph2D implements Graph2D {
     @Override
     public Double f(Double x) {
         Preconditions.checkState(getPointCount() > 1, "The graph needs at least two points.");
-        Map.Entry<Double, net.sync.game.util.math.Graph2DPoint> floorEntry, ceilingEntry;
+        Map.Entry<Double, Graph2DPoint> floorEntry, ceilingEntry;
 
         floorEntry = points.floorEntry(x);
         if(floorEntry != null) {
             if(floorEntry.getKey().equals(x)) {
-                net.sync.game.util.math.Graph2DPoint point = floorEntry.getValue();
+                Graph2DPoint point = floorEntry.getValue();
                 if(point.leftDefined) {
                     return point.y;
                 } else {
@@ -179,8 +179,8 @@ public class LineGraph2D implements Graph2D {
             ceilingEntry = points.higherEntry(floorEntry.getKey());
         }
 
-        net.sync.game.util.math.Graph2DPoint floorPoint = floorEntry.getValue();
-        net.sync.game.util.math.Graph2DPoint ceilingPoint = ceilingEntry.getValue();
+        Graph2DPoint floorPoint = floorEntry.getValue();
+        Graph2DPoint ceilingPoint = ceilingEntry.getValue();
         double x1 = floorPoint.x,
                x2 = ceilingPoint.x,
                y1 = floorPoint.y + floorPoint.jump,
@@ -209,8 +209,8 @@ public class LineGraph2D implements Graph2D {
         }
         //Check if the function is monotonic, otherwise it's not invertible.
         double signum = 0.0D; //1.0 if the function is increasing, -1.0 if it's decreasing.
-        net.sync.game.util.math.Graph2DPoint prevPoint = null;
-        for(net.sync.game.util.math.Graph2DPoint point : getPoints()) {
+        Graph2DPoint prevPoint = null;
+        for(Graph2DPoint point : getPoints()) {
             if(prevPoint != null) {
                 double prevY = prevPoint.y + prevPoint.jump;
                 double currY = point.y;
@@ -234,11 +234,11 @@ public class LineGraph2D implements Graph2D {
             throw new IllegalStateException("Cannot invert the graph, it's not monotonic.");
         }
         LineGraph2D invertedGraph = new LineGraph2D();
-        net.sync.game.util.math.Graph2DPoint prevPoint = null;
-        for(net.sync.game.util.math.Graph2DPoint point : getPoints()) {
+        Graph2DPoint prevPoint = null;
+        for(Graph2DPoint point : getPoints()) {
             if(prevPoint != null && Double.compare(point.y, prevPoint.y) == 0) {
                 //Constant segment turn into jump, left defined is the same of the constant segment end point
-                invertedGraph.putPoint(new net.sync.game.util.math.Graph2DPoint(
+                invertedGraph.putPoint(new Graph2DPoint(
                         prevPoint.y,
                         prevPoint.x,
                         point.x - prevPoint.x + invertedGraph.getJumpAmount(point.y),

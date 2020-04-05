@@ -42,7 +42,7 @@ public abstract class XmlSoundResolver extends XmlReferenceResolver<Resource<Sou
     public static XmlSoundResolver from(final ResourceProvider provider) {
         return new XmlSoundResolver() {
             @Override
-            public Resource<Sound> resolveReference(String resourceId) throws net.sync.game.resource.xml.XmlReferenceNotFoundException {
+            public Resource<Sound> resolveReference(String resourceId) throws XmlReferenceNotFoundException {
                 Resource<Sound> resource = provider.getSound(resourceId);
 
                 if(resource == null)

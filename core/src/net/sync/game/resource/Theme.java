@@ -47,9 +47,9 @@ public interface Theme extends ResourceProvider {
     boolean hasFallbackTheme();
 
     /**
-     * Gets the {@link net.sync.game.resource.ThemeManifest manifest} of the theme. It contains
+     * Gets the {@link ThemeManifest manifest} of the theme. It contains
      * theme information such as the name, the author etc...
-     * @return a {@link net.sync.game.resource.ThemeManifest} instance.
+     * @return a {@link ThemeManifest} instance.
      */
     ThemeManifest getManifest();
 

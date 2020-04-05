@@ -40,19 +40,19 @@ public class Round {
     private Score score;
     private Life life;
     private Music music;
-    private net.sync.game.round.MusicPosition musicPosition;
+    private MusicPosition musicPosition;
     private Judge judge;
-    private net.sync.game.round.PanelState panelState;
-    private net.sync.game.round.modifier.Modifiers modifiers;
+    private PanelState panelState;
+    private Modifiers modifiers;
 
     public Round(Song song, Chart chart, Music music) {
         this.song = song;
         this.chart = chart;
         this.music = music;
-        this.musicPosition = new net.sync.game.round.MusicPosition(music);
+        this.musicPosition = new MusicPosition(music);
         this.timing = new Timing(chart.timingData);
-        this.modifiers = new net.sync.game.round.modifier.Modifiers();
-        this.panelState = new net.sync.game.round.PanelState();
+        this.modifiers = new Modifiers();
+        this.panelState = new PanelState();
         this.judge = new Judge( this, new JudgeCriteria());
         this.panelState.addListener(this.judge);
 

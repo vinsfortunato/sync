@@ -29,10 +29,22 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import net.sync.game.resource.Dimension;
 import net.sync.game.resource.lazy.DrawableResource;
+import net.sync.game.resource.lazy.NinepatchResource;
+import net.sync.game.resource.lazy.RegionResource;
+import net.sync.game.resource.lazy.Resource;
+import net.sync.game.resource.lazy.SpriteResource;
+import net.sync.game.resource.lazy.TextureResource;
 import net.sync.game.resource.xml.XmlReferenceNotCompatibleException;
 import net.sync.game.resource.xml.XmlReferenceNotFoundException;
 import net.sync.game.resource.xml.XmlTheme;
+import net.sync.game.resource.xml.resolvers.XmlBooleanResolver;
+import net.sync.game.resource.xml.resolvers.XmlColorResolver;
 import net.sync.game.resource.xml.resolvers.XmlDimensionResolver;
+import net.sync.game.resource.xml.resolvers.XmlDrawableResolver;
+import net.sync.game.resource.xml.resolvers.XmlFloatResolver;
+import net.sync.game.resource.xml.resolvers.XmlIntegerResolver;
+import net.sync.game.resource.xml.resolvers.XmlReferenceResolver;
+import net.sync.game.resource.xml.resolvers.XmlStringResolver;
 import net.sync.game.util.xml.XmlParseException;
 import net.sync.game.util.xml.XmlParser;
 import net.sync.game.util.xml.XmlValueResolver;
@@ -45,8 +57,8 @@ import static net.sync.game.resource.xml.resolvers.XmlPixmapFormatResolver.GLOBA
 import static net.sync.game.resource.xml.resolvers.XmlTextureFilterResolver.GLOBAL_TEXTURE_FILTER_RESOLVER;
 import static net.sync.game.resource.xml.resolvers.XmlTextureWrapResolver.GLOBAL_TEXTURE_WRAP_RESOLVER;
 
-public class XmlDrawablesParser extends XmlMapResourceParser<net.sync.game.resource.lazy.Resource<Drawable>> {
-    private final net.sync.game.resource.xml.XmlTheme theme;
+public class XmlDrawablesParser extends XmlMapResourceParser<Resource<Drawable>> {
+    private final XmlTheme theme;
 
     /**
      * Create a resource parser from its file.
@@ -58,15 +70,15 @@ public class XmlDrawablesParser extends XmlMapResourceParser<net.sync.game.resou
 
         //Init resolvers
         this.dimensionResolver = XmlDimensionResolver.from(theme);
-        this.booleanResolver = net.sync.game.resource.xml.resolvers.XmlBooleanResolver.from(theme);
-        this.colorResolver = net.sync.game.resource.xml.resolvers.XmlColorResolver.from(theme);
-        this.floatResolver = net.sync.game.resource.xml.resolvers.XmlFloatResolver.from(theme);
-        this.integerResolver = net.sync.game.resource.xml.resolvers.XmlIntegerResolver.from(theme);
-        this.stringResolver = net.sync.game.resource.xml.resolvers.XmlStringResolver.from(theme);
+        this.booleanResolver = XmlBooleanResolver.from(theme);
+        this.colorResolver = XmlColorResolver.from(theme);
+        this.floatResolver = XmlFloatResolver.from(theme);
+        this.integerResolver = XmlIntegerResolver.from(theme);
+        this.stringResolver = XmlStringResolver.from(theme);
     }
 
     @Override
-    public Map<String, net.sync.game.resource.lazy.Resource<Drawable>> parse(XmlParser.Element root) throws XmlParseException {
+    public Map<String, Resource<Drawable>> parse(XmlParser.Element root) throws XmlParseException {
         //Merge xml included files into root
         mergeIncludes(root);
         return super.parse(root);
@@ -122,7 +134,7 @@ public class XmlDrawablesParser extends XmlMapResourceParser<net.sync.game.resou
     }
 
     @Override
-    protected void parseAttributes(String id, net.sync.game.resource.lazy.Resource<Drawable> value, XmlParser.Element element) throws XmlParseException {
+    protected void parseAttributes(String id, Resource<Drawable> value, XmlParser.Element element) throws XmlParseException {
         for (ObjectMap.Entry<String, String> attribute : element.getAttributes()) {
             String key = attribute.key;
             String val = attribute.value;
@@ -132,11 +144,11 @@ public class XmlDrawablesParser extends XmlMapResourceParser<net.sync.game.resou
 
             //Parse attribute
             boolean parsed = false;
-            if(value instanceof net.sync.game.resource.lazy.DrawableResource && parseAttribute((net.sync.game.resource.lazy.DrawableResource)  value, key, val)) parsed = true;
-            if(value instanceof net.sync.game.resource.lazy.TextureResource && parseAttribute((net.sync.game.resource.lazy.TextureResource)   value, key, val)) parsed = true;
-            if(value instanceof net.sync.game.resource.lazy.RegionResource && parseAttribute((net.sync.game.resource.lazy.RegionResource)    value, key, val)) parsed = true;
-            if(value instanceof net.sync.game.resource.lazy.SpriteResource && parseAttribute((net.sync.game.resource.lazy.SpriteResource)    value, key, val)) parsed = true;
-            if(value instanceof net.sync.game.resource.lazy.NinepatchResource && parseAttribute((net.sync.game.resource.lazy.NinepatchResource) value, key, val)) parsed = true;
+            if(value instanceof DrawableResource && parseAttribute((DrawableResource)  value, key, val)) parsed = true;
+            if(value instanceof TextureResource && parseAttribute((TextureResource)   value, key, val)) parsed = true;
+            if(value instanceof RegionResource && parseAttribute((RegionResource)    value, key, val)) parsed = true;
+            if(value instanceof SpriteResource && parseAttribute((SpriteResource)    value, key, val)) parsed = true;
+            if(value instanceof NinepatchResource && parseAttribute((NinepatchResource) value, key, val)) parsed = true;
 
             if(!parsed)
                 throw new XmlParseException(String.format(
@@ -144,7 +156,7 @@ public class XmlDrawablesParser extends XmlMapResourceParser<net.sync.game.resou
         }
     }
 
-    private boolean parseAttribute(net.sync.game.resource.lazy.DrawableResource resource, String name, String value) throws XmlParseException {
+    private boolean parseAttribute(DrawableResource resource, String name, String value) throws XmlParseException {
         switch(name) {
             case "leftWidth":    resource.leftWidth = floatResolver.resolve(value);                               break;
             case "rightWidth":   resource.rightWidth = floatResolver.resolve(value);                              break;
@@ -156,7 +168,7 @@ public class XmlDrawablesParser extends XmlMapResourceParser<net.sync.game.resou
         return true;
     }
 
-    private boolean parseAttribute(net.sync.game.resource.lazy.TextureResource resource, String name, String value) throws XmlParseException {
+    private boolean parseAttribute(TextureResource resource, String name, String value) throws XmlParseException {
         switch(name) {
             case "minFilter":  resource.minFilter = GLOBAL_TEXTURE_FILTER_RESOLVER.resolve(value);                break;
             case "maxFilter":  resource.magFilter = GLOBAL_TEXTURE_FILTER_RESOLVER.resolve(value);                break;
@@ -170,7 +182,7 @@ public class XmlDrawablesParser extends XmlMapResourceParser<net.sync.game.resou
         return true;
     }
 
-    private boolean parseAttribute(net.sync.game.resource.lazy.RegionResource resource, String name, String value) throws XmlParseException {
+    private boolean parseAttribute(RegionResource resource, String name, String value) throws XmlParseException {
         switch(name) {
             case "x":      resource.x = dimensionResolver.resolve(value).getIntValue();                           break;
             case "y":      resource.y = dimensionResolver.resolve(value).getIntValue();                           break;
@@ -182,7 +194,7 @@ public class XmlDrawablesParser extends XmlMapResourceParser<net.sync.game.resou
         return true;
     }
 
-    private boolean parseAttribute(net.sync.game.resource.lazy.SpriteResource resource, String name, String value) throws XmlParseException {
+    private boolean parseAttribute(SpriteResource resource, String name, String value) throws XmlParseException {
         switch(name) { //TODO
             case "x": break;
             default: return false; //Unrecognised attribute
@@ -191,7 +203,7 @@ public class XmlDrawablesParser extends XmlMapResourceParser<net.sync.game.resou
         return true;
     }
 
-    private boolean parseAttribute(net.sync.game.resource.lazy.NinepatchResource resource, String name, String value) throws XmlParseException {
+    private boolean parseAttribute(NinepatchResource resource, String name, String value) throws XmlParseException {
         switch(name) { //TODO
             case "x": break;
             default: return false; //Unrecognised attribute
@@ -222,7 +234,7 @@ public class XmlDrawablesParser extends XmlMapResourceParser<net.sync.game.resou
     }
 
     @Override
-    protected net.sync.game.resource.xml.resolvers.XmlReferenceResolver<net.sync.game.resource.lazy.Resource<Drawable>> getResolver(XmlParser.Element element) {
+    protected XmlReferenceResolver<Resource<Drawable>> getResolver(XmlParser.Element element) {
         switch (element.getName()) {
             case "texture":     return textureResolver;
             case "region":      return regionResolver;
@@ -243,26 +255,26 @@ public class XmlDrawablesParser extends XmlMapResourceParser<net.sync.game.resou
     private final XmlValueResolver<String> stringResolver;
 
     /* Drawable resolver */
-    private final net.sync.game.resource.xml.resolvers.XmlReferenceResolver<net.sync.game.resource.lazy.Resource<Drawable>> drawableResolver = new net.sync.game.resource.xml.resolvers.XmlDrawableResolver() {
+    private final XmlReferenceResolver<Resource<Drawable>> drawableResolver = new XmlDrawableResolver() {
         @Override
-        public net.sync.game.resource.lazy.Resource<Drawable> resolveReference(String resourceId) throws net.sync.game.resource.xml.XmlReferenceNotFoundException, net.sync.game.resource.xml.XmlReferenceNotCompatibleException {
-            net.sync.game.resource.lazy.Resource<Drawable> resource = getResolvedValueOrThrow(resourceId);
+        public Resource<Drawable> resolveReference(String resourceId) throws XmlReferenceNotFoundException, XmlReferenceNotCompatibleException {
+            Resource<Drawable> resource = getResolvedValueOrThrow(resourceId);
 
-            if(resource instanceof net.sync.game.resource.lazy.DrawableResource) {
-                return ((net.sync.game.resource.lazy.DrawableResource)resource).copy();
+            if(resource instanceof DrawableResource) {
+                return ((DrawableResource)resource).copy();
             }
 
-            throw net.sync.game.resource.xml.XmlReferenceNotCompatibleException.incompatibleType(resource.getClass(), DrawableResource.class);
+            throw XmlReferenceNotCompatibleException.incompatibleType(resource.getClass(), DrawableResource.class);
         }
 
         @Override
-        public net.sync.game.resource.lazy.Resource<Drawable> resolveValue(String value) throws XmlParseException {
+        public Resource<Drawable> resolveValue(String value) throws XmlParseException {
             //<drawable> is used only for referencing. So no need to parse value.
             throw new XmlParseException("Illegal value. Drawable resource value must be a reference!");
         }
 
         @Override
-        public void checkReferenceType(String type) throws net.sync.game.resource.xml.XmlReferenceNotCompatibleException {
+        public void checkReferenceType(String type) throws XmlReferenceNotCompatibleException {
             switch(type) {
                 case "drawable":
                 case "texture":
@@ -271,30 +283,30 @@ public class XmlDrawablesParser extends XmlMapResourceParser<net.sync.game.resou
                 case "ninepatch":
                     return;
             }
-            throw new net.sync.game.resource.xml.XmlReferenceNotCompatibleException("Incompatible drawable reference type!");
+            throw new XmlReferenceNotCompatibleException("Incompatible drawable reference type!");
         }
     };
 
     /* Sprite resolver */
-    private final net.sync.game.resource.xml.resolvers.XmlReferenceResolver<net.sync.game.resource.lazy.Resource<Drawable>> spriteResolver = new net.sync.game.resource.xml.resolvers.XmlDrawableResolver() {
+    private final XmlReferenceResolver<Resource<Drawable>> spriteResolver = new XmlDrawableResolver() {
         @Override
-        public net.sync.game.resource.lazy.Resource<Drawable> resolveReference(String resourceId) throws net.sync.game.resource.xml.XmlReferenceNotFoundException, net.sync.game.resource.xml.XmlReferenceNotCompatibleException {
-            net.sync.game.resource.lazy.Resource<Drawable> resource = getResolvedValueOrThrow(resourceId);
+        public Resource<Drawable> resolveReference(String resourceId) throws XmlReferenceNotFoundException, XmlReferenceNotCompatibleException {
+            Resource<Drawable> resource = getResolvedValueOrThrow(resourceId);
 
-            if(resource instanceof net.sync.game.resource.lazy.SpriteResource)
-                return ((net.sync.game.resource.lazy.SpriteResource)resource).copy();
+            if(resource instanceof SpriteResource)
+                return ((SpriteResource)resource).copy();
 
-            throw net.sync.game.resource.xml.XmlReferenceNotCompatibleException.incompatibleType(resource.getClass(), net.sync.game.resource.lazy.SpriteResource.class);
+            throw XmlReferenceNotCompatibleException.incompatibleType(resource.getClass(), SpriteResource.class);
         }
 
         @Override
-        public net.sync.game.resource.lazy.Resource<Drawable> resolveValue(String value) throws XmlParseException {
+        public Resource<Drawable> resolveValue(String value) throws XmlParseException {
             //TODO
             return null;
         }
 
         @Override
-        public void checkReferenceType(String type) throws net.sync.game.resource.xml.XmlReferenceNotCompatibleException {
+        public void checkReferenceType(String type) throws XmlReferenceNotCompatibleException {
             switch(type) {
                 case "drawable":
                 case "texture":
@@ -302,30 +314,30 @@ public class XmlDrawablesParser extends XmlMapResourceParser<net.sync.game.resou
                 case "sprite":
                     return;
             }
-            throw new net.sync.game.resource.xml.XmlReferenceNotCompatibleException("Incompatible sprite reference type!");
+            throw new XmlReferenceNotCompatibleException("Incompatible sprite reference type!");
         }
     };
 
     /* Ninepatch Resolver */
-    private final net.sync.game.resource.xml.resolvers.XmlReferenceResolver<net.sync.game.resource.lazy.Resource<Drawable>> ninepatchResolver = new net.sync.game.resource.xml.resolvers.XmlDrawableResolver() {
+    private final XmlReferenceResolver<Resource<Drawable>> ninepatchResolver = new XmlDrawableResolver() {
         @Override
-        public net.sync.game.resource.lazy.Resource<Drawable> resolveReference(String resourceId) throws net.sync.game.resource.xml.XmlReferenceNotFoundException, net.sync.game.resource.xml.XmlReferenceNotCompatibleException {
-            net.sync.game.resource.lazy.Resource<Drawable> resource = getResolvedValueOrThrow(resourceId);
+        public Resource<Drawable> resolveReference(String resourceId) throws XmlReferenceNotFoundException, XmlReferenceNotCompatibleException {
+            Resource<Drawable> resource = getResolvedValueOrThrow(resourceId);
 
-            if(resource instanceof net.sync.game.resource.lazy.NinepatchResource)
-                return ((net.sync.game.resource.lazy.NinepatchResource)resource).copy();
+            if(resource instanceof NinepatchResource)
+                return ((NinepatchResource)resource).copy();
 
-            throw net.sync.game.resource.xml.XmlReferenceNotCompatibleException.incompatibleType(resource.getClass(), net.sync.game.resource.lazy.NinepatchResource.class);
+            throw XmlReferenceNotCompatibleException.incompatibleType(resource.getClass(), NinepatchResource.class);
         }
 
         @Override
-        public net.sync.game.resource.lazy.Resource<Drawable> resolveValue(String value) throws XmlParseException {
+        public Resource<Drawable> resolveValue(String value) throws XmlParseException {
             //TODO
             return null;
         }
 
         @Override
-        public void checkReferenceType(String type) throws net.sync.game.resource.xml.XmlReferenceNotCompatibleException {
+        public void checkReferenceType(String type) throws XmlReferenceNotCompatibleException {
             switch(type) {
                 case "drawable":
                 case "texture":
@@ -333,59 +345,59 @@ public class XmlDrawablesParser extends XmlMapResourceParser<net.sync.game.resou
                 case "ninepatch":
                     return;
             }
-            throw new net.sync.game.resource.xml.XmlReferenceNotCompatibleException("Incompatible ninepatch reference type!");
+            throw new XmlReferenceNotCompatibleException("Incompatible ninepatch reference type!");
         }
     };
 
     /* Texture resolver */
-    private final net.sync.game.resource.xml.resolvers.XmlReferenceResolver<net.sync.game.resource.lazy.Resource<Drawable>> textureResolver = new net.sync.game.resource.xml.resolvers.XmlDrawableResolver() {
+    private final XmlReferenceResolver<Resource<Drawable>> textureResolver = new XmlDrawableResolver() {
         @Override
-        public net.sync.game.resource.lazy.Resource<Drawable> resolveReference(String resourceId) throws net.sync.game.resource.xml.XmlReferenceNotFoundException, net.sync.game.resource.xml.XmlReferenceNotCompatibleException {
-            net.sync.game.resource.lazy.Resource<Drawable> resource = getResolvedValueOrThrow(resourceId);
+        public Resource<Drawable> resolveReference(String resourceId) throws XmlReferenceNotFoundException, XmlReferenceNotCompatibleException {
+            Resource<Drawable> resource = getResolvedValueOrThrow(resourceId);
 
-            if(resource instanceof net.sync.game.resource.lazy.TextureResource)
-                return new net.sync.game.resource.lazy.TextureResource((net.sync.game.resource.lazy.TextureResource)resource);
+            if(resource instanceof TextureResource)
+                return new TextureResource((TextureResource)resource);
 
-            throw net.sync.game.resource.xml.XmlReferenceNotCompatibleException.incompatibleType(resource.getClass(), net.sync.game.resource.lazy.TextureResource.class);
+            throw XmlReferenceNotCompatibleException.incompatibleType(resource.getClass(), TextureResource.class);
         }
 
         @Override
-        public net.sync.game.resource.lazy.Resource<Drawable> resolveValue(String value) {
-            return new net.sync.game.resource.lazy.TextureResource(theme.getTexturePath(value));
+        public Resource<Drawable> resolveValue(String value) {
+            return new TextureResource(theme.getTexturePath(value));
         }
 
         @Override
-        public void checkReferenceType(String type) throws net.sync.game.resource.xml.XmlReferenceNotCompatibleException {
+        public void checkReferenceType(String type) throws XmlReferenceNotCompatibleException {
             switch(type) {
                 case "drawable":
                 case "texture":
                     return;
             }
-            throw new net.sync.game.resource.xml.XmlReferenceNotCompatibleException("Incompatible texture reference type!");
+            throw new XmlReferenceNotCompatibleException("Incompatible texture reference type!");
         }
     };
 
     /* Region resolver */
-    private final net.sync.game.resource.xml.resolvers.XmlReferenceResolver<net.sync.game.resource.lazy.Resource<Drawable>> regionResolver = new net.sync.game.resource.xml.resolvers.XmlDrawableResolver() {
+    private final XmlReferenceResolver<Resource<Drawable>> regionResolver = new XmlDrawableResolver() {
         @Override
-        public net.sync.game.resource.lazy.Resource<Drawable> resolveReference(String resourceId) throws XmlReferenceNotFoundException, net.sync.game.resource.xml.XmlReferenceNotCompatibleException {
-            net.sync.game.resource.lazy.Resource<Drawable> resource = getResolvedValueOrThrow(resourceId);
+        public Resource<Drawable> resolveReference(String resourceId) throws XmlReferenceNotFoundException, XmlReferenceNotCompatibleException {
+            Resource<Drawable> resource = getResolvedValueOrThrow(resourceId);
 
-            if(resource instanceof net.sync.game.resource.lazy.RegionResource)
-                return new net.sync.game.resource.lazy.RegionResource((net.sync.game.resource.lazy.RegionResource)resource);
-            if(resource instanceof net.sync.game.resource.lazy.TextureResource)
-                return new net.sync.game.resource.lazy.RegionResource((net.sync.game.resource.lazy.TextureResource)resource);
+            if(resource instanceof RegionResource)
+                return new RegionResource((RegionResource)resource);
+            if(resource instanceof TextureResource)
+                return new RegionResource((TextureResource)resource);
 
-            throw net.sync.game.resource.xml.XmlReferenceNotCompatibleException.incompatibleType(resource.getClass(), net.sync.game.resource.lazy.RegionResource.class);
+            throw XmlReferenceNotCompatibleException.incompatibleType(resource.getClass(), RegionResource.class);
         }
 
         @Override
-        public net.sync.game.resource.lazy.Resource<Drawable> resolveValue(String value) throws XmlParseException {
-            return new net.sync.game.resource.lazy.RegionResource(theme.getTexturePath(value));
+        public Resource<Drawable> resolveValue(String value) throws XmlParseException {
+            return new RegionResource(theme.getTexturePath(value));
         }
 
         @Override
-        public void checkReferenceType(String type) throws net.sync.game.resource.xml.XmlReferenceNotCompatibleException {
+        public void checkReferenceType(String type) throws XmlReferenceNotCompatibleException {
             switch(type) {
                 case "drawable":
                 case "texture":

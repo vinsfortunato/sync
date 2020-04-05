@@ -28,21 +28,21 @@ import net.sync.game.resource.lazy.Resource;
 import net.sync.game.resource.xml.XmlReferenceNotFoundException;
 import net.sync.game.util.xml.XmlParseException;
 
-public abstract class XmlStyleResolver extends XmlReferenceResolver<Resource<net.sync.game.resource.Style>> {
+public abstract class XmlStyleResolver extends XmlReferenceResolver<Resource<Style>> {
     @Override
     protected String getResourceTypeName() {
         return "style";
     }
 
     @Override
-    public Resource<net.sync.game.resource.Style> resolveValue(String value) throws XmlParseException {
+    public Resource<Style> resolveValue(String value) throws XmlParseException {
         throw new XmlParseException(String.format("Cannot resolve the value '%s'!", value));
     }
 
     public static XmlStyleResolver from(final ResourceProvider provider) {
         return new XmlStyleResolver() {
             @Override
-            public Resource<net.sync.game.resource.Style> resolveReference(String resourceId) throws net.sync.game.resource.xml.XmlReferenceNotFoundException {
+            public Resource<Style> resolveReference(String resourceId) throws XmlReferenceNotFoundException {
                 Resource<Style> resource = provider.getStyle(resourceId);
 
                 if(resource == null)

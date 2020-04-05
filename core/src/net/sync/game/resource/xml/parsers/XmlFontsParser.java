@@ -34,13 +34,21 @@ import net.sync.game.resource.lazy.Resource;
 import net.sync.game.resource.xml.XmlReferenceNotCompatibleException;
 import net.sync.game.resource.xml.XmlReferenceNotFoundException;
 import net.sync.game.resource.xml.XmlTheme;
+import net.sync.game.resource.xml.resolvers.XmlBooleanResolver;
 import net.sync.game.resource.xml.resolvers.XmlColorResolver;
+import net.sync.game.resource.xml.resolvers.XmlDimensionResolver;
+import net.sync.game.resource.xml.resolvers.XmlFloatResolver;
+import net.sync.game.resource.xml.resolvers.XmlFontResolver;
+import net.sync.game.resource.xml.resolvers.XmlIntegerResolver;
+import net.sync.game.resource.xml.resolvers.XmlReferenceResolver;
+import net.sync.game.resource.xml.resolvers.XmlStringResolver;
+import net.sync.game.resource.xml.resolvers.XmlTextureFilterResolver;
 import net.sync.game.util.xml.XmlParseException;
 import net.sync.game.util.xml.XmlParser;
 import net.sync.game.util.xml.XmlValueResolver;
 
 public class XmlFontsParser extends XmlMapResourceParser<Resource<BitmapFont>> {
-    private final net.sync.game.resource.xml.XmlTheme theme;
+    private final XmlTheme theme;
     private final XmlValueResolver<Dimension> dimensionResolver;
     private final XmlValueResolver<Boolean> booleanResolver;
     private final XmlValueResolver<Color> colorResolver;
@@ -49,9 +57,9 @@ public class XmlFontsParser extends XmlMapResourceParser<Resource<BitmapFont>> {
     private final XmlValueResolver<String> stringResolver;
     private final XmlValueResolver<Texture.TextureFilter> filterResolver;
     private final XmlValueResolver<FreeTypeFontGenerator.Hinting> hintingResolver;
-    private final net.sync.game.resource.xml.resolvers.XmlFontResolver fontResolver = new net.sync.game.resource.xml.resolvers.XmlFontResolver() {
+    private final XmlFontResolver fontResolver = new XmlFontResolver() {
         @Override
-        public Resource<BitmapFont> resolveReference(String resourceId) throws XmlReferenceNotFoundException, net.sync.game.resource.xml.XmlReferenceNotCompatibleException {
+        public Resource<BitmapFont> resolveReference(String resourceId) throws XmlReferenceNotFoundException, XmlReferenceNotCompatibleException {
             Resource<BitmapFont> resource = getResolvedValueOrThrow(resourceId);
 
             if(resource instanceof FontResource)
@@ -76,13 +84,13 @@ public class XmlFontsParser extends XmlMapResourceParser<Resource<BitmapFont>> {
         this.theme = theme;
 
         //Init resolvers
-        this.dimensionResolver = net.sync.game.resource.xml.resolvers.XmlDimensionResolver.from(theme);
-        this.booleanResolver = net.sync.game.resource.xml.resolvers.XmlBooleanResolver.from(theme);
+        this.dimensionResolver = XmlDimensionResolver.from(theme);
+        this.booleanResolver = XmlBooleanResolver.from(theme);
         this.colorResolver = XmlColorResolver.from(theme);
-        this.floatResolver = net.sync.game.resource.xml.resolvers.XmlFloatResolver.from(theme);
-        this.integerResolver = net.sync.game.resource.xml.resolvers.XmlIntegerResolver.from(theme);
-        this.stringResolver = net.sync.game.resource.xml.resolvers.XmlStringResolver.from(theme);
-        this.filterResolver = new net.sync.game.resource.xml.resolvers.XmlTextureFilterResolver();
+        this.floatResolver = XmlFloatResolver.from(theme);
+        this.integerResolver = XmlIntegerResolver.from(theme);
+        this.stringResolver = XmlStringResolver.from(theme);
+        this.filterResolver = new XmlTextureFilterResolver();
         this.hintingResolver = new XmlHintingResolver();
     }
 
@@ -111,7 +119,7 @@ public class XmlFontsParser extends XmlMapResourceParser<Resource<BitmapFont>> {
     }
 
     @Override
-    protected net.sync.game.resource.xml.resolvers.XmlReferenceResolver<Resource<BitmapFont>> getResolver(XmlParser.Element element) {
+    protected XmlReferenceResolver<Resource<BitmapFont>> getResolver(XmlParser.Element element) {
         return fontResolver;
     }
 

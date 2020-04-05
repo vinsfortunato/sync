@@ -41,19 +41,19 @@ public class XmlParseException extends IOException {
         super(cause);
     }
 
-    public XmlParseException(FileHandle file, net.sync.game.util.xml.XmlParser.Element element) {
+    public XmlParseException(FileHandle file, XmlParser.Element element) {
         this(getLineMessage(file, element));
     }
 
-    public XmlParseException(String message, FileHandle file, net.sync.game.util.xml.XmlParser.Element element) {
+    public XmlParseException(String message, FileHandle file, XmlParser.Element element) {
         this(getLineMessage(file, element) + " " + message);
     }
 
-    public XmlParseException(String message, Throwable cause, FileHandle file, net.sync.game.util.xml.XmlParser.Element element) {
+    public XmlParseException(String message, Throwable cause, FileHandle file, XmlParser.Element element) {
         this(getLineMessage(file, element) + " " + message, cause);
     }
 
-    public XmlParseException(Throwable cause, FileHandle file, net.sync.game.util.xml.XmlParser.Element element) {
+    public XmlParseException(Throwable cause, FileHandle file, XmlParser.Element element) {
         this(getLineMessage(file, element), cause);
     }
 

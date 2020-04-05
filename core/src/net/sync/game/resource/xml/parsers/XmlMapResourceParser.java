@@ -77,7 +77,7 @@ public abstract class XmlMapResourceParser<T> extends XmlResourceParser<Map<Stri
 
             try {
                 value = resolver.resolve(element.getText());
-            } catch(net.sync.game.resource.xml.XmlReferenceNotFoundException e) {
+            } catch(XmlReferenceNotFoundException e) {
                 //Mark as unresolved
                 markUnresolved(id, XmlReferenceResolver.getReferenceId(element.getText()), element);
                 continue;
@@ -98,7 +98,7 @@ public abstract class XmlMapResourceParser<T> extends XmlResourceParser<Map<Stri
                     exceptionMessage.append(", ");
                 }
             }
-            throw new net.sync.game.resource.xml.XmlReferenceNotFoundException(exceptionMessage.toString());
+            throw new XmlReferenceNotFoundException(exceptionMessage.toString());
         }
 
         return resolved;
@@ -170,12 +170,12 @@ public abstract class XmlMapResourceParser<T> extends XmlResourceParser<Map<Stri
 
     /**
      * Gets the resolved resource with the given resource id.
-     * If a resource with the given id cannot be found throws an {@link net.sync.game.resource.xml.XmlReferenceNotFoundException}.
+     * If a resource with the given id cannot be found throws an {@link XmlReferenceNotFoundException}.
      * @param resourceId the resource id, not null.
      * @return the resolved resource, never null.
-     * @throws net.sync.game.resource.xml.XmlReferenceNotFoundException if a resource with the given id has not been resolved.
+     * @throws XmlReferenceNotFoundException if a resource with the given id has not been resolved.
      */
-    protected T getResolvedValueOrThrow(String resourceId) throws net.sync.game.resource.xml.XmlReferenceNotFoundException {
+    protected T getResolvedValueOrThrow(String resourceId) throws XmlReferenceNotFoundException {
         T resource = getResolvedValues().get(resourceId);
         if(resource == null) {
             throw new XmlReferenceNotFoundException(

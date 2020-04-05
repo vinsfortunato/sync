@@ -92,7 +92,7 @@ public abstract class XmlColorResolver extends XmlReferenceResolver<Color> {
     public static XmlColorResolver from(final ResourceProvider provider) {
         return new XmlColorResolver() {
             @Override
-            public Color resolveReference(String resourceId) throws net.sync.game.resource.xml.XmlReferenceNotFoundException {
+            public Color resolveReference(String resourceId) throws XmlReferenceNotFoundException {
                 Color color = provider.getColor(resourceId);
 
                 if(color == null)

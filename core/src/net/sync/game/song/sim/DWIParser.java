@@ -26,7 +26,15 @@ import com.badlogic.gdx.utils.IntSet;
 import com.google.common.hash.Hasher;
 import com.google.common.hash.Hashing;
 import net.sync.game.song.Beatmap;
+import net.sync.game.song.ChartType;
+import net.sync.game.song.DifficultyClass;
+import net.sync.game.song.DisplayBPM;
+import net.sync.game.song.TimingData;
+import net.sync.game.song.note.HoldNote;
 import net.sync.game.song.note.Note;
+import net.sync.game.song.note.NotePanel;
+import net.sync.game.song.note.NoteResolution;
+import net.sync.game.song.note.TapNote;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,7 +59,7 @@ public class DWIParser extends TagSimParser {
     }
 
     @Override
-    protected net.sync.game.song.sim.SimChartParser createChartParser(String chartRawContent) {
+    protected SimChartParser createChartParser(String chartRawContent) {
         return new DWIChartParser(chartRawContent);
     }
 
@@ -136,15 +144,15 @@ public class DWIParser extends TagSimParser {
         throw new SimParseException("This format doesn't support this property");
     }
 
-    public net.sync.game.song.TimingData parseGlobalTimingData() throws SimParseException {
-        net.sync.game.song.TimingData data = new net.sync.game.song.TimingData();
+    public TimingData parseGlobalTimingData() throws SimParseException {
+        TimingData data = new TimingData();
         parseGlobalOffset(data);
         parseGlobalBpms(data);
         parseGlobalStops(data);
         return data;
     }
 
-    private void parseGlobalOffset(net.sync.game.song.TimingData data) throws SimParseException {
+    private void parseGlobalOffset(TimingData data) throws SimParseException {
         String value = dataSupplier.getHeaderTagValue("GAP");
         if(value != null) {
             try {
@@ -155,7 +163,7 @@ public class DWIParser extends TagSimParser {
         }
     }
 
-    private void parseGlobalBpms(net.sync.game.song.TimingData data) throws SimParseException {
+    private void parseGlobalBpms(TimingData data) throws SimParseException {
         //Parse initial bpm value.
         String value = dataSupplier.getHeaderTagValue("BPM");
         if(value == null) {
@@ -180,7 +188,7 @@ public class DWIParser extends TagSimParser {
         }
     }
 
-    private void parseGlobalStops(net.sync.game.song.TimingData data) {
+    private void parseGlobalStops(TimingData data) {
         String value = dataSupplier.getHeaderTagValue("FREEZE");
         if(value != null) {
             data.stops = null; //Reset
@@ -265,12 +273,12 @@ public class DWIParser extends TagSimParser {
         }
 
         @Override
-        public net.sync.game.song.ChartType parseChartType() throws SimParseException {
+        public ChartType parseChartType() throws SimParseException {
             String value = chartData[0];
             if(value != null) {
                 switch(value.toUpperCase()) {
                     case "SINGLE":
-                        return net.sync.game.song.ChartType.DANCE_SINGLE;
+                        return ChartType.DANCE_SINGLE;
                     default:
                         throw new SimParseException("Unrecognised/Unsupported chart type: " + value);
                 }
@@ -280,35 +288,35 @@ public class DWIParser extends TagSimParser {
         }
 
         @Override
-        public net.sync.game.song.DifficultyClass parseDifficultyClass() throws SimParseException {
+        public DifficultyClass parseDifficultyClass() throws SimParseException {
             return DWIParser.parseDifficultyClass(chartData[1]);
         }
 
         @Override
-        public net.sync.game.song.TimingData parseTimingData() throws SimParseException {
+        public TimingData parseTimingData() throws SimParseException {
             return parseGlobalTimingData();
         }
 
         @Override
-        public net.sync.game.song.Beatmap parseBeatmap() throws SimParseException {
+        public Beatmap parseBeatmap() throws SimParseException {
             return new BeatmapParser(chartData[3]).parse();
         }
 
         @Override
-        public net.sync.game.song.DisplayBPM parseDisplayBPM() throws SimParseException {
+        public DisplayBPM parseDisplayBPM() throws SimParseException {
             String value = dataSupplier.getHeaderTagValue("DISPLAYBPM");
             if(value != null) {
                 Matcher matcher = DISPLAY_BPM_PATTERN.matcher(value);
                 if(matcher.matches()) {
                     if(matcher.group(1) != null) {
-                        return new net.sync.game.song.DisplayBPM.RandomDisplayBPM();
+                        return new DisplayBPM.RandomDisplayBPM();
                     }
                     if(matcher.group(3) != null) {
-                        return new net.sync.game.song.DisplayBPM.RangeDisplayBPM(
+                        return new DisplayBPM.RangeDisplayBPM(
                                 Integer.parseInt(matcher.group(3)),
                                 Integer.parseInt(matcher.group(2)));
                     }
-                    return new net.sync.game.song.DisplayBPM.StaticDisplayBPM(
+                    return new DisplayBPM.StaticDisplayBPM(
                             Integer.parseInt(matcher.group(2)));
                 } else {
                     throw new SimParseException("Invalid display BPM tag value: " + value);
@@ -349,9 +357,9 @@ public class DWIParser extends TagSimParser {
     }
 
     private static class BeatmapParser {
-        private net.sync.game.song.Beatmap beatmap = new net.sync.game.song.Beatmap();
+        private Beatmap beatmap = new Beatmap();
         private String beatmapData;
-        private net.sync.game.song.note.NoteResolution resolution = net.sync.game.song.note.NoteResolution.NOTE_8TH; //Default resolution
+        private NoteResolution resolution = NoteResolution.NOTE_8TH; //Default resolution
         private double currentBeat = 0.0D;
         private boolean combining = false;
         private boolean holdFlag = false;
@@ -378,22 +386,22 @@ public class DWIParser extends TagSimParser {
         private void parseDataCharacter(char dataChar) throws SimParseException {
             switch(dataChar) {
                 case '(':
-                    setNoteResolution(net.sync.game.song.note.NoteResolution.NOTE_16TH);
+                    setNoteResolution(NoteResolution.NOTE_16TH);
                     break;
                 case '[':
-                    setNoteResolution(net.sync.game.song.note.NoteResolution.NOTE_24TH);
+                    setNoteResolution(NoteResolution.NOTE_24TH);
                     break;
                 case '{':
-                    setNoteResolution(net.sync.game.song.note.NoteResolution.NOTE_64TH);
+                    setNoteResolution(NoteResolution.NOTE_64TH);
                     break;
                 case '`':
-                    setNoteResolution(net.sync.game.song.note.NoteResolution.NOTE_192ND);
+                    setNoteResolution(NoteResolution.NOTE_192ND);
                     break;
                 case ')':
                 case ']':
                 case '}':
                 case '\'':
-                    setNoteResolution(net.sync.game.song.note.NoteResolution.NOTE_8TH); //Reset default resolution
+                    setNoteResolution(NoteResolution.NOTE_8TH); //Reset default resolution
                     break;
                 case '<':
                     setCombining(true); //Enable note characters combine mode to get more than 2 panels together.
@@ -428,16 +436,16 @@ public class DWIParser extends TagSimParser {
                 if(holdingPanelSet.remove(panel)) {
                     //Parsing hold tail
                     Note lastNote = beatmap.lastNote(panel);
-                    if(lastNote instanceof net.sync.game.song.note.TapNote) {
+                    if(lastNote instanceof TapNote) {
                         //Calculate hold note length
                         double length = currentBeat - lastNote.getBeat();
                         //Replace previous tap note with hold note
-                        beatmap.putNote(panel, new net.sync.game.song.note.HoldNote(lastNote.getBeat(), length));
+                        beatmap.putNote(panel, new HoldNote(lastNote.getBeat(), length));
                     } else {
                         throw new SimParseException("Invalid beatmap data! Expecting tap note as last map value!");
                     }
                 } else {
-                    beatmap.putNote(panel, new net.sync.game.song.note.TapNote(currentBeat));
+                    beatmap.putNote(panel, new TapNote(currentBeat));
                 }
             }
 
@@ -452,7 +460,7 @@ public class DWIParser extends TagSimParser {
             holdFlag = false; //Panels marked as hold
         }
 
-        private void setNoteResolution(net.sync.game.song.note.NoteResolution resolution) throws SimParseException {
+        private void setNoteResolution(NoteResolution resolution) throws SimParseException {
             if(combining || holdFlag) {
                 throw new SimParseException("Invalid beatmap data! Current state doesn't allow resolution changes.");
             }
@@ -484,16 +492,16 @@ public class DWIParser extends TagSimParser {
 
         private int[] parseNoteCharacter(char noteChar) throws SimParseException {
             switch(noteChar) {
-                case '1': return new int[] {net.sync.game.song.note.NotePanel.LEFT, net.sync.game.song.note.NotePanel.DOWN};
-                case '2': return new int[] {net.sync.game.song.note.NotePanel.DOWN};
-                case '3': return new int[] {net.sync.game.song.note.NotePanel.DOWN, net.sync.game.song.note.NotePanel.RIGHT};
-                case '4': return new int[] {net.sync.game.song.note.NotePanel.LEFT};
-                case '6': return new int[] {net.sync.game.song.note.NotePanel.RIGHT};
-                case '7': return new int[] {net.sync.game.song.note.NotePanel.UP, net.sync.game.song.note.NotePanel.LEFT};
-                case '8': return new int[] {net.sync.game.song.note.NotePanel.UP};
-                case '9': return new int[] {net.sync.game.song.note.NotePanel.UP, net.sync.game.song.note.NotePanel.RIGHT};
-                case 'A': return new int[] {net.sync.game.song.note.NotePanel.UP, net.sync.game.song.note.NotePanel.DOWN};
-                case 'B': return new int[] {net.sync.game.song.note.NotePanel.LEFT, net.sync.game.song.note.NotePanel.RIGHT};
+                case '1': return new int[] {NotePanel.LEFT, NotePanel.DOWN};
+                case '2': return new int[] {NotePanel.DOWN};
+                case '3': return new int[] {NotePanel.DOWN, NotePanel.RIGHT};
+                case '4': return new int[] {NotePanel.LEFT};
+                case '6': return new int[] {NotePanel.RIGHT};
+                case '7': return new int[] {NotePanel.UP, NotePanel.LEFT};
+                case '8': return new int[] {NotePanel.UP};
+                case '9': return new int[] {NotePanel.UP, NotePanel.RIGHT};
+                case 'A': return new int[] {NotePanel.UP, NotePanel.DOWN};
+                case 'B': return new int[] {NotePanel.LEFT, NotePanel.RIGHT};
                 case '0': return new int[0];
             }
             throw new SimParseException("Invalid beatmap data! Unrecognised data character!");

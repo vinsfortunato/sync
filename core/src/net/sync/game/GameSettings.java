@@ -35,14 +35,14 @@ import java.util.Locale;
 public class GameSettings {
     /** Contains supported sim formats ordered by their priority in ascending order (formats with
      * higher priority have higher indexes).**/
-    public List<net.sync.game.song.sim.SimFormat> simFormatPriorityList = new ArrayList<>();
+    public List<SimFormat> simFormatPriorityList = new ArrayList<>();
 
-    private net.sync.game.ui.ScreenCachePolicy screenCachePolicy = net.sync.game.ui.ScreenCachePolicy.DISPOSE_ON_HIDE;
+    private ScreenCachePolicy screenCachePolicy = ScreenCachePolicy.DISPOSE_ON_HIDE;
 
     public GameSettings() {
-        simFormatPriorityList.add(net.sync.game.song.sim.SimFormat.DWI);
-        simFormatPriorityList.add(net.sync.game.song.sim.SimFormat.SSC);
-        simFormatPriorityList.add(net.sync.game.song.sim.SimFormat.SM);
+        simFormatPriorityList.add(SimFormat.DWI);
+        simFormatPriorityList.add(SimFormat.SSC);
+        simFormatPriorityList.add(SimFormat.SM);
     }
 
     /**

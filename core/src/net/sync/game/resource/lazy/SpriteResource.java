@@ -25,13 +25,13 @@ package net.sync.game.resource.lazy;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
 //TODO
-public class SpriteResource extends net.sync.game.resource.lazy.DrawableResource {
+public class SpriteResource extends DrawableResource {
     /**
      * Copy constructor
      *
      * @param resource
      */
-    public SpriteResource(net.sync.game.resource.lazy.DrawableResource resource) {
+    public SpriteResource(DrawableResource resource) {
         super(resource);
     }
 

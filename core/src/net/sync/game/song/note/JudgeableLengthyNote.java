@@ -30,7 +30,7 @@ public interface JudgeableLengthyNote extends LengthyNote, JudgeableNote {
      * tail has not been judged yet.
      * @return the tail judgment or null if the tail has not been judged yet.
      */
-    net.sync.game.round.judge.TailJudgment getTailJudgment();
+    TailJudgment getTailJudgment();
 
     /**
      * Sets the tail judgment.

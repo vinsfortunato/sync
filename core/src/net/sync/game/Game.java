@@ -44,19 +44,19 @@ public class Game implements ApplicationListener {
 	public String tempFile;
 
 	private static Game instance;
-	private net.sync.game.Backend backend;
-	private net.sync.game.GameSettings settings;
+	private Backend backend;
+	private GameSettings settings;
 	private AssetManager assets;
 	private ScreenManager screens;
-	private net.sync.game.resource.ThemeManager themes;
+	private ThemeManager themes;
 	private SongManager songs;
-	private net.sync.game.player.PlayerManager players;
+	private PlayerManager players;
 	private ExecutorManager executors;
 	private DatabaseManager database;
 	private Disposer disposer;
 	private FPSLogger fps;
 
-	public Game(net.sync.game.Backend backend) {
+	public Game(Backend backend) {
 		instance = this;
 		this.backend = backend;
 	}
@@ -67,23 +67,23 @@ public class Game implements ApplicationListener {
 
 		this.fps = new FPSLogger();
 		this.disposer = new Disposer();
-		this.settings = new net.sync.game.GameSettings();
+		this.settings = new GameSettings();
 		this.executors = new ExecutorManager();
 		//if(Gdx.app.getType() != Application.ApplicationType.Android) { //TODO
 			this.database = new DatabaseManager();
 		//}
 		this.assets = new AssetManager();
-		this.themes = new net.sync.game.resource.ThemeManager();
+		this.themes = new ThemeManager();
 		this.screens = new ScreenManager();
 		this.songs = new SongManager();
-		this.players = new net.sync.game.player.PlayerManager();
+		this.players = new PlayerManager();
 
 		//TODO test
 		this.songs.index(Gdx.files.absolute("E:/Games/StepMania 5/Songs"));
 
 		//Show test screen TODO
 		if(Gdx.app.getType() != Application.ApplicationType.Android)
-			this.screens.show(net.sync.game.ui.screen.play.GameScreen.instance());
+			this.screens.show(GameScreen.instance());
 	}
 
 	@Override

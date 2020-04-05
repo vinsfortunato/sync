@@ -42,7 +42,7 @@ import javax.sql.DataSource;
 import java.io.File;
 
 public class AndroidLauncher extends AndroidApplication implements Backend {
-	private net.sync.game.Game game;
+	private Game game;
 	private SQLiteDataSource dataSource;
 
 

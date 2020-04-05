@@ -35,18 +35,18 @@ import net.sync.game.song.note.RollNote;
  */
 public class RollNoteRenderer extends BaseLengthyNoteRenderer {
     /* Resources */
-    private net.sync.game.resource.lazy.Resource<Drawable> head4Drawable;
-    private net.sync.game.resource.lazy.Resource<Drawable> head8Drawable;
-    private net.sync.game.resource.lazy.Resource<Drawable> head12Drawable;
-    private net.sync.game.resource.lazy.Resource<Drawable> head16Drawable;
-    private net.sync.game.resource.lazy.Resource<Drawable> head24Drawable;
-    private net.sync.game.resource.lazy.Resource<Drawable> head32Drawable;
-    private net.sync.game.resource.lazy.Resource<Drawable> head48Drawable;
-    private net.sync.game.resource.lazy.Resource<Drawable> head64Drawable;
-    private net.sync.game.resource.lazy.Resource<Drawable> head192Drawable;
-    private net.sync.game.resource.lazy.Resource<Drawable> bodyInactiveDrawable;
-    private net.sync.game.resource.lazy.Resource<Drawable> bodyActiveDrawable;
-    private net.sync.game.resource.lazy.Resource<Drawable> tailInactiveDrawable;
+    private Resource<Drawable> head4Drawable;
+    private Resource<Drawable> head8Drawable;
+    private Resource<Drawable> head12Drawable;
+    private Resource<Drawable> head16Drawable;
+    private Resource<Drawable> head24Drawable;
+    private Resource<Drawable> head32Drawable;
+    private Resource<Drawable> head48Drawable;
+    private Resource<Drawable> head64Drawable;
+    private Resource<Drawable> head192Drawable;
+    private Resource<Drawable> bodyInactiveDrawable;
+    private Resource<Drawable> bodyActiveDrawable;
+    private Resource<Drawable> tailInactiveDrawable;
     private Resource<Drawable> tailActiveDrawable;
 
     public RollNoteRenderer(BeatmapView view) {

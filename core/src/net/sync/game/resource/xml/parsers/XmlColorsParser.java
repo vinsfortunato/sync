@@ -32,7 +32,7 @@ import net.sync.game.util.xml.XmlParseException;
 import net.sync.game.util.xml.XmlParser;
 
 public class XmlColorsParser extends XmlMapResourceParser<Color> {
-    private net.sync.game.resource.xml.resolvers.XmlColorResolver colorResolver = new XmlColorResolver() {
+    private XmlColorResolver colorResolver = new XmlColorResolver() {
         @Override
         public Color resolveReference(String resourceId) throws XmlReferenceNotFoundException {
             Color color = getResolvedValueOrThrow(resourceId);

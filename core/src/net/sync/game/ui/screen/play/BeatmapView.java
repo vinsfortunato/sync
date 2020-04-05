@@ -28,13 +28,20 @@ import net.sync.game.Game;
 import net.sync.game.round.Round;
 import net.sync.game.song.Beatmap;
 import net.sync.game.song.Timing;
+import net.sync.game.song.note.FakeNote;
+import net.sync.game.song.note.HoldNote;
+import net.sync.game.song.note.LiftNote;
+import net.sync.game.song.note.MineNote;
+import net.sync.game.song.note.Note;
+import net.sync.game.song.note.NotePanel;
 import net.sync.game.song.note.RollNote;
+import net.sync.game.song.note.TapNote;
 
 /**
  * Renders beatmap notes and receptors.
  */
 public class BeatmapView extends Widget {
-    private net.sync.game.round.Round round;
+    private Round round;
 
     /* Receptor renderer */
     private ReceptorRenderer receptorRenderer = new ReceptorRenderer(this);
@@ -42,14 +49,14 @@ public class BeatmapView extends Widget {
     /* Note Renderers */
     private TapNoteRenderer tapNoteRenderer = new TapNoteRenderer(this);
     private HoldNoteRenderer holdNoteRenderer = new HoldNoteRenderer(this);
-    private net.sync.game.ui.screen.play.RollNoteRenderer rollNoteRenderer = new RollNoteRenderer(this);
+    private RollNoteRenderer rollNoteRenderer = new RollNoteRenderer(this);
     private MineNoteRenderer mineNoteRenderer = new MineNoteRenderer(this);
     private LiftNoteRenderer liftNoteRenderer = new LiftNoteRenderer(this);
-    private net.sync.game.ui.screen.play.FakeNoteRenderer fakeNoteRenderer = new FakeNoteRenderer(this);
+    private FakeNoteRenderer fakeNoteRenderer = new FakeNoteRenderer(this);
 
-    private int[] panels = net.sync.game.song.note.NotePanel.getModePanels(Game.instance().getSettings().getGameMode());
+    private int[] panels = NotePanel.getModePanels(Game.instance().getSettings().getGameMode());
 
-    public BeatmapView(net.sync.game.round.Round round) {
+    public BeatmapView(Round round) {
         super();
         this.round = round;
     }
@@ -84,7 +91,7 @@ public class BeatmapView extends Widget {
         float receptorY = receptorRenderer.getReceptorY(panel, beat, time);
         float viewW = getWidth();
         float viewH = getHeight();
-        net.sync.game.song.note.Note note;
+        Note note;
         NoteRenderer renderer;
 
         //Get the render starting note
@@ -110,7 +117,7 @@ public class BeatmapView extends Widget {
      * @param viewH the view height
      * @return the render starting note, or null if there are no notes to render.
      */
-    private net.sync.game.song.note.Note findStartingNote(int panel, double beat, double time,
+    private Note findStartingNote(int panel, double beat, double time,
                                                           float receptorX, float receptorY, float viewW, float viewH) {
         Beatmap beatmap = getBeatmap();
 
@@ -119,7 +126,7 @@ public class BeatmapView extends Widget {
             return null;
         }
 
-        net.sync.game.song.note.Note note;
+        Note note;
         NoteRenderer renderer;
 
         //Start by getting the closest floor note and find the
@@ -148,13 +155,13 @@ public class BeatmapView extends Widget {
         return null;
     }
 
-    private NoteRenderer getNoteRenderer(net.sync.game.song.note.Note note) {
-        if(note instanceof net.sync.game.song.note.TapNote)  return tapNoteRenderer;
-        if(note instanceof net.sync.game.song.note.HoldNote) return holdNoteRenderer;
+    private NoteRenderer getNoteRenderer(Note note) {
+        if(note instanceof TapNote)  return tapNoteRenderer;
+        if(note instanceof HoldNote) return holdNoteRenderer;
         if(note instanceof RollNote) return rollNoteRenderer;
-        if(note instanceof net.sync.game.song.note.MineNote) return mineNoteRenderer;
-        if(note instanceof net.sync.game.song.note.LiftNote) return liftNoteRenderer;
-        if(note instanceof net.sync.game.song.note.FakeNote) return fakeNoteRenderer;
+        if(note instanceof MineNote) return mineNoteRenderer;
+        if(note instanceof LiftNote) return liftNoteRenderer;
+        if(note instanceof FakeNote) return fakeNoteRenderer;
         return null;
     }
 

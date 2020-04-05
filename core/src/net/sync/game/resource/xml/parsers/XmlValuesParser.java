@@ -26,7 +26,12 @@ import com.badlogic.gdx.files.FileHandle;
 import net.sync.game.resource.xml.XmlReferenceNotCompatibleException;
 import net.sync.game.resource.xml.XmlReferenceNotFoundException;
 import net.sync.game.resource.xml.XmlTheme;
+import net.sync.game.resource.xml.resolvers.XmlBooleanResolver;
+import net.sync.game.resource.xml.resolvers.XmlDurationResolver;
+import net.sync.game.resource.xml.resolvers.XmlFloatResolver;
+import net.sync.game.resource.xml.resolvers.XmlIntegerResolver;
 import net.sync.game.resource.xml.resolvers.XmlPercentResolver;
+import net.sync.game.resource.xml.resolvers.XmlReferenceResolver;
 import net.sync.game.util.xml.XmlParseException;
 import net.sync.game.util.xml.XmlParser;
 
@@ -62,7 +67,7 @@ public class XmlValuesParser extends XmlMapResourceParser<Object> {
 
     @Override
     @SuppressWarnings("unchecked")
-    public net.sync.game.resource.xml.resolvers.XmlReferenceResolver getResolver(XmlParser.Element element) {
+    public XmlReferenceResolver getResolver(XmlParser.Element element) {
         switch (element.getName()) {
             case "boolean":
                 return booleanResolver;
@@ -80,57 +85,57 @@ public class XmlValuesParser extends XmlMapResourceParser<Object> {
     }
 
     /* Resolvers */
-    private net.sync.game.resource.xml.resolvers.XmlReferenceResolver<Boolean> booleanResolver = new net.sync.game.resource.xml.resolvers.XmlBooleanResolver() {
+    private XmlReferenceResolver<Boolean> booleanResolver = new XmlBooleanResolver() {
         @Override
-        public Boolean resolveReference(String resourceId) throws net.sync.game.resource.xml.XmlReferenceNotFoundException, net.sync.game.resource.xml.XmlReferenceNotCompatibleException {
+        public Boolean resolveReference(String resourceId) throws XmlReferenceNotFoundException, XmlReferenceNotCompatibleException {
             Object value = getResolvedValueOrThrow(resourceId);
 
             if(value instanceof Boolean)
                 return (Boolean) value;
 
-            throw net.sync.game.resource.xml.XmlReferenceNotCompatibleException.incompatibleType(value.getClass(), Boolean.class);
+            throw XmlReferenceNotCompatibleException.incompatibleType(value.getClass(), Boolean.class);
         }
     };
 
-    private net.sync.game.resource.xml.resolvers.XmlReferenceResolver<Float> floatResolver = new net.sync.game.resource.xml.resolvers.XmlFloatResolver() {
+    private XmlReferenceResolver<Float> floatResolver = new XmlFloatResolver() {
         @Override
-        public Float resolveReference(String resourceId) throws net.sync.game.resource.xml.XmlReferenceNotFoundException, net.sync.game.resource.xml.XmlReferenceNotCompatibleException {
+        public Float resolveReference(String resourceId) throws XmlReferenceNotFoundException, XmlReferenceNotCompatibleException {
             Object value = getResolvedValueOrThrow(resourceId);
 
             if(value instanceof Float)
                 return (Float) value;
 
-            throw net.sync.game.resource.xml.XmlReferenceNotCompatibleException.incompatibleType(value.getClass(), Float.class);
+            throw XmlReferenceNotCompatibleException.incompatibleType(value.getClass(), Float.class);
         }
     };
 
-    private net.sync.game.resource.xml.resolvers.XmlReferenceResolver<Integer> integerResolver = new net.sync.game.resource.xml.resolvers.XmlIntegerResolver() {
+    private XmlReferenceResolver<Integer> integerResolver = new XmlIntegerResolver() {
         @Override
-        public Integer resolveReference(String resourceId) throws net.sync.game.resource.xml.XmlReferenceNotFoundException, net.sync.game.resource.xml.XmlReferenceNotCompatibleException {
+        public Integer resolveReference(String resourceId) throws XmlReferenceNotFoundException, XmlReferenceNotCompatibleException {
             Object value = getResolvedValueOrThrow(resourceId);
 
             if(value instanceof Integer)
                 return (Integer) value;
 
-            throw net.sync.game.resource.xml.XmlReferenceNotCompatibleException.incompatibleType(value.getClass(), Integer.class);
+            throw XmlReferenceNotCompatibleException.incompatibleType(value.getClass(), Integer.class);
         }
     };
 
-    private net.sync.game.resource.xml.resolvers.XmlReferenceResolver<Long> durationResolver = new net.sync.game.resource.xml.resolvers.XmlDurationResolver() {
+    private XmlReferenceResolver<Long> durationResolver = new XmlDurationResolver() {
         @Override
-        public Long resolveReference(String resourceId) throws net.sync.game.resource.xml.XmlReferenceNotFoundException, net.sync.game.resource.xml.XmlReferenceNotCompatibleException {
+        public Long resolveReference(String resourceId) throws XmlReferenceNotFoundException, XmlReferenceNotCompatibleException {
             Object value = getResolvedValueOrThrow(resourceId);
 
             if(value instanceof Long)
                 return (Long) value;
 
-            throw net.sync.game.resource.xml.XmlReferenceNotCompatibleException.incompatibleType(value.getClass(), Long.class);
+            throw XmlReferenceNotCompatibleException.incompatibleType(value.getClass(), Long.class);
         }
     };
 
-    private net.sync.game.resource.xml.resolvers.XmlReferenceResolver<Float> percentResolver = new XmlPercentResolver() {
+    private XmlReferenceResolver<Float> percentResolver = new XmlPercentResolver() {
         @Override
-        public Float resolveReference(String resourceId) throws XmlReferenceNotFoundException, net.sync.game.resource.xml.XmlReferenceNotCompatibleException {
+        public Float resolveReference(String resourceId) throws XmlReferenceNotFoundException, XmlReferenceNotCompatibleException {
             Object value = getResolvedValueOrThrow(resourceId);
 
             if(value instanceof Float)

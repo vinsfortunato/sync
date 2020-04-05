@@ -33,7 +33,7 @@ public interface JudgeableNote extends Note {
      * been judged yet.
      * @return the note judgment, or null if the note has not been judged.
      */
-    net.sync.game.round.judge.Judgment getJudgment();
+    Judgment getJudgment();
 
     /**
      * Set the note judgment.

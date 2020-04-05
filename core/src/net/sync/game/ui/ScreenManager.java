@@ -35,7 +35,7 @@ public class ScreenManager implements Disposable {
     private Screen nextScreen;
 
     public ScreenManager() {
-        net.sync.game.Game.instance().getDisposer().manage(this);
+        Game.instance().getDisposer().manage(this);
 
         //Init stage
         stage = new Stage(new ScreenViewport());

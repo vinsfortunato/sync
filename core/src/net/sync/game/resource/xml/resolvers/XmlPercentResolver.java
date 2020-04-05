@@ -65,7 +65,7 @@ public abstract class XmlPercentResolver extends XmlReferenceResolver<Float> {
     public static XmlPercentResolver from(final ResourceProvider provider) {
         return new XmlPercentResolver() {
             @Override
-            public Float resolveReference(String resourceId) throws net.sync.game.resource.xml.XmlReferenceNotFoundException {
+            public Float resolveReference(String resourceId) throws XmlReferenceNotFoundException {
                 Float percent = provider.getPercent(resourceId);
 
                 if(percent == null)

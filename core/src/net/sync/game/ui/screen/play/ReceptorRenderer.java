@@ -37,10 +37,10 @@ import net.sync.game.song.note.NotePanel;
 import net.sync.game.util.math.MathUtils;
 
 public class ReceptorRenderer {
-    private net.sync.game.ui.screen.play.BeatmapView view;
+    private BeatmapView view;
 
     /* Resources */
-    private net.sync.game.resource.lazy.Resource<Drawable> receptorDrawable;
+    private Resource<Drawable> receptorDrawable;
     private Resource<Drawable> outlineDrawable;
 
     public ReceptorRenderer(BeatmapView view) {
@@ -238,11 +238,11 @@ public class ReceptorRenderer {
     public float getOutlineScaleX(int panel, double beat, double time) {
         float scaleX = getReceptorScaleX(panel, beat, time);
         float scaleFactor = 0.35f;
-        net.sync.game.round.PanelState state = getRound().getPanelState();
+        PanelState state = getRound().getPanelState();
         if(!state.isPressedAt(panel, time)) {
             double fadeTime = 0.250D; //250ms
             double lastTimeReleased = state.getFloorTimeReleased(panel, time);
-            double progress = net.sync.game.util.math.MathUtils.clamp(0.0D, 1.0D, Math.abs((time - lastTimeReleased) / fadeTime));
+            double progress = MathUtils.clamp(0.0D, 1.0D, Math.abs((time - lastTimeReleased) / fadeTime));
             return scaleX + (float) (progress * scaleFactor * scaleX);
         }
         return scaleX;
@@ -251,11 +251,11 @@ public class ReceptorRenderer {
     public float getOutlineScaleY(int panel, double beat, double time) {
         float scaleY = getReceptorScaleY(panel, beat, time);
         float scaleFactor = 0.35f;
-        net.sync.game.round.PanelState state = getRound().getPanelState();
+        PanelState state = getRound().getPanelState();
         if(!state.isPressedAt(panel, time)) {
             double fadeTime = 0.250D; //250ms
             double lastTimeReleased = state.getFloorTimeReleased(panel, time);
-            double progress = net.sync.game.util.math.MathUtils.clamp(0.0D, 1.0D, Math.abs((time - lastTimeReleased) / fadeTime));
+            double progress = MathUtils.clamp(0.0D, 1.0D, Math.abs((time - lastTimeReleased) / fadeTime));
             return scaleY + (float) (progress * scaleFactor* scaleY);
         }
         return scaleY;
@@ -266,7 +266,7 @@ public class ReceptorRenderer {
     }
 
     public float getOutlineOpacity(int panel, double beat, double time) {
-        net.sync.game.round.PanelState state = getRound().getPanelState();
+        PanelState state = getRound().getPanelState();
         if(!state.isPressedAt(panel, time)) {
             double fadeTime = 0.250D; //250ms
             double lastTimeReleased = state.getFloorTimeReleased(panel, time);

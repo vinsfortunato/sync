@@ -57,7 +57,7 @@ public abstract class XmlFloatResolver extends XmlReferenceResolver<Float> {
     public static XmlFloatResolver from(final ResourceProvider provider) {
         return new XmlFloatResolver() {
             @Override
-            public Float resolveReference(String resourceId) throws net.sync.game.resource.xml.XmlReferenceNotFoundException {
+            public Float resolveReference(String resourceId) throws XmlReferenceNotFoundException {
                 Float value = provider.getFloat(resourceId);
 
                 if(value == null)

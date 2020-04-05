@@ -25,6 +25,10 @@ package net.sync.game.song.sim;
 import com.google.common.hash.Hasher;
 import com.google.common.hash.Hashing;
 import net.sync.game.song.Beatmap;
+import net.sync.game.song.ChartType;
+import net.sync.game.song.DifficultyClass;
+import net.sync.game.song.DisplayBPM;
+import net.sync.game.song.TimingData;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,20 +47,20 @@ public class SSCParser extends SMParser {
     }
 
     @Override
-    protected net.sync.game.song.sim.SimChartParser createChartParser(String chartRawContent) {
+    protected SimChartParser createChartParser(String chartRawContent) {
         return new SSCChartParser(chartRawContent);
     }
 
     @Override
-    protected net.sync.game.song.TimingData parseGlobalTimingData() throws SimParseException {
+    protected TimingData parseGlobalTimingData() throws SimParseException {
         //Parse offset, bpms, stops, delays and warps
-        net.sync.game.song.TimingData data = super.parseGlobalTimingData();
+        TimingData data = super.parseGlobalTimingData();
         parseDelays(data, dataSupplier.getHeaderTagValue("DELAYS"));
         parseWarps(data, dataSupplier.getHeaderTagValue("WARPS"));
         return data;
     }
 
-    private void parseDelays(net.sync.game.song.TimingData data, String value) throws SimParseException {
+    private void parseDelays(TimingData data, String value) throws SimParseException {
         if(value != null) {
             data.delays = null; //Reset
             Matcher matcher = TIMING_DATA_PATTERN.matcher(value);
@@ -68,7 +72,7 @@ public class SSCParser extends SMParser {
         }
     }
 
-    private void parseWarps(net.sync.game.song.TimingData data, String value) {
+    private void parseWarps(TimingData data, String value) {
         if(value != null) {
             data.warps = null; //Reset
             Matcher matcher = TIMING_DATA_PATTERN.matcher(value);
@@ -88,7 +92,7 @@ public class SSCParser extends SMParser {
 
         SSCDataSupplier(String rawContent) throws SimParseException {
             boolean parsingHeader = true; //Go false when the chart data begins
-            Matcher matcher = net.sync.game.song.sim.TagSimParser.TAG_PATTERN.matcher(rawContent);
+            Matcher matcher = TagSimParser.TAG_PATTERN.matcher(rawContent);
             StringBuilder strBuilder = new StringBuilder();
             while(matcher.find()) {
                 String tagName = matcher.group(1);
@@ -157,14 +161,14 @@ public class SSCParser extends SMParser {
         }
 
         @Override
-        public net.sync.game.song.ChartType parseChartType() throws SimParseException {
+        public ChartType parseChartType() throws SimParseException {
             String value = tagsMap.get("STEPSTYPE");
             if(value != null) {
                 switch(value.toLowerCase()) {
                     case "dance-single":
-                        return net.sync.game.song.ChartType.DANCE_SINGLE;
+                        return ChartType.DANCE_SINGLE;
                     case "pump-single":
-                        return net.sync.game.song.ChartType.PUMP_SINGLE;
+                        return ChartType.PUMP_SINGLE;
                     default:
                         throw new SimParseException("Unrecognised/Unsupported chart type: " + value);
                 }
@@ -173,13 +177,13 @@ public class SSCParser extends SMParser {
         }
 
         @Override
-        public net.sync.game.song.DifficultyClass parseDifficultyClass() throws SimParseException {
+        public DifficultyClass parseDifficultyClass() throws SimParseException {
             return SSCParser.parseDifficultyClass(tagsMap.get("DIFFICULTY"));
         }
 
         @Override
-        public net.sync.game.song.TimingData parseTimingData() throws SimParseException {
-            net.sync.game.song.TimingData data = parseGlobalTimingData();
+        public TimingData parseTimingData() throws SimParseException {
+            TimingData data = parseGlobalTimingData();
             //Override global timing data with chart timing data when necessary
             parseOffset(data, tagsMap.get("OFFSET"));
             parseBpms(data, tagsMap.get("BPMS"));
@@ -198,7 +202,7 @@ public class SSCParser extends SMParser {
             }
             if(beatmapData != null) {
                 //Parse beatmap data
-                net.sync.game.song.ChartType type = parseChartType();
+                ChartType type = parseChartType();
                 if(type != null) {
                     switch(type) {
                         case DANCE_SINGLE:
@@ -212,7 +216,7 @@ public class SSCParser extends SMParser {
         }
 
         @Override
-        public net.sync.game.song.DisplayBPM parseDisplayBPM() throws SimParseException {
+        public DisplayBPM parseDisplayBPM() throws SimParseException {
             return parseGlobalDisplayBPM();
         }
 

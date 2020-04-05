@@ -23,12 +23,12 @@
 package net.sync.game.round.judge;
 
 public class TailJudgment extends Judgment {
-    private net.sync.game.round.judge.JudgmentClass judgmentClass;
+    private JudgmentClass judgmentClass;
 
     /**
      * @param genTime the judgment's generation time relative to the start of the music track.
      */
-    public TailJudgment(double genTime, net.sync.game.round.judge.JudgmentClass judgmentClass) {
+    public TailJudgment(double genTime, JudgmentClass judgmentClass) {
         super(genTime);
         this.judgmentClass = judgmentClass;
     }

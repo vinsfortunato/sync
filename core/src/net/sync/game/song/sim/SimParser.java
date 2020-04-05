@@ -116,7 +116,7 @@ public interface SimParser {
      * Gets all the available chart parsers.
      * @return the available chart parsers
      */
-    List<net.sync.game.song.sim.SimChartParser> getChartParsers();
+    List<SimChartParser> getChartParsers();
 
     /**
      * Gets a parser for the given chart data hash.

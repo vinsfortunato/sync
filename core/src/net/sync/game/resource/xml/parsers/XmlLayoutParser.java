@@ -36,7 +36,26 @@ import net.sync.game.resource.lazy.Resource;
 import net.sync.game.resource.xml.XmlLayout;
 import net.sync.game.resource.xml.XmlTheme;
 import net.sync.game.resource.xml.parsers.actors.XmlActorParser;
+import net.sync.game.resource.xml.parsers.actors.XmlContainerParser;
+import net.sync.game.resource.xml.parsers.actors.XmlHorizontalGroupParser;
+import net.sync.game.resource.xml.parsers.actors.XmlScrollPaneParser;
+import net.sync.game.resource.xml.parsers.actors.XmlSliderParser;
+import net.sync.game.resource.xml.parsers.actors.XmlStackParser;
+import net.sync.game.resource.xml.parsers.actors.XmlTableParser;
+import net.sync.game.resource.xml.parsers.actors.XmlVerticalGroupParser;
+import net.sync.game.resource.xml.resolvers.XmlBooleanResolver;
+import net.sync.game.resource.xml.resolvers.XmlColorResolver;
+import net.sync.game.resource.xml.resolvers.XmlDimensionResolver;
+import net.sync.game.resource.xml.resolvers.XmlDrawableResolver;
+import net.sync.game.resource.xml.resolvers.XmlDurationResolver;
+import net.sync.game.resource.xml.resolvers.XmlFloatResolver;
+import net.sync.game.resource.xml.resolvers.XmlFontResolver;
+import net.sync.game.resource.xml.resolvers.XmlIntegerResolver;
+import net.sync.game.resource.xml.resolvers.XmlMusicResolver;
 import net.sync.game.resource.xml.resolvers.XmlPercentResolver;
+import net.sync.game.resource.xml.resolvers.XmlSoundResolver;
+import net.sync.game.resource.xml.resolvers.XmlStringResolver;
+import net.sync.game.resource.xml.resolvers.XmlStyleResolver;
 import net.sync.game.util.xml.XmlParseException;
 import net.sync.game.util.xml.XmlParser;
 import net.sync.game.util.xml.XmlValueResolver;
@@ -45,7 +64,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class XmlLayoutParser extends XmlResourceParser<XmlLayout> {
-    private net.sync.game.resource.xml.XmlTheme theme;
+    private XmlTheme theme;
 
     /* Reference resolvers */
     public final XmlValueResolver<Resource<Layout>> layoutResolver = null; //TODO
@@ -77,29 +96,29 @@ public class XmlLayoutParser extends XmlResourceParser<XmlLayout> {
 
         //Create a new instance for every reference resolver.
         //this.layoutResolver = XmlLayoutResolver.from(theme);
-        this.styleResolver = net.sync.game.resource.xml.resolvers.XmlStyleResolver.from(theme);
-        this.drawableResolver = net.sync.game.resource.xml.resolvers.XmlDrawableResolver.from(theme);
-        this.colorResolver = net.sync.game.resource.xml.resolvers.XmlColorResolver.from(theme);
-        this.dimensionResolver = net.sync.game.resource.xml.resolvers.XmlDimensionResolver.from(theme);
-        this.fontResolver = net.sync.game.resource.xml.resolvers.XmlFontResolver.from(theme);
-        this.soundResolver = net.sync.game.resource.xml.resolvers.XmlSoundResolver.from(theme);
-        this.musicResolver = net.sync.game.resource.xml.resolvers.XmlMusicResolver.from(theme);
-        this.stringResolver = net.sync.game.resource.xml.resolvers.XmlStringResolver.from(theme);
-        this.integerResolver = net.sync.game.resource.xml.resolvers.XmlIntegerResolver.from(theme);
-        this.floatResolver = net.sync.game.resource.xml.resolvers.XmlFloatResolver.from(theme);
-        this.booleanResolver = net.sync.game.resource.xml.resolvers.XmlBooleanResolver.from(theme);
-        this.durationResolver = net.sync.game.resource.xml.resolvers.XmlDurationResolver.from(theme);
+        this.styleResolver = XmlStyleResolver.from(theme);
+        this.drawableResolver = XmlDrawableResolver.from(theme);
+        this.colorResolver = XmlColorResolver.from(theme);
+        this.dimensionResolver = XmlDimensionResolver.from(theme);
+        this.fontResolver = XmlFontResolver.from(theme);
+        this.soundResolver = XmlSoundResolver.from(theme);
+        this.musicResolver = XmlMusicResolver.from(theme);
+        this.stringResolver = XmlStringResolver.from(theme);
+        this.integerResolver = XmlIntegerResolver.from(theme);
+        this.floatResolver = XmlFloatResolver.from(theme);
+        this.booleanResolver = XmlBooleanResolver.from(theme);
+        this.durationResolver = XmlDurationResolver.from(theme);
         this.percentResolver = XmlPercentResolver.from(theme);
     }
 
     @Override
-    public net.sync.game.resource.xml.XmlLayout parse(XmlParser.Element root) throws XmlParseException {
+    public XmlLayout parse(XmlParser.Element root) throws XmlParseException {
         //Parse actors
         XmlParser.Element element = root.getChild(0);
         Actor actor = getActorElementParser(element.getName()).parse(element);
 
         //Build the layout
-        net.sync.game.resource.xml.XmlLayout layout = new XmlLayout();
+        XmlLayout layout = new XmlLayout();
         layout.setRootActor(actor);
         layout.setActorsLookupMap(actorsLookupMap);
         return layout;
@@ -136,22 +155,22 @@ public class XmlLayoutParser extends XmlResourceParser<XmlLayout> {
     }
 
     /**
-     * Gets a {@link net.sync.game.resource.xml.parsers.actors.XmlActorParser} that can parse an element with the given name and return
+     * Gets a {@link XmlActorParser} that can parse an element with the given name and return
      * the corresponding {@link Actor} with properties described by the element attributes and its children elements.
      *
      * @param elementName the element name.
      * @throws XmlParseException if there's no parser that associated to the given element name.
-     * @return the {@link net.sync.game.resource.xml.parsers.actors.XmlActorParser} that can parse the element with given element name.
+     * @return the {@link XmlActorParser} that can parse the element with given element name.
      */
     public XmlActorParser<?> getActorElementParser(String elementName) throws XmlParseException {
         switch(elementName) {
-            case "Slider" : return new net.sync.game.resource.xml.parsers.actors.XmlSliderParser(this);
-            case "Container": return new net.sync.game.resource.xml.parsers.actors.XmlContainerParser(this);
-            case "HorizontalGroup": return new net.sync.game.resource.xml.parsers.actors.XmlHorizontalGroupParser(this);
-            case "VerticalGroup": return new net.sync.game.resource.xml.parsers.actors.XmlVerticalGroupParser(this);
-            case "ScrollPane": return new net.sync.game.resource.xml.parsers.actors.XmlScrollPaneParser(this);
-            case "Stack": return new net.sync.game.resource.xml.parsers.actors.XmlStackParser(this);
-            case "Table": return new net.sync.game.resource.xml.parsers.actors.XmlTableParser(this);
+            case "Slider" : return new XmlSliderParser(this);
+            case "Container": return new XmlContainerParser(this);
+            case "HorizontalGroup": return new XmlHorizontalGroupParser(this);
+            case "VerticalGroup": return new XmlVerticalGroupParser(this);
+            case "ScrollPane": return new XmlScrollPaneParser(this);
+            case "Stack": return new XmlStackParser(this);
+            case "Table": return new XmlTableParser(this);
         }
         throw new XmlParseException(String.format("Unrecognised element with name '%s'", elementName));
     }

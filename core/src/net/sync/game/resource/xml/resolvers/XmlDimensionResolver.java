@@ -34,9 +34,9 @@ public abstract class XmlDimensionResolver extends XmlReferenceResolver<Dimensio
     }
 
     @Override
-    public net.sync.game.resource.Dimension resolveValue(String value) throws XmlParseException {
+    public Dimension resolveValue(String value) throws XmlParseException {
         try {
-            return new net.sync.game.resource.Dimension(Float.parseFloat(value));
+            return new Dimension(Float.parseFloat(value));
         } catch(NumberFormatException e) {
             throw new XmlParseException("Invalid dimension value!");
         }
@@ -45,7 +45,7 @@ public abstract class XmlDimensionResolver extends XmlReferenceResolver<Dimensio
     public static XmlDimensionResolver from(final ResourceProvider provider) {
         return new XmlDimensionResolver() {
             @Override
-            public net.sync.game.resource.Dimension resolveReference(String resourceId) throws net.sync.game.resource.xml.XmlReferenceNotFoundException {
+            public Dimension resolveReference(String resourceId) throws XmlReferenceNotFoundException {
                 Dimension dimen = provider.getDimension(resourceId);
 
                 if(dimen == null)

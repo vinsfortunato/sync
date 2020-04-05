@@ -38,18 +38,18 @@ import net.sync.game.song.note.Note;
  * @author Vincenzo Fortunato
  */
 public class HoldNoteRenderer extends BaseLengthyNoteRenderer {
-    private net.sync.game.resource.lazy.Resource<Drawable> head4Drawable;
-    private net.sync.game.resource.lazy.Resource<Drawable> head8Drawable;
-    private net.sync.game.resource.lazy.Resource<Drawable> head12Drawable;
-    private net.sync.game.resource.lazy.Resource<Drawable> head16Drawable;
-    private net.sync.game.resource.lazy.Resource<Drawable> head24Drawable;
-    private net.sync.game.resource.lazy.Resource<Drawable> head32Drawable;
-    private net.sync.game.resource.lazy.Resource<Drawable> head48Drawable;
-    private net.sync.game.resource.lazy.Resource<Drawable> head64Drawable;
-    private net.sync.game.resource.lazy.Resource<Drawable> head192Drawable;
-    private net.sync.game.resource.lazy.Resource<Drawable> bodyInactiveDrawable;
-    private net.sync.game.resource.lazy.Resource<Drawable> bodyActiveDrawable;
-    private net.sync.game.resource.lazy.Resource<Drawable> tailInactiveDrawable;
+    private Resource<Drawable> head4Drawable;
+    private Resource<Drawable> head8Drawable;
+    private Resource<Drawable> head12Drawable;
+    private Resource<Drawable> head16Drawable;
+    private Resource<Drawable> head24Drawable;
+    private Resource<Drawable> head32Drawable;
+    private Resource<Drawable> head48Drawable;
+    private Resource<Drawable> head64Drawable;
+    private Resource<Drawable> head192Drawable;
+    private Resource<Drawable> bodyInactiveDrawable;
+    private Resource<Drawable> bodyActiveDrawable;
+    private Resource<Drawable> tailInactiveDrawable;
     private Resource<Drawable> tailActiveDrawable;
 
     public HoldNoteRenderer(BeatmapView view) {
@@ -105,10 +105,10 @@ public class HoldNoteRenderer extends BaseLengthyNoteRenderer {
     @Override
     public boolean isNoteVisible(int panel, Note note, double beat, double time) {
         JudgeableLengthyNote lengthyNote = (JudgeableLengthyNote) note;
-        net.sync.game.round.judge.TapJudgment headJudgment = (TapJudgment) lengthyNote.getJudgment();
-        net.sync.game.round.judge.TailJudgment tailJudgment = (TailJudgment) lengthyNote.getTailJudgment();
+        TapJudgment headJudgment = (TapJudgment) lengthyNote.getJudgment();
+        TailJudgment tailJudgment = (TailJudgment) lengthyNote.getTailJudgment();
         return headJudgment == null                                         //No head judgment
-                || headJudgment.getJudgmentClass() == net.sync.game.round.judge.JudgmentClass.MISS    //Head missed
+                || headJudgment.getJudgmentClass() == JudgmentClass.MISS    //Head missed
                 || tailJudgment == null                                     //No tail judgment
                 || tailJudgment.getJudgmentClass() == JudgmentClass.NG;     //Trail missed
     }
