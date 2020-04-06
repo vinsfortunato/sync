@@ -31,9 +31,10 @@ package net.sync.game.resource.lazy;
  */
 public interface Resource<T> {
     /**
-     * Gets the resource. Will return null if the resource is not loaded.
+     * Gets the resource. Will throw a runtime exception if the resource is not loaded.
      * Check {@link #isAvailable()} to see if the resource is loaded.
      * @return the resource.
+     * @throws IllegalStateException if the resource is not loaded
      */
     T get();
 

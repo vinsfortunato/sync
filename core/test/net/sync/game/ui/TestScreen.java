@@ -32,7 +32,6 @@ public class TestScreen implements Screen {
     @Override
     public void prepare(Runnable doneCallback) {
         resGroup = resources().startGroup();
-
     }
 
     @Override

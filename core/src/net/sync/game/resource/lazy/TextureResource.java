@@ -23,22 +23,19 @@
 package net.sync.game.resource.lazy;
 
 import com.badlogic.gdx.assets.AssetDescriptor;
+import com.badlogic.gdx.assets.AssetLoaderParameters;
 import com.badlogic.gdx.assets.loaders.TextureLoader;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import net.sync.game.util.ui.TexturePath;
+
+import java.util.UUID;
 
 import static net.sync.game.Game.assets;
 
 public class TextureResource extends DrawableResource {
     public final TexturePath path;
-    public Pixmap.Format format;
-    public Texture.TextureFilter minFilter;
-    public Texture.TextureFilter magFilter;
-    public Texture.TextureWrap uWrap;
-    public Texture.TextureWrap vWrap;
-    public boolean useMipMaps = false;
+    private String assetId;
 
     public TextureResource(TexturePath path) {
         super();
@@ -48,46 +45,42 @@ public class TextureResource extends DrawableResource {
     public TextureResource(TextureResource resource) {
         super(resource);
         path = resource.path;
-        minFilter = resource.minFilter;
-        magFilter = resource.magFilter;
-        uWrap = resource.uWrap;
-        vWrap = resource.vWrap;
+
+        assets()
     }
 
     @Override
-    public TextureRegionDrawable get() {
-        AssetDescriptor<Texture> descriptor = getAssetDescriptor();
-        if(assets().isLoaded(descriptor)) {
-            Texture texture = assets().get(descriptor);
-            TextureRegionDrawable drawable = new TextureRegionDrawable(texture);
-            drawable.setLeftWidth(leftWidth);
-            drawable.setRightWidth(rightWidth);
-            drawable.setTopHeight(topHeight);
-            drawable.setBottomHeight(bottomHeight);
-            return drawable;
+    public synchronized TextureRegionDrawable get() {
+        if(isAvailable()) {
+            return assets().get(assetId);
+        }
+        throw new IllegalStateException("Resource not loaded");
+    }
+
+    @Override
+    public synchronized boolean isAvailable() {
+        return assetId != null && assets().isLoaded(assetId);
+    }
+
+    @Override
+    public synchronized boolean isLoading() {
+        return assetId != null && !assets().isLoaded(assetId);
+    }
+
+    @Override
+    public synchronized void load() {
+        if(assetId == null) {
+            assetId = UUID.randomUUID().toString(); //TODO track generated UUIDs?
+            AssetDescriptor<Texture> descriptor = new AssetDescriptor<Texture>();
+
+
         }
 
-        return null;
     }
 
     @Override
-    public boolean isAvailable() {
-        AssetDescriptor<Texture> descriptor = getAssetDescriptor();
-        return assets().isLoaded(descriptor);
-    }
+    public synchronized void unload() {
 
-    @Override
-    public boolean isLoading() {
-        AssetDescriptor<Texture> descriptor = getAssetDescriptor();
-        return assets().contains(descriptor.fileName, descriptor.type) && !assets().isLoaded(descriptor);
-    }
-
-    @Override
-    public void load() {
-        AssetDescriptor<Texture> descriptor = getAssetDescriptor();
-        if(!assets().isLoaded(descriptor)) {
-            assets().load(getAssetDescriptor());
-        }
     }
 
     @Override
@@ -95,7 +88,7 @@ public class TextureResource extends DrawableResource {
         return new TextureResource(this);
     }
 
-    protected AssetDescriptor<Texture> getAssetDescriptor() {
+    protected AssetLoaderParameters<Texture> getLoaderParameters() {
         TextureLoader.TextureParameter parameter = new TextureLoader.TextureParameter();
         parameter.format = format;
         parameter.minFilter = minFilter != null ? minFilter : Texture.TextureFilter.Nearest;
@@ -103,6 +96,6 @@ public class TextureResource extends DrawableResource {
         parameter.wrapU = uWrap != null ? uWrap : Texture.TextureWrap.ClampToEdge;
         parameter.wrapV = vWrap != null ? vWrap : Texture.TextureWrap.ClampToEdge;
         parameter.genMipMaps = useMipMaps;
-        return new AssetDescriptor<>(path.getFile(), Texture.class, parameter);
+        return parameter;
     }
 }

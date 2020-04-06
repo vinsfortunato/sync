@@ -32,8 +32,9 @@ import net.sync.game.resource.lazy.Resource;
 
 /**
  * <p>Manages and provides resources.</p>
- * <p>Get a resource by using one of the defined getter methods.
- * Some resources need to be loaded before being used. A {@link Resource}
+ * <p>Get a resource by using one of the defined getter methods. Resources
+ * returned by the provider should be considered immutable and should not be modified. </p>
+ * <p>Some resources need to be loaded before being used. A {@link Resource}
  * object will be returned for those resource and can be used to manage the
  * required resource. The resource provider is intended to be used during rendering
  * so calling its methods will not block the calling thread.</p>
