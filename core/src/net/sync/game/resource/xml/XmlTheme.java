@@ -29,10 +29,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import net.sync.game.resource.Dimension;
-import net.sync.game.resource.Layout;
-import net.sync.game.resource.Style;
-import net.sync.game.resource.Theme;
+import net.sync.game.resource.*;
 import net.sync.game.resource.lazy.Resource;
 import net.sync.game.util.ui.DPI;
 import net.sync.game.util.ui.TexturePath;
@@ -42,8 +39,14 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static net.sync.game.Game.backend;
 
+/**
+ * A map based implementation of {@link ResourceProvider} and {@link Theme} where resources are saved into maps.
+ * <p>{@link Resource} returned by this provider are decorated with {@link TrackedResource}
+ * to implement the resource grouping functionality.</p>
+ */
 public class XmlTheme implements Theme {
     private Theme fallback;
     private FileHandle manifestFile;
@@ -91,10 +94,6 @@ public class XmlTheme implements Theme {
         return hasFallbackTheme() ? getFallbackTheme().getStyle(id) : null;
     }
 
-    public void setDrawables(Map<String, Resource<Drawable>> drawables) {
-        this.drawables = drawables;
-    }
-
     @Override
     public Resource<Drawable> getDrawable(String id) {
         Resource<Drawable> resource = drawables.get(id);
@@ -102,10 +101,6 @@ public class XmlTheme implements Theme {
             return resource;
         }
         return hasFallbackTheme() ? getFallbackTheme().getDrawable(id) : null;
-    }
-
-    public void setColors(Map<String, Color> colors) {
-        this.colors = colors;
     }
 
     @Override
@@ -117,9 +112,6 @@ public class XmlTheme implements Theme {
         return hasFallbackTheme() ? getFallbackTheme().getColor(id) : null;
     }
 
-    public void setDimensions(Map<String, Dimension> dimens) {
-        this.dimens = dimens;
-    }
     @Override
     public Dimension getDimension(String id) {
         Dimension resource = dimens.get(id);
@@ -127,10 +119,6 @@ public class XmlTheme implements Theme {
             return resource;
         }
         return hasFallbackTheme() ? getFallbackTheme().getDimension(id) : null;
-    }
-
-    public void setFonts(Map<String, Resource<BitmapFont>> fonts) {
-        this.fonts = fonts;
     }
 
     @Override
@@ -142,10 +130,6 @@ public class XmlTheme implements Theme {
         return hasFallbackTheme() ? getFallbackTheme().getFont(id) : null;
     }
 
-    public void setSounds(Map<String, Resource<Sound>> sounds) {
-        this.sounds = sounds;
-    }
-
     @Override
     public Resource<Sound> getSound(String id) {
         Resource<Sound> resource = sounds.get(id);
@@ -153,10 +137,6 @@ public class XmlTheme implements Theme {
             return resource;
         }
         return hasFallbackTheme() ? getFallbackTheme().getSound(id) : null;
-    }
-
-    public void setMusics(Map<String, Resource<Music>> musics) {
-        this.musics = musics;
     }
 
     @Override
@@ -168,10 +148,6 @@ public class XmlTheme implements Theme {
         return hasFallbackTheme() ? getFallbackTheme().getMusic(id) : null;
     }
 
-    public void setStrings(Map<String, String> strings) {
-        this.strings = strings;
-    }
-
     @Override
     public String getString(String id) {
         String string = strings.get(id);
@@ -179,10 +155,6 @@ public class XmlTheme implements Theme {
             return string;
         }
         return hasFallbackTheme() ? getFallbackTheme().getString(id) : null;
-    }
-
-    public void setValues(Map<String, Object> values) {
-        this.values = values;
     }
 
     @Override
@@ -283,10 +255,6 @@ public class XmlTheme implements Theme {
         return () -> f;
     }
 
-    public void setManifest(XmlThemeManifest manifest) {
-        this.manifest = manifest;
-    }
-
     @Override
     public Theme getFallbackTheme() {
         return fallback;
@@ -297,16 +265,8 @@ public class XmlTheme implements Theme {
         return fallback != null;
     }
 
-    public void setFallbackTheme(Theme fallback) {
-        this.fallback = fallback;
-    }
-
-    public XmlThemeManifest getManifest() {
+    public ThemeManifest getManifest() {
         return manifest;
-    }
-
-    public void setLanguages(List<Locale> supportedLangs) {
-        this.langs = supportedLangs;
     }
 
     @Override
@@ -316,5 +276,123 @@ public class XmlTheme implements Theme {
 
     @Override
     public void dispose() {
+    }
+
+    /* Setters */
+    public void setDrawables(Map<String, Resource<Drawable>> drawables) {
+        checkNotNull(drawables);
+        this.drawables = trackResources(drawables);
+    }
+
+    public void setDimensions(Map<String, Dimension> dimens) {
+        checkNotNull(dimens);
+        this.dimens = dimens;
+    }
+
+    public void setFonts(Map<String, Resource<BitmapFont>> fonts) {
+        checkNotNull(fonts);
+        this.fonts = trackResources(fonts);
+    }
+
+    public void setColors(Map<String, Color> colors) {
+        checkNotNull(colors);
+        this.colors = colors;
+    }
+
+    public void setSounds(Map<String, Resource<Sound>> sounds) {
+        checkNotNull(sounds);
+        this.sounds = trackResources(sounds);
+    }
+
+    public void setMusics(Map<String, Resource<Music>> musics) {
+        checkNotNull(musics);
+        this.musics = trackResources(musics);
+    }
+
+    public void setStrings(Map<String, String> strings) {
+        checkNotNull(strings);
+        this.strings = strings;
+    }
+
+    public void setValues(Map<String, Object> values) {
+        checkNotNull(values);
+        this.values = values;
+    }
+
+    public void setManifest(XmlThemeManifest manifest) {
+        this.manifest = manifest;
+    }
+
+    public void setLanguages(List<Locale> supportedLangs) {
+        this.langs = supportedLangs;
+    }
+
+    public void setFallbackTheme(Theme fallback) {
+        this.fallback = fallback;
+    }
+
+    /* Resource tracking */
+
+    /**
+     * Replaces each resource in the given map with a decorated version of it.
+     * @param resources the map with values to decorate with {@link TrackedResource}.
+     * @param <T> the resource type.
+     * @return the same map with decorated values.
+     */
+    private <T> Map<String, Resource<T>> trackResources(Map<String, Resource<T>> resources) {
+        for(Map.Entry<String, Resource<T>> entry : resources.entrySet()) {
+            entry.setValue(new TrackedResource<>(entry.getValue()));
+        }
+        return resources;
+    }
+
+    /**
+     * A resource decorator used to track when a resource is loaded/unloaded. Used
+     * by the resource provider grouping system to unload resources when a group is ended.
+     * @param <T> the resource type.
+     */
+    public class TrackedResource<T> implements Resource<T> {
+        private Resource<T> resource;
+
+        /**
+         * Decorates the given resource with this tracker.
+         * @param resource the resource to decorate.
+         */
+        public TrackedResource(Resource<T> resource) {
+            this.resource = resource;
+        }
+
+        @Override
+        public T get() {
+            return resource.get();
+        }
+
+        @Override
+        public boolean isAvailable() {
+            return resource.isAvailable();
+        }
+
+        @Override
+        public boolean isLoading() {
+            return resource.isLoading();
+        }
+
+        @Override
+        public void load() {
+            //TODO
+        }
+
+        @Override
+        public void unload() {
+            //TODO
+        }
+
+        /**
+         * Gets the underlying resource being decorated
+         * @return the source resource being decorated.
+         */
+        public Resource<T> getDecoratedResource() {
+            return resource;
+        }
     }
 }

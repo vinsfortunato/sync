@@ -40,9 +40,10 @@ import net.sync.game.resource.lazy.Resource;
  * <p> Some resources need to be disposed when they are no longer needed.
  * Methods {@link #startGroup()} and {@link #endGroup(int)} can be used to
  * keep track of loaded resources and dispose them when they are no longer needed. </p>
- * <p> By starting a group all resources loaded after group creation will be bind to
- * the group. Resources can be added to multiple groups thus it is possible to start
- * more than one group. Loaded resources will be bind to all active groups. </p>
+ * <p> By starting a group all resources obtained through the provider and loaded
+ * after group creation will be bind to the group. Resources can be added to
+ * multiple groups thus it is possible to start more than one group. Loaded resources
+ * will be bind to all active groups. </p>
  * <p> A resource will be disposed when all its bind groups are ended. </p>
  * <p> A resource loaded with {@link Resource#load()} will automatically be bind
  * to the active groups. {@link #isGroupLoading(int)} can be used to check if resources

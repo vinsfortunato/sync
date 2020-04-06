@@ -23,21 +23,23 @@
 package net.sync.game.resource.lazy;
 
 /**
- * A resource that needs to be loaded before being used.
- * @param <T>
+ * A container for resources that needs to be loaded before being used.
+ * <p>This can be used during rendering to load, unload and get the needed resource.
+ * Loading and unloading tasks will be performed asynchronously. The loading
+ * progress can be monitored by the provided status access methods.</p>
+ * @param <T> the resource type.
  */
 public interface Resource<T> {
     /**
-     * Gets the resource. Will return null if the resource is not available.
-     * Check {@link #isAvailable()} to see if the resource is available.
+     * Gets the resource. Will return null if the resource is not loaded.
+     * Check {@link #isAvailable()} to see if the resource is loaded.
      * @return the resource.
      */
     T get();
 
     /**
-     * Checks if the resource is available. Some resources need to be loaded
-     * before being available.
-     * @return true if the resource is available, false otherwise.
+     * Checks if the resource is loaded.
+     * @return true if the resource is loaded, false otherwise.
      */
     boolean isAvailable();
 
@@ -48,7 +50,22 @@ public interface Resource<T> {
     boolean isLoading();
 
     /**
-     * Loads the resource.
+     * Start loading the resource. This method will not block and can be safely
+     * called during rendering.
+     * <p>When this method is called the wrapped resource will be loaded asynchronously.
+     * The status of the resource can be monitored by calling {@link #isAvailable()} and
+     * {@link #isLoading()}.</p>
+     * <p>Calling this method when the resource is loaded or when the resource is already
+     * loading will have no effect.</p>
      */
     void load();
+
+    /**
+     * Start unloading the resource. This method will not block and can be safely
+     * called during rendering.
+     * <p>When this method is called the wrapped resource will be unloaded asynchronously.</p>
+     * <p>Calling this method when the resource is not loaded or when the resource is already
+     * unloading will have no effect.</p>
+     */
+    void unload();
 }
