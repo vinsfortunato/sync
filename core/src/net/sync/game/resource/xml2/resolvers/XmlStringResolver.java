@@ -20,14 +20,35 @@
  * THE SOFTWARE.
  */
 
-package net.sync.game.util.xml;
+package net.sync.game.resource.xml2.resolvers;
 
-public interface XmlElementParser<T> {
-    /**
-     * Parses an xml element.
-     * @param element the element to parse.
-     * @return the result of the parsing.
-     * @throws XmlParseException if the element cannot be parsed correctly.
-     */
-    T parse(XmlElement element) throws XmlParseException;
+import net.sync.game.resource.ResourceProvider;
+import net.sync.game.resource.xml2.XmlReferenceNotFoundException;
+import net.sync.game.util.xml.XmlParseException;
+
+public abstract class XmlStringResolver extends XmlReferenceResolver<String> {
+    @Override
+    protected String getResourceTypeName() {
+        return "string";
+    }
+
+    @Override
+    public String resolveValue(String value) throws XmlParseException {
+        return value;
+    }
+
+    public static XmlStringResolver from(final ResourceProvider provider) {
+        return new XmlStringResolver() {
+            @Override
+            public String resolveReference(String resourceId) throws XmlReferenceNotFoundException {
+                String string = provider.getString(resourceId);
+
+                if(string == null)
+                    throw new XmlReferenceNotFoundException(
+                            String.format("Cannot resolve reference with id '%s'", resourceId));
+
+                return string;
+            }
+        };
+    }
 }

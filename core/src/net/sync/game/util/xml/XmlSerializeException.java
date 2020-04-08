@@ -22,12 +22,19 @@
 
 package net.sync.game.util.xml;
 
-public interface XmlElementParser<T> {
-    /**
-     * Parses an xml element.
-     * @param element the element to parse.
-     * @return the result of the parsing.
-     * @throws XmlParseException if the element cannot be parsed correctly.
-     */
-    T parse(XmlElement element) throws XmlParseException;
+public class XmlSerializeException extends RuntimeException {
+
+    public XmlSerializeException() {}
+
+    public XmlSerializeException(String message) {
+        super(message);
+    }
+
+    public XmlSerializeException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public XmlSerializeException(Throwable cause) {
+        super(cause);
+    }
 }

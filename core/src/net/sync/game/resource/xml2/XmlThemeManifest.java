@@ -20,14 +20,59 @@
  * THE SOFTWARE.
  */
 
-package net.sync.game.util.xml;
+package net.sync.game.resource.xml2;
 
-public interface XmlElementParser<T> {
-    /**
-     * Parses an xml element.
-     * @param element the element to parse.
-     * @return the result of the parsing.
-     * @throws XmlParseException if the element cannot be parsed correctly.
-     */
-    T parse(XmlElement element) throws XmlParseException;
+import net.sync.game.resource.ThemeManifest;
+
+public class XmlThemeManifest implements ThemeManifest {
+    private int version;
+    private String name;
+    private String author;
+    private String website;
+    private String description;
+
+    @Override
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    @Override
+    public String getWebsite() {
+        return website;
+    }
+
+    public void setWebsite(String website) {
+        this.website = website;
+    }
+
+    @Override
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }

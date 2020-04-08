@@ -20,14 +20,22 @@
  * THE SOFTWARE.
  */
 
-package net.sync.game.util.xml;
+package net.sync.game.resource.xml2.resolvers;
 
-public interface XmlElementParser<T> {
-    /**
-     * Parses an xml element.
-     * @param element the element to parse.
-     * @return the result of the parsing.
-     * @throws XmlParseException if the element cannot be parsed correctly.
-     */
-    T parse(XmlElement element) throws XmlParseException;
+import com.badlogic.gdx.graphics.Pixmap.Format;
+import net.sync.game.util.xml.XmlParseException;
+import net.sync.game.util.xml.XmlValueResolver;
+
+public class XmlPixmapFormatResolver implements XmlValueResolver<Format> {
+    public static final XmlPixmapFormatResolver GLOBAL_PIXMAP_FORMAT_RESOLVER = new XmlPixmapFormatResolver();
+
+    @Override
+    public Format resolve(String value) throws XmlParseException {
+        //TODO
+        switch(value.trim().toLowerCase()) {
+
+        }
+
+        throw new XmlParseException(String.format("Invalid pixmap format for value '%s'!", value));
+    }
 }

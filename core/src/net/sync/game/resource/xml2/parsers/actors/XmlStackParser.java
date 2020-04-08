@@ -20,14 +20,18 @@
  * THE SOFTWARE.
  */
 
-package net.sync.game.util.xml;
+package net.sync.game.resource.xml2.parsers.actors;
 
-public interface XmlElementParser<T> {
-    /**
-     * Parses an xml element.
-     * @param element the element to parse.
-     * @return the result of the parsing.
-     * @throws XmlParseException if the element cannot be parsed correctly.
-     */
-    T parse(XmlElement element) throws XmlParseException;
+import com.badlogic.gdx.scenes.scene2d.ui.Stack;
+import net.sync.game.resource.xml2.parsers.XmlLayoutParser;
+
+public class XmlStackParser extends XmlWidgetGroupParser<Stack> {
+    public XmlStackParser(XmlLayoutParser layoutParser) {
+        super(layoutParser);
+    }
+
+    @Override
+    protected Stack createActor() {
+        return new Stack();
+    }
 }

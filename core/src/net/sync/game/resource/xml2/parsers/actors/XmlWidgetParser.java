@@ -20,14 +20,29 @@
  * THE SOFTWARE.
  */
 
-package net.sync.game.util.xml;
+package net.sync.game.resource.xml2.parsers.actors;
 
-public interface XmlElementParser<T> {
-    /**
-     * Parses an xml element.
-     * @param element the element to parse.
-     * @return the result of the parsing.
-     * @throws XmlParseException if the element cannot be parsed correctly.
-     */
-    T parse(XmlElement element) throws XmlParseException;
+import com.badlogic.gdx.scenes.scene2d.ui.Widget;
+import net.sync.game.resource.xml2.parsers.XmlLayoutParser;
+import net.sync.game.util.xml.XmlParseException;
+
+public abstract class XmlWidgetParser<T extends Widget> extends XmlActorParser<T> {
+    public XmlWidgetParser(XmlLayoutParser layoutParser) {
+        super(layoutParser);
+    }
+
+    @Override
+    protected boolean parseAttribute(T widget, String name, String value) throws XmlParseException {
+        if(super.parseAttribute(widget, name, value)) {
+            //Attribute already parsed
+            return true;
+        }
+
+        switch(name) {
+            case "fillParent": widget.setFillParent(booleanResolver().resolve(value));                          break;
+            default: return false; //Unrecognised attribute
+        }
+
+        return true;
+    }
 }

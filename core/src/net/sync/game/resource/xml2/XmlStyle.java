@@ -20,14 +20,36 @@
  * THE SOFTWARE.
  */
 
-package net.sync.game.util.xml;
+package net.sync.game.resource.xml2;
 
-public interface XmlElementParser<T> {
-    /**
-     * Parses an xml element.
-     * @param element the element to parse.
-     * @return the result of the parsing.
-     * @throws XmlParseException if the element cannot be parsed correctly.
-     */
-    T parse(XmlElement element) throws XmlParseException;
+import net.sync.game.resource.Style;
+
+import java.util.Map;
+
+public class XmlStyle implements Style {
+    private Map<String, String> attributes;
+
+    public void setAttributes(Map<String, String> attributes) {
+        this.attributes = attributes;
+    }
+
+    @Override
+    public int getAttributesCount() {
+        return attributes != null ? attributes.size() : 0;
+    }
+
+    @Override
+    public Iterable<String> getAttributeNames() {
+        return attributes.keySet();
+    }
+
+    @Override
+    public String getAttributeValue(String name) {
+        return attributes != null ? attributes.get(name) : null;
+    }
+
+    @Override
+    public boolean hasAttribute(String name) {
+        return attributes != null && attributes.containsKey(name);
+    }
 }
