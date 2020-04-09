@@ -25,7 +25,7 @@ package net.sync.game.resource.xml.resolvers;
 import com.google.common.base.Function;
 import net.sync.game.resource.xml.XmlReferenceNotCompatibleException;
 import net.sync.game.resource.xml.XmlReferenceNotFoundException;
-import net.sync.game.util.xml.XmlParseException;
+import net.sync.game.util.xml.XmlDeserializeException;
 import net.sync.game.util.xml.XmlValueResolver;
 
 import java.util.regex.Matcher;
@@ -86,7 +86,7 @@ public abstract class XmlReferenceResolver<T> implements XmlValueResolver<T> {
 
     /**
      * Resolve reference by finding a resource with the given id. If the
-     * resource cannot be found an {@link XmlParseException} must be
+     * resource cannot be found an {@link XmlDeserializeException} must be
      * thrown. It must throw {@link XmlReferenceNotFoundException} if the referenced resource
      * has not been declared before.
      * @param resourceId the resource identifier.
@@ -99,7 +99,7 @@ public abstract class XmlReferenceResolver<T> implements XmlValueResolver<T> {
      * Parse the given value as a simple value (A value that is not referencing another resource).
      * @param value the value, a not null and not empty string.
      * @return the parsed value, never null.
-     * @throws XmlParseException if the value cannot be parsed correctly.
+     * @throws XmlDeserializeException if the value cannot be parsed correctly.
      */
     public abstract T resolveValue(String value);
 
@@ -129,7 +129,8 @@ public abstract class XmlReferenceResolver<T> implements XmlValueResolver<T> {
     }
 
     /**
-     * Creates a reference resolver from a simple value resolver, a resource provider and the resource type name.
+     * Creates a reference resolver from a simple value resolver, a
+     * resource provider function and the resource type name.
      * @param valueResolver the simple value resolver used to parse the raw value.
      * @param resourceProvider the function used to obtain a resource from a given resource id.
      * @param resourceTypeName the resource type name used to check for reference compatibility.

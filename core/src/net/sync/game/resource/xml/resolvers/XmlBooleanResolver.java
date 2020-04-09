@@ -22,7 +22,7 @@
 
 package net.sync.game.resource.xml.resolvers;
 
-import net.sync.game.util.xml.XmlParseException;
+import net.sync.game.util.xml.XmlDeserializeException;
 import net.sync.game.util.xml.XmlValueResolver;
 
 public class XmlBooleanResolver implements XmlValueResolver<Boolean> {
@@ -34,6 +34,6 @@ public class XmlBooleanResolver implements XmlValueResolver<Boolean> {
         } else if(value.equalsIgnoreCase("false")) {
             return false;
         }
-        throw new XmlParseException(String.format("Invalid boolean value '%s'! Must be 'true' or 'false'!", value));
+        throw new XmlDeserializeException(String.format("Invalid boolean value '%s'! Must be 'true' or 'false'!", value));
     }
 }

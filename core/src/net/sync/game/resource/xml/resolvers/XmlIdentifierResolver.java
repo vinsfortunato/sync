@@ -22,7 +22,7 @@
 
 package net.sync.game.resource.xml.resolvers;
 
-import net.sync.game.util.xml.XmlParseException;
+import net.sync.game.util.xml.XmlDeserializeException;
 import net.sync.game.util.xml.XmlValueResolver;
 
 import java.util.regex.Pattern;
@@ -36,10 +36,10 @@ public class XmlIdentifierResolver implements XmlValueResolver<String> {
     private static final Pattern ID_REGEX = Pattern.compile("[0-9a-zA-Z_-]+");
 
     @Override
-    public String resolve(String value) throws XmlParseException {
+    public String resolve(String value) throws XmlDeserializeException {
         value = value.trim();
         if (!ID_REGEX.matcher(value).matches()) {
-            throw new XmlParseException("Invalid id! Identifier can contain only alphanumeric characters plus _ and -!");
+            throw new XmlDeserializeException("Invalid id! Identifier can contain only alphanumeric characters plus _ and -!");
         }
         return value;
     }

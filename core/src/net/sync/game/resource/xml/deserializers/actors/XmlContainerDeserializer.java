@@ -20,22 +20,22 @@
  * THE SOFTWARE.
  */
 
-package net.sync.game.resource.xml.parsers.actors;
+package net.sync.game.resource.xml.deserializers.actors;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
-import net.sync.game.resource.xml.parsers.XmlLayoutParser;
+import net.sync.game.resource.xml.deserializers.XmlLayoutDeserializer;
 import net.sync.game.resource.xml.resolvers.XmlAlignResolver;
-import net.sync.game.util.xml.XmlParseException;
+import net.sync.game.util.xml.XmlDeserializeException;
 import net.sync.game.util.xml.XmlParser;
 
-public class XmlContainerParser extends XmlWidgetGroupParser<Container<Actor>> {
-    public XmlContainerParser(XmlLayoutParser layoutParser) {
+public class XmlContainerDeserializer extends XmlWidgetGroupParser<Container<Actor>> {
+    public XmlContainerDeserializer(XmlLayoutDeserializer layoutParser) {
         super(layoutParser);
     }
 
     @Override
-    protected boolean parseAttribute(Container<Actor> container, String name, String value) throws XmlParseException {
+    protected boolean parseAttribute(Container<Actor> container, String name, String value) throws XmlDeserializeException {
         if(super.parseAttribute(container, name, value)) {
             //Attribute already parsed
             return true;
@@ -69,14 +69,14 @@ public class XmlContainerParser extends XmlWidgetGroupParser<Container<Actor>> {
     }
 
     @Override
-    protected void parseChildren(Container<Actor> container, XmlParser.Element element) throws XmlParseException {
+    protected void parseChildren(Container<Actor> container, XmlParser.Element element) throws XmlDeserializeException {
         if(element.getChildCount() != 1) {
-            throw new XmlParseException("Container can only have one child!");
+            throw new XmlDeserializeException("Container can only have one child!");
         }
 
         //Parse and set the container child.
         XmlParser.Element child = element.getChild(0);
-        XmlActorParser<?> parser = getLayoutParser().getActorElementParser(child.getName());
+        XmlActorDeserializer<?> parser = getLayoutParser().getActorElementParser(child.getName());
         container.setActor(parser.parse(child));
     }
 

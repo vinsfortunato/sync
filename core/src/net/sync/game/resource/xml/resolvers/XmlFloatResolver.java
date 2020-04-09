@@ -22,16 +22,16 @@
 
 package net.sync.game.resource.xml.resolvers;
 
-import net.sync.game.util.xml.XmlParseException;
+import net.sync.game.util.xml.XmlDeserializeException;
 import net.sync.game.util.xml.XmlValueResolver;
 
 public class XmlFloatResolver implements XmlValueResolver<Float> {
     @Override
-    public Float resolve(String value) throws XmlParseException {
+    public Float resolve(String value) throws XmlDeserializeException {
         try {
             return Float.parseFloat(value);
         } catch(NumberFormatException e) {
-            throw new XmlParseException(String.format("Invalid float value '%s'!", value));
+            throw new XmlDeserializeException(String.format("Invalid float value '%s'!", value));
         }
     }
 }

@@ -23,7 +23,7 @@
 package net.sync.game.resource.xml.resolvers;
 
 import com.badlogic.gdx.graphics.Texture.TextureWrap;
-import net.sync.game.util.xml.XmlParseException;
+import net.sync.game.util.xml.XmlDeserializeException;
 import net.sync.game.util.xml.XmlValueResolver;
 
 public class XmlTextureWrapResolver implements XmlValueResolver<TextureWrap> {
@@ -34,6 +34,6 @@ public class XmlTextureWrapResolver implements XmlValueResolver<TextureWrap> {
 
         }
 
-        throw new XmlParseException(String.format("Invalid wrap format for value '%s'!", value));
+        throw new XmlDeserializeException(String.format("Invalid wrap format for value '%s'!", value));
     }
 }

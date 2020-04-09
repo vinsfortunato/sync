@@ -23,7 +23,7 @@
 package net.sync.game.resource.xml.resolvers;
 
 import com.badlogic.gdx.scenes.scene2d.Touchable;
-import net.sync.game.util.xml.XmlParseException;
+import net.sync.game.util.xml.XmlDeserializeException;
 import net.sync.game.util.xml.XmlValueResolver;
 
 public class XmlTouchableResolver implements XmlValueResolver<Touchable> {
@@ -34,6 +34,6 @@ public class XmlTouchableResolver implements XmlValueResolver<Touchable> {
             case "disabled": return Touchable.disabled;
             case "children_only": return Touchable.childrenOnly;
         }
-        throw new XmlParseException(String.format("Cannot resolve touchable value '%s'!", value));
+        throw new XmlDeserializeException(String.format("Cannot resolve touchable value '%s'!", value));
     }
 }

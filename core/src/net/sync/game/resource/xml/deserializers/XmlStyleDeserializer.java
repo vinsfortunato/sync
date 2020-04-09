@@ -20,30 +20,30 @@
  * THE SOFTWARE.
  */
 
-package net.sync.game.resource.xml.parsers;
+package net.sync.game.resource.xml.deserializers;
 
 import com.badlogic.gdx.files.FileHandle;
 import net.sync.game.resource.MapStyle;
 import net.sync.game.resource.MapTheme;
-import net.sync.game.util.xml.XmlParseException;
+import net.sync.game.util.xml.XmlDeserializeException;
 import net.sync.game.util.xml.XmlParser;
 
 import java.util.HashMap;
 import java.util.Map;
 
 //TODO rewrite
-public class XmlStyleParser extends XmlResourceParser<MapStyle> {
+public class XmlStyleDeserializer extends XmlResourceDeserializer<MapStyle> {
     /**
      * Create a resource parser from a its file.
      *
      * @param resourceFile the resource file.
      */
-    public XmlStyleParser(FileHandle resourceFile, MapTheme theme) {
+    public XmlStyleDeserializer(FileHandle resourceFile, MapTheme theme) {
         super(resourceFile);
     }
 
     @Override
-    public MapStyle parse(XmlParser.Element root) throws XmlParseException {
+    public MapStyle parse(XmlParser.Element root) throws XmlDeserializeException {
         //Initialize map with an appropriate size
         Map<String, String> attributes = new HashMap<>(root.getChildCount());
 
@@ -51,13 +51,13 @@ public class XmlStyleParser extends XmlResourceParser<MapStyle> {
             XmlParser.Element element = root.getChild(i);
 
             if(!element.getName().equals("attribute")) {
-                throw new XmlParseException(String.format("Unexpected element name '%s'! Expected to be 'attribute'!", element.getName()));
+                throw new XmlDeserializeException(String.format("Unexpected element name '%s'! Expected to be 'attribute'!", element.getName()));
             }
 
             //Get the attribute name
             String name = element.getAttribute("name");
             if(name == null || name.isEmpty()) {
-                throw new XmlParseException("Required attribute 'name' empty or not found in style attribute definition!");
+                throw new XmlDeserializeException("Required attribute 'name' empty or not found in style attribute definition!");
             }
 
             //Fix the attribute name
@@ -65,12 +65,12 @@ public class XmlStyleParser extends XmlResourceParser<MapStyle> {
 
             //Check for illegal attribute name
             if(name.equals("style")) {
-                throw new XmlParseException("Attribute with name 'style' is not allowed in a style resource!");
+                throw new XmlDeserializeException("Attribute with name 'style' is not allowed in a style resource!");
             }
 
             //Check for duplicates
             if(attributes.containsKey(name)) {
-                throw new XmlParseException(String.format("Duplicated attribute name '%s'", name));
+                throw new XmlDeserializeException(String.format("Duplicated attribute name '%s'", name));
             }
 
             //Get the attribute value and bind it to the attribute name
@@ -83,9 +83,9 @@ public class XmlStyleParser extends XmlResourceParser<MapStyle> {
     }
 
     @Override
-    protected void checkRoot(XmlParser.Element root) throws XmlParseException {
+    protected void checkRoot(XmlParser.Element root) throws XmlDeserializeException {
         if(!root.getName().equals("style")) {
-            throw new XmlParseException("Unexpected xml root element name. Expected to be 'style'!");
+            throw new XmlDeserializeException("Unexpected xml root element name. Expected to be 'style'!");
         }
     }
 }

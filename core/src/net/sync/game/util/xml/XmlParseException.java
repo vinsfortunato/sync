@@ -22,9 +22,12 @@
 
 package net.sync.game.util.xml;
 
+/**
+ * Thrown when an XML document cannot be parsed correctly.
+ */
 public class XmlParseException extends RuntimeException {
-
-    public XmlParseException() {}
+    public XmlParseException() {
+    }
 
     public XmlParseException(String message) {
         super(message);

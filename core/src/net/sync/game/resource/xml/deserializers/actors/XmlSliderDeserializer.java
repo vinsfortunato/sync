@@ -20,29 +20,20 @@
  * THE SOFTWARE.
  */
 
-package net.sync.game.resource.xml.parsers.actors;
+package net.sync.game.resource.xml.deserializers.actors;
 
-import com.badlogic.gdx.scenes.scene2d.ui.Widget;
-import net.sync.game.resource.xml.parsers.XmlLayoutParser;
-import net.sync.game.util.xml.XmlParseException;
+import net.sync.game.resource.xml.deserializers.XmlLayoutDeserializer;
+import net.sync.game.ui.widgets.Slider;
 
-public abstract class XmlWidgetParser<T extends Widget> extends XmlActorParser<T> {
-    public XmlWidgetParser(XmlLayoutParser layoutParser) {
+//TODO
+public class XmlSliderDeserializer extends XmlActorDeserializer<Slider> {
+
+    public XmlSliderDeserializer(XmlLayoutDeserializer layoutParser) {
         super(layoutParser);
     }
 
     @Override
-    protected boolean parseAttribute(T widget, String name, String value) throws XmlParseException {
-        if(super.parseAttribute(widget, name, value)) {
-            //Attribute already parsed
-            return true;
-        }
-
-        switch(name) {
-            case "fillParent": widget.setFillParent(booleanResolver().resolve(value));                          break;
-            default: return false; //Unrecognised attribute
-        }
-
-        return true;
+    protected Slider createActor() {
+        return null;
     }
 }

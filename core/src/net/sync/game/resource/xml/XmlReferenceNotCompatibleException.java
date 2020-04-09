@@ -22,9 +22,9 @@
 
 package net.sync.game.resource.xml;
 
-import net.sync.game.util.xml.XmlParseException;
+import net.sync.game.util.xml.XmlDeserializeException;
 
-public class XmlReferenceNotCompatibleException extends XmlParseException {
+public class XmlReferenceNotCompatibleException extends XmlDeserializeException {
     public XmlReferenceNotCompatibleException() {
         super();
     }

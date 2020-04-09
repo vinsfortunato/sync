@@ -23,7 +23,7 @@
 package net.sync.game.resource.xml.resolvers;
 
 import com.badlogic.gdx.graphics.Texture;
-import net.sync.game.util.xml.XmlParseException;
+import net.sync.game.util.xml.XmlDeserializeException;
 import net.sync.game.util.xml.XmlValueResolver;
 
 public class XmlTextureFilterResolver implements XmlValueResolver<Texture.TextureFilter> {
@@ -42,6 +42,6 @@ public class XmlTextureFilterResolver implements XmlValueResolver<Texture.Textur
             case "mipmaplinearnearest":
             case "mipmap_linear_nearest": return Texture.TextureFilter.MipMapLinearNearest;
         }
-        throw new XmlParseException(String.format("Invalid filter format for value '%s'!", value));
+        throw new XmlDeserializeException(String.format("Invalid filter format for value '%s'!", value));
     }
 }

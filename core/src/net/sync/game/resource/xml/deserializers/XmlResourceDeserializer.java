@@ -20,60 +20,60 @@
  * THE SOFTWARE.
  */
 
-package net.sync.game.resource.xml.parsers;
+package net.sync.game.resource.xml.deserializers;
 
 import com.badlogic.gdx.files.FileHandle;
-import net.sync.game.util.xml.XmlElement;
-import net.sync.game.util.xml.XmlElementParser;
-import net.sync.game.util.xml.XmlParseException;
-import net.sync.game.util.xml.XmlParser;
+import net.sync.game.util.xml.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * An XML resource file parser.
- * @param <T> the type of parsing result.
+ * An XML resource file deserializer. Parses a given XML file
+ * then deserializes the object represented by the XML document.
+ * @param <T> the type of deserialized object.
  */
-public abstract class XmlResourceParser<T> implements XmlElementParser<T> {
+public abstract class XmlResourceDeserializer<T> implements XmlElementDeserializer<T> {
     private XmlParser parser;
     private FileHandle file;
 
     /**
-     * Creates a resource parser from its file.
+     * Creates a resource deserializer.
+     * @param parser the XML parser.
      * @param file the resource file.
      */
-    public XmlResourceParser(XmlParser parser, FileHandle file) {
+    public XmlResourceDeserializer(XmlParser parser, FileHandle file) {
         this.parser = checkNotNull(parser);
         this.file = checkNotNull(file);
     }
 
     /**
-     * Parses the xml resource file. Checks if the root element is valid
-     * by calling {@link #validateRoot(XmlElement)}, if valid then parse
-     * it by calling {@link #parse(XmlElement)}.
+     * Deserializes the XML resource file. Checks if the root element is valid
+     * by calling {@link #validateRoot(XmlElement)}, if valid then deserialize
+     * it by calling {@link #deserialize(XmlElement)}.
      * @return the result of the parsing.
-     * @throws XmlParseException if the resource file cannot be parsed correctly
+     * @throws XmlParseException if the resource file cannot be parsed correctly.
+     * @throws XmlDeserializeException if the XML document cannot be deserialized correctly.
      */
-    public T parse() {
+    public T deserialize() {
         XmlElement root = parser.parse(file);
-        if(root != null) {
+        if(root != null) { //TODO this check can be removed?
             validateRoot(root);
-            return parse(root);
+            return deserialize(root);
         }
-        throw new XmlParseException("Empty xml resource file!");
+        throw new XmlDeserializeException("Empty xml resource file!");
     }
 
     /**
-     * Parses the XML document.
+     * Deserializes the XML document.
      * @param root the xml root element, never null.
      * @return the result of the parsing.
-     * @throws XmlParseException if the document cannot be parsed correctly.
+     * @throws XmlDeserializeException if the document cannot be parsed correctly.
      */
-    public abstract T parse(XmlElement root);
+    public abstract T deserialize(XmlElement root);
 
     /**
      * Validates root element.
-     * @throws XmlParseException if the root element is invalid
+     * @throws XmlDeserializeException if the root element is invalid
      */
     protected abstract void validateRoot(XmlElement root);
 

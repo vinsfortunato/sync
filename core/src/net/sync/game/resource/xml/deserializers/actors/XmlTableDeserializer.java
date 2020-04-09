@@ -20,22 +20,22 @@
  * THE SOFTWARE.
  */
 
-package net.sync.game.resource.xml.parsers.actors;
+package net.sync.game.resource.xml.deserializers.actors;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.ObjectMap;
-import net.sync.game.resource.xml.parsers.XmlLayoutParser;
-import net.sync.game.util.xml.XmlParseException;
+import net.sync.game.resource.xml.deserializers.XmlLayoutDeserializer;
+import net.sync.game.util.xml.XmlDeserializeException;
 import net.sync.game.util.xml.XmlParser;
 
-public class XmlTableParser extends XmlWidgetGroupParser<Table> {
-    public XmlTableParser(XmlLayoutParser layoutParser) {
+public class XmlTableDeserializer extends XmlWidgetGroupParser<Table> {
+    public XmlTableDeserializer(XmlLayoutDeserializer layoutParser) {
         super(layoutParser);
     }
 
     @Override
-    protected void parseChildren(Table table, XmlParser.Element element) throws XmlParseException {
+    protected void parseChildren(Table table, XmlParser.Element element) throws XmlDeserializeException {
         for (int i = 0; i < element.getChildCount(); i++) {
             if (i > 0) {
                 //Go to the next row
@@ -50,11 +50,11 @@ public class XmlTableParser extends XmlWidgetGroupParser<Table> {
      *
      * @param table the result table.
      * @param element the row xml element.
-     * @throws XmlParseException if the cell cannot be parsed correctly.
+     * @throws XmlDeserializeException if the cell cannot be parsed correctly.
      */
-    protected void parseRow(Table table, XmlParser.Element element) throws XmlParseException {
+    protected void parseRow(Table table, XmlParser.Element element) throws XmlDeserializeException {
         if (!element.getName().equals("Row")) {
-            throw new XmlParseException(
+            throw new XmlDeserializeException(
                     String.format("Unexpected child element '%s'! Expected it to be named 'Row'!", element.getName()));
         }
 
@@ -68,23 +68,23 @@ public class XmlTableParser extends XmlWidgetGroupParser<Table> {
      *
      * @param cell    the result cell.
      * @param element the cell xml element.
-     * @throws XmlParseException if the cell cannot be parsed correctly.
+     * @throws XmlDeserializeException if the cell cannot be parsed correctly.
      */
-    protected void parseCell(Cell cell, XmlParser.Element element) throws XmlParseException {
+    protected void parseCell(Cell cell, XmlParser.Element element) throws XmlDeserializeException {
         if (!element.getName().equals("Cell")) {
-            throw new XmlParseException(
+            throw new XmlDeserializeException(
                     String.format("Unexpected child element '%s'! Expected it to be named 'Cell'!", element.getName()));
         }
 
         //Check data integrity
         if (element.getChildCount() > 1) {
-            throw new XmlParseException("Table cell can only have one child!");
+            throw new XmlDeserializeException("Table cell can only have one child!");
         }
 
         //Parse the Cell actor
         if (element.getChildCount() == 1) {
             XmlParser.Element child = element.getChild(0);
-            XmlActorParser<?> parser = getLayoutParser().getActorElementParser(child.getName());
+            XmlActorDeserializer<?> parser = getLayoutParser().getActorElementParser(child.getName());
             cell.setActor(parser.parse(child));
         }
 
@@ -112,7 +112,7 @@ public class XmlTableParser extends XmlWidgetGroupParser<Table> {
     }
 
     @Override
-    protected boolean parseAttribute(Table table, String name, String value) throws XmlParseException {
+    protected boolean parseAttribute(Table table, String name, String value) throws XmlDeserializeException {
         if (super.parseAttribute(table, name, value)) {
             //Attribute already parsed
             return true;
@@ -134,9 +134,9 @@ public class XmlTableParser extends XmlWidgetGroupParser<Table> {
         return true;
     }
 
-    private void parseCellAttributeOrThrow(Cell cell, String name, String value) throws XmlParseException {
+    private void parseCellAttributeOrThrow(Cell cell, String name, String value) throws XmlDeserializeException {
         if (!parseCellAttribute(cell, name, value)) {
-            throw new XmlParseException(String.format("Unrecognised cell attribute with name '%s' and value '%s'!", name, value));
+            throw new XmlDeserializeException(String.format("Unrecognised cell attribute with name '%s' and value '%s'!", name, value));
         }
     }
 
@@ -147,9 +147,9 @@ public class XmlTableParser extends XmlWidgetGroupParser<Table> {
      * @param name  the attribute name.
      * @param value the attribute value.
      * @return true if the attribute has been recognised and parsed, false if it has not been recognised.
-     * @throws XmlParseException if the attribute has been recognised but cannot be parsed correctly.
+     * @throws XmlDeserializeException if the attribute has been recognised but cannot be parsed correctly.
      */
-    protected boolean parseCellAttribute(Cell cell, String name, String value) throws XmlParseException {
+    protected boolean parseCellAttribute(Cell cell, String name, String value) throws XmlDeserializeException {
         switch(name) {
             case "align":       cell.align(net.sync.game.resource.xml.resolvers.XmlAlignResolver.GLOBAL_ALIGN_RESOLVER.resolve(value));              break;
             case "colspan":     cell.colspan(integerResolver().resolve(value));                                 break;

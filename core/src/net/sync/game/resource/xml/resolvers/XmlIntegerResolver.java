@@ -22,16 +22,16 @@
 
 package net.sync.game.resource.xml.resolvers;
 
-import net.sync.game.util.xml.XmlParseException;
+import net.sync.game.util.xml.XmlDeserializeException;
 import net.sync.game.util.xml.XmlValueResolver;
 
 public class XmlIntegerResolver implements XmlValueResolver<Integer> {
     @Override
-    public Integer resolve(String value) throws XmlParseException {
+    public Integer resolve(String value) throws XmlDeserializeException {
         try {
             return Integer.parseInt(value);
         } catch(NumberFormatException e) {
-            throw new XmlParseException(String.format("Invalid int value '%s'!", value));
+            throw new XmlDeserializeException(String.format("Invalid int value '%s'!", value));
         }
     }
 }

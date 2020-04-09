@@ -20,13 +20,13 @@
  * THE SOFTWARE.
  */
 
-package net.sync.game.resource.xml.parsers;
+package net.sync.game.resource.xml.deserializers;
 
 import com.badlogic.gdx.files.FileHandle;
 import net.sync.game.resource.xml.XmlReferenceNotFoundException;
 import net.sync.game.resource.xml.resolvers.XmlReferenceResolver;
+import net.sync.game.util.xml.XmlDeserializeException;
 import net.sync.game.util.xml.XmlElement;
-import net.sync.game.util.xml.XmlParseException;
 import net.sync.game.util.xml.XmlParser;
 
 import java.util.HashMap;
@@ -42,7 +42,7 @@ import static net.sync.game.resource.xml.resolvers.XmlGlobalResolvers.GLOBAL_IDE
  * the value is resolved.
  * @param <T> the type of the resource.
  */
-public abstract class XmlMapResourceParser<T> extends XmlResourceParser<Map<String, T>> {
+public abstract class XmlMapResourceDeserializer<T> extends XmlResourceDeserializer<Map<String, T>> {
     private String rootName;
     private Map<String, T> resolved;
     private Map<String, UnresolvedResource> unresolved;
@@ -51,13 +51,13 @@ public abstract class XmlMapResourceParser<T> extends XmlResourceParser<Map<Stri
      * Create a resource parser from its file.
      * @param file the resource file.
      */
-    public XmlMapResourceParser(XmlParser parser, FileHandle file, String rootName) {
+    public XmlMapResourceDeserializer(XmlParser parser, FileHandle file, String rootName) {
         super(parser, file);
         this.rootName = rootName;
     }
 
     @Override
-    public Map<String, T> parse(XmlElement root) throws XmlParseException {
+    public Map<String, T> deserialize(XmlElement root) throws XmlDeserializeException {
         resolved = new HashMap<>(root.getChildCount());
         unresolved = new HashMap<>();
 
@@ -69,7 +69,7 @@ public abstract class XmlMapResourceParser<T> extends XmlResourceParser<Map<Stri
 
             //Check for duplicates
             if(resolved.containsKey(id) || unresolved.containsKey(id)) {
-                throw new XmlParseException(String.format("Duplicated id '%s'", id));
+                throw new XmlDeserializeException(String.format("Duplicated id '%s'", id));
             }
 
             //Resolve the resource value
@@ -106,7 +106,7 @@ public abstract class XmlMapResourceParser<T> extends XmlResourceParser<Map<Stri
         return resolved;
     }
 
-    private void markResolved(String id, T value, XmlElement element) throws XmlParseException {
+    private void markResolved(String id, T value, XmlElement element) throws XmlDeserializeException {
         resolved.put(id, value);
 
         if(element != null && element.getAttributeCount() > 1) {
@@ -127,7 +127,7 @@ public abstract class XmlMapResourceParser<T> extends XmlResourceParser<Map<Stri
         }
     }
 
-    private void markUnresolved(String id, String referenceId, XmlElement element) throws XmlParseException {
+    private void markUnresolved(String id, String referenceId, XmlElement element) throws XmlDeserializeException {
         unresolved.put(id, new UnresolvedResource(referenceId, element));
     }
 
@@ -143,14 +143,14 @@ public abstract class XmlMapResourceParser<T> extends XmlResourceParser<Map<Stri
     @Override
     protected void validateRoot(XmlElement root) {
         if(!root.getName().equals(rootName)) {
-            throw new XmlParseException(String.format(
+            throw new XmlDeserializeException(String.format(
                     "Unexpected xml root element name '%s'. Expected to be '%s'!", root.getName(), rootName));
         }
     }
 
     /**
      * Checks root element child's validity
-     * @throws XmlParseException if the child is invalid.
+     * @throws XmlDeserializeException if the child is invalid.
      */
     protected abstract void validateRootChild(XmlElement element);
 
@@ -166,7 +166,7 @@ public abstract class XmlMapResourceParser<T> extends XmlResourceParser<Map<Stri
      * @param id the resource id.
      * @param value the resource value.
      * @param element the xml element.
-     * @throws XmlParseException if the attributes cannot be parsed correctly.
+     * @throws XmlDeserializeException if the attributes cannot be parsed correctly.
      */
     protected void parseAttributes(String id, T value, XmlElement element) {}
 

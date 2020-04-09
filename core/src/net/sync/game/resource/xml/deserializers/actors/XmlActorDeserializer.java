@@ -20,7 +20,7 @@
  * THE SOFTWARE.
  */
 
-package net.sync.game.resource.xml.parsers.actors;
+package net.sync.game.resource.xml.deserializers.actors;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -31,11 +31,11 @@ import net.sync.game.resource.Dimension;
 import net.sync.game.resource.Layout;
 import net.sync.game.resource.Style;
 import net.sync.game.resource.lazy.Resource;
-import net.sync.game.resource.xml.parsers.XmlLayoutParser;
+import net.sync.game.resource.xml.deserializers.XmlLayoutDeserializer;
 import net.sync.game.resource.xml.resolvers.XmlIdentifierResolver;
 import net.sync.game.resource.xml.resolvers.XmlTouchableResolver;
-import net.sync.game.util.xml.XmlElementParser;
-import net.sync.game.util.xml.XmlParseException;
+import net.sync.game.util.xml.XmlDeserializeException;
+import net.sync.game.util.xml.XmlElementDeserializer;
 import net.sync.game.util.xml.XmlParser;
 import net.sync.game.util.xml.XmlValueResolver;
 
@@ -44,15 +44,15 @@ import net.sync.game.util.xml.XmlValueResolver;
  *
  * @param <T> the type of the actor being parsed.
  */
-public abstract class XmlActorParser<T extends Actor> implements XmlElementParser<T> {
-    private net.sync.game.resource.xml.parsers.XmlLayoutParser layoutParser;
+public abstract class XmlActorDeserializer<T extends Actor> implements XmlElementDeserializer<T> {
+    private XmlLayoutDeserializer layoutParser;
 
-    public XmlActorParser(net.sync.game.resource.xml.parsers.XmlLayoutParser layoutParser) {
+    public XmlActorDeserializer(XmlLayoutDeserializer layoutParser) {
         this.layoutParser = layoutParser;
     }
 
     @Override
-    public T parse(XmlParser.Element element) throws XmlParseException {
+    public T parse(XmlParser.Element element) throws XmlDeserializeException {
         T actor = createActor();
 
         //Parse style
@@ -90,9 +90,9 @@ public abstract class XmlActorParser<T extends Actor> implements XmlElementParse
         return actor;
     }
 
-    private void parseAttributeOrThrow(T actor, String name, String value) throws XmlParseException {
+    private void parseAttributeOrThrow(T actor, String name, String value) throws XmlDeserializeException {
         if(!parseAttribute(actor, name, value)) {
-            throw new XmlParseException(String.format("Unrecognised attribute with name '%s' and value '%s'!", name, value));
+            throw new XmlDeserializeException(String.format("Unrecognised attribute with name '%s' and value '%s'!", name, value));
         }
     }
 
@@ -106,9 +106,9 @@ public abstract class XmlActorParser<T extends Actor> implements XmlElementParse
      * @param name the attribute name.
      * @param value the attribute value.
      * @return true if the attribute has been recognised and parsed, false if it has not been recognised.
-     * @throws XmlParseException if the attribute has been recognised but cannot be parsed correctly.
+     * @throws XmlDeserializeException if the attribute has been recognised but cannot be parsed correctly.
      */
-    protected boolean parseAttribute(T actor, String name, String value) throws XmlParseException {
+    protected boolean parseAttribute(T actor, String name, String value) throws XmlDeserializeException {
         switch(name) {
             case "id": getLayoutParser().setFindableActor(XmlIdentifierResolver.GLOBAL_IDENTIFIER_RESOLVER.resolve(value), actor);    break;
             case "x":         actor.setX(dimensionResolver().resolve(value).getValue());                        break;
@@ -137,9 +137,9 @@ public abstract class XmlActorParser<T extends Actor> implements XmlElementParse
      *
      * @param actor the result actor.
      * @param content the actor element's text content.
-     * @throws XmlParseException if data cannot be parsed correctly.
+     * @throws XmlDeserializeException if data cannot be parsed correctly.
      */
-    protected void parseTextContent(T actor, String content) throws XmlParseException {}
+    protected void parseTextContent(T actor, String content) throws XmlDeserializeException {}
 
     /**
      * Parses the element's children. This is called only if the element
@@ -147,9 +147,9 @@ public abstract class XmlActorParser<T extends Actor> implements XmlElementParse
      *
      * @param actor the result actor.
      * @param element the actor element.
-     * @throws XmlParseException if data cannot be parsed correctly.
+     * @throws XmlDeserializeException if data cannot be parsed correctly.
      */
-    protected void parseChildren(T actor, XmlParser.Element element) throws XmlParseException {}
+    protected void parseChildren(T actor, XmlParser.Element element) throws XmlDeserializeException {}
 
 
     /**
@@ -159,7 +159,7 @@ public abstract class XmlActorParser<T extends Actor> implements XmlElementParse
      */
     protected abstract T createActor();
 
-    public XmlLayoutParser getLayoutParser() {
+    public XmlLayoutDeserializer getLayoutParser() {
         return layoutParser;
     }
 

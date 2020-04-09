@@ -20,17 +20,17 @@
  * THE SOFTWARE.
  */
 
-package net.sync.game.resource.xml.parsers;
+package net.sync.game.resource.xml.deserializers;
 
 import com.badlogic.gdx.files.FileHandle;
-import net.sync.game.resource.xml.XmlReferenceNotCompatibleException;
 import net.sync.game.resource.MapTheme;
+import net.sync.game.resource.xml.XmlReferenceNotCompatibleException;
 import net.sync.game.resource.xml.resolvers.*;
+import net.sync.game.util.xml.XmlDeserializeException;
 import net.sync.game.util.xml.XmlElement;
-import net.sync.game.util.xml.XmlParseException;
 import net.sync.game.util.xml.XmlParser;
 
-public class XmlValuesParser extends XmlMapResourceParser<Object> {
+public class XmlValuesParser extends XmlMapResourceDeserializer<Object> {
     private static final String RESOURCE_ROOT_NAME = "values";
     private static final String BOOLEAN_RESOURCE_TYPE_NAME = "boolean";
     private static final String FLOAT_RESOURCE_TYPE_NAME = "float";
@@ -39,11 +39,13 @@ public class XmlValuesParser extends XmlMapResourceParser<Object> {
     private static final String PERCENT_RESOURCE_TYPE_NAME = "percent";
 
     /**
-     * Create a resource parser from its file.
-     * @param resourceFile the resource file.
+     * Creates a values resource deserializer.
+     * @param parser the XML parser.
+     * @param file the resource file.
+     * @param theme the theme.
      */
-    public XmlValuesParser(XmlParser parser, FileHandle resourceFile, MapTheme theme) {
-        super(parser, resourceFile, RESOURCE_ROOT_NAME);
+    public XmlValuesParser(XmlParser parser, FileHandle file, MapTheme theme) {
+        super(parser, file, RESOURCE_ROOT_NAME);
     }
 
     @Override
@@ -56,7 +58,7 @@ public class XmlValuesParser extends XmlMapResourceParser<Object> {
             case PERCENT_RESOURCE_TYPE_NAME:
                 return;
             default:
-                throw new XmlParseException(String.format("Unexpected element name '%s'!", element.getName()));
+                throw new XmlDeserializeException(String.format("Unexpected element name '%s'!", element.getName()));
         }
     }
 
@@ -75,7 +77,7 @@ public class XmlValuesParser extends XmlMapResourceParser<Object> {
             case PERCENT_RESOURCE_TYPE_NAME:
                 return percentResolver;
             default:
-                throw new XmlParseException(String.format("Unexpected element name '%s'!", element.getName()));
+                throw new XmlDeserializeException(String.format("Unexpected element name '%s'!", element.getName()));
         }
     }
 

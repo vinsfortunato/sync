@@ -23,7 +23,7 @@
 package net.sync.game.resource.xml.resolvers;
 
 import com.badlogic.gdx.utils.Align;
-import net.sync.game.util.xml.XmlParseException;
+import net.sync.game.util.xml.XmlDeserializeException;
 import net.sync.game.util.xml.XmlValueResolver;
 
 import java.util.regex.Matcher;
@@ -45,7 +45,7 @@ public class XmlAlignResolver implements XmlValueResolver<Integer> {
                 return getAlignFromValue(matcher.group(3));
             }
         }
-        throw new XmlParseException(String.format("Invalid align format for value '%s'!", value));
+        throw new XmlDeserializeException(String.format("Invalid align format for value '%s'!", value));
     }
 
     private int getAlignFromValue(String value) {

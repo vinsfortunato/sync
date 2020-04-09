@@ -23,7 +23,7 @@
 package net.sync.game.resource.xml.resolvers;
 
 import com.badlogic.gdx.graphics.Color;
-import net.sync.game.util.xml.XmlParseException;
+import net.sync.game.util.xml.XmlDeserializeException;
 import net.sync.game.util.xml.XmlValueResolver;
 
 import java.util.regex.Matcher;
@@ -80,6 +80,6 @@ public class XmlColorResolver implements XmlValueResolver<Color> {
                     Float.parseFloat(params[3]));
         }
 
-        throw new XmlParseException("Unrecognised color format!");
+        throw new XmlDeserializeException("Unrecognised color format!");
     }
 }

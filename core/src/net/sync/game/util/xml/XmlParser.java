@@ -28,11 +28,12 @@ import java.io.InputStream;
 import java.io.Reader;
 
 /**
- * An XML document parser.
+ * An XML document parser. Provides a DOM representation of an XML document
+ * by parsing it from different different possible sources.
  */
 public interface XmlParser {
     /**
-     * Parse the given XML document from a string.
+     * Parses the given XML document from a string.
      * @param xml the xml string to parse.
      * @return the parsed XML root element.
      * @throws XmlParseException if the document cannot be parsed.
@@ -40,7 +41,7 @@ public interface XmlParser {
     XmlElement parse(String xml);
 
     /**
-     * Parse the given XML document from a stream.
+     * Parses the given XML document from a stream.
      * @param stream the xml stream to parse.
      * @return the parsed XML root element.
      * @throws XmlParseException if the document cannot be parsed.
@@ -48,7 +49,7 @@ public interface XmlParser {
     XmlElement parse(InputStream stream);
 
     /**
-     * Parse the given XML document from a reader.
+     * Parses the given XML document from a reader.
      * @param reader the xml reader to parse.
      * @return the parsed XML root element.
      * @throws XmlParseException if the document cannot be parsed.
@@ -56,11 +57,10 @@ public interface XmlParser {
     XmlElement parse(Reader reader);
 
     /**
-     * Parse the given XML document from a file handle.
+     * Parses the given XML document from a file handle.
      * @param file the xml file to parse.
      * @return the parsed XML root element.
      * @throws XmlParseException if the document cannot be parsed.
      */
     XmlElement parse(FileHandle file);
-
 }

@@ -20,16 +20,15 @@
  * THE SOFTWARE.
  */
 
-package net.sync.game.resource.xml.parsers;
+package net.sync.game.resource.xml.deserializers;
 
 import com.badlogic.gdx.files.FileHandle;
 import net.sync.game.resource.MapTheme;
 import net.sync.game.resource.SettableThemeManifest;
+import net.sync.game.util.xml.XmlDeserializeException;
 import net.sync.game.util.xml.XmlElement;
-import net.sync.game.util.xml.XmlParseException;
 import net.sync.game.util.xml.XmlParser;
 
-import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -38,18 +37,19 @@ import static net.sync.game.Game.settings;
 import static net.sync.game.resource.xml.resolvers.XmlGlobalResolvers.GLOBAL_INTEGER_RESOLVER;
 
 //TODO rewrite
-public class XmlThemeParser extends XmlResourceParser<MapTheme> {
+public class XmlThemeDeserializer extends XmlResourceDeserializer<MapTheme> {
     /**
-     * Creates an XML theme parser from its manifest file.
-     * @param manifestFile the theme manifest file.
+     * Creates a theme resource deserializer.
+     * @param parser the XML parser.
+     * @param manifestFile the manifest resource file.
      */
-    public XmlThemeParser(XmlParser parser, FileHandle manifestFile) {
+    public XmlThemeDeserializer(XmlParser parser, FileHandle manifestFile) {
         super(parser, manifestFile);
     }
 
     @Override
-    public MapTheme parse() throws Exception {
-        MapTheme theme = super.parse(); //Parse theme.xml (theme manifest)
+    public MapTheme deserialize() {
+        MapTheme theme = super.deserialize(); //Parse theme.xml (theme manifest)
         parseLangs(theme);              //Parse langs.xml (language resources)
         parseValues(theme);             //Parse values.xml (value resources)
         parseColors(theme);             //Parse colors.xml (color resources)
@@ -63,7 +63,7 @@ public class XmlThemeParser extends XmlResourceParser<MapTheme> {
     }
 
     @Override
-    public MapTheme parse(XmlElement root) {
+    public MapTheme deserialize(XmlElement root) {
         //Parse manifest
         SettableThemeManifest manifest = new SettableThemeManifest();
         manifest.setVersion(GLOBAL_INTEGER_RESOLVER.resolve(root.getAttribute("version")));
@@ -81,41 +81,41 @@ public class XmlThemeParser extends XmlResourceParser<MapTheme> {
     @Override
     protected void validateRoot(XmlElement root) {
         if(!root.getName().equals("theme")) {
-            throw new XmlParseException("Unexpected xml root element name. Expected to be 'theme'!");
+            throw new XmlDeserializeException("Unexpected xml root element name. Expected to be 'theme'!");
         }
     }
 
-    private void parseLangs(MapTheme theme) throws Exception {
+    private void parseLangs(MapTheme theme) {
         FileHandle langFile = getFile().sibling("langs.xml");
         if(langFile.exists()) {
-            theme.setLanguages(new XmlLangsParser(langFile, theme).parse());
+            theme.setLanguages(new XmlLangsDeserializer(getParser(), langFile, theme).deserialize());
         }
     }
 
-    private void parseValues(MapTheme theme) throws Exception {
+    private void parseValues(MapTheme theme) {
         FileHandle valuesFile = getFile().sibling("values.xml");
         if(valuesFile.exists()) {
-            theme.setValues(new XmlValuesParser(getParser(), valuesFile, theme).parse());
+            theme.setValues(new XmlValuesParser(getParser(), valuesFile, theme).deserialize());
         }
     }
 
-    private void parseColors(MapTheme theme) throws Exception {
+    private void parseColors(MapTheme theme) {
         FileHandle colorsFile = getFile().sibling("colors.xml");
         if(colorsFile.exists()) {
-            theme.setColors(new XmlColorsParser(getParser(), colorsFile, theme).parse());
+            theme.setColors(new XmlColorsDeserializer(getParser(), colorsFile, theme).deserialize());
         }
     }
 
-    private void parseDimens(MapTheme theme) throws Exception {
+    private void parseDimens(MapTheme theme) {
         FileHandle dimensFile = getFile().sibling("dimens.xml");
         if(dimensFile.exists()) {
-            theme.setDimensions(new XmlDimensParser(getParser(), dimensFile, theme).parse());
+            theme.setDimensions(new XmlDimensDeserializer(getParser(), dimensFile, theme).deserialize());
         }
     }
 
-    private void parseStrings(MapTheme theme) throws Exception {
+    private void parseStrings(MapTheme theme) {
         List<Locale> langs = theme.getLanguages();
-        //Check theme supported languages. If the array containing theme languages is null no string resource
+        //Check theme supported languages. If the list containing theme languages is null no string resource
         //from the theme is parsed and fallback theme will then be used to resolve string references.
         if(langs != null) {
             //Get current game language
@@ -128,15 +128,15 @@ public class XmlThemeParser extends XmlResourceParser<MapTheme> {
                 //Parse active lang strings
                 FileHandle stringsFile = getStringsFile(active);
                 existsOrThrow(stringsFile);
-                net.sync.game.resource.xml.parsers.XmlStringsParser parser = new net.sync.game.resource.xml.parsers.XmlStringsParser(stringsFile, theme);
-                Map<String, String> strings = parser.parse();
+                XmlStringsDeserializer parser = new XmlStringsDeserializer(getParser(), stringsFile, theme);
+                Map<String, String> strings = parser.deserialize();
 
                 //Parse default language if active isn't already default
                 if(index != 0) {
                     stringsFile = getStringsFile(langs.get(0)); //Get default theme lang
                     existsOrThrow(stringsFile);
-                    parser = new net.sync.game.resource.xml.parsers.XmlStringsParser(stringsFile, theme);
-                    Map<String, String> defStrings = parser.parse();
+                    parser = new XmlStringsDeserializer(getParser(), stringsFile, theme);
+                    Map<String, String> defStrings = parser.deserialize();
 
                     //Merge maps by overriding default lang strings with active lang strings
                     defStrings.putAll(strings);
@@ -149,37 +149,37 @@ public class XmlThemeParser extends XmlResourceParser<MapTheme> {
                 //Parse default theme lang strings
                 FileHandle stringsFile = getStringsFile(langs.get(0));
                 existsOrThrow(stringsFile);
-                net.sync.game.resource.xml.parsers.XmlStringsParser parser = new XmlStringsParser(stringsFile, theme);
-                theme.setStrings(parser.parse());
+                XmlStringsDeserializer parser = new XmlStringsDeserializer(getParser(), stringsFile, theme);
+                theme.setStrings(parser.deserialize());
             }
         }
     }
 
-    private void parseFonts(MapTheme theme) throws Exception {
+    private void parseFonts(MapTheme theme) {
         FileHandle fontsFile = getFile().sibling("fonts.xml");
         if(fontsFile.exists()) {
-            theme.setFonts(new XmlFontsParser(fontsFile, theme).parse());
+            theme.setFonts(new XmlFontsDeserializer(fontsFile, theme).deserialize());
         }
     }
 
-    private void parseSounds(MapTheme theme) throws Exception {
+    private void parseSounds(MapTheme theme) {
         FileHandle soundsFile = getFile().sibling("sounds.xml");
         if(soundsFile.exists()) {
-            theme.setSounds(new XmlSoundsParser(soundsFile, theme).parse());
+            theme.setSounds(new XmlSoundsDeserializer(getParser(), soundsFile, theme).deserialize());
         }
     }
 
-    private void parseMusics(MapTheme theme) throws Exception {
+    private void parseMusics(MapTheme theme) {
         FileHandle musicsFile = getFile().sibling("musics.xml");
         if(musicsFile.exists()) {
-            theme.setMusics(new XmlMusicsParser(musicsFile, theme).parse());
+            theme.setMusics(new XmlMusicsDeserializer(getParser(), musicsFile, theme).deserialize());
         }
     }
 
-    private void parseDrawables(MapTheme theme) throws Exception {
+    private void parseDrawables(MapTheme theme) {
         FileHandle drawablesFile = getFile().sibling("drawables.xml");
         if(drawablesFile.exists()) {
-            theme.setDrawables(new XmlDrawablesParser(drawablesFile, theme).parse());
+            theme.setDrawables(new XmlDrawablesDeserializer(drawablesFile, theme).deserialize());
         }
     }
 
@@ -189,9 +189,9 @@ public class XmlThemeParser extends XmlResourceParser<MapTheme> {
                 .child(String.format("strings_%s_%s.xml", locale.getLanguage(), locale.getCountry()));
     }
 
-    private static void existsOrThrow(FileHandle file) throws FileNotFoundException {
+    private static void existsOrThrow(FileHandle file) {
         if(!file.exists()) {
-            throw new FileNotFoundException(String.format("Required file '%s' not found!", file.path()));
+            throw new XmlDeserializeException(String.format("Required file '%s' not found!", file.path()));
         }
     }
 }

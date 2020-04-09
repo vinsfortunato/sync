@@ -20,7 +20,7 @@
  * THE SOFTWARE.
  */
 
-package net.sync.game.resource.xml.parsers;
+package net.sync.game.resource.xml.deserializers;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
@@ -29,18 +29,18 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.utils.ObjectMap;
 import net.sync.game.resource.Dimension;
+import net.sync.game.resource.MapTheme;
 import net.sync.game.resource.lazy.FontResource;
 import net.sync.game.resource.lazy.Resource;
 import net.sync.game.resource.xml.XmlReferenceNotCompatibleException;
 import net.sync.game.resource.xml.XmlReferenceNotFoundException;
-import net.sync.game.resource.MapTheme;
 import net.sync.game.resource.xml.resolvers.*;
-import net.sync.game.util.xml.XmlParseException;
+import net.sync.game.util.xml.XmlDeserializeException;
 import net.sync.game.util.xml.XmlParser;
 import net.sync.game.util.xml.XmlValueResolver;
 
 //TODO rewrite
-public class XmlFontsParser extends XmlMapResourceParser<Resource<BitmapFont>> {
+public class XmlFontsDeserializer extends XmlMapResourceDeserializer<Resource<BitmapFont>> {
     private final MapTheme theme;
     private final XmlValueResolver<Dimension> dimensionResolver;
     private final XmlValueResolver<Boolean> booleanResolver;
@@ -72,7 +72,7 @@ public class XmlFontsParser extends XmlMapResourceParser<Resource<BitmapFont>> {
      *
      * @param resourceFile the resource file.
      */
-    public XmlFontsParser(FileHandle resourceFile, MapTheme theme) {
+    public XmlFontsDeserializer(FileHandle resourceFile, MapTheme theme) {
         super(resourceFile);
         this.theme = theme;
 
@@ -88,26 +88,26 @@ public class XmlFontsParser extends XmlMapResourceParser<Resource<BitmapFont>> {
     }
 
     @Override
-    protected void parseAttributes(String id, Resource<BitmapFont> value, XmlParser.Element element) throws XmlParseException {
+    protected void parseAttributes(String id, Resource<BitmapFont> value, XmlParser.Element element) throws XmlDeserializeException {
         for (ObjectMap.Entry<String, String> attribute : element.getAttributes()) {
             if (!attribute.key.equals("id") && !parseAttribute(value, attribute.key, attribute.value)) {
-                throw new XmlParseException(String.format(
+                throw new XmlDeserializeException(String.format(
                         "Unrecognised attribute with name '%s' and value '%s'!", attribute.key, attribute.value));
             }
         }
     }
 
     @Override
-    protected void checkRoot(XmlParser.Element root) throws XmlParseException {
+    protected void checkRoot(XmlParser.Element root) throws XmlDeserializeException {
         if(!root.getName().equals("fonts")) {
-            throw new XmlParseException("Unexpected xml root element name. Expected to be 'fonts'!");
+            throw new XmlDeserializeException("Unexpected xml root element name. Expected to be 'fonts'!");
         }
     }
 
     @Override
-    protected void checkRootChild(XmlParser.Element element) throws XmlParseException {
+    protected void checkRootChild(XmlParser.Element element) throws XmlDeserializeException {
         if(!element.getName().equals("font")) {
-            throw new XmlParseException(String.format("Unexpected element name '%s'! Expected to be 'font'!", element.getName()));
+            throw new XmlDeserializeException(String.format("Unexpected element name '%s'! Expected to be 'font'!", element.getName()));
         }
     }
 
@@ -122,9 +122,9 @@ public class XmlFontsParser extends XmlMapResourceParser<Resource<BitmapFont>> {
      * @param name the attribute name.
      * @param value the attribute value.
      * @return true if the attribute has been recognised and parsed, false if it has not been recognised.
-     * @throws XmlParseException if the attribute has been recognised but cannot be parsed correctly.
+     * @throws XmlDeserializeException if the attribute has been recognised but cannot be parsed correctly.
      */
-    private boolean parseAttribute(Resource<BitmapFont> resource, String name, String value) throws XmlParseException {
+    private boolean parseAttribute(Resource<BitmapFont> resource, String name, String value) throws XmlDeserializeException {
         FreeTypeFontGenerator.FreeTypeFontParameter p = ((FontResource) resource).parameter;
         switch(name) {
             case "size":           p.size = dimensionResolver.resolve(value).getIntValue();                      break;
@@ -156,7 +156,7 @@ public class XmlFontsParser extends XmlMapResourceParser<Resource<BitmapFont>> {
 
     private static class XmlHintingResolver implements XmlValueResolver<FreeTypeFontGenerator.Hinting> {
         @Override
-        public FreeTypeFontGenerator.Hinting resolve(String value) throws XmlParseException {
+        public FreeTypeFontGenerator.Hinting resolve(String value) throws XmlDeserializeException {
             switch(value.trim().toLowerCase()) {
                 case "none": return FreeTypeFontGenerator.Hinting.None;
                 case "slight": return FreeTypeFontGenerator.Hinting.Slight;
@@ -169,7 +169,7 @@ public class XmlFontsParser extends XmlMapResourceParser<Resource<BitmapFont>> {
                 case "autofull":
                 case "auto_full": return FreeTypeFontGenerator.Hinting.AutoFull;
             }
-            throw new XmlParseException(String.format("Invalid align format for value '%s'!", value));
+            throw new XmlDeserializeException(String.format("Invalid align format for value '%s'!", value));
         }
     }
 }

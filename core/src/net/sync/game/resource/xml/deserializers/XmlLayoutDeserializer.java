@@ -20,7 +20,7 @@
  * THE SOFTWARE.
  */
 
-package net.sync.game.resource.xml.parsers;
+package net.sync.game.resource.xml.deserializers;
 
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
@@ -31,13 +31,13 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import net.sync.game.resource.Dimension;
 import net.sync.game.resource.Layout;
+import net.sync.game.resource.MapTheme;
 import net.sync.game.resource.Style;
 import net.sync.game.resource.lazy.Resource;
 import net.sync.game.resource.xml.XmlLayout;
-import net.sync.game.resource.MapTheme;
-import net.sync.game.resource.xml.parsers.actors.*;
+import net.sync.game.resource.xml.deserializers.actors.*;
 import net.sync.game.resource.xml.resolvers.*;
-import net.sync.game.util.xml.XmlParseException;
+import net.sync.game.util.xml.XmlDeserializeException;
 import net.sync.game.util.xml.XmlParser;
 import net.sync.game.util.xml.XmlValueResolver;
 
@@ -45,7 +45,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 //TODO rewrite
-public class XmlLayoutParser extends XmlResourceParser<XmlLayout> {
+public class XmlLayoutDeserializer extends XmlResourceDeserializer<XmlLayout> {
     private MapTheme theme;
 
     /* Reference resolvers */
@@ -72,7 +72,7 @@ public class XmlLayoutParser extends XmlResourceParser<XmlLayout> {
      *
      * @param resourceFile the resource file.
      */
-    public XmlLayoutParser(FileHandle resourceFile, MapTheme theme) {
+    public XmlLayoutDeserializer(FileHandle resourceFile, MapTheme theme) {
         super(resourceFile);
         this.theme = theme;
 
@@ -94,7 +94,7 @@ public class XmlLayoutParser extends XmlResourceParser<XmlLayout> {
     }
 
     @Override
-    public net.sync.game.resource.xml.XmlLayout parse(XmlParser.Element root) throws XmlParseException {
+    public net.sync.game.resource.xml.XmlLayout parse(XmlParser.Element root) throws XmlDeserializeException {
         //Parse actors
         XmlParser.Element element = root.getChild(0);
         Actor actor = getActorElementParser(element.getName()).parse(element);
@@ -107,13 +107,13 @@ public class XmlLayoutParser extends XmlResourceParser<XmlLayout> {
     }
 
     @Override
-    protected void checkRoot(XmlParser.Element root) throws XmlParseException {
+    protected void checkRoot(XmlParser.Element root) throws XmlDeserializeException {
         if(!root.getName().equals("layout")) {
-            throw new XmlParseException("Unexpected xml root element name. Expected to be 'layout'");
+            throw new XmlDeserializeException("Unexpected xml root element name. Expected to be 'layout'");
         }
 
         if(root.getChildCount() > 1) {
-            throw new XmlParseException("Invalid layout element content! Layout element can have only one child element!");
+            throw new XmlDeserializeException("Invalid layout element content! Layout element can have only one child element!");
         }
     }
 
@@ -122,38 +122,38 @@ public class XmlLayoutParser extends XmlResourceParser<XmlLayout> {
      *
      * @param id the actor id.
      * @param actor the actor to associate.
-     * @throws XmlParseException if another actor is already associated to the given id.
+     * @throws XmlDeserializeException if another actor is already associated to the given id.
      */
-    public void setFindableActor(String id, Actor actor) throws XmlParseException {
+    public void setFindableActor(String id, Actor actor) throws XmlDeserializeException {
         if(actorsLookupMap == null) {
             actorsLookupMap = new HashMap<>();
         }
 
         if(actorsLookupMap.containsKey(id)) { //Check for duplicates
-            throw new XmlParseException(String.format("Id '%s' is already associated to an actor!", id));
+            throw new XmlDeserializeException(String.format("Id '%s' is already associated to an actor!", id));
         }
 
         actorsLookupMap.put(id, actor);
     }
 
     /**
-     * Gets a {@link XmlActorParser} that can parse an element with the given name and return
+     * Gets a {@link XmlActorDeserializer} that can parse an element with the given name and return
      * the corresponding {@link Actor} with properties described by the element attributes and its children elements.
      *
      * @param elementName the element name.
-     * @throws XmlParseException if there's no parser that associated to the given element name.
-     * @return the {@link XmlActorParser} that can parse the element with given element name.
+     * @throws XmlDeserializeException if there's no parser that associated to the given element name.
+     * @return the {@link XmlActorDeserializer} that can parse the element with given element name.
      */
-    public XmlActorParser<?> getActorElementParser(String elementName) throws XmlParseException {
+    public XmlActorDeserializer<?> getActorElementParser(String elementName) throws XmlDeserializeException {
         switch(elementName) {
-            case "Slider" : return new XmlSliderParser(this);
-            case "Container": return new XmlContainerParser(this);
-            case "HorizontalGroup": return new XmlHorizontalGroupParser(this);
+            case "Slider" : return new XmlSliderDeserializer(this);
+            case "Container": return new XmlContainerDeserializer(this);
+            case "HorizontalGroup": return new XmlHorizontalGroupDeserializer(this);
             case "VerticalGroup": return new XmlVerticalGroupParser(this);
-            case "ScrollPane": return new XmlScrollPaneParser(this);
-            case "Stack": return new XmlStackParser(this);
-            case "Table": return new XmlTableParser(this);
+            case "ScrollPane": return new XmlScrollPaneDeserializer(this);
+            case "Stack": return new XmlStackDeserializer(this);
+            case "Table": return new XmlTableDeserializer(this);
         }
-        throw new XmlParseException(String.format("Unrecognised element with name '%s'", elementName));
+        throw new XmlDeserializeException(String.format("Unrecognised element with name '%s'", elementName));
     }
 }

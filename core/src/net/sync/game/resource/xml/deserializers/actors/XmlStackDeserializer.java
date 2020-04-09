@@ -20,24 +20,18 @@
  * THE SOFTWARE.
  */
 
-package net.sync.game.resource.xml.parsers.actors;
+package net.sync.game.resource.xml.deserializers.actors;
 
-import com.badlogic.gdx.scenes.scene2d.Group;
-import net.sync.game.resource.xml.parsers.XmlLayoutParser;
-import net.sync.game.util.xml.XmlParseException;
-import net.sync.game.util.xml.XmlParser;
+import com.badlogic.gdx.scenes.scene2d.ui.Stack;
+import net.sync.game.resource.xml.deserializers.XmlLayoutDeserializer;
 
-public abstract class XmlGroupParser<T extends Group> extends net.sync.game.resource.xml.parsers.actors.XmlActorParser<T> {
-    public XmlGroupParser(XmlLayoutParser layoutParser) {
+public class XmlStackDeserializer extends XmlWidgetGroupParser<Stack> {
+    public XmlStackDeserializer(XmlLayoutDeserializer layoutParser) {
         super(layoutParser);
     }
 
     @Override
-    protected void parseChildren(T group, XmlParser.Element element) throws XmlParseException {
-        for(int i = 0; i < element.getChildCount(); i++) {
-            XmlParser.Element child = element.getChild(i);
-            XmlActorParser<?> parser = getLayoutParser().getActorElementParser(child.getName());
-            group.addActor(parser.parse(child));
-        }
+    protected Stack createActor() {
+        return new Stack();
     }
 }

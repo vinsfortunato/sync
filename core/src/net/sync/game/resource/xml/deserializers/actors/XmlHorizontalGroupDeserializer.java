@@ -20,21 +20,21 @@
  * THE SOFTWARE.
  */
 
-package net.sync.game.resource.xml.parsers.actors;
+package net.sync.game.resource.xml.deserializers.actors;
 
 import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
 import com.badlogic.gdx.utils.Align;
-import net.sync.game.resource.xml.parsers.XmlLayoutParser;
+import net.sync.game.resource.xml.deserializers.XmlLayoutDeserializer;
 import net.sync.game.resource.xml.resolvers.XmlAlignResolver;
-import net.sync.game.util.xml.XmlParseException;
+import net.sync.game.util.xml.XmlDeserializeException;
 
-public class XmlHorizontalGroupParser extends XmlWidgetGroupParser<HorizontalGroup> {
-    public XmlHorizontalGroupParser(XmlLayoutParser layoutParser) {
+public class XmlHorizontalGroupDeserializer extends XmlWidgetGroupParser<HorizontalGroup> {
+    public XmlHorizontalGroupDeserializer(XmlLayoutDeserializer layoutParser) {
         super(layoutParser);
     }
 
     @Override
-    protected boolean parseAttribute(HorizontalGroup group, String name, String value) throws XmlParseException {
+    protected boolean parseAttribute(HorizontalGroup group, String name, String value) throws XmlDeserializeException {
         if(super.parseAttribute(group, name, value)) {
             //Attribute already parsed
             return true;
@@ -60,7 +60,7 @@ public class XmlHorizontalGroupParser extends XmlWidgetGroupParser<HorizontalGro
                     group.align(XmlAlignResolver.GLOBAL_ALIGN_RESOLVER.resolve(value));
                     break;
                 }
-                throw new XmlParseException("Invalid align value! Row align should be bottom or center or top!");
+                throw new XmlDeserializeException("Invalid align value! Row align should be bottom or center or top!");
             }
             default: return false; //Unrecognised attribute
         }

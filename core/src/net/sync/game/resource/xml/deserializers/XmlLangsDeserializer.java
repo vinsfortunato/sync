@@ -20,41 +20,43 @@
  * THE SOFTWARE.
  */
 
-package net.sync.game.resource.xml.parsers;
+package net.sync.game.resource.xml.deserializers;
 
 import com.badlogic.gdx.files.FileHandle;
 import net.sync.game.resource.MapTheme;
+import net.sync.game.util.xml.XmlDeserializeException;
 import net.sync.game.util.xml.XmlElement;
-import net.sync.game.util.xml.XmlParseException;
 import net.sync.game.util.xml.XmlParser;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import static net.sync.game.resource.xml.resolvers.XmlGlobalResolvers.GLOBAL_LOCALE_RESOLVER;
 import static net.sync.game.resource.xml.resolvers.XmlGlobalResolvers.GLOBAL_BOOLEAN_RESOLVER;
+import static net.sync.game.resource.xml.resolvers.XmlGlobalResolvers.GLOBAL_LOCALE_RESOLVER;
 
-public class XmlLangsParser extends XmlResourceParser<List<Locale>> {
+public class XmlLangsDeserializer extends XmlResourceDeserializer<List<Locale>> {
     private static final String RESOURCE_ROOT_NAME = "langs";
     private static final String RESOURCE_TYPE_NAME = "lang";
 
     /**
-     * Creates a resource parser from its file.
+     * Creates a langs resource deserializer.
+     * @param parser the XML parser.
      * @param file the resource file.
+     * @param theme the theme.
      */
-    public XmlLangsParser(XmlParser parser, FileHandle file, MapTheme theme) {
+    public XmlLangsDeserializer(XmlParser parser, FileHandle file, MapTheme theme) {
         super(parser, file);
     }
 
     @Override
-    public List<Locale> parse(XmlElement root) {
+    public List<Locale> deserialize(XmlElement root) {
         List<Locale> langs = new ArrayList<>();
 
         for(XmlElement element : root.getChildren()) {
             //Check root child name
             if(!element.getName().equals(RESOURCE_TYPE_NAME)) {
-                throw new XmlParseException(String.format(
+                throw new XmlDeserializeException(String.format(
                         "Unexpected element name '%s'! Expected to be '%s'!", element.getName(), RESOURCE_TYPE_NAME));
             }
 
@@ -66,7 +68,7 @@ public class XmlLangsParser extends XmlResourceParser<List<Locale>> {
 
             //Check for duplicates
             if(langs.contains(lang)) {
-                throw new XmlParseException(String.format(
+                throw new XmlDeserializeException(String.format(
                         "A language with the same locale '%s' has been already declared!", element.getAttribute("locale")));
             }
 
@@ -86,7 +88,7 @@ public class XmlLangsParser extends XmlResourceParser<List<Locale>> {
     @Override
     protected void validateRoot(XmlElement root) {
         if(!root.getName().equals(RESOURCE_ROOT_NAME)) {
-            throw new XmlParseException(String.format(
+            throw new XmlDeserializeException(String.format(
                     "Unexpected xml root element name '%s'. Expected to be '%s'!", root.getName(), RESOURCE_ROOT_NAME));
         }
     }

@@ -22,14 +22,14 @@
 
 package net.sync.game.resource.xml.resolvers;
 
-import net.sync.game.util.xml.XmlParseException;
+import net.sync.game.util.xml.XmlDeserializeException;
 import net.sync.game.util.xml.XmlValueResolver;
 
 import java.util.Locale;
 
 public class XmlLocaleResolver implements XmlValueResolver<Locale> {
     @Override
-    public Locale resolve(String value) throws XmlParseException {
+    public Locale resolve(String value) throws XmlDeserializeException {
         //Prepare the value for parsing by removing leading/trailing spaces
         value = value.trim();
 

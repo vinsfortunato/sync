@@ -22,7 +22,7 @@
 
 package net.sync.game.resource.xml.resolvers;
 
-import net.sync.game.util.xml.XmlParseException;
+import net.sync.game.util.xml.XmlDeserializeException;
 import net.sync.game.util.xml.XmlValueResolver;
 
 import java.util.concurrent.TimeUnit;
@@ -72,11 +72,11 @@ public class XmlDurationResolver implements XmlValueResolver<Long> {
             //Parse value as milliseconds long
             long duration = Long.parseLong(value);
             if(duration < 0) {
-                throw new XmlParseException("Duration cannot be negative|");
+                throw new XmlDeserializeException("Duration cannot be negative|");
             }
             return duration;
         } catch(Exception e) {
-            throw new XmlParseException("Invalid duration format for value '%s'!", e);
+            throw new XmlDeserializeException("Invalid duration format for value '%s'!", e);
         }
     }
 }

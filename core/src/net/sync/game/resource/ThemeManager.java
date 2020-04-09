@@ -24,7 +24,7 @@ package net.sync.game.resource;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-import net.sync.game.resource.xml.parsers.XmlThemeParser;
+import net.sync.game.resource.xml.deserializers.XmlThemeDeserializer;
 
 public class ThemeManager {
 
@@ -33,9 +33,9 @@ public class ThemeManager {
     public ThemeManager() {
         //TODO
         FileHandle manifestFile = Gdx.files.internal("theme/default/theme.xml");
-        XmlThemeParser parser = new XmlThemeParser(manifestFile);
+        XmlThemeDeserializer parser = new XmlThemeDeserializer(manifestFile);
         try {
-            activeTheme = parser.parse();
+            activeTheme = parser.deserialize();
             //((XmlTheme)activeTheme).test();
         } catch (Exception e) {
             throw new IllegalStateException(e);

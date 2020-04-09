@@ -20,42 +20,48 @@
  * THE SOFTWARE.
  */
 
-package net.sync.game.resource.xml.parsers;
+package net.sync.game.resource.xml.deserializers;
 
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
 import net.sync.game.resource.MapTheme;
+import net.sync.game.resource.xml.resolvers.XmlColorResolver;
 import net.sync.game.resource.xml.resolvers.XmlReferenceResolver;
+import net.sync.game.util.xml.XmlDeserializeException;
 import net.sync.game.util.xml.XmlElement;
-import net.sync.game.util.xml.XmlParseException;
 import net.sync.game.util.xml.XmlParser;
 
-public class XmlStringsParser extends XmlMapResourceParser<String>{
-    private static final String RESOURCE_ROOT_NAME = "strings";
-    private static final String RESOURCE_TYPE_NAME = "string";
-
-    private XmlReferenceResolver<String> stringResolver = XmlReferenceResolver.from(
-            value -> value,
-            this::getResolvedValueOrThrow,
-            RESOURCE_TYPE_NAME);
+public class XmlColorsDeserializer extends XmlMapResourceDeserializer<Color> {
+    private static final String RESOURCE_ROOT_NAME = "colors";
+    private static final String RESOURCE_TYPE_NAME = "color";
 
     /**
-     * Creates a resource parser from its file.
+     * Creates a colors resource deserializer.
+     * @param parser the XML parser.
      * @param file the resource file.
+     * @param theme the theme.
      */
-    public XmlStringsParser(XmlParser parser, FileHandle file, MapTheme theme) {
+    public XmlColorsDeserializer(XmlParser parser, FileHandle file, MapTheme theme) {
         super(parser, file, RESOURCE_ROOT_NAME);
     }
 
     @Override
     protected void validateRootChild(XmlElement element) {
         if(!element.getName().equals(RESOURCE_TYPE_NAME)) {
-            throw new XmlParseException(String.format(
+            throw new XmlDeserializeException(String.format(
                     "Unexpected element name '%s'! Expected to be '%s'!", element.getName(), RESOURCE_TYPE_NAME));
         }
     }
 
     @Override
-    protected XmlReferenceResolver<String> getResolver(XmlElement element) {
-        return stringResolver;
+    protected XmlReferenceResolver<Color> getResolver(XmlElement element) {
+        return colorResolver;
     }
+
+    /* Resolvers */
+
+    private XmlReferenceResolver<Color> colorResolver = XmlReferenceResolver.from(
+            new XmlColorResolver(),
+            this::getResolvedValueOrThrow,
+            RESOURCE_TYPE_NAME);
 }

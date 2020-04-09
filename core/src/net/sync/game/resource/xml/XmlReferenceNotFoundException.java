@@ -22,9 +22,9 @@
 
 package net.sync.game.resource.xml;
 
-import net.sync.game.util.xml.XmlParseException;
+import net.sync.game.util.xml.XmlDeserializeException;
 
-public class XmlReferenceNotFoundException extends XmlParseException {
+public class XmlReferenceNotFoundException extends XmlDeserializeException {
     public XmlReferenceNotFoundException() {
     }
 

@@ -23,7 +23,7 @@
 package net.sync.game.resource.xml.resolvers;
 
 import net.sync.game.util.math.MathUtils;
-import net.sync.game.util.xml.XmlParseException;
+import net.sync.game.util.xml.XmlDeserializeException;
 import net.sync.game.util.xml.XmlValueResolver;
 
 import java.util.regex.Matcher;
@@ -33,7 +33,7 @@ public class XmlPercentResolver implements XmlValueResolver<Float> {
     private static final Pattern PERCENT_REGEX = Pattern.compile("(?:100(?:\\.0+)?|[1-9]?\\d(?:[.,]\\d+)?)\\s*%");
 
     @Override
-    public Float resolve(String value) throws XmlParseException {
+    public Float resolve(String value) throws XmlDeserializeException {
         //Prepare the value for parsing by removing leading/trailing spaces
         value = value.trim();
 
@@ -47,12 +47,12 @@ public class XmlPercentResolver implements XmlValueResolver<Float> {
             //Parse value as percent float
             float percent = Float.parseFloat(value);
             if(percent < 0) {
-                throw new XmlParseException("Percentage cannot be negative!");
+                throw new XmlDeserializeException("Percentage cannot be negative!");
             }
             //Return clamped percentage
             return MathUtils.clamp(0.0f, 1.0f, percent);
         } catch (Exception e) {
-            throw new XmlParseException("Invalid percentage format for value '%s'!", e);
+            throw new XmlDeserializeException("Invalid percentage format for value '%s'!", e);
         }
     }
 }

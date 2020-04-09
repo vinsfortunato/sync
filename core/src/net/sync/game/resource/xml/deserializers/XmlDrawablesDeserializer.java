@@ -20,7 +20,7 @@
  * THE SOFTWARE.
  */
 
-package net.sync.game.resource.xml.parsers;
+package net.sync.game.resource.xml.deserializers;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
@@ -28,11 +28,11 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import net.sync.game.resource.Dimension;
+import net.sync.game.resource.MapTheme;
 import net.sync.game.resource.lazy.*;
 import net.sync.game.resource.xml.XmlReferenceNotCompatibleException;
 import net.sync.game.resource.xml.XmlReferenceNotFoundException;
-import net.sync.game.resource.MapTheme;
-import net.sync.game.util.xml.XmlParseException;
+import net.sync.game.util.xml.XmlDeserializeException;
 import net.sync.game.util.xml.XmlParser;
 import net.sync.game.util.xml.XmlValueResolver;
 
@@ -41,14 +41,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 //TODO rewrite
-public class XmlDrawablesParser extends XmlMapResourceParser<Resource<Drawable>> {
+public class XmlDrawablesDeserializer extends XmlMapResourceDeserializer<Resource<Drawable>> {
     private final MapTheme theme;
 
     /**
      * Create a resource parser from its file.
      * @param resourceFile the resource file.
      */
-    public XmlDrawablesParser(FileHandle resourceFile, MapTheme theme) {
+    public XmlDrawablesDeserializer(FileHandle resourceFile, MapTheme theme) {
         super(resourceFile);
         this.theme = theme;
 
@@ -62,13 +62,13 @@ public class XmlDrawablesParser extends XmlMapResourceParser<Resource<Drawable>>
     }
 
     @Override
-    public Map<String, Resource<Drawable>> parse(XmlParser.Element root) throws XmlParseException {
+    public Map<String, Resource<Drawable>> parse(XmlParser.Element root) throws XmlDeserializeException {
         //Merge xml included files into root
         mergeIncludes(root);
-        return super.parse(root);
+        return super.deserialize(root);
     }
 
-    private void mergeIncludes(XmlParser.Element root) throws XmlParseException {
+    private void mergeIncludes(XmlParser.Element root) throws XmlDeserializeException {
         //Included files are located inside the drawables dir
         FileHandle includesDir = getFile().sibling("drawables");
 
@@ -79,11 +79,11 @@ public class XmlDrawablesParser extends XmlMapResourceParser<Resource<Drawable>>
             if(element.getName().equals("include")) {
                 //Check include file
                 if(element.getText().isEmpty()) {
-                    throw new XmlParseException("Empty include file name!");
+                    throw new XmlDeserializeException("Empty include file name!");
                 }
                 FileHandle includeFile = includesDir.child(element.getText());
                 if(!includeFile.exists()) {
-                    throw new XmlParseException("Include file not found!");
+                    throw new XmlDeserializeException("Include file not found!");
                 }
 
                 //Parse include file
@@ -92,10 +92,10 @@ public class XmlDrawablesParser extends XmlMapResourceParser<Resource<Drawable>>
                 try {
                     includeRoot = parser.parse(includeFile);
                 } catch (IOException e) {
-                    throw new XmlParseException("Cannot parse include xml file!");
+                    throw new XmlDeserializeException("Cannot parse include xml file!");
                 }
                 if(includeRoot == null) {
-                    throw new XmlParseException("Empty include xml resource file!");
+                    throw new XmlDeserializeException("Empty include xml resource file!");
                 }
                 //Include root should be the same as the root
                 checkRoot(includeRoot);
@@ -118,7 +118,7 @@ public class XmlDrawablesParser extends XmlMapResourceParser<Resource<Drawable>>
     }
 
     @Override
-    protected void parseAttributes(String id, Resource<Drawable> value, XmlParser.Element element) throws XmlParseException {
+    protected void parseAttributes(String id, Resource<Drawable> value, XmlParser.Element element) throws XmlDeserializeException {
         for (ObjectMap.Entry<String, String> attribute : element.getAttributes()) {
             String key = attribute.key;
             String val = attribute.value;
@@ -135,12 +135,12 @@ public class XmlDrawablesParser extends XmlMapResourceParser<Resource<Drawable>>
             if(value instanceof NinepatchResource && parseAttribute((NinepatchResource) value, key, val))   parsed = true;
 
             if(!parsed)
-                throw new XmlParseException(String.format(
+                throw new XmlDeserializeException(String.format(
                         "Unrecognised attribute with name '%s' and value '%s'!", attribute.key, attribute.value));
         }
     }
 
-    private boolean parseAttribute(DrawableResource resource, String name, String value) throws XmlParseException {
+    private boolean parseAttribute(DrawableResource resource, String name, String value) throws XmlDeserializeException {
         switch(name) {
             case "leftWidth":    resource.leftWidth = floatResolver.resolve(value);                               break;
             case "rightWidth":   resource.rightWidth = floatResolver.resolve(value);                              break;
@@ -152,7 +152,7 @@ public class XmlDrawablesParser extends XmlMapResourceParser<Resource<Drawable>>
         return true;
     }
 
-    private boolean parseAttribute(TextureResource resource, String name, String value) throws XmlParseException {
+    private boolean parseAttribute(TextureResource resource, String name, String value) throws XmlDeserializeException {
         switch(name) {
             case "minFilter":  resource.minFilter = net.sync.game.resource.xml.resolvers.XmlTextureFilterResolver.GLOBAL_TEXTURE_FILTER_RESOLVER.resolve(value);                break;
             case "maxFilter":  resource.magFilter = net.sync.game.resource.xml.resolvers.XmlTextureFilterResolver.GLOBAL_TEXTURE_FILTER_RESOLVER.resolve(value);                break;
@@ -166,7 +166,7 @@ public class XmlDrawablesParser extends XmlMapResourceParser<Resource<Drawable>>
         return true;
     }
 
-    private boolean parseAttribute(RegionResource resource, String name, String value) throws XmlParseException {
+    private boolean parseAttribute(RegionResource resource, String name, String value) throws XmlDeserializeException {
         switch(name) {
             case "x":      resource.x = dimensionResolver.resolve(value).getIntValue();                           break;
             case "y":      resource.y = dimensionResolver.resolve(value).getIntValue();                           break;
@@ -178,7 +178,7 @@ public class XmlDrawablesParser extends XmlMapResourceParser<Resource<Drawable>>
         return true;
     }
 
-    private boolean parseAttribute(SpriteResource resource, String name, String value) throws XmlParseException {
+    private boolean parseAttribute(SpriteResource resource, String name, String value) throws XmlDeserializeException {
         switch(name) { //TODO
             case "x": break;
             default: return false; //Unrecognised attribute
@@ -187,7 +187,7 @@ public class XmlDrawablesParser extends XmlMapResourceParser<Resource<Drawable>>
         return true;
     }
 
-    private boolean parseAttribute(NinepatchResource resource, String name, String value) throws XmlParseException {
+    private boolean parseAttribute(NinepatchResource resource, String name, String value) throws XmlDeserializeException {
         switch(name) { //TODO
             case "x": break;
             default: return false; //Unrecognised attribute
@@ -197,14 +197,14 @@ public class XmlDrawablesParser extends XmlMapResourceParser<Resource<Drawable>>
     }
 
     @Override
-    protected void checkRoot(XmlParser.Element root) throws XmlParseException {
+    protected void checkRoot(XmlParser.Element root) throws XmlDeserializeException {
         if(!root.getName().equals("drawables")) {
-            throw new XmlParseException("Unexpected xml root element name. Expected to be 'drawables'!");
+            throw new XmlDeserializeException("Unexpected xml root element name. Expected to be 'drawables'!");
         }
     }
 
     @Override
-    protected void checkRootChild(XmlParser.Element element) throws XmlParseException {
+    protected void checkRootChild(XmlParser.Element element) throws XmlDeserializeException {
         switch(element.getName()) {
             case "texture":
             case "region":
@@ -213,7 +213,7 @@ public class XmlDrawablesParser extends XmlMapResourceParser<Resource<Drawable>>
             case "drawable":
                 return;
             default:
-                throw new XmlParseException(String.format("Unexpected element name '%s'!", element.getName()));
+                throw new XmlDeserializeException(String.format("Unexpected element name '%s'!", element.getName()));
         }
     }
 
@@ -252,9 +252,9 @@ public class XmlDrawablesParser extends XmlMapResourceParser<Resource<Drawable>>
         }
 
         @Override
-        public Resource<Drawable> resolveValue(String value) throws XmlParseException {
+        public Resource<Drawable> resolveValue(String value) throws XmlDeserializeException {
             //<drawable> is used only for referencing. So no need to parse value.
-            throw new XmlParseException("Illegal value. Drawable resource value must be a reference!");
+            throw new XmlDeserializeException("Illegal value. Drawable resource value must be a reference!");
         }
 
         @Override
@@ -284,7 +284,7 @@ public class XmlDrawablesParser extends XmlMapResourceParser<Resource<Drawable>>
         }
 
         @Override
-        public Resource<Drawable> resolveValue(String value) throws XmlParseException {
+        public Resource<Drawable> resolveValue(String value) throws XmlDeserializeException {
             //TODO
             return null;
         }
@@ -315,7 +315,7 @@ public class XmlDrawablesParser extends XmlMapResourceParser<Resource<Drawable>>
         }
 
         @Override
-        public Resource<Drawable> resolveValue(String value) throws XmlParseException {
+        public Resource<Drawable> resolveValue(String value) throws XmlDeserializeException {
             //TODO
             return null;
         }
@@ -376,7 +376,7 @@ public class XmlDrawablesParser extends XmlMapResourceParser<Resource<Drawable>>
         }
 
         @Override
-        public Resource<Drawable> resolveValue(String value) throws XmlParseException {
+        public Resource<Drawable> resolveValue(String value) throws XmlDeserializeException {
             return new RegionResource(theme.getTexturePath(value));
         }
 

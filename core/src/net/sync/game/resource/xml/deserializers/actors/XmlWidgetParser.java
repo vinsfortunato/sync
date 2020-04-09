@@ -20,19 +20,29 @@
  * THE SOFTWARE.
  */
 
-package net.sync.game.resource.xml.resolvers;
+package net.sync.game.resource.xml.deserializers.actors;
 
-import net.sync.game.resource.Dimension;
+import com.badlogic.gdx.scenes.scene2d.ui.Widget;
+import net.sync.game.resource.xml.deserializers.XmlLayoutDeserializer;
 import net.sync.game.util.xml.XmlDeserializeException;
-import net.sync.game.util.xml.XmlValueResolver;
 
-public class XmlDimensionResolver implements XmlValueResolver<Dimension> {
+public abstract class XmlWidgetParser<T extends Widget> extends XmlActorDeserializer<T> {
+    public XmlWidgetParser(XmlLayoutDeserializer layoutParser) {
+        super(layoutParser);
+    }
+
     @Override
-    public Dimension resolve(String value) {
-        try {
-            return new Dimension(Float.parseFloat(value));
-        } catch(NumberFormatException e) {
-            throw new XmlDeserializeException("Invalid dimension value!");
+    protected boolean parseAttribute(T widget, String name, String value) throws XmlDeserializeException {
+        if(super.parseAttribute(widget, name, value)) {
+            //Attribute already parsed
+            return true;
         }
+
+        switch(name) {
+            case "fillParent": widget.setFillParent(booleanResolver().resolve(value));                          break;
+            default: return false; //Unrecognised attribute
+        }
+
+        return true;
     }
 }

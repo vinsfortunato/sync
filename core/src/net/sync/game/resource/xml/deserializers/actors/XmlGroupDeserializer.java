@@ -20,29 +20,24 @@
  * THE SOFTWARE.
  */
 
-package net.sync.game.resource.xml.parsers.actors;
+package net.sync.game.resource.xml.deserializers.actors;
 
-import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
-import net.sync.game.resource.xml.parsers.XmlLayoutParser;
-import net.sync.game.util.xml.XmlParseException;
+import com.badlogic.gdx.scenes.scene2d.Group;
+import net.sync.game.resource.xml.deserializers.XmlLayoutDeserializer;
+import net.sync.game.util.xml.XmlDeserializeException;
+import net.sync.game.util.xml.XmlParser;
 
-public abstract class XmlWidgetGroupParser<T extends WidgetGroup> extends XmlGroupParser<T> {
-    public XmlWidgetGroupParser(XmlLayoutParser layoutParser) {
+public abstract class XmlGroupDeserializer<T extends Group> extends XmlActorDeserializer<T> {
+    public XmlGroupDeserializer(XmlLayoutDeserializer layoutParser) {
         super(layoutParser);
     }
 
     @Override
-    protected boolean parseAttribute(T group, String name, String value) throws XmlParseException {
-        if(super.parseAttribute(group, name, value)) {
-            //Attribute already parsed
-            return true;
+    protected void parseChildren(T group, XmlParser.Element element) throws XmlDeserializeException {
+        for(int i = 0; i < element.getChildCount(); i++) {
+            XmlParser.Element child = element.getChild(i);
+            XmlActorDeserializer<?> parser = getLayoutParser().getActorElementParser(child.getName());
+            group.addActor(parser.parse(child));
         }
-
-        switch(name) {
-            case "fillParent": group.setFillParent(booleanResolver().resolve(value));                           break;
-            default: return false; //Unrecognised attribute
-        }
-
-        return true;
     }
 }

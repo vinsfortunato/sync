@@ -33,7 +33,7 @@ public interface XmlValueResolver<T> {
      * in a more complex way.
      * @param value the value to resolve, not null, not empty.
      * @return the resolved value, never null.
-     * @throws XmlParseException if the value cannot be resolved correctly.
+     * @throws XmlDeserializeException if the value cannot be resolved correctly.
      */
     T resolve(String value);
 }

@@ -20,20 +20,25 @@
  * THE SOFTWARE.
  */
 
-package net.sync.game.resource.xml.parsers.actors;
+package net.sync.game.util.xml;
 
-import net.sync.game.resource.xml.parsers.XmlLayoutParser;
-import net.sync.game.ui.widgets.Slider;
+/**
+ * Thrown if the XML document cannot be deserialized correctly. This is
+ * thrown when the XML syntax is correct but the serialized object cannot
+ * be reconstructed properly.
+ */
+public class XmlDeserializeException extends RuntimeException {
+    public XmlDeserializeException() {}
 
-//TODO
-public class XmlSliderParser extends XmlActorParser<Slider> {
-
-    public XmlSliderParser(XmlLayoutParser layoutParser) {
-        super(layoutParser);
+    public XmlDeserializeException(String message) {
+        super(message);
     }
 
-    @Override
-    protected Slider createActor() {
-        return null;
+    public XmlDeserializeException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public XmlDeserializeException(Throwable cause) {
+        super(cause);
     }
 }

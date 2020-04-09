@@ -20,44 +20,56 @@
  * THE SOFTWARE.
  */
 
-package net.sync.game.resource.xml.parsers;
+package net.sync.game.resource.xml.deserializers;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.Color;
 import net.sync.game.resource.MapTheme;
-import net.sync.game.resource.xml.resolvers.XmlColorResolver;
+import net.sync.game.resource.lazy.Resource;
+import net.sync.game.resource.lazy.SoundResource;
+import net.sync.game.resource.xml.XmlReferenceNotCompatibleException;
 import net.sync.game.resource.xml.resolvers.XmlReferenceResolver;
+import net.sync.game.util.xml.XmlDeserializeException;
 import net.sync.game.util.xml.XmlElement;
-import net.sync.game.util.xml.XmlParseException;
 import net.sync.game.util.xml.XmlParser;
 
-public class XmlColorsParser extends XmlMapResourceParser<Color> {
-    private static final String RESOURCE_ROOT_NAME = "colors";
-    private static final String RESOURCE_TYPE_NAME = "color";
-
-    private XmlReferenceResolver<Color> colorResolver = XmlReferenceResolver.from(
-            new XmlColorResolver(),
-            this::getResolvedValueOrThrow,
-            RESOURCE_TYPE_NAME);
+public class XmlSoundsDeserializer extends XmlMapResourceDeserializer<Resource<Sound>> {
+    private static final String RESOURCE_ROOT_NAME = "sounds";
+    private static final String RESOURCE_TYPE_NAME = "sound";
 
     /**
-     * Create a resource parser from its file.
+     * Creates a sounds resource deserializer.
+     * @param parser the XML parser.
      * @param file the resource file.
+     * @param theme the theme.
      */
-    public XmlColorsParser(XmlParser parser, FileHandle file, MapTheme theme) {
+    public XmlSoundsDeserializer(XmlParser parser, FileHandle file, MapTheme theme) {
         super(parser, file, RESOURCE_ROOT_NAME);
     }
 
     @Override
     protected void validateRootChild(XmlElement element) {
         if(!element.getName().equals(RESOURCE_TYPE_NAME)) {
-            throw new XmlParseException(String.format(
+            throw new XmlDeserializeException(String.format(
                     "Unexpected element name '%s'! Expected to be '%s'!", element.getName(), RESOURCE_TYPE_NAME));
         }
     }
 
     @Override
-    protected XmlReferenceResolver<Color> getResolver(XmlElement element) {
-        return colorResolver;
+    protected XmlReferenceResolver<Resource<Sound>> getResolver(XmlElement element) {
+        return soundResolver;
     }
+
+    /* Resolvers */
+
+    private XmlReferenceResolver<Resource<Sound>> soundResolver = XmlReferenceResolver.from(
+            //Create a sound resource from the given file located in /sounds/
+            fileName -> new SoundResource(getFile().sibling("sounds").sibling(fileName)),
+            resourceId -> {
+                Resource<Sound> resource = getResolvedValueOrThrow(resourceId);
+                if(resource instanceof SoundResource)
+                    return new SoundResource((SoundResource) resource);
+                throw new XmlReferenceNotCompatibleException(resource.getClass(), SoundResource.class);
+            },
+            RESOURCE_TYPE_NAME);
 }

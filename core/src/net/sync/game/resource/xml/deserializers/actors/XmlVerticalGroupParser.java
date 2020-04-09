@@ -20,21 +20,21 @@
  * THE SOFTWARE.
  */
 
-package net.sync.game.resource.xml.parsers.actors;
+package net.sync.game.resource.xml.deserializers.actors;
 
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.utils.Align;
-import net.sync.game.resource.xml.parsers.XmlLayoutParser;
+import net.sync.game.resource.xml.deserializers.XmlLayoutDeserializer;
 import net.sync.game.resource.xml.resolvers.XmlAlignResolver;
-import net.sync.game.util.xml.XmlParseException;
+import net.sync.game.util.xml.XmlDeserializeException;
 
 public class XmlVerticalGroupParser extends XmlWidgetGroupParser<VerticalGroup> {
-    public XmlVerticalGroupParser(XmlLayoutParser layoutParser) {
+    public XmlVerticalGroupParser(XmlLayoutDeserializer layoutParser) {
         super(layoutParser);
     }
 
     @Override
-    protected boolean parseAttribute(VerticalGroup group, String name, String value) throws XmlParseException {
+    protected boolean parseAttribute(VerticalGroup group, String name, String value) throws XmlDeserializeException {
         if(super.parseAttribute(group, name, value)) {
             //Attribute already parsed
             return true;
@@ -60,7 +60,7 @@ public class XmlVerticalGroupParser extends XmlWidgetGroupParser<VerticalGroup> 
                     group.align(XmlAlignResolver.GLOBAL_ALIGN_RESOLVER.resolve(value));
                     break;
                 }
-                throw new XmlParseException("Invalid align value! Row align should be left or center or right!");
+                throw new XmlDeserializeException("Invalid align value! Row align should be left or center or right!");
             }
             default: return false; //Unrecognised attribute
         }

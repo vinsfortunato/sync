@@ -20,10 +20,11 @@
   ~ THE SOFTWARE.
   -->
 
-<!-- Enums languages supported by the theme
-    For each language a strings resource file must be created and defined
-    inside /strings/ folder with name strings_{locale}.xml where {locale}
-    must be replaced with the lang's locale.
+<!--
+  ~ Enums languages supported by the theme.
+  ~ For each language a strings resource file must be created and defined
+  ~ inside /strings/ folder with name strings_{locale}.xml where {locale}
+  ~ must be replaced with the lang's locale.
 -->
 <langs>
     <!-- English language /strings/strings_en_US.xml DEFAULT -->

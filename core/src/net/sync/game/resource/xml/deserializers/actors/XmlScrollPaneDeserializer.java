@@ -20,20 +20,20 @@
  * THE SOFTWARE.
  */
 
-package net.sync.game.resource.xml.parsers.actors;
+package net.sync.game.resource.xml.deserializers.actors;
 
-import net.sync.game.resource.xml.parsers.XmlLayoutParser;
+import net.sync.game.resource.xml.deserializers.XmlLayoutDeserializer;
 import net.sync.game.ui.widgets.ScrollPane;
-import net.sync.game.util.xml.XmlParseException;
+import net.sync.game.util.xml.XmlDeserializeException;
 import net.sync.game.util.xml.XmlParser;
 
-public class XmlScrollPaneParser extends XmlWidgetGroupParser<ScrollPane> {
-    public XmlScrollPaneParser(XmlLayoutParser layoutParser) {
+public class XmlScrollPaneDeserializer extends XmlWidgetGroupParser<ScrollPane> {
+    public XmlScrollPaneDeserializer(XmlLayoutDeserializer layoutParser) {
         super(layoutParser);
     }
 
     @Override
-    protected boolean parseAttribute(ScrollPane pane, String name, String value) throws XmlParseException {
+    protected boolean parseAttribute(ScrollPane pane, String name, String value) throws XmlDeserializeException {
         if(super.parseAttribute(pane, name, value)) {
             //Attribute already parsed
             return true;
@@ -88,14 +88,14 @@ public class XmlScrollPaneParser extends XmlWidgetGroupParser<ScrollPane> {
     }
 
     @Override
-    protected void parseChildren(ScrollPane pane, XmlParser.Element element) throws XmlParseException {
+    protected void parseChildren(ScrollPane pane, XmlParser.Element element) throws XmlDeserializeException {
         if(element.getChildCount() != 1) {
-            throw new XmlParseException("ScrollPane can only have one child!");
+            throw new XmlDeserializeException("ScrollPane can only have one child!");
         }
 
         //Parse and set the scroll pane child.
         XmlParser.Element child = element.getChild(0);
-        XmlActorParser<?> parser = getLayoutParser().getActorElementParser(child.getName());
+        XmlActorDeserializer<?> parser = getLayoutParser().getActorElementParser(child.getName());
         pane.setActor(parser.parse(child));
     }
 

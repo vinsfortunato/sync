@@ -20,18 +20,18 @@
  * THE SOFTWARE.
  */
 
-package net.sync.game.resource.xml.parsers.actors;
+package net.sync.game.util.xml;
 
-import com.badlogic.gdx.scenes.scene2d.ui.Stack;
-import net.sync.game.resource.xml.parsers.XmlLayoutParser;
-
-public class XmlStackParser extends XmlWidgetGroupParser<Stack> {
-    public XmlStackParser(XmlLayoutParser layoutParser) {
-        super(layoutParser);
-    }
-
-    @Override
-    protected Stack createActor() {
-        return new Stack();
-    }
+/**
+ * Deserializes an object represented by an {@link XmlElement}.
+ * @param <T> the object type.
+ */
+public interface XmlElementDeserializer<T> {
+    /**
+     * Deserializes an object from an XML element.
+     * @param element the element to deserialize.
+     * @return the result of the deserialization.
+     * @throws XmlDeserializeException if the element cannot be deserialized correctly.
+     */
+    T deserialize(XmlElement element);
 }

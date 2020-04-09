@@ -23,17 +23,17 @@
 package net.sync.game.resource.xml.resolvers;
 
 import com.badlogic.gdx.graphics.Pixmap.Format;
-import net.sync.game.util.xml.XmlParseException;
+import net.sync.game.util.xml.XmlDeserializeException;
 import net.sync.game.util.xml.XmlValueResolver;
 
 public class XmlPixmapFormatResolver implements XmlValueResolver<Format> {
     @Override
-    public Format resolve(String value) throws XmlParseException {
+    public Format resolve(String value) throws XmlDeserializeException {
         //TODO
         switch(value.trim().toLowerCase()) {
 
         }
 
-        throw new XmlParseException(String.format("Invalid pixmap format for value '%s'!", value));
+        throw new XmlDeserializeException(String.format("Invalid pixmap format for value '%s'!", value));
     }
 }
