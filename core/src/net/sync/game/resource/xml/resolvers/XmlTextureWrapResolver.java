@@ -20,14 +20,20 @@
  * THE SOFTWARE.
  */
 
-package net.sync.game.util.xml;
+package net.sync.game.resource.xml.resolvers;
 
-public interface XmlElementParser<T> {
-    /**
-     * Parses an xml element.
-     * @param element the element to parse.
-     * @return the result of the parsing.
-     * @throws XmlParseException if the element cannot be parsed correctly.
-     */
-    T parse(XmlElement element);
+import com.badlogic.gdx.graphics.Texture.TextureWrap;
+import net.sync.game.util.xml.XmlParseException;
+import net.sync.game.util.xml.XmlValueResolver;
+
+public class XmlTextureWrapResolver implements XmlValueResolver<TextureWrap> {
+    @Override
+    public TextureWrap resolve(String value) {
+        //TODO
+        switch(value.trim().toLowerCase()) {
+
+        }
+
+        throw new XmlParseException(String.format("Invalid wrap format for value '%s'!", value));
+    }
 }

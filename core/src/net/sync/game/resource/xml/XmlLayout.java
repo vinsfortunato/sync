@@ -20,14 +20,32 @@
  * THE SOFTWARE.
  */
 
-package net.sync.game.util.xml;
+package net.sync.game.resource.xml;
 
-public interface XmlElementParser<T> {
-    /**
-     * Parses an xml element.
-     * @param element the element to parse.
-     * @return the result of the parsing.
-     * @throws XmlParseException if the element cannot be parsed correctly.
-     */
-    T parse(XmlElement element);
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import net.sync.game.resource.Layout;
+
+import java.util.Map;
+
+public class XmlLayout implements Layout {
+    private Actor rootActor;
+    private Map<String, Actor> actorsLookupMap;
+
+    public void setRootActor(Actor rootActor) {
+        this.rootActor = rootActor;
+    }
+
+    @Override
+    public Actor getRootActor() {
+        return rootActor;
+    }
+
+    public void setActorsLookupMap(Map<String, Actor> actorsLookupMap) {
+        this.actorsLookupMap = actorsLookupMap;
+    }
+
+    @Override
+    public Actor findActorById(String id) {
+        return actorsLookupMap != null ? actorsLookupMap.get(id) : null;
+    }
 }

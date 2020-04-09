@@ -92,4 +92,17 @@ public interface XmlElement {
      * @return the attribute value or the default value if there is no attribute with the given name.
      */
     String getAttribute(String name, String defaultValue);
+
+    /**
+     * Gets the count of element's attributes.
+     * @return the count of attributes.
+     */
+    int getAttributeCount();
+
+    /**
+     * Checks if the element has an attribute with the given name.
+     * @param name the attribute name.
+     * @return true if the element has the attribute, false otherwise.
+     */
+    boolean hasAttribute(String name);
 }

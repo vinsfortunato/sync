@@ -20,14 +20,23 @@
  * THE SOFTWARE.
  */
 
-package net.sync.game.util.xml;
+package net.sync.game.resource.xml;
 
-public interface XmlElementParser<T> {
-    /**
-     * Parses an xml element.
-     * @param element the element to parse.
-     * @return the result of the parsing.
-     * @throws XmlParseException if the element cannot be parsed correctly.
-     */
-    T parse(XmlElement element);
+import net.sync.game.util.xml.XmlParseException;
+
+public class XmlReferenceNotFoundException extends XmlParseException {
+    public XmlReferenceNotFoundException() {
+    }
+
+    public XmlReferenceNotFoundException(String message) {
+        super(message);
+    }
+
+    public XmlReferenceNotFoundException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public XmlReferenceNotFoundException(Throwable cause) {
+        super(cause);
+    }
 }

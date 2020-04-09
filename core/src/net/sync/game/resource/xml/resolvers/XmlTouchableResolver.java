@@ -20,14 +20,20 @@
  * THE SOFTWARE.
  */
 
-package net.sync.game.util.xml;
+package net.sync.game.resource.xml.resolvers;
 
-public interface XmlElementParser<T> {
-    /**
-     * Parses an xml element.
-     * @param element the element to parse.
-     * @return the result of the parsing.
-     * @throws XmlParseException if the element cannot be parsed correctly.
-     */
-    T parse(XmlElement element);
+import com.badlogic.gdx.scenes.scene2d.Touchable;
+import net.sync.game.util.xml.XmlParseException;
+import net.sync.game.util.xml.XmlValueResolver;
+
+public class XmlTouchableResolver implements XmlValueResolver<Touchable> {
+    @Override
+    public Touchable resolve(String value) {
+        switch(value) {
+            case "enabled": return Touchable.enabled;
+            case "disabled": return Touchable.disabled;
+            case "children_only": return Touchable.childrenOnly;
+        }
+        throw new XmlParseException(String.format("Cannot resolve touchable value '%s'!", value));
+    }
 }

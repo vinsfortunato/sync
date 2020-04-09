@@ -28,35 +28,30 @@ package net.sync.game.resource;
 public interface ThemeManifest {
     /**
      * Gets the theme version.
-     *
      * @return the theme version where higher values means more recent version.
      */
     int getVersion();
 
     /**
      * Gets the name of the theme.
-     *
      * @return the theme name.
      */
     String getName();
 
     /**
      * Gets the author(s) of the theme.
-     *
      * @return the theme author(s).
      */
     String getAuthor();
 
     /**
      * Gets the website related to the theme.
-     *
      * @return the theme website.
      */
     String getWebsite();
 
     /**
      * Gets a brief description about the theme.
-     *
      * @return the theme description.
      */
     String getDescription();

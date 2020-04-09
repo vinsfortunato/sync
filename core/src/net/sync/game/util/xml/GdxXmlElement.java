@@ -22,8 +22,10 @@
 
 package net.sync.game.util.xml;
 
+import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.XmlReader;
 
+import java.util.Collections;
 import java.util.Iterator;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -105,7 +107,8 @@ public class GdxXmlElement implements XmlElement {
 
     @Override
     public Iterable<String> getAttributeNames() {
-        return element.getAttributes().keys();
+        ObjectMap<String, String> attributes = element.getAttributes();
+        return attributes != null ? attributes.keys() : Collections::emptyIterator;
     }
 
     @Override
@@ -116,5 +119,16 @@ public class GdxXmlElement implements XmlElement {
     @Override
     public String getAttribute(String name, String defaultValue) {
         return element.getAttribute(name, defaultValue);
+    }
+
+    @Override
+    public int getAttributeCount() {
+        ObjectMap<String, String> attributes = element.getAttributes();
+        return attributes != null ? attributes.size : 0;
+    }
+
+    @Override
+    public boolean hasAttribute(String name) {
+        return element.hasAttribute(name);
     }
 }

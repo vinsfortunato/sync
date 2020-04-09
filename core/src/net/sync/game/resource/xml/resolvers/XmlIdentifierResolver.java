@@ -20,14 +20,27 @@
  * THE SOFTWARE.
  */
 
-package net.sync.game.util.xml;
+package net.sync.game.resource.xml.resolvers;
 
-public interface XmlElementParser<T> {
-    /**
-     * Parses an xml element.
-     * @param element the element to parse.
-     * @return the result of the parsing.
-     * @throws XmlParseException if the element cannot be parsed correctly.
-     */
-    T parse(XmlElement element);
+import net.sync.game.util.xml.XmlParseException;
+import net.sync.game.util.xml.XmlValueResolver;
+
+import java.util.regex.Pattern;
+
+/**
+ * Resolves id values used to bind resources. Id values can contain
+ * only alphanumeric characters plus the characters '_' and '-' and can have only
+ * leading/trailing whitespaces that will be removed when resolved.
+ */
+public class XmlIdentifierResolver implements XmlValueResolver<String> {
+    private static final Pattern ID_REGEX = Pattern.compile("[0-9a-zA-Z_-]+");
+
+    @Override
+    public String resolve(String value) throws XmlParseException {
+        value = value.trim();
+        if (!ID_REGEX.matcher(value).matches()) {
+            throw new XmlParseException("Invalid id! Identifier can contain only alphanumeric characters plus _ and -!");
+        }
+        return value;
+    }
 }

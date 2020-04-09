@@ -20,14 +20,24 @@
  * THE SOFTWARE.
  */
 
-package net.sync.game.util.xml;
+package net.sync.game.resource.xml.parsers.actors;
 
-public interface XmlElementParser<T> {
-    /**
-     * Parses an xml element.
-     * @param element the element to parse.
-     * @return the result of the parsing.
-     * @throws XmlParseException if the element cannot be parsed correctly.
-     */
-    T parse(XmlElement element);
+import com.badlogic.gdx.scenes.scene2d.Group;
+import net.sync.game.resource.xml.parsers.XmlLayoutParser;
+import net.sync.game.util.xml.XmlParseException;
+import net.sync.game.util.xml.XmlParser;
+
+public abstract class XmlGroupParser<T extends Group> extends net.sync.game.resource.xml.parsers.actors.XmlActorParser<T> {
+    public XmlGroupParser(XmlLayoutParser layoutParser) {
+        super(layoutParser);
+    }
+
+    @Override
+    protected void parseChildren(T group, XmlParser.Element element) throws XmlParseException {
+        for(int i = 0; i < element.getChildCount(); i++) {
+            XmlParser.Element child = element.getChild(i);
+            XmlActorParser<?> parser = getLayoutParser().getActorElementParser(child.getName());
+            group.addActor(parser.parse(child));
+        }
+    }
 }

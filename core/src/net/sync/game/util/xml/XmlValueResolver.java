@@ -35,5 +35,5 @@ public interface XmlValueResolver<T> {
      * @return the resolved value, never null.
      * @throws XmlParseException if the value cannot be resolved correctly.
      */
-    T resolve(String value) throws XmlParseException;
+    T resolve(String value);
 }

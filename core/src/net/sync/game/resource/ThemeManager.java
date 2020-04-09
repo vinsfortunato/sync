@@ -24,7 +24,7 @@ package net.sync.game.resource;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-import net.sync.game.resource.xml2.parsers.XmlThemeParser;
+import net.sync.game.resource.xml.parsers.XmlThemeParser;
 
 public class ThemeManager {
 

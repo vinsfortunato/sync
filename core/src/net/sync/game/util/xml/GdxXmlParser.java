@@ -39,7 +39,7 @@ public class GdxXmlParser implements XmlParser {
             XmlReader parser = new XmlReader();
             return new GdxXmlElement(parser.parse(xml));
         } catch(SerializationException e) {
-            throw new XmlSerializeException("Cannot parse xml", e);
+            throw new XmlParseException("Cannot parse xml", e);
         }
     }
 
@@ -49,7 +49,7 @@ public class GdxXmlParser implements XmlParser {
             XmlReader parser = new XmlReader();
             return new GdxXmlElement(parser.parse(stream));
         } catch(SerializationException e) {
-            throw new XmlSerializeException("Cannot parse xml", e);
+            throw new XmlParseException("Cannot parse xml", e);
         }
     }
 
@@ -59,7 +59,7 @@ public class GdxXmlParser implements XmlParser {
             XmlReader parser = new XmlReader();
             return new GdxXmlElement(parser.parse(reader));
         } catch(SerializationException e) {
-            throw new XmlSerializeException("Cannot parse xml", e);
+            throw new XmlParseException("Cannot parse xml", e);
         }
     }
 
@@ -69,7 +69,7 @@ public class GdxXmlParser implements XmlParser {
             XmlReader parser = new XmlReader();
             return new GdxXmlElement(parser.parse(file));
         } catch(SerializationException e) {
-            throw new XmlSerializeException("Cannot parse xml", e);
+            throw new XmlParseException("Cannot parse xml", e);
         }
     }
 }

@@ -20,14 +20,26 @@
  * THE SOFTWARE.
  */
 
-package net.sync.game.util.xml;
+package net.sync.game.resource.xml.resolvers;
 
-public interface XmlElementParser<T> {
-    /**
-     * Parses an xml element.
-     * @param element the element to parse.
-     * @return the result of the parsing.
-     * @throws XmlParseException if the element cannot be parsed correctly.
-     */
-    T parse(XmlElement element);
+import net.sync.game.util.xml.XmlParseException;
+import net.sync.game.util.xml.XmlValueResolver;
+
+import java.util.Locale;
+
+public class XmlLocaleResolver implements XmlValueResolver<Locale> {
+    @Override
+    public Locale resolve(String value) throws XmlParseException {
+        //Prepare the value for parsing by removing leading/trailing spaces
+        value = value.trim();
+
+        if(value.contains("_")) {
+            String[] parts = value.split("_");
+            String lang = parts[0];
+            String country = parts[1];
+            return new Locale(lang, country);
+        }
+
+        return new Locale(value);
+    }
 }

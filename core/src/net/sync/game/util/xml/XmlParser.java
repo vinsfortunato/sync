@@ -35,7 +35,7 @@ public interface XmlParser {
      * Parse the given XML document from a string.
      * @param xml the xml string to parse.
      * @return the parsed XML root element.
-     * @throws XmlSerializeException if the document cannot be parsed.
+     * @throws XmlParseException if the document cannot be parsed.
      */
     XmlElement parse(String xml);
 
@@ -43,7 +43,7 @@ public interface XmlParser {
      * Parse the given XML document from a stream.
      * @param stream the xml stream to parse.
      * @return the parsed XML root element.
-     * @throws XmlSerializeException if the document cannot be parsed.
+     * @throws XmlParseException if the document cannot be parsed.
      */
     XmlElement parse(InputStream stream);
 
@@ -51,7 +51,7 @@ public interface XmlParser {
      * Parse the given XML document from a reader.
      * @param reader the xml reader to parse.
      * @return the parsed XML root element.
-     * @throws XmlSerializeException if the document cannot be parsed.
+     * @throws XmlParseException if the document cannot be parsed.
      */
     XmlElement parse(Reader reader);
 
@@ -59,7 +59,7 @@ public interface XmlParser {
      * Parse the given XML document from a file handle.
      * @param file the xml file to parse.
      * @return the parsed XML root element.
-     * @throws XmlSerializeException if the document cannot be parsed.
+     * @throws XmlParseException if the document cannot be parsed.
      */
     XmlElement parse(FileHandle file);
 

@@ -106,6 +106,7 @@ project(":core") {
         api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
         api "com.google.guava:guava:28.1-android"
         api 'org.jooq:jooq:3.9.6'
+        implementation 'org.codehaus.groovy:groovy:3.0.2'
         testImplementation 'org.junit.jupiter:junit-jupiter-api:5.5.2'
         testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.5.2'
     }

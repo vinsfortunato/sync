@@ -20,14 +20,18 @@
  * THE SOFTWARE.
  */
 
-package net.sync.game.util.xml;
+package net.sync.game.resource.xml.resolvers;
 
-public interface XmlElementParser<T> {
-    /**
-     * Parses an xml element.
-     * @param element the element to parse.
-     * @return the result of the parsing.
-     * @throws XmlParseException if the element cannot be parsed correctly.
-     */
-    T parse(XmlElement element);
+import net.sync.game.util.xml.XmlParseException;
+import net.sync.game.util.xml.XmlValueResolver;
+
+public class XmlIntegerResolver implements XmlValueResolver<Integer> {
+    @Override
+    public Integer resolve(String value) throws XmlParseException {
+        try {
+            return Integer.parseInt(value);
+        } catch(NumberFormatException e) {
+            throw new XmlParseException(String.format("Invalid int value '%s'!", value));
+        }
+    }
 }
