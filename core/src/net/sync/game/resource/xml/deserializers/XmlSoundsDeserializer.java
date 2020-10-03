@@ -62,7 +62,7 @@ public class XmlSoundsDeserializer extends XmlMapResourceDeserializer<Resource<S
 
     /* Resolvers */
 
-    private XmlReferenceResolver<Resource<Sound>> soundResolver = XmlReferenceResolver.from(
+    private XmlReferenceResolver<Resource<Sound>> soundResolver = XmlReferenceResolver.of(
             //Create a sound resource from the given file located in /sounds/
             fileName -> new SoundResource(getFile().sibling("sounds").sibling(fileName)),
             resourceId -> {

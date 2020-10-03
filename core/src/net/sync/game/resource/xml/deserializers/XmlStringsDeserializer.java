@@ -58,7 +58,7 @@ public class XmlStringsDeserializer extends XmlMapResourceDeserializer<String> {
 
     /* Resolvers */
 
-    private XmlReferenceResolver<String> stringResolver = XmlReferenceResolver.from(
+    private XmlReferenceResolver<String> stringResolver = XmlReferenceResolver.of(
             value -> value,
             this::getResolvedValueOrThrow,
             RESOURCE_TYPE_NAME);

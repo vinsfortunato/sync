@@ -36,7 +36,6 @@ import java.util.Map;
 import static net.sync.game.Game.settings;
 import static net.sync.game.resource.xml.resolvers.XmlGlobalResolvers.GLOBAL_INTEGER_RESOLVER;
 
-//TODO rewrite
 public class XmlThemeDeserializer extends XmlResourceDeserializer<MapTheme> {
     /**
      * Creates a theme resource deserializer.
@@ -49,22 +48,24 @@ public class XmlThemeDeserializer extends XmlResourceDeserializer<MapTheme> {
 
     @Override
     public MapTheme deserialize() {
-        MapTheme theme = super.deserialize(); //Parse theme.xml (theme manifest)
-        parseLangs(theme);              //Parse langs.xml (language resources)
-        parseValues(theme);             //Parse values.xml (value resources)
-        parseColors(theme);             //Parse colors.xml (color resources)
-        parseDimens(theme);             //Parse dimens.xml (dimension resources)
-        parseStrings(theme);            //Parse strings/strings_{locale}.xml based on active locale (strings resources)
-        parseFonts(theme);              //Parse fonts.xml (font resources)
-        parseSounds(theme);             //Parse sounds.xml (sound resources)
-        parseMusics(theme);             //Parse musics.xml (music resources)
-        parseDrawables(theme);          //Parse drawables.xml (drawable resources)
+        MapTheme theme = super.deserialize();   //Deserialize theme.xml (theme manifest)
+        deserializeLangs(theme);                //Deserialize langs.xml (language resources)
+        deserializeValues(theme);               //Deserialize values.xml (value resources)
+        deserializeColors(theme);               //Deserialize colors.xml (color resources)
+        deserializeDimens(theme);               //Deserialize dimens.xml (dimension resources)
+        deserializeStrings(theme);              //Deserialize strings/strings_{locale}.xml based on active locale
+        deserializeFonts(theme);                //Deserialize fonts.xml (font resources)
+        deserializeSounds(theme);               //Deserialize sounds.xml (sound resources)
+        deserializeMusics(theme);               //Deserialize musics.xml (music resources)
+        deserializeDrawables(theme);            //Deserialize drawables.xml (drawable resources)
+        //deserializeLayouts(theme);            //TODO
+        //deserializeStyles(theme);             //TODO
         return theme;
     }
 
     @Override
     public MapTheme deserialize(XmlElement root) {
-        //Parse manifest
+        //Deserialize manifest
         SettableThemeManifest manifest = new SettableThemeManifest();
         manifest.setVersion(GLOBAL_INTEGER_RESOLVER.resolve(root.getAttribute("version")));
         manifest.setName(root.getAttribute("name"));
@@ -85,35 +86,35 @@ public class XmlThemeDeserializer extends XmlResourceDeserializer<MapTheme> {
         }
     }
 
-    private void parseLangs(MapTheme theme) {
+    private void deserializeLangs(MapTheme theme) {
         FileHandle langFile = getFile().sibling("langs.xml");
         if(langFile.exists()) {
             theme.setLanguages(new XmlLangsDeserializer(getParser(), langFile, theme).deserialize());
         }
     }
 
-    private void parseValues(MapTheme theme) {
+    private void deserializeValues(MapTheme theme) {
         FileHandle valuesFile = getFile().sibling("values.xml");
         if(valuesFile.exists()) {
-            theme.setValues(new XmlValuesParser(getParser(), valuesFile, theme).deserialize());
+            theme.setValues(new XmlValuesDeserializer(getParser(), valuesFile, theme).deserialize());
         }
     }
 
-    private void parseColors(MapTheme theme) {
+    private void deserializeColors(MapTheme theme) {
         FileHandle colorsFile = getFile().sibling("colors.xml");
         if(colorsFile.exists()) {
             theme.setColors(new XmlColorsDeserializer(getParser(), colorsFile, theme).deserialize());
         }
     }
 
-    private void parseDimens(MapTheme theme) {
+    private void deserializeDimens(MapTheme theme) {
         FileHandle dimensFile = getFile().sibling("dimens.xml");
         if(dimensFile.exists()) {
             theme.setDimensions(new XmlDimensDeserializer(getParser(), dimensFile, theme).deserialize());
         }
     }
 
-    private void parseStrings(MapTheme theme) {
+    private void deserializeStrings(MapTheme theme) {
         List<Locale> langs = theme.getLanguages();
         //Check theme supported languages. If the list containing theme languages is null no string resource
         //from the theme is parsed and fallback theme will then be used to resolve string references.
@@ -128,15 +129,15 @@ public class XmlThemeDeserializer extends XmlResourceDeserializer<MapTheme> {
                 //Parse active lang strings
                 FileHandle stringsFile = getStringsFile(active);
                 existsOrThrow(stringsFile);
-                XmlStringsDeserializer parser = new XmlStringsDeserializer(getParser(), stringsFile, theme);
-                Map<String, String> strings = parser.deserialize();
+                XmlStringsDeserializer deserializer = new XmlStringsDeserializer(getParser(), stringsFile, theme);
+                Map<String, String> strings = deserializer.deserialize();
 
                 //Parse default language if active isn't already default
                 if(index != 0) {
                     stringsFile = getStringsFile(langs.get(0)); //Get default theme lang
                     existsOrThrow(stringsFile);
-                    parser = new XmlStringsDeserializer(getParser(), stringsFile, theme);
-                    Map<String, String> defStrings = parser.deserialize();
+                    deserializer = new XmlStringsDeserializer(getParser(), stringsFile, theme);
+                    Map<String, String> defStrings = deserializer.deserialize();
 
                     //Merge maps by overriding default lang strings with active lang strings
                     defStrings.putAll(strings);
@@ -149,34 +150,34 @@ public class XmlThemeDeserializer extends XmlResourceDeserializer<MapTheme> {
                 //Parse default theme lang strings
                 FileHandle stringsFile = getStringsFile(langs.get(0));
                 existsOrThrow(stringsFile);
-                XmlStringsDeserializer parser = new XmlStringsDeserializer(getParser(), stringsFile, theme);
-                theme.setStrings(parser.deserialize());
+                XmlStringsDeserializer deserializer = new XmlStringsDeserializer(getParser(), stringsFile, theme);
+                theme.setStrings(deserializer.deserialize());
             }
         }
     }
 
-    private void parseFonts(MapTheme theme) {
+    private void deserializeFonts(MapTheme theme) {
         FileHandle fontsFile = getFile().sibling("fonts.xml");
         if(fontsFile.exists()) {
             theme.setFonts(new XmlFontsDeserializer(fontsFile, theme).deserialize());
         }
     }
 
-    private void parseSounds(MapTheme theme) {
+    private void deserializeSounds(MapTheme theme) {
         FileHandle soundsFile = getFile().sibling("sounds.xml");
         if(soundsFile.exists()) {
             theme.setSounds(new XmlSoundsDeserializer(getParser(), soundsFile, theme).deserialize());
         }
     }
 
-    private void parseMusics(MapTheme theme) {
+    private void deserializeMusics(MapTheme theme) {
         FileHandle musicsFile = getFile().sibling("musics.xml");
         if(musicsFile.exists()) {
             theme.setMusics(new XmlMusicsDeserializer(getParser(), musicsFile, theme).deserialize());
         }
     }
 
-    private void parseDrawables(MapTheme theme) {
+    private void deserializeDrawables(MapTheme theme) {
         FileHandle drawablesFile = getFile().sibling("drawables.xml");
         if(drawablesFile.exists()) {
             theme.setDrawables(new XmlDrawablesDeserializer(drawablesFile, theme).deserialize());

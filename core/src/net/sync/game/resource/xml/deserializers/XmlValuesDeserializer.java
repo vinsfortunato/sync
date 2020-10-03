@@ -30,7 +30,7 @@ import net.sync.game.util.xml.XmlDeserializeException;
 import net.sync.game.util.xml.XmlElement;
 import net.sync.game.util.xml.XmlParser;
 
-public class XmlValuesParser extends XmlMapResourceDeserializer<Object> {
+public class XmlValuesDeserializer extends XmlMapResourceDeserializer<Object> {
     private static final String RESOURCE_ROOT_NAME = "values";
     private static final String BOOLEAN_RESOURCE_TYPE_NAME = "boolean";
     private static final String FLOAT_RESOURCE_TYPE_NAME = "float";
@@ -44,7 +44,7 @@ public class XmlValuesParser extends XmlMapResourceDeserializer<Object> {
      * @param file the resource file.
      * @param theme the theme.
      */
-    public XmlValuesParser(XmlParser parser, FileHandle file, MapTheme theme) {
+    public XmlValuesDeserializer(XmlParser parser, FileHandle file, MapTheme theme) {
         super(parser, file, RESOURCE_ROOT_NAME);
     }
 
@@ -83,52 +83,47 @@ public class XmlValuesParser extends XmlMapResourceDeserializer<Object> {
 
     /* Resolvers */
 
-    private XmlReferenceResolver<Boolean> booleanResolver = XmlReferenceResolver.from(
+    private XmlReferenceResolver<Boolean> booleanResolver = XmlReferenceResolver.of(
             new XmlBooleanResolver(),
             resourceId -> {
                 Object value = getResolvedValueOrThrow(resourceId);
-                if(value instanceof Boolean)
-                    return (Boolean) value;
+                if(value instanceof Boolean) return (Boolean) value;
                 throw new XmlReferenceNotCompatibleException(value.getClass(), Boolean.class);
             },
             BOOLEAN_RESOURCE_TYPE_NAME);
 
-    private XmlReferenceResolver<Float> floatResolver = XmlReferenceResolver.from(
+    private XmlReferenceResolver<Float> floatResolver = XmlReferenceResolver.of(
             new XmlFloatResolver(),
             resourceId -> {
                 Object value = getResolvedValueOrThrow(resourceId);
-                if(value instanceof Float)
-                    return (Float) value;
+                if(value instanceof Float) return (Float) value;
                 throw new XmlReferenceNotCompatibleException(value.getClass(), Float.class);
             },
             FLOAT_RESOURCE_TYPE_NAME);
 
-    private XmlReferenceResolver<Integer> integerResolver = XmlReferenceResolver.from(
+    private XmlReferenceResolver<Integer> integerResolver = XmlReferenceResolver.of(
             new XmlIntegerResolver(),
             resourceId -> {
                 Object value = getResolvedValueOrThrow(resourceId);
-                if(value instanceof Integer)
-                    return (Integer) value;
+                if(value instanceof Integer) return (Integer) value;
                 throw new XmlReferenceNotCompatibleException(value.getClass(), Integer.class);
             },
             INTEGER_RESOURCE_TYPE_NAME);
 
-    private XmlReferenceResolver<Long> durationResolver = XmlReferenceResolver.from(
+    private XmlReferenceResolver<Long> durationResolver = XmlReferenceResolver.of(
             new XmlDurationResolver(),
             resourceId -> {
                 Object value = getResolvedValueOrThrow(resourceId);
-                if(value instanceof Long)
-                    return (Long) value;
+                if(value instanceof Long) return (Long) value;
                 throw new XmlReferenceNotCompatibleException(value.getClass(), Long.class);
             },
             DURATION_RESOURCE_TYPE_NAME);
 
-    private XmlReferenceResolver<Float> percentResolver = XmlReferenceResolver.from(
+    private XmlReferenceResolver<Float> percentResolver = XmlReferenceResolver.of(
             new XmlPercentResolver(),
             resourceId -> {
                 Object value = getResolvedValueOrThrow(resourceId);
-                if(value instanceof Float)
-                    return (Float) value;
+                if(value instanceof Float) return (Float) value;
                 throw new XmlReferenceNotCompatibleException(value.getClass(), Float.class);
             },
             PERCENT_RESOURCE_TYPE_NAME);

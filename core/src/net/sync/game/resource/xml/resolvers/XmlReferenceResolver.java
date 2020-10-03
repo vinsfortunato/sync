@@ -137,9 +137,9 @@ public abstract class XmlReferenceResolver<T> implements XmlValueResolver<T> {
      * @param <T> the value type.
      * @return a reference value resolver.
      */
-    public static <T> XmlReferenceResolver<T> from(final XmlValueResolver<T> valueResolver,
-                                                   final Function<String, T> resourceProvider,
-                                                   final String resourceTypeName) {
+    public static <T> XmlReferenceResolver<T> of(final XmlValueResolver<T> valueResolver,
+                                                 final Function<String, T> resourceProvider,
+                                                 final String resourceTypeName) {
         return new XmlReferenceResolver<T>() {
             @Override
             protected String getResourceTypeName() {

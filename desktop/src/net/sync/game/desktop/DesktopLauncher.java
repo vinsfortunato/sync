@@ -47,6 +47,7 @@ public class DesktopLauncher implements Backend {
 		config.width = 1920;
 		config.height = 1080;
 		config.foregroundFPS = 144;
+		config.vSyncEnabled = false;
 		new LwjglApplication(new Game(this), config);
 	}
 

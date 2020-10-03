@@ -30,7 +30,7 @@ import java.io.InputStream;
 import java.io.Reader;
 
 /**
- * An implementation of {@link XmlParser} that uses {@link XmlReader} from libGDX.
+ * An implementation of {@link XmlParser} that adapts {@link XmlReader} from libGDX.
  */
 public class GdxXmlParser implements XmlParser {
     @Override

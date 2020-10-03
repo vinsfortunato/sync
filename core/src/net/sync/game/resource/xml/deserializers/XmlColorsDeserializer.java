@@ -60,7 +60,7 @@ public class XmlColorsDeserializer extends XmlMapResourceDeserializer<Color> {
 
     /* Resolvers */
 
-    private XmlReferenceResolver<Color> colorResolver = XmlReferenceResolver.from(
+    private XmlReferenceResolver<Color> colorResolver = XmlReferenceResolver.of(
             new XmlColorResolver(),
             this::getResolvedValueOrThrow,
             RESOURCE_TYPE_NAME);

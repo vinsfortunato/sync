@@ -61,7 +61,7 @@ public class XmlDimensDeserializer extends XmlMapResourceDeserializer<Dimension>
 
     /* Resolvers */
 
-    private XmlReferenceResolver<Dimension> dimenResolver = XmlReferenceResolver.from(
+    private XmlReferenceResolver<Dimension> dimenResolver = XmlReferenceResolver.of(
             new XmlDimensionResolver(),
             this::getResolvedValueOrThrow,
             RESOURCE_TYPE_NAME);

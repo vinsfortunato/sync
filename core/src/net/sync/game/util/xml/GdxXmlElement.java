@@ -31,7 +31,7 @@ import java.util.Iterator;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * An implementation of {@link XmlElement} that wraps a {@link XmlReader.Element} from libGDX.
+ * An implementation of {@link XmlElement} that adapts a {@link XmlReader.Element} from libGDX.
  */
 public class GdxXmlElement implements XmlElement {
     private XmlReader.Element element;

@@ -63,7 +63,7 @@ public class XmlMusicsDeserializer extends XmlMapResourceDeserializer<Resource<M
 
     /* Resolvers */
 
-    private XmlReferenceResolver<Resource<Music>> musicResolver = XmlReferenceResolver.from(
+    private XmlReferenceResolver<Resource<Music>> musicResolver = XmlReferenceResolver.of(
             //Create a music resource from the given file located in /musics/
             fileName -> new MusicResource(getFile().sibling("musics").sibling(fileName)),
             resourceId -> {
