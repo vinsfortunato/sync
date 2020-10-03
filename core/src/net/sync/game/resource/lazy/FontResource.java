@@ -85,4 +85,9 @@ public class FontResource implements Resource<BitmapFont> {
     public void load() {
         //TODO
     }
+
+    @Override
+    public void unload() {
+        //TODO
+    }
 }

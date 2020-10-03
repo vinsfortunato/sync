@@ -41,10 +41,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static net.sync.game.resource.xml.resolvers.XmlPixmapFormatResolver.GLOBAL_PIXMAP_FORMAT_RESOLVER;
-import static net.sync.game.resource.xml.resolvers.XmlTextureFilterResolver.GLOBAL_TEXTURE_FILTER_RESOLVER;
-import static net.sync.game.resource.xml.resolvers.XmlTextureWrapResolver.GLOBAL_TEXTURE_WRAP_RESOLVER;
-
 public class XmlDrawablesParser extends XmlMapResourceParser<Resource<Drawable>> {
     private final XmlTheme theme;
 
@@ -158,6 +154,7 @@ public class XmlDrawablesParser extends XmlMapResourceParser<Resource<Drawable>>
 
     private boolean parseAttribute(TextureResource resource, String name, String value) throws XmlParseException {
         switch(name) {
+            /** TODO
             case "minFilter":  resource.minFilter = GLOBAL_TEXTURE_FILTER_RESOLVER.resolve(value);                break;
             case "maxFilter":  resource.magFilter = GLOBAL_TEXTURE_FILTER_RESOLVER.resolve(value);                break;
             case "uWrap":      resource.uWrap = GLOBAL_TEXTURE_WRAP_RESOLVER.resolve(value);                      break;
@@ -165,6 +162,7 @@ public class XmlDrawablesParser extends XmlMapResourceParser<Resource<Drawable>>
             case "format":     resource.format = GLOBAL_PIXMAP_FORMAT_RESOLVER.resolve(value);                    break;
             case "useMipMaps": resource.useMipMaps = booleanResolver.resolve(value);                              break;
             default: return false; //Unrecognised attribute
+             **/
         }
 
         return true;

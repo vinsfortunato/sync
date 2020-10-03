@@ -59,4 +59,9 @@ public class MusicResource implements Resource<Music> {
     public void load() {
 
     }
+
+    @Override
+    public void unload() {
+        //TODO
+    }
 }

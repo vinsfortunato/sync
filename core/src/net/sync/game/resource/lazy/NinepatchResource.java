@@ -59,4 +59,9 @@ public class NinepatchResource extends DrawableResource {
     public void load() {
 
     }
+
+    @Override
+    public void unload() {
+        //TODO
+    }
 }

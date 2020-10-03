@@ -59,4 +59,9 @@ public class SpriteResource extends DrawableResource {
     public void load() {
 
     }
+
+    @Override
+    public void unload() {
+        //TODO
+    }
 }

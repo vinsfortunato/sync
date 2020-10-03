@@ -22,9 +22,7 @@
 
 package net.sync.game.resource.lazy;
 
-import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetLoaderParameters;
-import com.badlogic.gdx.assets.loaders.TextureLoader;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import net.sync.game.util.ui.TexturePath;
@@ -46,7 +44,7 @@ public class TextureResource extends DrawableResource {
         super(resource);
         path = resource.path;
 
-        assets()
+        //assets()
     }
 
     @Override
@@ -71,7 +69,7 @@ public class TextureResource extends DrawableResource {
     public synchronized void load() {
         if(assetId == null) {
             assetId = UUID.randomUUID().toString(); //TODO track generated UUIDs?
-            AssetDescriptor<Texture> descriptor = new AssetDescriptor<Texture>();
+            //AssetDescriptor<Texture> descriptor = new AssetDescriptor<Texture>();
 
 
         }
@@ -89,6 +87,7 @@ public class TextureResource extends DrawableResource {
     }
 
     protected AssetLoaderParameters<Texture> getLoaderParameters() {
+        /**
         TextureLoader.TextureParameter parameter = new TextureLoader.TextureParameter();
         parameter.format = format;
         parameter.minFilter = minFilter != null ? minFilter : Texture.TextureFilter.Nearest;
@@ -97,5 +96,7 @@ public class TextureResource extends DrawableResource {
         parameter.wrapV = vWrap != null ? vWrap : Texture.TextureWrap.ClampToEdge;
         parameter.genMipMaps = useMipMaps;
         return parameter;
+         **/
+        return null;
     }
 }
